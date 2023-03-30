@@ -1,0 +1,132 @@
+<style>
+    .navbar {
+        position: relative;
+        background: black;
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
+        margin-bottom: 20vh;
+        height: 10vh;
+    }
+
+    #navlist {
+        padding: 0px;
+        margin: 0px;
+        list-style: none;
+        display: flex;
+        background: black;
+        width: 100%;
+        height: 10vh;
+        justify-content: space-around;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    #navlist li {
+        text-align: center;
+        color: white;
+        padding-left: 5px;
+        font-size: 20px;
+        height: 10vh;
+
+
+    }
+
+    #toggle-nav {
+        margin: auto;
+        cursor: pointer;
+        flex-wrap: wrap;
+        align-items: center;
+        visibility: hidden;
+        display: none;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    @media only screen and (max-width: 650px) {
+
+        #toggle-nav {
+            visibility: visible;
+            display: flex;
+        }
+
+        #settings-buttons-list {
+            visibility: hidden;
+            display: none;
+        }
+    }
+</style>
+
+<nav class="navbar">
+    <div id="toggle-nav">
+        <div>
+            <a class="navbar-brand" href="\ ">Teachly</a>
+        </div>
+        <div>
+            <i onclick="toggleNav()" class="fa fa-bars" style="height: 25px;"></i>
+        </div>
+        <div id="settings-buttons">
+            <button type="button" class="btn btn-primary">{{settings.lang}}</button>
+            <button type="button" class="btn btn-primary">{{settings.cur}}</button>
+        </div>
+    </div>
+    <ul id="navlist">
+        <li><a style="height: 10vh !important;" class="navbar-brand" href="\learn">{{navbarContext.findTutor}}</a></li>
+        <li><a style="height: 10vh !important;" class="navbar-brand" href="\teach">{{navbarContext.becomeTutor}}</a>
+        </li>
+        <li><a style="height: 10vh !important;" class="navbar-brand" href="\register">{{navbarContext.signUp}}</a></li>
+        <li><a style="height: 10vh !important;" class="navbar-brand" href="\login">{{navbarContext.login}}</a></li>
+
+        <div id="settings-buttons-list" style="float:right; margin-right: 20px;">
+            <button type="button" class="btn btn-primary">{{settings.lang}}</button>
+            <button type="button" class="btn btn-primary">{{settings.cur}}</button>
+        </div>
+
+    </ul>
+</nav>
+
+
+
+<script>
+
+    var nav = document.getElementById('navlist');
+
+    if (window.innerWidth > 650) {
+        nav.style.visibility = "visible";
+        nav.style.display = "block";
+    }
+    else {
+        nav.style.display = "none";
+        nav.style.visibility = "hidden";
+    }
+ 
+    function toggleNav() {
+
+        if (nav.style.display === "none") {
+            nav.style.display = "block";
+            nav.style.visibility = "visible";
+        }
+
+        else {
+            nav.style.display = "none";
+            nav.style.visibility = "hidden";
+        }
+    }
+
+    function windowResizeHandler() {
+        if (window.innerWidth > 650) {
+            nav.style.visibility = "visible";
+            nav.style.display = "block";
+
+        }
+        else {
+            nav.style.display = "none";
+            nav.style.visibility = "hidden";
+        }
+    }
+
+    window.addEventListener("resize", windowResizeHandler);
+
+
+
+</script>

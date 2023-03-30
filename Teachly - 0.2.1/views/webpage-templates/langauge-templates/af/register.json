@@ -1,0 +1,20 @@
+{    
+    "title": "Register With Teachly",
+    "language": "Language",
+    "localTimezone": "(localTimezone)",
+    "registrationForm": "Registration Form",
+    "fullName": "Full Name",
+    "dateOfBirth": "Date of Birth", 
+    "timezone": "Timezone",
+    "email": "Email",
+    "profileImage": "Profile Image",
+    "currency": "Currency",
+    "password": "Password",
+    "country": "Country",
+    "IAgreeTo": "I agree all statements in",
+    "TOS": "Terms of service",
+    "REGISTER": "REGISTER",
+    "AlreadyhaveAccount": "Have already an account?",
+    "loginHere": " Login here",
+    "languageName": "Afrikaans"
+}

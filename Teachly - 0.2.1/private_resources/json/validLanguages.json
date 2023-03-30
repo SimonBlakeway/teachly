@@ -1,0 +1,30 @@
+{
+    "fullName": [
+        "English",
+        "普通话",
+        "हिंदी",
+        "Española",
+        "française",
+        "العربية الفصحى",
+        "বাঙ্গালি",
+        "русский",
+        "Português",
+        "Indonesia",
+        "Afrikaans"
+    ],
+    "code": [
+        "en",
+        "zh",
+        "hi",
+        "es",
+        "fr",
+        "ar",
+        "bn",
+        "ru",
+        "pt",
+        "id",
+        "af"
+    ]
+}
+
+

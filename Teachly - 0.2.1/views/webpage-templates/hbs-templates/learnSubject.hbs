@@ -1,0 +1,1286 @@
+<link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+<meta name="theme-color" content="#7952b3">
+
+
+<style>
+    .more-course-description {
+        margin-top: -1000px !important;
+        display: none;
+    }
+
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        width: 100% !important;
+    }
+
+    #toggel-search-bar-button {
+        position: relative;
+        background: black;
+        color: white;
+        width: 100% !important;
+        padding-top: 20px;
+        margin: 0px !important;
+        margin-top: -50px !important;
+        margin-bottom: 50px;
+        height: 60px;
+        padding-bottom: 20px;
+        font-family: Verdana, sans-serif;
+    }
+
+    .subject-link-li {
+        text-decoration: none;
+    }
+
+    #product-search-bar {
+        position: relative;
+        background: black;
+        color: white;
+        width: 100% !important;
+        padding-top: 20px;
+        margin: 0px !important;
+        margin-top: -50px !important;
+        margin-bottom: 50px;
+        height: 260px;
+    }
+
+    .product-search-popup {
+        visibility: hidden;
+    }
+
+    section.range-slider {
+        position: relative;
+        width: 200px;
+        height: 35px;
+        text-align: center;
+    }
+
+    section.range-slider input {
+        pointer-events: none;
+        position: absolute;
+        overflow: hidden;
+        left: 0;
+        top: 10px;
+        width: 250px !important;
+        outline: none;
+        height: 18px;
+        margin: 0;
+        padding: 0;
+    }
+
+    section.range-slider input::-webkit-slider-thumb {
+        pointer-events: all;
+        position: relative;
+        z-index: 1;
+        outline: 0;
+    }
+
+    section.range-slider input::-moz-range-thumb {
+        pointer-events: all;
+        position: relative;
+        z-index: 10;
+        -moz-appearance: none;
+        width: 9px;
+    }
+
+    section.range-slider input::-moz-range-track {
+        position: relative;
+        z-index: -1;
+        background-color: rgba(0, 0, 0, 1);
+        border: 0;
+    }
+
+    section.range-slider input:last-of-type::-moz-range-track {
+        -moz-appearance: none;
+        background: none transparent;
+        border: 0;
+    }
+
+    section.range-slider input[type=range]::-moz-focus-outer {
+        border: 0;
+    }
+
+    .popup {
+        position: absolute;
+        z-index: 20;
+        width: 300px;
+        height: 300px;
+        background-color: #ffffff;
+        display: none;
+        visibility: hidden;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        text-align: left;
+        overflow: auto;
+        -ms-overflow-style: none;
+        /* Internet Explorer 10+ */
+        scrollbar-width: none;
+        /* Firefox */
+        font-size: 20px;
+        border-radius: 10px;
+        webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border-style: solid;
+        border-color: white;
+        border-width: 30px;
+    }
+
+    .popup::-webkit-scrollbar {
+        display: none;
+        /* Safari and Chrome */
+    }
+
+    #pricePerLesson-popup {
+        width: 300px;
+        height: 160px !important;
+        margin-top: 220px;
+        margin-left: 200px;
+        padding: 0px;
+        border-width: 5px;
+    }
+
+    #subject-popup {
+        text-align: left;
+        width: 200px;
+        padding: 10px;
+        overflow: auto;
+        font-size: 20px;
+        margin-top: 400px;
+        padding-left: 20px !important;
+        margin-left: 50px;
+
+    }
+
+    #speciality-popup {
+        width: 280px;
+        height: 300px;
+        padding: 10px;
+        font-size: 20px;
+        margin-left: 80px;
+        margin-top: 400px;
+    }
+
+    #orderBy-popup {
+        width: 240px;
+        height: 200px;
+        margin-top: 270px;
+
+    }
+
+    #timeRange-popup {
+        width: 460px;
+        height: 460px;
+        margin-top: 530px;
+        margin-right: 220px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #taughtIn-popup {
+        width: 200px;
+        height: 400px;
+        margin-left: -35px;
+        margin-top: 500px;
+    }
+
+    .search-bar-popup-wrap {
+        position: relative;
+        display: inline-block;
+    }
+
+    .input-and-text {
+        width: 130px !important;
+        height: 100px !important;
+        color: white;
+        text-align: center;
+    }
+
+    .day-div {
+        background-color: #89c4ff;
+        width: 100% !important;
+        height: 50px;
+        margin: 2px;
+        text-align: center;
+        font-size: 30px;
+        margin: 5px;
+    }
+
+    .time-slot-div {
+        background-color: #89c4ff;
+        border-radius: 12px 6px;
+        width: 85px !important;
+        height: 50px;
+        margin-left: 5px !important;
+        margin-right: 5px !important;
+        margin-top: 1px;
+        margin: 2px !important;
+
+    }
+
+    .active-time-slot-div {
+        background-color: #277dd3;
+        border-radius: 14px 7px;
+    }
+
+    .search-bar-button {
+        margin-top: 5px !important;
+        width: 140px !important;
+        height: 40px !important;
+    }
+
+    input {
+        text-align: center;
+    }
+
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+
+    #toggel-search-bar-button {
+        font-size: 30px;
+        position: relative;
+        padding: 10px;
+        z-index: 2323;
+        margin-bottom: 40px !important;
+
+    }
+
+
+
+
+    @media only screen and (max-width: 600px) {
+        #speciality-popup {
+            margin-left: 150px;
+        }
+    }
+
+
+    @media only screen and (max-width: 450px) {
+        #timeRange-popup {
+            height: 520px;
+            width: 315px !important;
+            margin-right: 140px !important;
+            margin-top: 640px;
+            border-left-width: 3px !important;
+            border-right-width: 3px !important;
+            padding: -5px !important;
+        }
+
+        #pricePerLesson-popup {}
+
+        #subject-popup {
+            margin-left: 100px;
+        }
+
+        #speciality-popup {
+            margin-left: 150px;
+        }
+
+        #orderBy-popup {
+            width: 240px;
+            height: 200px;
+            top: 65px;
+
+        }
+
+        #taughtIn-popup {
+            margin-left: -50px;
+        }
+
+        .search-bar-button {
+            width: 120px !important;
+            height: 40px !important;
+        }
+
+        .search-bar-input {
+            width: 120px !important;
+            height: 40px !important;
+        }
+    }
+
+
+    @media only screen and (max-width: 770px) {
+
+        #speciality-popup {
+            margin-left: 150px;
+        }
+
+        .input-and-text {
+            width: 140px !important;
+        }
+
+        input {
+            width: 140px !important;
+        }
+
+
+        #product-search-bar {
+
+            padding-top: 40px;
+            padding-bottom: 40px;
+            height: 500px;
+
+        }
+
+        #timeRange-popup {
+            width: 340px !important;
+            height: 520px;
+            border-width: 15px;
+            margin-right: 150px !important;
+            margin-top: 640px;
+        }
+
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+
+        #product-search-bar {
+            display: none;
+            visibility: hidden;
+        }
+
+        #toggel-search-bar-button {
+            display: block;
+            visibility: visible;
+        }
+    }
+
+    @media only screen and (min-width: 770px) {
+        #product-search-bar {
+            display: block;
+            visibility: visible;
+        }
+
+        #toggel-search-bar-button {
+            display: none;
+            visibility: hidden;
+        }
+
+    }
+
+    .fa-circle {
+        color: black;
+    }
+</style>
+
+<div>
+
+    <div id="toggel-search-bar-button">
+
+        <div style="float: left; padding-left: 15px;">filters</div>
+        <button onclick="togglesearchBar()"
+            style="float: right; background-color:black; height: 40px !important; font-size: 20px !important;">
+            <span class="fa-stack" style="vertical-align: top; height: 40px !important;">
+                <i class="fas fa-circle fa-stack-1x" style="height: 40px !important;"></i>
+                <i id="toggel-search-bar-button-symbol" class="fa fa-bars fa-stack-1x fa-inverse"
+                    style="height: 40px !important; font-size: 30px !important; color:#ffffff !important;"></i>
+            </span>
+        </button>
+    </div>
+
+
+
+
+    <div id="product-search-bar">
+        <div class="row" style="width: 100% !important;">
+            <div class="col-6 search-bar-popup-wrap" style="width: 50% !important; padding-left: 40px !important;">
+                <div class="row">
+                    <div
+                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div class="input-and-text" onclick='toggleSearchBarPopup("subject-popup")'>
+                            <div style="height: 35px;">
+                                Subject Search
+                            </div>
+                            <input class="search-bar-input" type="text" id="subject-search-input" style="color:white;"
+                                onkeyup="subjectSearch()"></input>
+                        </div>
+                        <div class="product-search-popup popup" id="subject-popup">
+                            <ul id="subject-links">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div
+                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div class="input-and-text" onclick='toggleSearchBarPopup("speciality-popup")'>
+                            <div style="height: 35px;">
+                                Speciality Search
+                            </div>
+                            <input class="search-bar-input" type="text" id="speciality-search-input" placeholder=""
+                                style="color:white;" onkeyup="specialitySearch()"></input>
+                        </div>
+                        <div class="product-search-popup popup" id="speciality-popup">
+                            <div id="speciality-checkboxes"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 search-bar-popup-wrap" style="width: 50% !important;">
+                <div class="row">
+                    <div
+                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div class="input-and-text">
+                            <div style="height: 35px;">
+                                search By Keyword
+                            </div>
+                            <input class="search-bar-input" id="searchBy-input" type="text" placeholder=""
+                                style="color:white;" onkeyup='updateformData("searchBy", "searchBy-input")'></input>
+                            <div class="popup">
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div class="input-and-text" onclick='toggleSearchBarPopup("taughtIn-popup")'>
+                            <div style="height: 35px;">
+                                Taught In
+                            </div>
+                            <input class="search-bar-input" id="taughtIn-search-input" type="text" placeholder=""
+                                style="color:white;" onkeyup="taughtInSearch()"></input>
+                        </div>
+                        <div class="taughtIn-search-popup popup" id="taughtIn-popup">
+                            <div id="taughtIn-checkboxes"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="width: 100% !important;">
+            <div class="col-6 search-bar-popup-wrap" style="width: 50% !important; padding-left: 40px !important;">
+                <div class="row">
+                    <div
+                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div onclick='toggleSearchBarPopup("pricePerLesson-popup")' class="input-and-text">
+                            <div>
+                                price Per Lesson
+                            </div>
+                            <button
+                                class="btn btn-sm btn-outline-secondary container d-flex align-items-center justify-content-center search-bar-button">
+                                <span class="currency">
+                                    <span id="min-price-shown" style="display: none;">50.000</span>
+                                    <span></span>
+                                </span>
+
+                                <span style="margin-left: 5px; margin-right: 5px;">-</span>
+
+                                <span class="currency">
+                                    <span id="max-price-shown" style="display: none;">50.000</span>
+                                    <span></span>
+                                </span>
+                                <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="product-search-popup popup container d-flex align-items-center justify-content-center"
+                            id="pricePerLesson-popup">
+                            <div class="container" style="text-align: center;">
+                                <div style="color: black; text-align: center;"
+                                    class="container d-flex align-items-center justify-content-center">
+                                </div>
+                                <section class="range-slider">
+                                    <span class="rangeValues"></span>
+                                    <input id="min-price-val" onclick='updateformData("priceRangeMin", "min-price-val")'
+                                        value="5" min="1" max="50" step="0.1" type="range">
+                                    <input id="max-price-val" onclick='updateformData("priceRangeMax", "max-price-val")'
+                                        value="10" min="1" max="50" step="0.1" type="range">
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div onclick='toggleSearchBarPopup("orderBy-popup")' class="input-and-text"
+                            style="width: 150px !important;">
+                            <div>
+                                order By
+                            </div>
+                            <button id="orderBy-button" style="width: 150px !important;"
+                                class="btn btn-sm btn-outline-secondary search-bar-button text-capitalize">order By <i
+                                    style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
+                                    aria-hidden="true"></i></button>
+                        </div>
+                        <div class="product-search-popup popup" id="orderBy-popup">
+                            <form action="#">
+                                <p>
+                                    <label>
+                                        <input name="group1" type="radio" class="filled-in" id="Popularity"
+                                            onclick='updateformData("orderBy", "Popularity")' />
+                                        <span>Popularity</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input name="group1" type="radio" class="filled-in" id="Price:-highest-first"
+                                            onclick='updateformData("orderBy", "Price:-highest-first")' />
+                                        <span>Price: highest first</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input name="group1" type="radio" class="filled-in" id="Price:-lowest-first"
+                                            onclick='updateformData("orderBy", "Price:-lowest-first")' />
+                                        <span>Price: lowest first</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input name="group1" type="radio" class="filled-in" id="Number-of-reviews"
+                                            onclick='updateformData("orderBy", "Number-of-reviews")' />
+                                        <span>Number of reviews</span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input name="group1" type="radio" class="filled-in" id="Best-rating"
+                                            onclick='updateformData("orderBy", "Best-rating")' />
+                                        <span>Best rating</span>
+                                    </label>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 search-bar-popup-wrap">
+                <div class="row">
+                    <div
+                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div onclick='toggleSearchBarPopup("timeRange-popup")' class="input-and-text">
+                            <div style="height: 21px;"></div>
+
+
+                            <button class="btn btn-sm btn-outline-secondary search-bar-button text-capitalize">timeRange
+                                <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x" <i
+                                    style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
+                                    aria-hidden="true"></i></button>
+                        </div>
+                        <div class="product-search-popup popup" id="timeRange-popup">
+                            <div id="timeRange-popup-rows" style="text-align: center; width:100%">
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div onclick="clearSearchBarPopups()" class="input-and-text">
+                            <div style="height: 21px;"></div>
+
+                            <div>
+                                <button onclick="searchCourses()"
+                                    class="btn btn-sm btn-outline-secondary search-bar-button text-capitalize">search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+<script>
+
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+    //localStorage.removeItem("TeachlyFormData")
+
+    function formDataSetup() {
+        teachlyFormDataDefault = {
+            "subject": window.location.href.split("/")[4],
+            "specialities": [],
+            "priceRange": [1, 50],
+            "searchby": "",
+            "taughtIn": [],
+            "orderBy": "Popularity",
+            "days": {
+                "monday": [],
+                "tuesday": [],
+                "wednesday": [],
+                "thursday": [],
+                "friday": [],
+                "saturday": [],
+                "sunday": []
+            }
+
+        }
+        teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
+        if (teachlyFormData === null) {
+            teachlyFormData = teachlyFormDataDefault
+            localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
+        }
+        if (teachlyFormData.subject != teachlyFormDataDefault.subject) {
+            teachlyFormData = teachlyFormDataDefault
+            localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
+        }
+
+        range1Shown = document.getElementById('min-price-shown');
+        range2Shown2 = document.getElementById('max-price-shown');
+        range1Shown.innerHTML = teachlyFormData.priceRange[0] * curConversionRatio;
+        range2Shown2.innerHTML = teachlyFormData.priceRange[1] * curConversionRatio;
+        range1 = document.getElementById('min-price-val');
+        range2 = document.getElementById('max-price-val');
+        range1.max = range1.max * curConversionRatio;
+        range1.min = range1.min * curConversionRatio;
+        range1.step = range1.step * curConversionRatio;
+        range2.max = range2.max * curConversionRatio;
+        range2.min = range2.min * curConversionRatio;
+        range2.step = range2.step * curConversionRatio;
+        range1.value = teachlyFormData.priceRange[0];
+        range2.value = teachlyFormData.priceRange[1];
+
+
+        document.getElementById("searchBy-input").value = teachlyFormData.searchby;
+        document.getElementById(teachlyFormData.orderBy.replaceAll(" ", "-")).checked = true;
+        document.getElementById('orderBy-button').innerHTML = teachlyFormData.orderBy;
+
+
+
+        for (i = 0; i < teachlyFormData.specialities.length; i++) {
+            document.getElementById(teachlyFormData.specialities[i].replaceAll(" ", "-") + "-checkbox").checked = true;
+        }
+        for (i = 0; i < teachlyFormData.taughtIn.length; i++) { document.getElementById(teachlyFormData.taughtIn[i].replaceAll(" ", "-") + "-checkbox").checked = true; }
+        for (i = 0; i < Object.keys(teachlyFormData.days).length; i++) {
+            for (j = 0; j < teachlyFormData.days[Object.keys(teachlyFormData.days)[i]].length; j++) {
+                document.getElementById(teachlyFormData.days[Object.keys(teachlyFormData.days)[i]][j] + "-checkbox").classList.add("active-time-slot-div");
+
+            }
+        }
+
+    }
+
+    async function formSetup() {
+        document.getElementById("subject-search-input").placeholder = window.location.href.split("/")[4]
+
+        for (let i = 0; i <= 6; i++) {
+            outerDiv = document.createElement("div");
+            outerDiv.className = "row container d-flex align-items-center justify-content-center";
+            outerDiv.style.marginLeft = "0px"
+            dayVal = document.createElement("div");
+            dayVal.className = "day-div";
+            dayVal.innerHTML = `${days[i]}`;
+            outerDiv.appendChild(dayVal);
+            for (let j = 0; j <= 23; j++) {
+                innerDiv = document.createElement("div");
+                innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div";
+                innerDiv.innerHTML = `${j} - ${j + 1}`;
+                innerDiv.id = `${j}-${j + 1}-checkbox`;
+                innerDiv.onclick = function () { updateformData(`${days[i]}`, `${j}-${j + 1}`) }
+                outerDiv.appendChild(innerDiv);
+            }
+            document.getElementById("timeRange-popup-rows").appendChild(outerDiv);
+        }
+
+        // Initialize Slider
+        let sliderSections = document.getElementsByClassName("range-slider");
+        for (var x = 0; x < sliderSections.length; x++) {
+            var sliders = sliderSections[x].getElementsByTagName("input");
+            for (var y = 0; y < sliders.length; y++) {
+                if (sliders[y].type === "range") {
+                    sliders[y].oninput = getVals;
+                    // Manually trigger event first time to display values
+                    sliders[y].oninput();
+                }
+            }
+        }
+
+        button = document.getElementById("toggel-search-bar-button")
+        bar = document.getElementById("product-search-bar")
+        symbol = document.getElementById("toggel-search-bar-button-symbol")
+        if (window.innerWidth > 770) {
+            button.style.visibility = "hidden";
+            button.style.display = "none";
+            bar.style.visibility = "visible";
+            bar.style.display = "block";
+        }
+        else {
+            button.style.visibility = "visible";
+            button.style.display = "block";
+            bar.style.visibility = "hidden";
+            bar.style.display = "none";
+            symbol.className = "fa fa-bars fa-stack-1x fa-inverse"
+        }
+        function searchBarResizeHandler() {
+            button = document.getElementById("toggel-search-bar-button")
+            bar = document.getElementById("product-search-bar")
+            symbol = document.getElementById("toggel-search-bar-button-symbol")
+            if (window.innerWidth > 770) {
+                button.style.visibility = "hidden";
+                button.style.display = "none";
+                bar.style.visibility = "visible";
+                bar.style.display = "block";
+            }
+            else {
+                button.style.visibility = "visible";
+                button.style.display = "block";
+                bar.style.visibility = "hidden";
+                bar.style.display = "none";
+                symbol.className = "fa fa-bars fa-stack-1x fa-inverse"
+            }
+        }
+        window.addEventListener("resize", searchBarResizeHandler);
+
+
+
+        setInterval(async function () {
+            try {
+                range1 = document.getElementById('min-price-val');
+                range2 = document.getElementById('max-price-val');
+                range1.max = range1.max * curConversionRatio;
+                range1.min = range1.min * curConversionRatio;
+                range1.step = range1.step * curConversionRatio;
+                range2.max = range2.max * curConversionRatio;
+                range2.min = range2.min * curConversionRatio;
+                range2.step = range2.step * curConversionRatio;
+            }
+
+            catch (err) {
+                console.log(err)
+            }
+        }, 300000);
+
+
+    }
+
+    function updateformData(type, val) {
+        teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
+
+        if (type == "specialities") {
+            index = teachlyFormData["specialities"].indexOf(val)
+
+            if (index != -1) {
+                teachlyFormData["specialities"].splice(index, 1);
+            }
+            else {
+                teachlyFormData["specialities"].push(val)
+            }
+
+        }
+
+        else if (type == "priceRangeMin" || (type == "priceRangeMax")) {
+
+            if (type == "priceRangeMin") {
+                value = document.getElementById(val).value
+                teachlyFormData["priceRange"][0] = value / curConversionRatio;
+                document.getElementById('min-price-shown').innerHTML = value;
+
+            }
+            else {
+                value = document.getElementById(val).value
+                teachlyFormData["priceRange"][1] = value / curConversionRatio;
+                document.getElementById('max-price-shown').innerHTML = document.getElementById(val).value;
+
+            }
+            teachlyFormData[type] = val;
+            updateCurrency(curConversionRatio)
+
+        }
+
+        else if (type == "searchBy") {
+            teachlyFormData.searchby = document.getElementById(val).value;
+        }
+
+        else if (type == "taughtIn") {
+            console.log(teachlyFormData["taughtIn"])
+            index = teachlyFormData["taughtIn"].indexOf(val.replaceAll("-", " "))
+
+            if (index != -1) {
+                teachlyFormData["taughtIn"].splice(index, 1);
+            }
+            else {
+                teachlyFormData["taughtIn"].push(val.replaceAll("-", " "))
+            }
+        }
+
+        else if (type == "orderBy") {
+            document.getElementById('orderBy-button').innerHTML = val.replaceAll("-", " ");
+            teachlyFormData["orderBy"] = val.replaceAll("-", " ")
+        }
+
+        else if (Object.keys(teachlyFormData.days).includes(type)) {
+
+            index = teachlyFormData.days[type].indexOf(val)
+
+            if (index != -1) {
+                console.log("skreee")
+                teachlyFormData.days[type].splice(index, 1);
+                document.getElementById(val + "-checkbox").classList.remove("active-time-slot-div");
+            }
+            else {
+                console.log("reee")
+                teachlyFormData.days[type].push(val)
+                document.getElementById(val + "-checkbox").classList.add("active-time-slot-div");
+            }
+
+        }
+
+        localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
+    }
+
+    function subjectSearch() {
+        var input, filter;
+        input = document.getElementById("subject-search-input");
+        filter = input.value.toUpperCase();
+        a = document.getElementsByClassName("subject-link-li");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+
+    function specialitySearch() {
+        var input, filter;
+        input = document.getElementById("speciality-search-input");
+        filter = input.value.toUpperCase();
+        checkboxes = document.getElementsByClassName("speciality-checkboxes-p");
+        for (i = 0; i < checkboxes.length; i++) {
+            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                checkboxes[i].style.display = "";
+            } else {
+                checkboxes[i].style.display = "none";
+            }
+        }
+    }
+
+    function taughtInSearch() {
+        var input, filter;
+        input = document.getElementById("taughtIn-search-input");
+        filter = input.value.toUpperCase();
+        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
+        for (i = 0; i < checkboxes.length; i++) {
+            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                checkboxes[i].style.display = "";
+            } else {
+                checkboxes[i].style.display = "none";
+            }
+        }
+    }
+
+    function clearSearchBarPopups() {
+        popupArr = document.getElementsByClassName("popup")
+        for (i = 0; i < popupArr.length; i++) {
+            popupArr[i].style.display = "none";
+            popupArr[i].style.visibility = "hidden";
+        }
+    }
+
+    function toggleSearchBarPopup(id) {
+        var subjectPopup = document.getElementById(id);
+        if (subjectPopup.style.display == "block") {
+            subjectPopup.style.display = "none";
+            subjectPopup.style.visibility = "hidden";
+        }
+        else {
+            clearSearchBarPopups()
+            subjectPopup.style.display = "block";
+            subjectPopup.style.visibility = "visible";
+        }
+    }
+
+    function getVals() {
+        // Get slider values
+        var parent = this.parentNode;
+        var slides = parent.getElementsByTagName("input");
+        var slide1 = parseFloat(slides[0].value);
+        var slide2 = parseFloat(slides[1].value);
+        // Neither slider will clip the other, so make sure we determine which is larger
+        if (slide1 > slide2) { var tmp = slide2; slide2 = slide1; slide1 = tmp; }
+
+        var displayElement = parent.getElementsByClassName("rangeValues")[0];
+        displayElement.innerHTML = slide1 + " - " + slide2;
+    }
+
+    window.addEventListener('load', function () {
+        formSetupRes = formSetup()
+        //populate subject
+        validSubject = axios.get('/get/validSubject').then(res => {
+            if (res.data == "404") { }
+            else {
+                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+                for (let i = 0; i < arr.length; i++) {
+                    node = document.createElement("li");
+                    node.innerHTML = `<a class="subject-link-li" href="/learn/${arr[i]}">${arr[i]}</a>`;
+                    document.getElementById("subject-links").appendChild(node);
+                }
+            }
+        })
+        //populate subject
+        validSpecialities = axios.get(`/get/validSpecialities/${window.location.href.split("/")[4]}`).then(res => {
+            if (res.data == "404") {
+            }
+            else {
+                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+                for (let i = 0; i < arr.length; i++) {
+                    p = document.createElement("p");
+                    p.className = "speciality-checkboxes-p";
+                    label = document.createElement("label");
+                    label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
+                    label.innerHTML = `<input onclick="updateformData('specialities', '${arr[i].replaceAll(" ", "-")}')"  type="checkbox" id="${arr[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")} checkbox" value="${arr[i]}-checkbox"><span>${arr[i]}</label>`
+                    p.appendChild(label);
+                    document.getElementById("speciality-checkboxes").appendChild(p);
+                }
+            }
+        })
+        //populate subject
+        validLanguagesFullName = axios.get('/get/validLanguagesFullName').then(res => {
+            if (res.data == "404") { }
+            else {
+                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+                for (let i = 0; i < arr.length; i++) {
+                    p = document.createElement("p");
+                    p.className = "taughtIn-checkboxes-p"
+                    label = document.createElement("label");
+                    label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
+                    label.innerHTML = `<input onclick="updateformData('taughtIn', '${arr[i].replaceAll(" ", "-")}')" type="checkbox" id="${res.data[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")}-checkbox" value="${arr[i].replaceAll(" ", "-")}-checkbox"><span>${arr[i]}</label>`
+                    p.appendChild(label);
+                    document.getElementById("taughtIn-checkboxes").appendChild(p);
+                }
+            }
+        })
+        Promise.all([formSetupRes, validSubject, validSpecialities, validLanguagesFullName]).then((values) => {
+            formDataSetup()
+            updateCurrency(curConversionRatio)
+        });
+    })
+
+    function togglesearchBar() {
+        button = document.getElementById("toggel-search-bar-button")
+        bar = document.getElementById("product-search-bar")
+        symbol = document.getElementById("toggel-search-bar-button-symbol")
+        if (bar.style.display === "none" || bar.style.display === "") {
+            bar.style.visibility = "visible";
+            bar.style.display = "block";
+            symbol.className = "fa fa-times fa-stack-1x fa-inverse"
+        }
+        else {
+            bar.style.visibility = "hidden";
+            bar.style.display = "none";
+            symbol.className = "fa fa-bars fa-stack-1x fa-inverse"
+        }
+    }
+
+    async function searchCourses() {
+        try {
+            teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
+            teachlyFormData.amount = 10
+            teachlyFormData.pagePlace = 10
+
+            res = await axios({
+                method: 'post',
+                url: '/learn/searchTutorCourses',
+                data: teachlyFormData,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            console.log(res.data)
+
+            if (res.data.err) {
+                if (res.data.err == 404) {
+                    document.getElementById("courses").style.display = "none"
+                    document.getElementById("no-courses").style.display = "block"
+                    document.getElementById("server-error").style.display = "none"
+                }
+                else if (res.data.err == "server error") {
+                    document.getElementById("courses").style.display = "none"
+                    document.getElementById("no-courses").style.display = "none"
+                    document.getElementById("server-error").style.display = "block"
+                }
+            }
+
+            else {
+                courseArr = res.data
+
+                for (let i = 0; i < courseArr.length; i++) {
+
+                    colDiv = document.createElement("div");
+                    colDiv.className = "col"
+
+                    shadowDiv = document.createElement("div");
+                    shadowDiv.className = "card shadow-sm"
+
+
+
+
+                    document.getElementById("courses").style.display = "block"
+                    document.getElementById("no-courses").style.display = "none"
+                    document.getElementById("server-error").style.display = "none"
+                }
+            }
+
+        }
+        catch (err) {
+            document.getElementById("courses").style.display = "none"
+            document.getElementById("no-courses").style.display = "none"
+            document.getElementById("server-error").style.display = "block"
+        }
+    }
+
+
+    function taughInToggle(dotsId, MoreId, btnId) {
+        var dots = document.getElementById(dotsId);
+        var moreText = document.getElementById(MoreId);
+        var btnText = document.getElementById(btnId);
+
+        if (dots.style.display === "none") {
+            dots.style.display = "inline";
+            btnText.innerHTML = "Read more";
+            moreText.style.display = "none";
+        } else {
+            dots.style.display = "none";
+            btnText.innerHTML = "Read less";
+            moreText.style.display = "inline";
+        }
+    }
+
+
+    function readMoreDescToggle(dotsId, MoreId, btnId) {
+        var dots = document.getElementById(dotsId);
+        var moreText = document.getElementById(MoreId);
+        var btnText = document.getElementById(btnId);
+
+        if (dots.style.display === "none") {
+            dots.style.display = "inline";
+            btnText.innerHTML = "Read more";
+            moreText.style.display = "none";
+        } else {
+            dots.style.display = "none";
+            btnText.innerHTML = "Read less";
+            moreText.style.display = "inline";
+        }
+    }
+
+
+</script>
+
+
+
+<main onclick="clearSearchBarPopups()">
+
+
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <br>
+                <h1 class="fw-light">browse our skilled tutors</h1>
+                <p class="lead text-muted fs-3">
+                    "It Alsways Seems Imposible Until It's Done" - Nelson Mandela
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+
+                <div id="courses" class="card mb-3" style="width: 100%;">
+
+
+                    <div class="row g-0">
+                        <div class="col-md-5" style="padding-top: 20px; padding-left: 15px;">
+                            <img src="/images/img-1.jpg" class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-7" style="padding: 20px;">
+                            <div class="card-body">
+                                <h5 class="card-title fs-1">becca</h5>
+                                <h5 class="card-text text-muted fs-4">english</h5>
+
+
+
+
+                                <div class="row g-0" style="height: 20px; text-align: left;">
+                                    <span style="width: auto; padding: 3px;">
+                                        <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i> 5 active
+                                        students
+                                    </span>
+                                    <span style="width: auto; padding: 3px;">
+                                        <i class="fa fa-circle" aria-hidden="true"></i> 23 lessons
+                                    </span>
+                                </div>
+
+                                <div class="row g-0" style="height: auto;">
+                                    <span></span><span></span>
+                                </div>
+
+
+
+                                <p class="card-text" style="margin-bottom: 0px !important;">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
+                                    imperdiet, nulla et dictum interdum, nisi lorem egestas vitae scel
+                                    <span id="teacherId-dots">...</span>
+                                <div id="teacherId-more-course-description" class="more-course-description">
+                                    erisque enim ligula venenatis dolor. Maecenasnisl est, ultrices nec
+                                    congue eget, auctor vitae massa. Fusce luctus vestibulum augue ut aliquet.
+                                    Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. In at libero
+                                    sed nunc venenatis imperdiet
+
+                                    <p> sed ornare turpis. Donec vitae dui eget tellus</p>
+                                    gravid venenatis. Integer fringilla congue eros non fermentum. Sed dapibus
+                                    pulvinar nibh tempor porta.
+                                </div>
+                                </p>
+                                <button
+                                    onclick='readMoreDescToggle("teacherId-dots", "teacherId-more-course-description", "teacherId-more-course-myBtn")'
+                                    id="teacherId-more-course-myBtn">Read more</button>
+
+
+
+                                <div class="row g-0" style="height: auto;">
+
+                                    <div class="col-6 col-md-6 container d-flex justify-content-center">
+                                        <div class="row d-flex justify-content-center" style="width: 100% !important;">
+                                            <div class="col-5 d-flex justify-content-center"
+                                                style="width: 100px !important" ;>
+                                                <div style="width: 100px !important;">
+                                                    <div style="width: 100% !important;"
+                                                        class="d-flex justify-content-center">
+                                                        <i style="font-size: 15px !important; color:gold;"
+                                                            class="fa fa-star" aria-hidden="true"></i>
+                                                        <span>5.5</span>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center">5 reviews</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-7" style="width: 130px !important;"
+                                                class="d-flex justify-content-center">
+                                                <div style="width: 100% !important;"
+                                                    class="d-flex justify-content-center">
+                                                    <span class="currency">
+                                                        <span id="max-price-shown" style="display: none;">50.000</span>
+                                                        <span></span>
+                                                    </span>
+                                                </div>
+                                                <div style="width: 100% !important;">5 minute lesson</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 col-md-6 container d-flex justify-content-center">
+                                        <div class="row d-flex justify-content-center" style="width: 100% !important;">
+                                            <div class="col-6 col-md-6 d-flex justify-content-center"
+                                                style="width: 130px !important;">
+                                                <button class="btn btn-sm btn-outline-secondary text-capitalize"
+                                                    style="width: 130px !important;">
+                                                    book lesson
+                                                </button>
+                                            </div>
+                                            <div class="col-6 col-md-6 d-flex justify-content-center"
+                                                style="width: 130px !important;">
+                                                <button class="btn btn-sm btn-outline-secondary text-capitalize"
+                                                    style="width: 130px !important;">
+                                                    message
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card-footer bg-transparent border-success">Footer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="card mb-3" style="width: 100%;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/images/img-1.jpg" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a
+                                        natural
+                                        lead-in to additional content. This content is a little bit longer.</p>
+                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3" style="width: 100%;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/images/img-1.jpg" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a
+                                        natural
+                                        lead-in to additional content. This content is a little bit longer.</p>
+                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3" style="width: 100%;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/images/img-1.jpg" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a
+                                        natural
+                                        lead-in to additional content. This content is a little bit longer.</p>
+                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="no-courses" style="display: none;">
+
+                    <div class="row g-0">
+                        no courses
+                    </div>
+
+                </div>
+
+                <div id="server-error" style="display: none;">
+
+                    <div class="row g-0">
+                        server error
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+</main>

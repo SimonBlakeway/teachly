@@ -1,0 +1,60 @@
+<style>
+#cookies-popup {
+  margin: auto;
+  width: 50%;
+  height: 30%;
+  text-align: center;
+  padding: 20px;
+  background: cyan;
+  border-radius: 20px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+@media screen and (max-width: 750px) {
+  #cookies-popup {
+    width: 80%;
+    height:30%;
+  }
+}
+@media screen and (max-width: 550px) {
+  #cookies-popup {
+    width: 80%;
+    height: 40%;
+  }
+}
+@media screen and (max-width: 350px) {
+  #cookies-popup {
+    width: 80%;
+    height: 40%;
+    padding: 5px;
+  }
+}
+</style>  
+  <div id="cookies-popup">                 
+      <div  class="email-input-form">
+        <h2>{{cookiesText.cookiesPopupText}}<a href="">{{cookiesText.termsAndConditions}}</a></h2>
+        <button type="submit" id="email-popup-submit" onclick="acceptCookies()">✖</button>
+      </div>
+      <script>
+        async function acceptCookies() {
+          document.getElementById("cookies-popup").style.display = "none";
+          res = await axios({
+            method: 'post',
+            url: '/auth/settings',
+            data: {},
+            headers: {
+             'Content-Type': 'application/json'
+              },
+          })
+
+        }
+
+</script>
+    </div>

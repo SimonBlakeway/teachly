@@ -1,0 +1,291 @@
+<style>
+    .navbar {
+        position: relative;
+        background: black;
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
+        margin-bottom: 20px;
+        height: 60px;
+    }
+
+    #profile-buttons {
+        height: 50px;
+        text-align: center;
+        float: right;
+
+    }
+
+    .nav-popup {
+        width: 250px;
+        height: auto;
+        border-radius: 2%;
+        padding: 5px;
+        visibility: hidden;
+        background: black;
+        position: absolute;
+        top: 65px;
+        right: 5px;
+        text-align: left;
+    }
+
+    .popup-link {
+        width: 100%;
+        height: 60px;
+        background-color: blueviolet;
+        margin: auto;
+        padding: 5px;
+        font-size: 18px;
+
+        vertical-align: middle;
+    }
+
+    .navlist-list {}
+
+    .navlist-list li {
+        width: 100%;
+        font-size: 18px;
+        margin: 10px;
+        height: 50px;
+        line-height: 18px;
+
+    }
+
+    .circle-icon {
+        background: #ffc0c0;
+        width: 47px;
+        height: 47px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 0px;
+        vertical-align: middle;
+        padding: -5px;
+        margin-left: 10px;
+        float: right;
+    }
+
+    .profile-img {
+        width: 47px;
+        height: 47px;
+        border-radius: 50%;
+        text-align: center;
+        float: right;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+</style>
+
+<nav class="navbar">
+    <div style="float: left; padding-left: 10px;">
+        <h2>Teachly</h2>
+    </div>
+    <div id="profile-buttons">
+        <button onclick="toggleProfile()" type="button" class="profile-img"
+            style="background-image: url('profile/img'); background-repeat: no-repeat; background-size: cover;"></button>
+        <button onclick="toggleMessages()" type="button" id="messages" class="circle-icon"><i class='fas fa-comments'
+                aria-hidden="true" style="height: 25px !important;"></i></button>
+        <button onclick="toggleNotifications()" type="button" id="notifications" class="circle-icon"><i
+                class="fa fa-bell" aria-hidden="true" style="height: 25px !important;"></i></button>
+        <div style="width: 30px !important; height: 30px !important; float: right; margin: 0px !important;">
+            <i onclick="toggleNavlist()" class="fa fa-bars"
+                style="height: 40px; width: 40px; font-size: 40px; margin-top: 4px; margin-left: -20px;"></i>
+        </div>
+    </div>
+
+
+
+    <div class="nav-popup" id="profile-popup">
+        <div class="popup-link">
+
+            {{settings.name}}
+            <img src="profile/img" alt="user profile image" class="profile-img"
+                style="background-repeat: no-repeat; background-size: cover; margin-right: 10px; float: left;"
+                loading="lazy"></a>
+
+        </div>
+        <ul class="navlist-list">
+            <li><a href="\profile\settings">{{navbarContext.profilePopup.settings}}</a></li>
+            <li><a href="\help">{{navbarContext.profilePopup.help}}</a></li>
+            <li><a href="\profile\display">{{navbarContext.profilePopup.display}}</a></li>
+            <li><a href="\feedback">{{navbarContext.profilePopup.feedback}}</a></li>
+            <li><a href="\auth\logout">{{navbarContext.profilePopup.logout}}</a></li>
+        </ul>
+    </div>
+    <div class="nav-popup" id="messages-popup">
+        <div class="popup-link" style="padding: 15px;">
+            <h2>
+                {{navbarContext.messagesPopup.messages}}
+            </h2>
+        </div>
+        <ul class="navlist-list" id="messages-list">
+        </ul>
+    </div>
+    <div class="nav-popup" id="notifications-popup">
+        <div class="popup-link" style="padding: 15px;">
+            <h3>
+                {{navbarContext.notificationsPopup.notifications}}
+            </h3>
+        </div>
+        <ul class="navlist-list" id="notificationss-list" style="height: 100%;">
+        </ul>
+    </div>
+    <div class="nav-popup" id="navlist-popup">
+        <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
+        <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
+    </div>
+</nav>
+
+
+<script>
+
+    var profile = document.getElementById('profile-popup');
+    var messages = document.getElementById('messages-popup');
+    var notifications = document.getElementById('notifications-popup');
+    var navlist = document.getElementById('navlist-popup');
+    messages.style.display = "none";
+    profile.style.display = "none";
+    notifications.style.display = "none";
+    navlist.style.display = "none";
+
+
+    window.onload = async function () {
+
+
+        axios.get('/profile/notifications').then(res => {
+
+            if (res.data == "404") {
+                console.log("no notifications")
+            }
+            else {
+
+                document.getElementById("notificationss-list").innerHTML = '';
+
+                for (let i = 0; i < res.data.length; i++) {
+
+                    node = document.createElement("li");
+                    node.innerHTML = `<div style="height: 20px; font-size: 20px; line-height: 20px; margin-bottom: 10px;">${res.data[i].text}</div><div style="height: 20px; font-size: 16px; line-height: 16px;">${prettyifyDate(res.data[i].createdAt)}</div>`
+                    document.getElementById("notificationss-list").appendChild(node);
+                }
+            }
+
+        })
+
+
+        axios.get('/profile/messages').then(res => {
+
+            if (res.data == "404") {
+            }
+            else {
+                for (let i = 0; i < res.data.length; i++) {
+
+                }
+            }
+
+        })
+
+
+
+        setInterval(() => {
+
+        }, 21600000) // six hours in milliseconds
+    };
+
+
+
+
+    function toggleMessages() {
+        clearPopups()
+        messages.style.display = "none";
+        messages.style.visibility = "hidden";
+    }
+
+    function toggleProfile() {
+
+        if (profile.style.display === "none") {
+
+            profile.style.display = "block";
+            profile.style.visibility = "visible";
+
+            notifications.style.display = "none";
+            notifications.style.visibility = "hidden";
+
+            messages.style.display = "none";
+            messages.style.visibility = "hidden";
+
+            navlist.style.display = "none";
+            navlist.style.visibility = "hidden";
+        }
+
+        else {
+            profile.style.display = "none";
+            profile.style.visibility = "hidden";
+        }
+    }
+
+    function toggleNotifications() {
+
+        if (notifications.style.display === "none") {
+
+            notifications.style.display = "block";
+            notifications.style.visibility = "visible";
+
+
+            profile.style.display = "none";
+            profile.style.visibility = "hidden";
+
+            messages.style.display = "none";
+            messages.style.visibility = "hidden";
+
+            navlist.style.display = "none";
+            navlist.style.visibility = "hidden";
+        }
+
+        else {
+            notifications.style.display = "none";
+            notifications.style.visibility = "hidden";
+        }
+    }
+
+    function toggleNavlist() {
+
+        if (navlist.style.display === "none") {
+
+            navlist.style.display = "block";
+            navlist.style.visibility = "visible";
+
+            notifications.style.display = "none";
+            notifications.style.visibility = "hidden";
+
+            messages.style.display = "none";
+            messages.style.visibility = "hidden";
+
+            notifications.style.display = "none";
+            notifications.style.visibility = "hidden";
+        }
+
+        else {
+            navlist.style.display = "none";
+            navlist.style.visibility = "hidden";
+        }
+    }
+
+
+
+
+    async function logout() {
+        res = await axios.get('/auth/logout');
+        if (res.data.err) {
+            console.log(res.data.err)
+        }
+        else {
+            window.location = "/"
+        }
+
+    }
+
+
+
+
+
+
+</script>

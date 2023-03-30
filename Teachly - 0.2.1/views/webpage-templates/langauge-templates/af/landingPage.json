@@ -1,0 +1,50 @@
+{
+  "title" : "Teachly",
+  "getATutorPitch": {
+    "header": "bekwame onderrig",
+    "subHeader": "1000's van gekeurde privaat tutors",
+    "paragraph": "Ons uitgesoekte tutors leer aanlyn met buigsame ure. tevredenheid gewaarborg",
+    "buttonText": "Blaai deur tutors",
+    "imageAlt": ""
+  },
+  "qualityGuarantee": {
+    "imageAlt": "",
+    "whyTeachly": {
+      "header":"hoekom Teachly?",
+      "subHeader": "Ons sal u help om die perfekte privaat tutor te vind."
+    },
+    "exellentTutors": {
+      "header": "uitstekende Tutors",
+      "paragraph": "elke tutor gaan deur 'n streng siftingsproses, sowel as persoonlik opgelei"
+    },
+    "safetyGuarantee": {
+      "header":"Veiligheid eerste",
+      "paragraph": "Ons ondersoek ons tutors deeglik om seker te maak dat ons so veilig as moontlik is, en elke interaksie in Teachly word noukeurig deur professionele personeel gemodereer"
+    },
+    "satisfactionGuarantee": {
+      "header": "100% tevredenheid gewaarborg",
+      "paragraph": "as u nie tevrede is nie, sal ons ons bes probeer om u by te staan"
+    }              
+  },
+  "companyPromise": {
+    "header": "Ons kry vir jou resultate",
+    "paragraph": "Ons fokus op begrip en begrip, met lesse wat vir u saamgestel is, Dit berei die studente voor op suksesvolle toekomstige studies en help hulle om hul doelwitte self te bereik"
+  },
+  "findATutor": {
+    "imageAlt": "",
+    "header": "Benodig 'n tutor?",
+    "paragraph": "Soek deur ons lys tutors vir enige vak en ons sal jou ooreenstem met 'n geskikte tutor. begin jou leerreis met Teachly",
+    "promise1": "Aanlyn, bekwame tutors met buigsame ure",
+    "promise2": "heeltemal persoonlike lesse",
+    "buttonText": "Soek 'n tutor"
+  },
+  "becomeATutor": {
+    "imageAlt": "",    
+    "header": "Word 'n tutor",
+    "paragraph": "Ons bied uitstekende tutor-werksgeleenthede oor die internet, gewaarborgde betalings in jou bankrekening, buigsame tutortye en advertensies namens jou sodat jy op onderrig kan fokus. Solank jy die vaardighede het, sal jy geleenthede vind",
+    "promise1": "As jy 'n vaardigheid het, kan jy geld verdien deur dit te leer",
+    "promise2": "Hoër betaling vir hoër graderings",
+    "buttonText": "sluit aan by ons Tutors"
+}
+
+}

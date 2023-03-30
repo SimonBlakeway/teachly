@@ -1,0 +1,50 @@
+{
+  "title" : "Teachly",
+  "getATutorPitch": {
+    "header": "skilled Tutoring",
+    "subHeader": "1000s of Vetted Private Tutors",
+    "paragraph": "Our hand picked tutors teach online with flexible hours. satisfaction guaranteed",
+    "buttonText": "Browse Tutors",
+    "imageAlt": ""
+  },
+  "qualityGuarantee": {
+    "imageAlt": "",
+    "whyTeachly": {
+      "header":"why Teachly?",
+      "subHeader": "We will help you find the perfect private tutor."
+    },
+    "exellentTutors": {
+      "header": "exellent Tutors",
+      "paragraph": "every tutor goes through a rigorous screening procces, as well as personally trained"
+    },
+    "safetyGuarantee": {
+      "header":"Safety First",
+      "paragraph": "We thouroughly screen our tutors to make sure we are as safe as possible, and every interaction in Teachly is carefully moderated by professional staff"
+    },
+    "satisfactionGuarantee": {
+      "header": "100% Satisfaction Guaranteed",
+      "paragraph": "if a any time you are unsatisfied, we will try our best to assist you"
+    }              
+  },
+  "companyPromise": {
+    "header": "We get you results",
+    "paragraph": "We focus on comprehension and understanding, with lessons curated for you, This prepares the students for successful future studies and helps them to achieve their goals by themselves moving forward"
+  },
+  "findATutor": {
+    "imageAlt": "",
+    "header": "Need a tutor?",
+    "paragraph": "search through our list of tutors for any subject and we will match you up with a sutable tutor. start your learning journey with Teachly",
+    "promise1": "Online, Skilled Tutors With Flexible Hours",
+    "promise2": "completely personalized lessons",
+    "buttonText": "Find A Tutor"
+  },
+  "becomeATutor": {
+    "imageAlt": "",    
+    "header": "Become a tutor",
+    "paragraph": "We offer excellent tutor job opportinities over the internet, guaranteed payments into you bank account, flexible tutoring times, and advertising on your behalf so you can focus on teaching. as longs as you've got the skills, you'll find opportunities",
+    "promise1": "If You've Got A Skill, You Can Earn Money By Teaching It",
+    "promise2": "Higher Pay for Higher Ratings",
+    "buttonText": "join our Tutors"
+}
+
+}

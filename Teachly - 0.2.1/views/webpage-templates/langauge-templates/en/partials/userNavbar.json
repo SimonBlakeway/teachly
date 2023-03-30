@@ -1,0 +1,20 @@
+{  
+    "profilePopup": {
+        "logout": "logout",
+        "settings": "settings",
+        "help": "help",
+        "display": "display",
+        "feedback": "feedback"
+    },
+    "messagesPopup": {
+        "messages": "messages"
+
+    },
+    "notificationsPopup": {
+        "notifications": "notifications"
+    },
+    "navlistPopup": {
+        "learn": "learn",
+        "teach": "teach"
+    }
+}
