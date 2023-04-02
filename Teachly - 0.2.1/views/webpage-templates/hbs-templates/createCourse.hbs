@@ -149,7 +149,7 @@
     font-size: 20px;
     margin-top: 400px;
     padding-left: 20px !important;
-    margin-left: 50px;
+
 
   }
 
@@ -158,7 +158,6 @@
     height: 300px;
     padding: 10px;
     font-size: 20px;
-    margin-left: 80px;
     margin-top: 400px;
   }
 
@@ -205,18 +204,28 @@
     border-radius: 14px 7px;
   }
 
-
-
-
-
+  .course-col {
+    background-color: gold;
+    text-align: center;
+    padding: 10px !important;
+    min-height: 80px !important;
+    max-width: 300px !important;
+    min-width: 170px !important;
+    margin-top: 10px !important;
+    border-radius: 5%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 
 
 
   @media only screen and (max-width: 770px) {
 
-    #speciality-popup {
-      margin-left: 150px;
-    }
+    #speciality-popup {}
 
     #timeRange-popup {
       width: 340px !important;
@@ -226,13 +235,15 @@
       margin-top: 640px;
     }
 
+    .course-col {
+      background-color: goldenrod;
+      max-width: 200px !important;
+    }
+
   }
 
-
   @media only screen and (max-width: 600px) {
-    #speciality-popup {
-      margin-left: 150px;
-    }
+    #speciality-popup {}
   }
 
   @media only screen and (max-width: 500px) {
@@ -259,18 +270,12 @@
 
     #pricePerLesson-popup {}
 
-    #subject-popup {
-      margin-left: 100px;
-    }
+    #subject-popup {}
 
-    #speciality-popup {
-      margin-left: 150px;
-    }
+    #speciality-popup {}
 
 
-    #taughtIn-popup {
-      margin-left: -50px;
-    }
+    #taughtIn-popup {}
   }
 
   @media only screen and (max-width: 300px) {
@@ -280,17 +285,9 @@
       padding: 0px;
     }
   }
-
-  .fa-circle {
-    color: black;
-  }
-
-  .fa-circle {
-    color: black;
-  }
 </style>
 
-<section id="create-course">
+<section id="create-course" onclick="clearCoursePopups()">
   <section id="form-section">
     <div class="container py-5">
       <div class="row justify-content-center align-items-center h-100">
@@ -298,79 +295,80 @@
           <div class="registration-form-color" style="border-radius: 15px; background-color: rgb(210, 233, 231);">
             <div class="p-4 p-md-5">
               <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">{{context.bodyContext.registrationForm}}</h3>
-              <form onsubmit="return false" class="registration-form-color">
-                <div class="row">
-                  <div class="col container d-flex align-items-center justify-content-center">
-
-                    <div onclick='toggleCoursePopup("subject-popup")' style="background-color:gold; text-align:center; width: 100%; margin: 5px;">
-                      <div style="font-size: 25px; font-weight:500; margin-bottom: 15px;">subject</div>
-                      <div>choose</div>
-                    </div>
-
-                    <div class="product-search-popup popup" id="subject-popup">
-
-
-                      <div class="input-and-text">
-                        <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                          id="subject-search-input" style="color:rgb(0, 0, 0);" onkeyup="subjectSearch()"></input>
-                      </div>
-
-                      <ul id="subject-links" onclick='toggleCoursePopup("subject-popup")'>
-
-                      </ul>
-                    </div>
+              <div class="row" onclick="event.stopPropagation();">
+                <div class="col container d-flex align-items-center justify-content-center course-col"
+                  onclick='toggleCoursePopup("subject-popup")'>
+                  <div>
+                    <div style="font-size: 25px; font-weight:500; margin-bottom: 10px;">subject</div>
+                    <div id="subject">choose</div>
                   </div>
-
-
-                  <div class="col container d-flex align-items-center justify-content-center">
-
-                    <div onclick='toggleCoursePopup("speciality-popup")'
-                      style="background-color:gold; text-align:center">
-                      <div style="font-size: 25px; font-weight:1000;">specialities</div>
-                      <div>specialities, specialities, specialities, specialities, specialities, specialities, </div>
-                    </div> 
-
-                    <div class="product-search-popup popup" id="speciality-popup">
-                      <input class="course-input" type="text" id="speciality-search-input" placeholder=""
-                        onkeyup="specialitySearch()"></input>
-
-                      <div id="speciality-checkboxes"></div>
+                  <div class="popup" id="subject-popup">
+                    <div>
+                      <input class="course-input form-control form-control-lg border border-info rounded" type="text"
+                        id="subject-search-input" onkeyup="subjectSearch()"></input>
                     </div>
-                  </div>
-
-
-                </div>
-                <div class="row">
-                  <div class="col-md-6 mb-6">
-                    <label class="form-label text">{{context.bodyContext.password}}</label>
-                    <input required minlength="5" maxlength="256" type="password" id="password"
-                      class="form-control form-control-lg border border-info rounded course-input"
-                      style="outline:none;" />
-                  </div>
-                  <div class="col-md-6 mb-6">
-                    <label class="form-label text">{{context.bodyContext.profileImage}}</label>
-                    <div id="course-image" onclick="getFile()" style="padding-top: 10px; height: 44px;">click to upload
-                      image</div>
-                    <div class="border border-info rounded " style='height: 0px;width: 0px; overflow:hidden;'><input
-                        required id="upfile" type="file" value="upload" onchange="sub(this)" accept="image/*" /></div>
+                    <ul id="subject-links" onclick='toggleCoursePopup("subject-popup")'>
+                    </ul>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-12 mb-4">
-                    <div class="form-check d-flex justify-content-center mb-5">
-                      <label class="form-check-label">
-                        {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
-                          class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
-                      </label>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                      <button type='submit' onclick="sendSigninReq()"
-                        class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
-                        {{context.bodyContext.createCourse}}</button>
-                    </div>
+
+                <div class="col container d-flex align-items-center justify-content-center course-col">
+                  <div onclick='toggleCoursePopup("speciality-popup")'>
+
+                    <div style="font-size: 25px; font-weight:500; margin-bottom: 10px;">specialities</div>
+                    <div id="specialities">ㅤ</div>
+                  </div>
+                  <div class="popup" id="speciality-popup">
+                    <input class="course-input form-control form-control-lg border border-info rounded" type="text"
+                      id="speciality-search-input" placeholder="" onkeyup="specialitySearch()"></input>
+                    <div id="speciality-checkboxes"></div>
                   </div>
                 </div>
-              </form>
+              </div>
+
+
+
+              <div class="row">
+
+                <div class="col container d-flex align-items-center justify-content-center course-col"
+                  onclick='toggleCoursePopup("subject-popup")'>
+                  <div>
+                    <div style="font-size: 25px; font-weight:500; margin-bottom: 10px;">description</div>
+                    <div id="subject">choose</div>
+                  </div>
+                  <div class="popup" id="subject-popup">
+                    <div>
+                      <input class="course-input form-control form-control-lg border border-info rounded" type="text"
+                        id="subject-search-input" onkeyup="subjectSearch()"></input>
+                    </div>
+                    <ul id="subject-links" onclick='toggleCoursePopup("subject-popup")'>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-6">
+                  <label class="form-label text">{{context.bodyContext.profileImage}}</label>
+                  <div id="course-image" onclick="getFile()" style="padding-top: 10px; height: 44px;">click to upload
+                    image</div>
+                  <div class="border border-info rounded " style='height: 0px;width: 0px; overflow:hidden;'><input
+                      required id="upfile" type="file" value="upload" onchange="sub(this)" accept="image/*" /></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 mb-4">
+                  <div class="form-check d-flex justify-content-center mb-5">
+                    <label class="form-check-label">
+                      {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
+                        class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
+                    </label>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <button type='submit' onclick="sendSigninReq()"
+                      class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                      {{context.bodyContext.createCourse}}</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -503,7 +501,10 @@
     var input, filter;
     input = document.getElementById("subject-search-input");
     filter = input.value.toUpperCase();
-    a = document.getElementsByClassName("subject-link-li");
+
+    a = document.getElementsByClassName("subject-li");
+
+    console.log(a)
     for (i = 0; i < a.length; i++) {
       txtValue = a[i].textContent || a[i].innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -562,6 +563,13 @@
       clearCoursePopups()
       subjectPopup.style.display = "block";
       subjectPopup.style.visibility = "visible";
+
+      try {
+        document.getElementById(id.split("-")[0] + "-search-input").focus();
+      }
+      catch {
+
+      }
     }
   }
 
@@ -578,11 +586,10 @@
     displayElement.innerHTML = slide1 + " - " + slide2;
   }
 
-
-  function chooseSubject(subject) {
+  function chooseInput(subject) {
+    clearCoursePopups()
     console.log(subject)
   }
-
 
   window.addEventListener('load', function () {
     axios.get('/get/validSubject').then(res => {
@@ -610,7 +617,7 @@
         }
         for (let i = 0; i < arr.length; i++) {
           node = document.createElement("li");
-          node.innerHTML = `<div class="subject-li" onclick='chooseSubject("${arr[i]}")''>${arr[i]}</div>`;
+          node.innerHTML = `<div class="subject-li" onclick='chooseInput("${arr[i]}")''>${arr[i]}</div>`;
           document.getElementById("subject-links").appendChild(node);
         }
       }
