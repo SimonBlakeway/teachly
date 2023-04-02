@@ -8,7 +8,6 @@ const db = require('../config/db');
 // @route   GET /
 router.get('/', (req, res) => {
   try {
-
     res.render('teach', {
       layout: "main",
       context: contextSetup(req.settings, ["footer"], "teach"),
@@ -26,7 +25,7 @@ router.get('/createCourse', async (req, res) => {
 
     res.render('createCourse', {
       layout: "main",
-      context: contextSetup(req.settings, ["footer"], "createCourse"),
+      context: contextSetup(req.settings, ["navbar", "footer"], "createCourse"),
     })
   }
   catch (err) {
@@ -107,106 +106,5 @@ router.post('/createCourse', async (req, res) => {
     return false
   }
 })
-
-
-
-
-
-// @desc    view user profile
-// @route   GET /user/id
-router.get('/tests/subject/:subject', async (req, res) => {
-  try {
-    subject = req.params.subject
-    if (utils.isValidSubject(req.settings.lang, subject)) {
-      res.render('testSubject', {
-        layout: "main",
-        context: contextSetup(req.settings, ["footer"], "testSubject"),
-      })
-
-    }
-    else {
-      res.sendStatus(404)
-    }
-  } catch (err) {
-    console.log(err)
-    res.json({ "err": err })
-
-  }
-})
-
-// @desc    test speciality
-// @route   GET /user/id
-router.get('/tests/speciality/:speciality', async (req, res) => {
-  try {
-    subject = req.params.subject
-    if (utils.isValidSubjectSpeciality(subject)) {
-      res.render('testSpeciality', {
-        layout: "main",
-        context: contextSetup(req.settings, ["footer"], "testSpeciality"),
-      })
-
-    }
-  }
-  catch (err) {
-    console.log(err)
-    serialize.json(err)
-  }
-})
-
-
-
-// @desc    view user profile
-// @route   GET /user/id
-router.post('/tests/:subject', async (req, res) => {
-  subjectObj = req.body
-  subject = req.params.subject
-  if (utils.isValidSubject(subject)) {
-
-    try {
-      result = await db.query(`SELECT "qualifications" FROM user_info WHERE id = $1`, [req.settings.id]);
-
-      if (result.qualifications.subject) {
-
-      }
-
-
-    } catch (error) {
-      console.log(error)
-      res.json({ "err": "no idea what heppened here" })
-    }
-
-
-
-
-
-  }
-})
-
-// @desc    view user profile
-// @route   GET /user/id
-router.post('/tests/:speciality', async (req, res) => {
-  specialityObj = req.body
-  speciality = req.params.subject
-  if (utils.isValidSubjectSpeciality(subject)) {
-
-    try {
-      result = await db.query(`SELECT "qualifications" FROM user_info WHERE id = $1`, [req.settings.id]);
-
-
-
-    } catch (error) {
-      console.log(error)
-    }
-
-
-
-
-
-  }
-})
-
-
-
-
 
 module.exports = router

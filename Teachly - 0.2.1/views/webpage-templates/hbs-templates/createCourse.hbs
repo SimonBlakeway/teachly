@@ -1,25 +1,511 @@
 <style>
+  #create-course {
+    /* fallback for old browsers */
+    background: rgb(85, 138, 230);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to bottom right, rgba(3, 71, 117), rgba(85, 138, 230));
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to bottom right, rgb(3, 71, 117), rgb(85, 138, 230));
+    height: 80%;
+    width: 100%;
+    font-size: 18px;
+    margin-top: -140px;
+  }
+
+  .profile-input {
+    font-size: 222px;
+    font-family: calibri;
+    width: 100%;
+    padding: 0px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #0baecf;
+    text-align: center;
+    background-color: rgb(210, 233, 231);
+    cursor: pointer;
+  }
+
+  #profile-image {
+    font-size: 15px;
+    font-family: calibri;
+    width: 100%;
+    height: 46px;
+    padding: 4px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #0baecf;
+    text-align: center;
+    background-color: rgb(210, 233, 231);
+    cursor: pointer;
+  }
+
+  .popup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 40%;
+    height: 40%;
+    padding: 20px;
+    background: cyan;
+    border-radius: 20px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 500px) {
+    .popup {
+      width: 80%;
+      height: 45%;
+    }
+
+    .email-input-form {
+      padding: 10px;
+      max-width: 600px;
+      top: 10%;
+      left: 10%;
+    }
+
+    .profile-input {
+      width: 80%;
+    }
+  }
+
+  @media screen and (max-width: 300px) {
+    .popup {
+      width: 80%;
+      height: 50%;
+      padding: 0px;
+    }
+
+    .email-input-form {
+      padding: 5px;
+      top: 10%;
+      left: 10%;
+    }
+  }
 
 
+
+
+
+
+  #toggel-search-bar-button {
+    position: relative;
+    background: black;
+    color: white;
+    width: 100% !important;
+    padding-top: 20px;
+    margin: 0px !important;
+    margin-top: -50px !important;
+    margin-bottom: 50px;
+    height: 60px;
+    padding-bottom: 20px;
+    font-family: Verdana, sans-serif;
+  }
+
+  .subject-link-li {
+    text-decoration: none;
+  }
+
+  #product-search-bar {
+    position: relative;
+    background: black;
+    color: white;
+    width: 100% !important;
+    padding-top: 20px;
+    margin: 0px !important;
+    margin-top: -50px !important;
+    margin-bottom: 50px;
+    height: 260px;
+  }
+
+  .product-search-popup {
+    visibility: hidden;
+  }
+
+  section.range-slider {
+    position: relative;
+    width: 200px;
+    height: 35px;
+    text-align: center;
+  }
+
+  section.range-slider input {
+    pointer-events: none;
+    position: absolute;
+    overflow: hidden;
+    left: 0;
+    top: 10px;
+    width: 250px !important;
+    outline: none;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+  }
+
+  section.range-slider input::-webkit-slider-thumb {
+    pointer-events: all;
+    position: relative;
+    z-index: 1;
+    outline: 0;
+  }
+
+  section.range-slider input::-moz-range-thumb {
+    pointer-events: all;
+    position: relative;
+    z-index: 10;
+    -moz-appearance: none;
+    width: 9px;
+  }
+
+  section.range-slider input::-moz-range-track {
+    position: relative;
+    z-index: -1;
+    background-color: rgba(0, 0, 0, 1);
+    border: 0;
+  }
+
+  section.range-slider input:last-of-type::-moz-range-track {
+    -moz-appearance: none;
+    background: none transparent;
+    border: 0;
+  }
+
+  section.range-slider input[type=range]::-moz-focus-outer {
+    border: 0;
+  }
+
+  .popup {
+    position: absolute;
+    z-index: 20;
+    width: 300px;
+    height: 300px;
+    background-color: #ffffff;
+    display: none;
+    visibility: hidden;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: left;
+    overflow: auto;
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+    font-size: 20px;
+    border-radius: 10px;
+    webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-style: solid;
+    border-color: white;
+    border-width: 30px;
+  }
+
+  .popup::-webkit-scrollbar {
+    display: none;
+    /* Safari and Chrome */
+  }
+
+  #pricePerLesson-popup {
+    width: 300px;
+    height: 160px !important;
+    margin-top: 220px;
+    margin-left: 200px;
+    padding: 0px;
+    border-width: 5px;
+  }
+
+  #subject-popup {
+    text-align: left;
+    width: 200px;
+    padding: 10px;
+    overflow: auto;
+    font-size: 20px;
+    margin-top: 400px;
+    padding-left: 20px !important;
+    margin-left: 50px;
+
+  }
+
+  #speciality-popup {
+    width: 280px;
+    height: 300px;
+    padding: 10px;
+    font-size: 20px;
+    margin-left: 80px;
+    margin-top: 400px;
+  }
+
+  #orderBy-popup {
+    width: 240px;
+    height: 200px;
+    margin-top: 270px;
+
+  }
+
+  #timeRange-popup {
+    width: 460px;
+    height: 460px;
+    margin-top: 530px;
+    margin-right: 220px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #taughtIn-popup {
+    width: 200px;
+    height: 400px;
+    margin-left: -35px;
+    margin-top: 500px;
+  }
+
+  .search-bar-popup-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .input-and-text {
+    width: 130px !important;
+    height: 100px !important;
+    color: white;
+    text-align: center;
+  }
+
+  .day-div {
+    background-color: #89c4ff;
+    width: 100% !important;
+    height: 50px;
+    margin: 2px;
+    text-align: center;
+    font-size: 30px;
+    margin: 5px;
+  }
+
+  .time-slot-div {
+    background-color: #89c4ff;
+    border-radius: 12px 6px;
+    width: 85px !important;
+    height: 50px;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+    margin-top: 1px;
+    margin: 2px !important;
+
+  }
+
+  .active-time-slot-div {
+    background-color: #277dd3;
+    border-radius: 14px 7px;
+  }
+
+  .search-bar-button {
+    margin-top: 5px !important;
+    width: 140px !important;
+    height: 40px !important;
+  }
+
+  input {
+    text-align: center;
+  }
+
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  #toggel-search-bar-button {
+    font-size: 30px;
+    position: relative;
+    padding: 10px;
+    z-index: 2323;
+    margin-bottom: 40px !important;
+
+  }
+
+  @media only screen and (max-width: 600px) {
+    #speciality-popup {
+      margin-left: 150px;
+    }
+  }
+
+  @media only screen and (max-width: 450px) {
+    #timeRange-popup {
+      height: 520px;
+      width: 315px !important;
+      margin-right: 140px !important;
+      margin-top: 640px;
+      border-left-width: 3px !important;
+      border-right-width: 3px !important;
+      padding: -5px !important;
+    }
+
+    #pricePerLesson-popup {}
+
+    #subject-popup {
+      margin-left: 100px;
+    }
+
+    #speciality-popup {
+      margin-left: 150px;
+    }
+
+    #orderBy-popup {
+      width: 240px;
+      height: 200px;
+      top: 65px;
+
+    }
+
+    #taughtIn-popup {
+      margin-left: -50px;
+    }
+
+    .search-bar-button {
+      width: 120px !important;
+      height: 40px !important;
+    }
+
+    .search-bar-input {
+      width: 120px !important;
+      height: 40px !important;
+    }
+  }
+
+  @media only screen and (max-width: 770px) {
+
+    #speciality-popup {
+      margin-left: 150px;
+    }
+
+    .input-and-text {
+      width: 140px !important;
+    }
+
+    input {
+      width: 140px !important;
+    }
+
+
+    #product-search-bar {
+
+      padding-top: 40px;
+      padding-bottom: 40px;
+      height: 500px;
+
+    }
+
+    #timeRange-popup {
+      width: 340px !important;
+      height: 520px;
+      border-width: 15px;
+      margin-right: 150px !important;
+      margin-top: 640px;
+    }
+
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+
+    #product-search-bar {
+      display: none;
+      visibility: hidden;
+    }
+
+    #toggel-search-bar-button {
+      display: block;
+      visibility: visible;
+    }
+  }
+
+  @media only screen and (min-width: 770px) {
+    #product-search-bar {
+      display: block;
+      visibility: visible;
+    }
+
+    #toggel-search-bar-button {
+      display: none;
+      visibility: hidden;
+    }
+
+  }
+
+  .fa-circle {
+    color: black;
+  }
 </style>
-<section id="login">
+
+<section id="create-course">
   <section id="form-section">
     <div class="container py-5">
       <div class="row justify-content-center align-items-center h-100">
         <div class="col-12 col-lg-9 col-xl-7">
-          <div class="login-form-color" style="border-radius: 15px; background-color: rgb(210, 233, 231);">
+          <div class="registration-form-color" style="border-radius: 15px; background-color: rgb(210, 233, 231);">
             <div class="p-4 p-md-5">
-              <form onsubmit="return false" class="login-form-color">
+              <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">{{context.bodyContext.registrationForm}}</h3>
+              <form onsubmit="return false" class="registration-form-color">
+                <div class="row">
+
+
+                  <div
+                    class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                    <div class="input-and-text" onclick='toggleSearchBarPopup("subject-popup")'>
+                      <div style="height: 35px;">
+                        Subject Search
+                      </div>
+                      <input class="search-bar-input form-control form-control-lg border border-info rounded"
+                        type="text" id="subject-search-input" style="color:white;" onkeyup="subjectSearch()"></input>
+                    </div>
+                    <div class="product-search-popup popup" id="subject-popup">
+                      <ul id="subject-links">
+
+                      </ul>
+                    </div>
+                  </div>
+
+
+                  <div
+                    class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                    <div class="input-and-text" onclick='toggleSearchBarPopup("speciality-popup")'>
+                      <div style="height: 35px;">
+                        Speciality Search
+                      </div>
+                      <input class="search-bar-input" type="text" id="speciality-search-input" placeholder=""
+                        style="color:white;" onkeyup="specialitySearch()"></input>
+                    </div>
+                    <div class="product-search-popup popup" id="speciality-popup">
+                      <div id="speciality-checkboxes"></div>
+                    </div>
+                  </div>
+
+
+                </div>
                 <div class="row">
                   <div class="col-md-6 mb-6">
-                    <label class="form-label text" for="firstName">{{context.bodyContext.fullName}}</label>
-                    <input required style="height: 20px; font-size: 18px; padding: -10px;" type="text" id="username"
-                      class="form-control form-control-sm border border-info rounded profile-input" />
+                    <label class="form-label text">{{context.bodyContext.password}}</label>
+                    <input required minlength="5" maxlength="256" type="password" id="password"
+                      class="form-control form-control-lg border border-info rounded profile-input"
+                      style="outline:none;" />
                   </div>
                   <div class="col-md-6 mb-6">
-                    <label class="form-label text" for="password">{{context.bodyContext.password}}</label>
-                    <input required style="height: 20px; font-size: 18px; padding: -10px;" type="password" id="password"
-                      class="form-control form-control-sm border border-info rounded profile-input" />
+                    <label class="form-label text">{{context.bodyContext.profileImage}}</label>
+                    <div id="profile-image" onclick="getFile()" style="padding-top: 10px; height: 44px;">click to upload
+                      image</div>
+                    <div class="border border-info rounded " style='height: 0px;width: 0px; overflow:hidden;'><input
+                        required id="upfile" type="file" value="upload" onchange="sub(this)" accept="image/*" /></div>
                   </div>
                 </div>
                 <div class="row">
@@ -31,29 +517,10 @@
                       </label>
                     </div>
                     <div class="d-flex justify-content-center">
-                      <button type='submit' onclick="sendloginReq()"
+                      <button type='submit' onclick="sendSigninReq()"
                         class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
-                        {{context.bodyContext.LOGIN}}</button>
+                        {{context.bodyContext.createCourse}}</button>
                     </div>
-                    <div>
-                      <p class="text-center text-muted mt-5 mb-0 fw-bold text-body">
-                        {{context.bodyContext.or}}
-                      </p>
-                      <p>
-                      <div id="sign-in-with-oauth" class="section" style="text-align: center;">
-                        <a href="/auth/google" class="btn red darken-1" style="width: 250px;">
-                          <i class="fab fa-google left"></i> Log In With Google
-                        </a>
-                        <a href="/auth/facebook" class="btn blue darken-2" style="width: 250px;">
-                          <i class="fab fa-facebook left fa-small"></i> Log In With Facebook
-                        </a>
-                      </div>
-                      </p>
-                    </div>
-                    <p class="text-center text-muted mt-5 mb-0 fw-bold text-body">
-                      {{context.bodyContext.dontHaveAccount}} <a href="\login">
-                        <u>{{context.bodyContext.createOne}}</u></a>
-                    </p>
                   </div>
                 </div>
               </form>
@@ -66,53 +533,234 @@
     </div>
   </section>
 
-  <div id="err-popup" class="popup" style="height: 20%; width: 30%;">
-    <div id="password-err">{{context.bodyContext.errPopup.passwordErr}}</div>
+
+  <div id="email-popup" class="popup">
+    <form onsubmit="return false" id="email-input-form">
+      <label id="email-label" class="text" for="email-input"
+        style="font-size: 18px;">{{context.bodyContext.emailPopup.text}}</label>
+      <br>
+      <input maxlength="5" type="numbers" required type="text" id="email-input"
+        class="form-control form-control-lg border border-info rounded profile-input" />
+      <br>
+      <button id="email-popup-submit" type='submit' onclick="sendEmailCode()"
+        class="btn btn-success btn-block btn-lg">{{context.bodyContext.emailPopup.submitButtonText}}</button>
+    </form>
+  </div>
+
+  <div id="err-popup" class="popup" style="height: 20%; width: 40%;">
+    <div id="email-err">{{context.bodyContext.errPopup.emailErr}}</div>
     <div id="name-err">{{context.bodyContext.errPopup.nameErr}}</div>
   </div>
 
+  <div id="emailcode-err-popup" class="popup" style="height: 10%; width: 20%;">
+    <div>{{context.bodyContext.emailCode.invalidEmailCode}}</div>
+  </div>
+
+
   <script>
-    sendloginReq = async function () {
-      try {
-        formData = {
-          'name': $("#username").val(),
-          'password': $("#password").val(),
-        }
-        res = await axios({
-          method: 'post',
-          url: '/auth/login',
-          data: formData,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        if (res.data.err) {
-          $("#err-popup").attr("display", "grid");
-          document.getElementById("err-popup").style.display = "grid";
-          if (res.data.err == "invalid name") {
-            $('#name-err').show();
-            $('#password-err').hide();
-            setTimeout(function () {
-              $('#err-popup').fadeOut('fast')
-            }, 1000);
-          }
-          if (res.data.err == "invalid password") {
-            $('#name-err').hide();
-            $('#password-err').show();
-            setTimeout(function () {
-              $('#err-popup').fadeOut('fast')
-            }, 1000);
-          }
-        }
-        else {
-          window.location = "/"
-        }
+    function getFile() {
+      document.getElementById("upfile").click();
+    }
+
+    function sub(obj) {
+      var file = obj.value;
+      var fileName = file.split("\\");
+      document.getElementById("profile-image").innerHTML = fileName[fileName.length - 1];
+    }
+
+    sendEmailCode = async function () {
+      emailCode = $("#email-input").val();
+      email = $("#email").val();
+      res = await axios.get('/auth/emailValidation', { params: { "emailCode": emailCode, "email": email } });
+      if (res.data.err) {
+        console.log(res.data.err)
+
+        $("#emailcode-err-popup").attr("display", "grid");
+        setTimeout(function () {
+          $("#emailcode-err-popup").fadeOut('fast')
+        }, 1000);
+
       }
-      catch (err) {
-        console.log(err)
+      else {
+        window.location = "/"
       }
     }
 
 
+
+    sendSigninReq = async function () {
+      try {
+        reader = new FileReader();
+        reader.onloadend = () => {
+          sendReq([$("#username").val(), reader.result, $("#password").val(), $("#email").val()])
+        };
+        reader.readAsDataURL($('#upfile').prop('files')[0])
+
+        sendReq = async function (arr) {
+          try {
+            formData = {
+              'name': arr[0],
+              'profileImage': arr[1],
+              'password': arr[2],
+              'email': arr[3],
+            }
+            res = await axios({
+              method: 'post',
+              url: '/auth/register',
+              data: formData,
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+            if (res.data.err) {
+              $("#err-popup").attr("display", "grid");
+              document.getElementById("err-popup").style.display = "grid";
+              if (res.data.err == "name taken") {
+                $('#name-err').show();
+                $('#email-err').hide();
+                setTimeout(function () {
+                  $('#err-popup').fadeOut('fast')
+                }, 1000);
+              }
+              if (res.data.err == "email taken") {
+                $('#name-err').hide();
+                $('#email-err').show();
+                setTimeout(function () {
+                  $('#err-popup').fadeOut('fast')
+                }, 1000);
+              }
+            }
+            else {
+
+              document.getElementById("email-popup").style.display = "grid";
+              document.getElementById("form-section").style.visibility = "hidden";
+            }
+          }
+          catch (err) {
+            console.log(err)
+          }
+        }
+      }
+      catch {
+
+      }
+    }
   </script>
 </section>
+
+
+<script>
+
+
+  function subjectSearch() {
+    var input, filter;
+    input = document.getElementById("subject-search-input");
+    filter = input.value.toUpperCase();
+    a = document.getElementsByClassName("subject-link-li");
+    for (i = 0; i < a.length; i++) {
+      txtValue = a[i].textContent || a[i].innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        a[i].style.display = "";
+      } else {
+        a[i].style.display = "none";
+      }
+    }
+  }
+
+  function specialitySearch() {
+    var input, filter;
+    input = document.getElementById("speciality-search-input");
+    filter = input.value.toUpperCase();
+    checkboxes = document.getElementsByClassName("speciality-checkboxes-p");
+    for (i = 0; i < checkboxes.length; i++) {
+      txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        checkboxes[i].style.display = "";
+      } else {
+        checkboxes[i].style.display = "none";
+      }
+    }
+  }
+
+  function taughtInSearch() {
+    var input, filter;
+    input = document.getElementById("taughtIn-search-input");
+    filter = input.value.toUpperCase();
+    checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
+    for (i = 0; i < checkboxes.length; i++) {
+      txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        checkboxes[i].style.display = "";
+      } else {
+        checkboxes[i].style.display = "none";
+      }
+    }
+  }
+
+  function clearSearchBarPopups() {
+    popupArr = document.getElementsByClassName("popup")
+    for (i = 0; i < popupArr.length; i++) {
+      popupArr[i].style.display = "none";
+      popupArr[i].style.visibility = "hidden";
+    }
+  }
+
+  function toggleSearchBarPopup(id) {
+    var subjectPopup = document.getElementById(id);
+    if (subjectPopup.style.display == "block") {
+      subjectPopup.style.display = "none";
+      subjectPopup.style.visibility = "hidden";
+    }
+    else {
+      clearSearchBarPopups()
+      subjectPopup.style.display = "block";
+      subjectPopup.style.visibility = "visible";
+    }
+  }
+
+  function getVals() {
+    // Get slider values
+    var parent = this.parentNode;
+    var slides = parent.getElementsByTagName("input");
+    var slide1 = parseFloat(slides[0].value);
+    var slide2 = parseFloat(slides[1].value);
+    // Neither slider will clip the other, so make sure we determine which is larger
+    if (slide1 > slide2) { var tmp = slide2; slide2 = slide1; slide1 = tmp; }
+
+    var displayElement = parent.getElementsByClassName("rangeValues")[0];
+    displayElement.innerHTML = slide1 + " - " + slide2;
+  }
+
+  window.addEventListener('load', function () {
+    axios.get('/get/validSubject').then(res => {
+      if (res.data == "404") { }
+      else {
+        arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+        for (i = 0; i < arr.length; i++) {
+          axios.get(`/get/validSpecialities/${arr[i]}`).then(res => {
+            if (res.data == "404") {
+            }
+            else {
+              arr = res.data
+              for (let i = 0; i < arr.length; i++) {
+                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+                p = document.createElement("p");
+                p.className = "speciality-checkboxes-p";
+                label = document.createElement("label");
+                label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
+                label.innerHTML = `<input onclick="updateformData('specialities', '${arr[i].replaceAll(" ", "-")}')"  type="checkbox" id="${arr[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")} checkbox" value="${arr[i]}-checkbox"><span>${arr[i]}</label>`
+                p.appendChild(label);
+                document.getElementById("speciality-checkboxes").appendChild(p);
+              }
+            }
+          })
+        }
+        for (let i = 0; i < arr.length; i++) {
+          node = document.createElement("li");
+          node.innerHTML = `<a class="subject-link-li" href="/learn/${arr[i]}">${arr[i]}</a>`;
+          document.getElementById("subject-links").appendChild(node);
+        }
+      }
+    })
+  })
+</script>
