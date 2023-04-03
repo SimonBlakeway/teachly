@@ -28,16 +28,19 @@
         min-width: 170px;
         font-size: 20px;
     }
+
     .nav-link {
         color: aliceblue !important;
         width: fit-content !important;
+        margin: 0px !important;
         display: inline;
         min-width: 170px;
         font-size: 20px;
         text-align: center;
         background-color: rgb(26, 24, 24);
         margin-top: -3px !important;
-        height: 10vh;
+        height: 8vh;
+        padding-top: 10px !important;
     }
 
     #toggle-nav {
@@ -90,17 +93,20 @@
     #language-popup {
         width: 200px;
         height: 400px;
-        margin-left: 70%;
-        margin-top: -200px;
+        margin-left: 8s0%;
+        margin-top: -100px;
+        z-index: 1212121;
 
     }
 
     #currency-popup {
         width: 200px;
         height: 400px;
-        margin-left: -35px;
-        margin-top: 500px;
+        margin-left: 70%;
+        margin-top: -100px;
     }
+
+    @media only screen and (max-width: 960px) {}
 
     @media only screen and (max-width: 960px) {
 
@@ -126,7 +132,7 @@
     }
 </style>
 
-<nav class="navbar">
+<nav class="navbar" onclick="clearNavPopups()">
     <div id="toggle-nav">
         <div style="height: 10vh;">
             <a class="navbar-brand" style="font-size: 30px;" href="\ ">Teachly</a>
@@ -134,9 +140,11 @@
         <div style="font-size: 30px;">
             <i onclick="toggleNav()" class="fa fa-bars" style="height: 25px; color:aliceblue"></i>
         </div>
-        <div id="settings-buttons">
-            <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary">{{settings.lang}}</button>
-            <button onclick="toggleNavPopup('currency-popup')" type="button" class="btn btn-primary">{{settings.cur}}</button>
+        <div id="settings-buttons" onclick="event.stopPropagation();">
+            <button onclick="toggleNavPopup('language-popup')" type="button"
+                class="btn btn-primary">{{settings.lang}}</button>
+            <button onclick="toggleNavPopup('currency-popup')" type="button"
+                class="btn btn-primary">{{settings.cur}}</button>
         </div>
     </div>
     <div id="navlist" class="row d-flex align-items-center justify-content-center">
@@ -167,11 +175,13 @@
 
 
 
-        <div id="settings-buttons-list" class=""
-            style="width: 130px !important; float:right;">
-            <div  style="margin-top: -20px !important;" >
-                <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary">{{settings.lang}}</button>
-                <button onclick="toggleNavPopup('currency-popup')" type="button" class="btn btn-primary">{{settings.cur}}</button>
+        <div id="settings-buttons-list" class="" style="width: 130px !important; float:right;"
+            onclick="event.stopPropagation();">
+            <div style="margin-top: -20px !important;">
+                <button onclick="toggleNavPopup('language-popup')" type="button"
+                    class="btn btn-primary">{{settings.lang}}</button>
+                <button onclick="toggleNavPopup('currency-popup')" type="button"
+                    class="btn btn-primary">{{settings.cur}}</button>
             </div>
         </div>
 
@@ -275,20 +285,20 @@
 
     function toggleNavPopup(id) {
         var popup = document.getElementById(id);
-
-        if (popup.style.display == "block") {
-            popup.style.display = "none";
-            popup.style.visibility = "hidden";
-        }
-        else {
+        if ((popup.style.display != "block")) {
             clearNavPopups()
             popup.style.display = "block";
             popup.style.visibility = "visible";
+
+        }
+        else {
+            popup.style.display = "none";
+            popup.style.visibility = "hidden";
         }
     }
 
     function clearNavPopups() {
-        popupArr = document.getElementsByClassName("popup")
+        popupArr = document.getElementsByClassName("nav-popup")
         for (i = 0; i < popupArr.length; i++) {
             popupArr[i].style.display = "none";
             popupArr[i].style.visibility = "hidden";
