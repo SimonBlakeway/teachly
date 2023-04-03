@@ -12,27 +12,30 @@
     #navlist {
         padding: 0px;
         margin: 0px;
-        list-style: none;
         display: flex;
-        background: black;
+        background-color: black !important;
         width: 100%;
-        height: 10vh;
-        justify-content: space-around;
-        align-items: center;
-        flex-wrap: wrap;
+        height: auto;
+        padding-top: 5px;
+        padding-bottom: -5px;
+
+
     }
 
-    #navlist li {
-        text-align: center;
-        color: white;
-        padding-left: 5px;
+    .nav-link {
+        color: aliceblue !important;
+        width: fit-content !important;
+        display: inline;
+        min-width: 170px;
         font-size: 20px;
+        text-align: center;
+        background-color: rgb(26, 24, 24);
+        margin-top: -3px !important;
         height: 10vh;
-
-
     }
 
     #toggle-nav {
+        height: 10vh !important;
         margin: auto;
         cursor: pointer;
         flex-wrap: wrap;
@@ -41,9 +44,59 @@
         display: none;
         justify-content: space-around;
         width: 100%;
+        padding: 0px;
+        margin-top: -5px;
     }
 
-    @media only screen and (max-width: 650px) {
+    .nav-popup {
+        position: absolute;
+        z-index: 20;
+        width: 300px;
+        height: 300px;
+        background-color: #ffffff;
+        display: none;
+        visibility: hidden;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        text-align: left;
+        overflow: auto;
+        -ms-overflow-style: none;
+        /* Internet Explorer 10+ */
+        scrollbar-width: none;
+        /* Firefox */
+        font-size: 20px;
+        border-radius: 10px;
+        webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border-style: solid;
+        border-color: white;
+        border-width: 30px;
+    }
+
+    .nav-popup::-webkit-scrollbar {
+        display: none;
+        /* Safari and Chrome */
+    }
+
+    #language-popup {
+        width: 200px;
+        height: 400px;
+        margin-left: 70%;
+        margin-top: -200px;
+
+    }
+
+    #currency-popup {
+        width: 200px;
+        height: 400px;
+        margin-left: -35px;
+        margin-top: 500px;
+    }
+
+    @media only screen and (max-width: 960px) {
 
         #toggle-nav {
             visibility: visible;
@@ -54,52 +107,106 @@
             visibility: hidden;
             display: none;
         }
+
+        #navlist {
+            padding: 10px;
+            height: auto;
+            padding-bottom: 0px;
+        }
+
+        .nav-link {
+            margin: 5px !important;
+        }
     }
 </style>
 
 <nav class="navbar">
     <div id="toggle-nav">
-        <div>
-            <a class="navbar-brand" href="\ ">Teachly</a>
+        <div style="height: 10vh;">
+            <a class="navbar-brand" style="font-size: 30px;" href="\ ">Teachly</a>
         </div>
-        <div>
-            <i onclick="toggleNav()" class="fa fa-bars" style="height: 25px;"></i>
+        <div style="font-size: 30px;">
+            <i onclick="toggleNav()" class="fa fa-bars" style="height: 25px; color:aliceblue"></i>
         </div>
         <div id="settings-buttons">
-            <button type="button" class="btn btn-primary">{{settings.lang}}</button>
-            <button type="button" class="btn btn-primary">{{settings.cur}}</button>
+            <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary">{{settings.lang}}</button>
+            <button onclick="toggleNavPopup('currency-popup')" type="button" class="btn btn-primary">{{settings.cur}}</button>
         </div>
     </div>
-    <ul id="navlist">
-        <li><a style="height: 10vh !important;" class="navbar-brand" href="\learn">{{navbarContext.findTutor}}</a></li>
-        <li><a style="height: 10vh !important;" class="navbar-brand" href="\teach">{{navbarContext.becomeTutor}}</a>
-        </li>
-        <li><a style="height: 10vh !important;" class="navbar-brand" href="\register">{{navbarContext.signUp}}</a></li>
-        <li><a style="height: 10vh !important;" class="navbar-brand" href="\login">{{navbarContext.login}}</a></li>
+    <div id="navlist" class="row d-flex align-items-center justify-content-center">
 
-        <div id="settings-buttons-list" style="float:right; margin-right: 20px;">
-            <button type="button" class="btn btn-primary">{{settings.lang}}</button>
-            <button type="button" class="btn btn-primary">{{settings.cur}}</button>
+
+        <div class="col d-flex align-items-center justify-content-center">
+            <div class="row d-flex align-items-center justify-content-center">
+                <div class="col d-flex align-items-center justify-content-center">
+                    <a class="navbar-brand nav-link" href="\learn">{{navbarContext.findTutor}}</a>
+                </div>
+                <div class="col d-flex align-items-center justify-content-center">
+                    <a class="navbar-brand nav-link" href="\teach">{{navbarContext.becomeTutor}}</a>
+                </div>
+            </div>
         </div>
 
-    </ul>
+
+        <div class="col d-flex align-items-center justify-content-center">
+            <div class="row d-flex align-items-center justify-content-center">
+                <div class="col d-flex align-items-center justify-content-center">
+                    <a class="navbar-brand nav-link" href="\register">{{navbarContext.signUp}}</a>
+                </div>
+                <div class="col d-flex align-items-center justify-content-center">
+                    <a class="navbar-brand nav-link" href="\login">{{navbarContext.login}}</a>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="settings-buttons-list" class=""
+            style="width: 130px !important; float:right;">
+            <div  style="margin-top: -20px !important;" >
+                <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary">{{settings.lang}}</button>
+                <button onclick="toggleNavPopup('currency-popup')" type="button" class="btn btn-primary">{{settings.cur}}</button>
+            </div>
+        </div>
+
+    </div>
 </nav>
 
+<div class="nav-popup" id="language-popup">
+    <div>
+        <input class="course-input form-control form-control-lg border border-info rounded" type="text"
+            id="subject-search-input" onkeyup="navlangSearch()"></input>
+    </div>
+    <ul id="subject-links" onclick=''>
+    </ul>
+</div>
+
+
+<div class="nav-popup" id="currency-popup">
+    <div>
+        <input class="course-input form-control form-control-lg border border-info rounded" type="text"
+            id="subject-search-input" onkeyup="navCurSearch()"></input>
+    </div>
+    <ul id="subject-links" onclick=''>
+    </ul>
+</div>
 
 
 <script>
-
     var nav = document.getElementById('navlist');
 
-    if (window.innerWidth > 650) {
-        nav.style.visibility = "visible";
-        nav.style.display = "block";
+    function windowResizeHandler() {
+        if (window.innerWidth > 960) {
+            nav.style.visibility = "visible";
+            nav.style.display = "block";
+
+        }
+        else {
+            nav.style.display = "none";
+            nav.style.visibility = "hidden";
+        }
     }
-    else {
-        nav.style.display = "none";
-        nav.style.visibility = "hidden";
-    }
- 
+
     function toggleNav() {
 
         if (nav.style.display === "none") {
@@ -113,19 +220,130 @@
         }
     }
 
-    function windowResizeHandler() {
-        if (window.innerWidth > 650) {
+
+    function navLangSearch() {
+        var input, filter;
+        input = document.getElementById("taughtIn-search-input");
+        filter = input.value.toUpperCase();
+        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
+        for (i = 0; i < checkboxes.length; i++) {
+            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                checkboxes[i].style.display = "";
+            } else {
+                checkboxes[i].style.display = "none";
+            }
+        }
+    }
+
+    function navCurSearch() {
+        var input, filter;
+        input = document.getElementById("taughtIn-search-input");
+        filter = input.value.toUpperCase();
+        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
+        for (i = 0; i < checkboxes.length; i++) {
+            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                checkboxes[i].style.display = "";
+            } else {
+                checkboxes[i].style.display = "none";
+            }
+        }
+    }
+
+
+    function changeNavSettings(type, val) {
+        var input, filter;
+        input = document.getElementById("taughtIn-search-input");
+        filter = input.value.toUpperCase();
+        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
+        for (i = 0; i < checkboxes.length; i++) {
+            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                checkboxes[i].style.display = "";
+            } else {
+                checkboxes[i].style.display = "none";
+            }
+        }
+    }
+
+    function toggleNavPopup(id) {
+        var popup = document.getElementById(id);
+
+        if (popup.style.display == "block") {
+            popup.style.display = "none";
+            popup.style.visibility = "hidden";
+        }
+        else {
+            clearNavPopups()
+            popup.style.display = "block";
+            popup.style.visibility = "visible";
+        }
+    }
+
+    function clearNavPopups() {
+        popupArr = document.getElementsByClassName("popup")
+        for (i = 0; i < popupArr.length; i++) {
+            popupArr[i].style.display = "none";
+            popupArr[i].style.visibility = "hidden";
+        }
+    }
+
+
+    window.addEventListener('load', function () {
+
+        var nav = document.getElementById('navlist');
+
+        if (window.innerWidth > 960) {
             nav.style.visibility = "visible";
             nav.style.display = "block";
-
         }
         else {
             nav.style.display = "none";
             nav.style.visibility = "hidden";
         }
-    }
 
-    window.addEventListener("resize", windowResizeHandler);
+        window.addEventListener("resize", windowResizeHandler);
+
+
+
+
+
+
+
+        axios.get('/get/validSubject').then(res => {
+            if (res.data == "404") { }
+            else {
+                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+                for (i = 0; i < arr.length; i++) {
+                    axios.get(`/get/validSpecialities/${arr[i]}`).then(res => {
+                        if (res.data == "404") {
+                        }
+                        else {
+                            arr = res.data
+                            for (let i = 0; i < arr.length; i++) {
+                                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+                                p = document.createElement("p");
+                                p.className = "speciality-checkboxes-p";
+                                label = document.createElement("label");
+                                label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
+                                label.innerHTML = `<input type="checkbox" id="${arr[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")} checkbox" value="${arr[i]}-checkbox"><span>${arr[i]}</label>`
+                                p.appendChild(label);
+                                document.getElementById("speciality-checkboxes").appendChild(p);
+                            }
+                        }
+                    })
+                }
+                for (let i = 0; i < arr.length; i++) {
+                    node = document.createElement("li");
+                    node.innerHTML = `<div class="subject-li" onclick='chooseInput("${arr[i]}")''>${arr[i]}</div>`;
+                    document.getElementById("subject-links").appendChild(node);
+                }
+            }
+        })
+    })
+
+
 
 
 
