@@ -27,6 +27,7 @@
         display: inline;
         min-width: 170px;
         font-size: 20px;
+    }
     .nav-link {
         color: aliceblue !important;
         width: fit-content !important;
@@ -200,15 +201,18 @@
 <script>
     var nav = document.getElementById('navlist');
 
-    if (window.innerWidth > 650) {
-        nav.style.visibility = "visible";
-        nav.style.display = "block";
+    function windowResizeHandler() {
+        if (window.innerWidth > 960) {
+            nav.style.visibility = "visible";
+            nav.style.display = "block";
+
+        }
+        else {
+            nav.style.display = "none";
+            nav.style.visibility = "hidden";
+        }
     }
-    else {
-        nav.style.display = "none";
-        nav.style.visibility = "hidden";
-    }
- 
+
     function toggleNav() {
 
         if (nav.style.display === "none") {
@@ -222,8 +226,81 @@
         }
     }
 
-    function windowResizeHandler() {
-        if (window.innerWidth > 650) {
+
+    function navLangSearch() {
+        var input, filter;
+        input = document.getElementById("taughtIn-search-input");
+        filter = input.value.toUpperCase();
+        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
+        for (i = 0; i < checkboxes.length; i++) {
+            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                checkboxes[i].style.display = "";
+            } else {
+                checkboxes[i].style.display = "none";
+            }
+        }
+    }
+
+    function navCurSearch() {
+        var input, filter;
+        input = document.getElementById("taughtIn-search-input");
+        filter = input.value.toUpperCase();
+        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
+        for (i = 0; i < checkboxes.length; i++) {
+            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                checkboxes[i].style.display = "";
+            } else {
+                checkboxes[i].style.display = "none";
+            }
+        }
+    }
+
+
+    function changeNavSettings(type, val) {
+        var input, filter;
+        input = document.getElementById("taughtIn-search-input");
+        filter = input.value.toUpperCase();
+        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
+        for (i = 0; i < checkboxes.length; i++) {
+            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                checkboxes[i].style.display = "";
+            } else {
+                checkboxes[i].style.display = "none";
+            }
+        }
+    }
+
+    function toggleNavPopup(id) {
+        var popup = document.getElementById(id);
+
+        if (popup.style.display == "block") {
+            popup.style.display = "none";
+            popup.style.visibility = "hidden";
+        }
+        else {
+            clearNavPopups()
+            popup.style.display = "block";
+            popup.style.visibility = "visible";
+        }
+    }
+
+    function clearNavPopups() {
+        popupArr = document.getElementsByClassName("popup")
+        for (i = 0; i < popupArr.length; i++) {
+            popupArr[i].style.display = "none";
+            popupArr[i].style.visibility = "hidden";
+        }
+    }
+
+
+    window.addEventListener('load', function () {
+
+        var nav = document.getElementById('navlist');
+
+        if (window.innerWidth > 960) {
             nav.style.visibility = "visible";
             nav.style.display = "block";
         }
