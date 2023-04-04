@@ -94,6 +94,7 @@ function contextSetup(settings, partials = [], pageName) {
     return context
   }
   catch (err) {
+    console.log(err)
     return {}
   }
 }

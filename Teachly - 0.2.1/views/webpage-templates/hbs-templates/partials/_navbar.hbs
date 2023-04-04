@@ -1,148 +1,16 @@
-<style>
-    .navbar {
-        position: relative;
-        background: black;
-        width: 100%;
-        padding: 0px;
-        margin: 0px;
-        margin-bottom: 20vh;
-        height: 10vh;
-    }
-
-    #navlist {
-        padding: 0px;
-        margin: 0px;
-        display: flex;
-        background-color: black !important;
-        width: 100%;
-        height: auto;
-        padding-top: 5px;
-        padding-bottom: 5px;
-
-    }
-
-    .nav-link {
-        color: aliceblue !important;
-        width: fit-content !important;
-        display: inline;
-        min-width: 170px;
-        font-size: 20px;
-    }
-
-    .nav-link {
-        color: aliceblue !important;
-        width: fit-content !important;
-        margin: 0px !important;
-        display: inline;
-        min-width: 170px;
-        font-size: 20px;
-        text-align: center;
-        background-color: rgb(26, 24, 24);
-        margin-top: -3px !important;
-        height: 8vh;
-        padding-top: 10px !important;
-    }
-
-    #toggle-nav {
-        height: 10vh !important;
-        margin: auto;
-        cursor: pointer;
-        flex-wrap: wrap;
-        align-items: center;
-        visibility: hidden;
-        display: none;
-        justify-content: space-around;
-        width: 100%;
-        padding: 0px;
-        margin-top: -5px;
-    }
-
-    .nav-popup {
-        position: absolute;
-        z-index: 20;
-        width: 300px;
-        height: 300px;
-        background-color: #ffffff;
-        display: none;
-        visibility: hidden;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        text-align: left;
-        overflow: auto;
-        -ms-overflow-style: none;
-        /* Internet Explorer 10+ */
-        scrollbar-width: none;
-        /* Firefox */
-        font-size: 20px;
-        border-radius: 10px;
-        webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        border-style: solid;
-        border-color: white;
-        border-width: 30px;
-    }
-
-    .nav-popup::-webkit-scrollbar {
-        display: none;
-        /* Safari and Chrome */
-    }
-
-    #language-popup {
-        width: 200px;
-        height: 400px;
-        margin-left: 8s0%;
-        margin-top: -100px;
-        z-index: 1212121;
-
-    }
-
-    #currency-popup {
-        width: 200px;
-        height: 400px;
-        margin-left: 70%;
-        margin-top: -100px;
-    }
-
-    @media only screen and (max-width: 960px) {}
-
-    @media only screen and (max-width: 960px) {
-
-        #toggle-nav {
-            visibility: visible;
-            display: flex;
-        }
-
-        #settings-buttons-list {
-            visibility: hidden;
-            display: none;
-        }
-
-        #navlist {
-            padding: 10px;
-            height: auto;
-            padding-bottom: 0px;
-        }
-
-        .nav-link {
-            margin: 5px !important;
-        }
-    }
-</style>
+<link rel="stylesheet" href="/css/navbar.css">
 
 <nav class="navbar" onclick="clearNavPopups()">
     <div id="toggle-nav">
         <div style="height: 10vh;">
             <a class="navbar-brand" style="font-size: 30px;" href="\ ">Teachly</a>
         </div>
-        <div style="font-size: 30px;">
+        <div style="font-size: 30px; margin-right:10px;">
             <i onclick="toggleNav()" class="fa fa-bars" style="height: 25px; color:aliceblue"></i>
         </div>
         <div id="settings-buttons" onclick="event.stopPropagation();">
             <button onclick="toggleNavPopup('language-popup')" type="button"
-                class="btn btn-primary">{{settings.lang}}</button>
+                class="btn btn-primary" style="text-transform: uppercase;">{{settings.lang}}</button>
             <button onclick="toggleNavPopup('currency-popup')" type="button"
                 class="btn btn-primary">{{settings.cur}}</button>
         </div>
@@ -179,7 +47,7 @@
             onclick="event.stopPropagation();">
             <div style="margin-top: -20px !important;">
                 <button onclick="toggleNavPopup('language-popup')" type="button"
-                    class="btn btn-primary">{{settings.lang}}</button>
+                    class="btn btn-primary" style="text-transform: uppercase;">{{settings.lang}}</button>
                 <button onclick="toggleNavPopup('currency-popup')" type="button"
                     class="btn btn-primary">{{settings.cur}}</button>
             </div>
@@ -188,23 +56,33 @@
     </div>
 </nav>
 
-<div class="nav-popup" id="language-popup">
-    <div>
-        <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-            id="subject-search-input" onkeyup="navlangSearch()"></input>
+<div id="nav-popup-holder">
+    <div style="float: right; margin-right:0px;">
+        <div style="margin-left:-255px;">
+            <div class="nav-popup" id="language-popup">
+                <div style="text-align: center; margin: 10px; font-size:25px">language</div>
+                <div class="d-flex align-items-center justify-content-center">
+                    <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
+                        id="nav-language-search-input" style="width: 120px !important;"
+                        onkeyup="navLangSearch()"></input>
+                </div>
+                <ul id="language-change" class="nav-list">
+                </ul>
+            </div>
+        </div>
+        <div style="margin-left:-210px;">
+            <div class="nav-popup" id="currency-popup">
+                <div style="text-align: center; margin: 10px; font-size:25px">currency</div>
+                <div class="d-flex align-items-center justify-content-center">
+                    <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
+                        id="nav-currency-search-input" style="width: 80px !important; text-transform: uppercase;"
+                        onkeyup="navCurSearch()"></input>
+                </div>
+                <ul id="currency-change" class="nav-list">
+                </ul>
+            </div>
+        </div>
     </div>
-    <ul id="subject-links" onclick=''>
-    </ul>
-</div>
-
-
-<div class="nav-popup" id="currency-popup">
-    <div>
-        <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-            id="subject-search-input" onkeyup="navCurSearch()"></input>
-    </div>
-    <ul id="subject-links" onclick=''>
-    </ul>
 </div>
 
 
@@ -239,48 +117,49 @@
 
     function navLangSearch() {
         var input, filter;
-        input = document.getElementById("taughtIn-search-input");
+        input = document.getElementById("nav-language-search-input");
         filter = input.value.toUpperCase();
-        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
-        for (i = 0; i < checkboxes.length; i++) {
-            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+        list = document.getElementById("language-change").children;
+        for (i = 0; i < list.length; i++) {
+            txtValue = list[i].textContent || list[i].innerHTML;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                checkboxes[i].style.display = "";
+                list[i].style.display = "block";
             } else {
-                checkboxes[i].style.display = "none";
+                list[i].style.display = "none";
             }
         }
     }
 
     function navCurSearch() {
         var input, filter;
-        input = document.getElementById("taughtIn-search-input");
+        input = document.getElementById("nav-currency-search-input");
         filter = input.value.toUpperCase();
-        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
-        for (i = 0; i < checkboxes.length; i++) {
-            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
+        list = document.getElementById("currency-change").children;
+        for (i = 0; i < list.length; i++) {
+            txtValue = list[i].textContent || list[i].innerHTML;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                checkboxes[i].style.display = "";
+                list[i].style.display = "block";
             } else {
-                checkboxes[i].style.display = "none";
+                list[i].style.display = "none";
             }
         }
     }
 
 
-    function changeNavSettings(type, val) {
-        var input, filter;
-        input = document.getElementById("taughtIn-search-input");
-        filter = input.value.toUpperCase();
-        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
-        for (i = 0; i < checkboxes.length; i++) {
-            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                checkboxes[i].style.display = "";
-            } else {
-                checkboxes[i].style.display = "none";
-            }
+    function changeNavSettings(settingName, change) {
+
+        changeObj = {
+            settingName: settingName,
+            change: change
         }
+
+        axios.post('/auth/settings', changeObj)
+            .then(res => {
+                window.location.reload();
+            })
+            .catch(err => {
+                console.log(error);
+            });
     }
 
     function toggleNavPopup(id) {
@@ -289,6 +168,12 @@
             clearNavPopups()
             popup.style.display = "block";
             popup.style.visibility = "visible";
+            try {
+                document.getElementById("nav-" + id.split("-")[0] + "-search-input").focus(); //auto focus on input in popup
+            }
+            catch {
+
+            }
 
         }
         else {
@@ -323,37 +208,27 @@
 
 
 
+        axios.get('/get/validLanguages').then(res => {
+            if (res.data == "404") { }
+            else {
+                arr = res.data.sort((a, b) => {return a[0].localeCompare(b[0], userLang)})
+                for (let i = 0; i < arr.length; i++) {
+                    node = document.createElement("li");
+                    node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${arr[i][1]}")'>${arr[i][0]}</div>`;
+                    document.getElementById("language-change").appendChild(node);
+                }
+            }
+        })
 
 
-
-
-        axios.get('/get/validSubject').then(res => {
+        axios.get('/get/validCurrencies').then(res => {
             if (res.data == "404") { }
             else {
                 arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-                for (i = 0; i < arr.length; i++) {
-                    axios.get(`/get/validSpecialities/${arr[i]}`).then(res => {
-                        if (res.data == "404") {
-                        }
-                        else {
-                            arr = res.data
-                            for (let i = 0; i < arr.length; i++) {
-                                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-                                p = document.createElement("p");
-                                p.className = "speciality-checkboxes-p";
-                                label = document.createElement("label");
-                                label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
-                                label.innerHTML = `<input type="checkbox" id="${arr[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")} checkbox" value="${arr[i]}-checkbox"><span>${arr[i]}</label>`
-                                p.appendChild(label);
-                                document.getElementById("speciality-checkboxes").appendChild(p);
-                            }
-                        }
-                    })
-                }
                 for (let i = 0; i < arr.length; i++) {
                     node = document.createElement("li");
-                    node.innerHTML = `<div class="subject-li" onclick='chooseInput("${arr[i]}")''>${arr[i]}</div>`;
-                    document.getElementById("subject-links").appendChild(node);
+                    node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
+                    document.getElementById("currency-change").appendChild(node);
                 }
             }
         })

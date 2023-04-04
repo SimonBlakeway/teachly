@@ -229,30 +229,66 @@ exports.logout = function (req, res) {
   }
 
 };
-exports.cookieSettings = function (req, res) {
-  /* 
-   * there's a lot of dangers/issues in this route
+exports.settings = function (req, res) {
+
+  /**
+   * this route is for relatively unimportant changes, like languge, name,
+   *  font-size, profile image etc... 
    * 
-   * first off, the route gives anybody the ability to change the user cookie,
-   * as long as the user has a cookie he can call someting like
-   * host//auth/cookieSettings?name=user_refresh_token&change=wehfwhfbfbqiehffnjfniinfq
-   * that would set an important cookie setting to anything at all, very dangerous
-   * 
-   * it should also(once proven safe), update user settings in the db
-   *  
+   * no security changes
    */
-  if (req.cookies.userCookie) {
-    userCookie = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
-    userCookie[`${req.body.name}`] = req.body.change
-    res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-  }
-  else {
-    settings = {
-      lang: req.settings.lang,
-      cur: req.settings.cur
+
+  validSettings = ["lang", "cur"]
+
+  try {
+    change = req.body
+    console.log(req.settings)
+
+    if ((req.cookies.userCookie)) {
+      if (validSettings.includes(change.settingName) && (Object.keys(change).length != 0)) {
+        if (req.cookies.userRefreshToken) {
+
+          userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
+          userRefreshToken = jwt.decode(req.cookies.userRefreshToken, process.env.JWT_SECRET)
+
+
+          res.cookie('userCookie', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+          res.cookie('userRefreshToken', userRefreshToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+        }
+        else {
+          userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
+
+          userToken[`${change.settingName}`] = change.change
+          settings = jwt.encode(userToken, process.env.JWT_SECRET)
+          console.log(userToken)
+
+
+          res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+        }
+      }
+      else {
+        res.sendStatus(400)
+        return
+      }
+
     }
-    settings = jwt.encode(settings, process.env.JWT_SECRET)
-    res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+
+    else {
+      settings = {
+        lang: req.settings.lang,
+        cur: req.settings.cur
+      }
+      settings = jwt.encode(settings, process.env.JWT_SECRET)
+      res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+    }
+
+
+
+    res.sendStatus(200)
+
+  } catch (error) {
+    console.log(error)
+    res.sendStatus(500)
+    return
   }
-  res.sendStatus(200)
-};
+}

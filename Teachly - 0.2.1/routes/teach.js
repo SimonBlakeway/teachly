@@ -22,6 +22,7 @@ router.get('/', (req, res) => {
 // @route   POST /
 router.get('/createCourse', async (req, res) => {
   try {
+    console.log(req.settings)
 
     res.render('createCourse', {
       layout: "main",

@@ -27,7 +27,7 @@ router.get("/loginWithFacebook",  authController.facebookLogin);
 
 // @desc    this changes user http cookie settings, if it doesn't exist it creates it then adds settings
 // @route   GET /
-router.post('/settings', authController.cookieSettings)
+router.post('/settings', bodyParser.json({ limit: "50mb" }), authController.settings)
 
 // @desc    this route gets the email and email verificatiob code then validates the email address then logs the user in
 // @route   GET /

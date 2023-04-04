@@ -7,7 +7,7 @@ const exphbs  = require('express-handlebars');
 const app = express()
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser'); 
-//cors = require('cors'); // usefull, but a security risk
+//cors = require('cors'); // useful, but a security risk
 const db = require('./config/db');
 const customTimers = require('./customTimers');
 
@@ -16,7 +16,7 @@ dotenv.config(dotenv.config({ path: './config/config.env' }));
 
 
 //setting up the timers
-//customTimers.timerSetup() 
+customTimers.timerSetup() 
 
 // Body parser
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }))

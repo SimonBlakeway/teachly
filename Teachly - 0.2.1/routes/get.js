@@ -10,14 +10,31 @@ const { json } = require('body-parser');
 
 validSpecialitiesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validspecialities.json`))
 validSubjectObj = JSON.parse(fs.readFileSync(`./private_resources/json/validSubject.json`))
-validLanguagesArr = JSON.parse(fs.readFileSync(`./private_resources/json/validLanguages.json`))
 
 
-// @desc    get supported languages
+validLanguagesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validLanguages.json`))
+validLanguagesArr = []
+
+for (i = 0; i < validLanguagesObj.fullName.length; i++) {
+  validLanguagesArr[i] = [validLanguagesObj.fullName[i], validLanguagesObj.code[i]];
+}
+
+// @desc    get supported languages full names
 // @route   GET /
 router.get('/validLanguagesFullName', (req, res) => {
   try {
-    res.send(validLanguagesArr.fullName)
+    res.send(validLanguagesObj.fullName)
+  } catch (error) {
+    res.sendStatus(404)
+  }
+})
+
+
+// @desc    get supported languages with code
+// @route   GET /
+router.get('/validLanguages', (req, res) => {
+  try {
+    res.send(validLanguagesArr)
   } catch (error) {
     res.sendStatus(404)
   }
@@ -65,7 +82,7 @@ router.get('/images/profile/:id', (req, res) => {
   })
 })
 
-// @desc    get images
+// @desc    get currency ratio
 // @route   GET /
 router.get('/curConversionRatio/:cur', (req, res) => {
   try {
@@ -73,6 +90,18 @@ router.get('/curConversionRatio/:cur', (req, res) => {
   }
   catch (err) {
     res.json({ "err": err })
+  }
+})
+
+// @desc    get valid currencies
+// @route   GET /
+router.get('/validCurrencies/', (req, res) => {
+  try {
+    res.send(Object.keys(global.currencyObj.conversion_rates))
+  }
+  catch (err) {
+    //console.log(err)
+    res.json({ "err": "ree" })
   }
 })
 

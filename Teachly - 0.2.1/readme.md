@@ -37,6 +37,8 @@ list of tasks
 
   >searchbar https://www.youtube.com/watch?v=szfUbzsKvtE
 
+  >json can be store and cached in a .js file
+
 
 This app uses Node.js/Express/MongoDB with Google OAuth for authentication
 
