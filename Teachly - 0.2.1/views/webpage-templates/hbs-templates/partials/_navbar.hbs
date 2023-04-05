@@ -1,22 +1,24 @@
 <link rel="stylesheet" href="/css/navbar.css">
-
 <nav class="navbar" onclick="clearNavPopups()">
     <div id="toggle-nav">
-        <div style="height: 10vh;">
-            <a class="navbar-brand" style="font-size: 30px;" href="\ ">Teachly</a>
+        <div style="height: 60px;">
+            <a class="navbar-brand" style="font-size: 30px; padding-left: 5px !important" href="\ ">Teachly</a>
         </div>
         <div style="font-size: 30px; margin-right:10px;">
             <i onclick="toggleNav()" class="fa fa-bars" style="height: 25px; color:aliceblue"></i>
         </div>
-        <div id="settings-buttons" onclick="event.stopPropagation();">
-            <button onclick="toggleNavPopup('language-popup')" type="button"
-                class="btn btn-primary" style="text-transform: uppercase;">{{settings.lang}}</button>
+        <div id="settings-buttons" style="height: 60px; padding:10px;" onclick="event.stopPropagation();">
+            <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary"
+                style="text-transform: uppercase;">{{settings.lang}}</button>
             <button onclick="toggleNavPopup('currency-popup')" type="button"
                 class="btn btn-primary">{{settings.cur}}</button>
         </div>
     </div>
     <div id="navlist" class="row d-flex align-items-center justify-content-center">
 
+        <div id="large-screen-teachly">
+            <a class="navbar-brand" style="font-size: 30px;" href="\ ">Teachly</a>
+        </div>
 
         <div class="col d-flex align-items-center justify-content-center">
             <div class="row d-flex align-items-center justify-content-center">
@@ -28,34 +30,27 @@
                 </div>
             </div>
         </div>
-
-
         <div class="col d-flex align-items-center justify-content-center">
             <div class="row d-flex align-items-center justify-content-center">
                 <div class="col d-flex align-items-center justify-content-center">
                     <a class="navbar-brand nav-link" href="\register">{{navbarContext.signUp}}</a>
                 </div>
-                <div class="col d-flex align-items-center justify-content-center">
-                    <a class="navbar-brand nav-link" href="\login">{{navbarContext.login}}</a>
+                <div class="col d-flex align-items-center justify-content-center align-middle">
+                    <a class="navbar-brand nav-link align-middle" href="\login">{{navbarContext.login}}</a>
                 </div>
             </div>
         </div>
-
-
-
         <div id="settings-buttons-list" class="" style="width: 130px !important; float:right;"
             onclick="event.stopPropagation();">
-            <div style="margin-top: -20px !important;">
-                <button onclick="toggleNavPopup('language-popup')" type="button"
-                    class="btn btn-primary" style="text-transform: uppercase;">{{settings.lang}}</button>
+            <div style="margin-top: -20px !important; width:110px !important">
+                <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary"
+                    style="text-transform: uppercase;">{{settings.lang}}</button>
                 <button onclick="toggleNavPopup('currency-popup')" type="button"
                     class="btn btn-primary">{{settings.cur}}</button>
             </div>
         </div>
-
     </div>
 </nav>
-
 <div id="nav-popup-holder">
     <div style="float: right; margin-right:0px;">
         <div style="margin-left:-255px;">
@@ -85,157 +80,4 @@
     </div>
 </div>
 
-
-<script>
-    var nav = document.getElementById('navlist');
-
-    function windowResizeHandler() {
-        if (window.innerWidth > 960) {
-            nav.style.visibility = "visible";
-            nav.style.display = "block";
-
-        }
-        else {
-            nav.style.display = "none";
-            nav.style.visibility = "hidden";
-        }
-    }
-
-    function toggleNav() {
-
-        if (nav.style.display === "none") {
-            nav.style.display = "block";
-            nav.style.visibility = "visible";
-        }
-
-        else {
-            nav.style.display = "none";
-            nav.style.visibility = "hidden";
-        }
-    }
-
-
-    function navLangSearch() {
-        var input, filter;
-        input = document.getElementById("nav-language-search-input");
-        filter = input.value.toUpperCase();
-        list = document.getElementById("language-change").children;
-        for (i = 0; i < list.length; i++) {
-            txtValue = list[i].textContent || list[i].innerHTML;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                list[i].style.display = "block";
-            } else {
-                list[i].style.display = "none";
-            }
-        }
-    }
-
-    function navCurSearch() {
-        var input, filter;
-        input = document.getElementById("nav-currency-search-input");
-        filter = input.value.toUpperCase();
-        list = document.getElementById("currency-change").children;
-        for (i = 0; i < list.length; i++) {
-            txtValue = list[i].textContent || list[i].innerHTML;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                list[i].style.display = "block";
-            } else {
-                list[i].style.display = "none";
-            }
-        }
-    }
-
-
-    function changeNavSettings(settingName, change) {
-
-        changeObj = {
-            settingName: settingName,
-            change: change
-        }
-
-        axios.post('/auth/settings', changeObj)
-            .then(res => {
-                window.location.reload();
-            })
-            .catch(err => {
-                console.log(error);
-            });
-    }
-
-    function toggleNavPopup(id) {
-        var popup = document.getElementById(id);
-        if ((popup.style.display != "block")) {
-            clearNavPopups()
-            popup.style.display = "block";
-            popup.style.visibility = "visible";
-            try {
-                document.getElementById("nav-" + id.split("-")[0] + "-search-input").focus(); //auto focus on input in popup
-            }
-            catch {
-
-            }
-
-        }
-        else {
-            popup.style.display = "none";
-            popup.style.visibility = "hidden";
-        }
-    }
-
-    function clearNavPopups() {
-        popupArr = document.getElementsByClassName("nav-popup")
-        for (i = 0; i < popupArr.length; i++) {
-            popupArr[i].style.display = "none";
-            popupArr[i].style.visibility = "hidden";
-        }
-    }
-
-
-    window.addEventListener('load', function () {
-
-        var nav = document.getElementById('navlist');
-
-        if (window.innerWidth > 960) {
-            nav.style.visibility = "visible";
-            nav.style.display = "block";
-        }
-        else {
-            nav.style.display = "none";
-            nav.style.visibility = "hidden";
-        }
-
-        window.addEventListener("resize", windowResizeHandler);
-
-
-
-        axios.get('/get/validLanguages').then(res => {
-            if (res.data == "404") { }
-            else {
-                arr = res.data.sort((a, b) => {return a[0].localeCompare(b[0], userLang)})
-                for (let i = 0; i < arr.length; i++) {
-                    node = document.createElement("li");
-                    node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${arr[i][1]}")'>${arr[i][0]}</div>`;
-                    document.getElementById("language-change").appendChild(node);
-                }
-            }
-        })
-
-
-        axios.get('/get/validCurrencies').then(res => {
-            if (res.data == "404") { }
-            else {
-                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-                for (let i = 0; i < arr.length; i++) {
-                    node = document.createElement("li");
-                    node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
-                    document.getElementById("currency-change").appendChild(node);
-                }
-            }
-        })
-    })
-
-
-
-
-
-</script>
+<script src="/js/navbar.js"></script>

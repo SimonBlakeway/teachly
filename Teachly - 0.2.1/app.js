@@ -62,7 +62,9 @@ app.use(function (req, res, next) {
 })
 
 // Static folders
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public'), {
+  maxAge: 60
+}))
 
 // general Routes
 app.use('/', require('./routes/index'))
