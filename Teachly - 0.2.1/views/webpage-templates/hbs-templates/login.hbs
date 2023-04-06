@@ -1,9 +1,9 @@
 <style>
   #login {
     background-color: rgb(247, 247, 247);
-    height: 80%;
     width: 100%;
     font-size: 18px;
+    min-height: 85vh !important;
   }
 
   .popup {
@@ -32,10 +32,18 @@
     height: 40px;
     text-align: center;
   }
+
+  #login-form-col {
+    border-radius: 15px;
+    background-color: rgb(189, 210, 210);
+    min-width: 240px;
+    padding: 30px !important;
+
+  }
 </style>
 <section id="login" class="d-flex justify-content-center align-items-center">
-  <section id="form-section" class="row container py-4 m-0" style="max-width: 600px;">
-    <div class="col-12 p-5 p-md-5" style="border-radius: 15px; background-color: rgb(189, 210, 210);">
+  <section id="form-section" class="row container p-1 py-4 m-0" style="max-width: 600px;">
+    <div class="col-12 p-md-5" id="login-form-col">
       <form onsubmit="return false">
         <div class="row py-3 d-flex justify-content-center align-items-center">
           <div class="col" style="min-width: 200px; max-width: 300px;">
@@ -51,27 +59,25 @@
         </div>
         <div class="row">
           <div class="col-12 mb-4">
-            <div class="form-ch-eck d-flex justify-content-center mb-5">
-              <label class="form-check-label">
+            <div class="form-ch-eck d-flex justify-content-center mb-4">
+              <label class="form-check-label" style="text-align: center;">
                 {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
                   class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
               </label>
             </div>
             <div class="d-flex justify-content-center">
               <button type='submit' onclick="sendloginReq()"
-                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                class="btn btn-outline-primary btn-lg">
                 {{context.bodyContext.LOGIN}}</button>
             </div>
             <div>
-              <p class="text-center text-muted mt-5 mb-0 fw-bold text-body">
-                {{context.bodyContext.or}}
-              </p>
+
               <p>
               <div id="sign-in-with-oauth" class="section" style="text-align: center;">
-                <a href="/auth/google" class="btn red darken-1" style="width: 250px;">
+                <a href="/auth/google" class="btn red darken-1" style="width: 200px;">
                   <i class="fab fa-google left"></i> Log In With Google
                 </a>
-                <a href="/auth/facebook" class="btn blue darken-2" style="width: 250px;">
+                <a href="/auth/facebook" class="btn blue darken-2" style="width: 200px;">
                   <i class="fab fa-facebook left fa-small"></i> Log In With Facebook
                 </a>
               </div>
