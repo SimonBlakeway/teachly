@@ -3,9 +3,10 @@
     background: black;
     width: 100%;
     padding: 0px;
-    margin: 0px;
-    margin-bottom: 20vh;
+    margin: 0px !important;
     height: 60px;
+    margin-bottom: 200px !important;
+    z-index: 999999;
 }
 
 #navlist {

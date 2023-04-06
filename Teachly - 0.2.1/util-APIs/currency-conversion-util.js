@@ -37,6 +37,7 @@ function CurrencyAPISetup() {
       }, 1800000) // half an hour in milliseconds
     })
     .catch(err => {
+      console.log(err)
       console.log("err")
       CurrencyAPISetup()
     })

@@ -12,6 +12,14 @@
   <title>{{context.bodyContext.title}}</title>
 </head>
 
+<script src="/js/mainLayout.js"></script>
+<script>
+  const userLang = "{{context.settings.lang}}"
+  const userCur = "{{context.settings.cur}}"
+  var curConversionRatio = "{{context.settings.curRatio}}"
+  updateCurrencyInterval(userCur)
+</script>
+
 <body>
   {{#if context.navbar}}
   {{> _navbar navbarContext = context.navbar settings = context.settings}}
@@ -29,12 +37,4 @@
   {{>_cookiesPopup cookiesText = context.cookiesPopup}}
   {{/if}}
 </body>
-<script src="/js/mainLayout.js"></script>
-<script>
-  const userLang = "{{context.settings.lang}}"
-  const userCur = "{{context.settings.cur}}"
-  var curConversionRatio = "{{context.settings.curRatio}}"
-  updateCurrencyInterval(userCur)
-</script>
-
 </html>

@@ -4,12 +4,16 @@
 <meta name="theme-color" content="#7952b3">
 
 
+<script src="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.js"></script>
+<script src="https://unpkg.com/wnumb@1.1.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.css">
+
+
 <style>
     .more-course-description {
         margin-top: -1000px !important;
         display: none;
     }
-
 
     img {
         max-width: 100%;
@@ -50,58 +54,6 @@
 
     .product-search-popup {
         visibility: hidden;
-    }
-
-    section.range-slider {
-        position: relative;
-        width: 200px;
-        height: 35px;
-        text-align: center;
-    }
-
-    section.range-slider input {
-        pointer-events: none;
-        position: absolute;
-        overflow: hidden;
-        left: 0;
-        top: 10px;
-        width: 250px !important;
-        outline: none;
-        height: 18px;
-        margin: 0;
-        padding: 0;
-    }
-
-    section.range-slider input::-webkit-slider-thumb {
-        pointer-events: all;
-        position: relative;
-        z-index: 1;
-        outline: 0;
-    }
-
-    section.range-slider input::-moz-range-thumb {
-        pointer-events: all;
-        position: relative;
-        z-index: 10;
-        -moz-appearance: none;
-        width: 9px;
-    }
-
-    section.range-slider input::-moz-range-track {
-        position: relative;
-        z-index: -1;
-        background-color: rgba(0, 0, 0, 1);
-        border: 0;
-    }
-
-    section.range-slider input:last-of-type::-moz-range-track {
-        -moz-appearance: none;
-        background: none transparent;
-        border: 0;
-    }
-
-    section.range-slider input[type=range]::-moz-focus-outer {
-        border: 0;
     }
 
     .popup {
@@ -251,20 +203,16 @@
         font-size: 30px;
         position: relative;
         padding: 10px;
-        z-index: 2323;
+        z-index: 30;
         margin-bottom: 40px !important;
 
     }
-
-
-
 
     @media only screen and (max-width: 600px) {
         #speciality-popup {
             margin-left: 150px;
         }
     }
-
 
     @media only screen and (max-width: 450px) {
         #timeRange-popup {
@@ -375,7 +323,6 @@
 </style>
 
 <div>
-
     <div id="toggel-search-bar-button">
 
         <div style="float: left; padding-left: 15px;">filters</div>
@@ -388,22 +335,18 @@
             </span>
         </button>
     </div>
-
-
-
-
     <div id="product-search-bar">
-        <div class="row" style="width: 100% !important;">
-            <div class="col-6 search-bar-popup-wrap" style="width: 50% !important; padding-left: 40px !important;">
+
+
+        <div class="row w-100 d-flex align-items-center justify-content-center m-0 p-0">
+            <div class="col">
                 <div class="row">
-                    <div
-                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
-                        <div class="input-and-text" onclick='toggleSearchBarPopup("subject-popup")'>
-                            <div style="height: 35px;">
-                                Subject Search
-                            </div>
-                            <input class="search-bar-input" type="text" id="subject-search-input" style="color:white;"
-                                onkeyup="subjectSearch()"></input>
+                    <div class="col container d-flex align-items-center justify-content-center">
+                        <div class="" onclick='toggleSearchBarPopup("subject-popup")'>
+                            <div class="mb-3">Subject Search</div>
+                            <input
+                                class="search-bar-input form-control form-control-md border border-info rounded profile-input"
+                                type="text" id="subject-search-input" onkeyup="subjectSearch()"></input>
                         </div>
                         <div class="product-search-popup popup" id="subject-popup">
                             <ul id="subject-links">
@@ -411,14 +354,12 @@
                             </ul>
                         </div>
                     </div>
-                    <div
-                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
-                        <div class="input-and-text" onclick='toggleSearchBarPopup("speciality-popup")'>
-                            <div style="height: 35px;">
-                                Speciality Search
-                            </div>
-                            <input class="search-bar-input" type="text" id="speciality-search-input" placeholder=""
-                                style="color:white;" onkeyup="specialitySearch()"></input>
+                    <div class="col container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div onclick='toggleSearchBarPopup("speciality-popup")'>
+                            <div class="mb-3">Speciality Search</div>
+                            <input class="search-bar-input form-control form-control-md border border-info rounded"
+                                type="text" id="speciality-search-input" placeholder=""
+                                onkeyup="specialitySearch()"></input>
                         </div>
                         <div class="product-search-popup popup" id="speciality-popup">
                             <div id="speciality-checkboxes"></div>
@@ -426,28 +367,24 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6 search-bar-popup-wrap" style="width: 50% !important;">
+            <div class="col">
                 <div class="row">
-                    <div
-                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
-                        <div class="input-and-text">
-                            <div style="height: 35px;">
-                                search By Keyword
-                            </div>
-                            <input class="search-bar-input" id="searchBy-input" type="text" placeholder=""
-                                style="color:white;" onkeyup='updateformData("searchBy", "searchBy-input")'></input>
+                    <div class="col container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div>
+                            <div class="mb-3">search By Keyword</div>
+                            <input class="search-bar-input form-control form-control-md border border-info rounded"
+                                id="searchBy-input" type="text" placeholder=""
+                                onkeyup='updateformData("searchBy", "searchBy-input")'></input>
                             <div class="popup">
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
-                        <div class="input-and-text" onclick='toggleSearchBarPopup("taughtIn-popup")'>
-                            <div style="height: 35px;">
-                                Taught In
-                            </div>
-                            <input class="search-bar-input" id="taughtIn-search-input" type="text" placeholder=""
-                                style="color:white;" onkeyup="taughtInSearch()"></input>
+                    <div class="col container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                        <div class="" onclick='toggleSearchBarPopup("taughtIn-popup")'>
+                            <div class="mb-3">Taught In</div>
+                            <input class="search-bar-input form-control form-control-md border border-info rounded"
+                                id="taughtIn-search-input" type="text" placeholder=""
+                                onkeyup="taughtInSearch()"></input>
                         </div>
                         <div class="taughtIn-search-popup popup" id="taughtIn-popup">
                             <div id="taughtIn-checkboxes"></div>
@@ -457,15 +394,14 @@
             </div>
         </div>
 
-        <div class="row" style="width: 100% !important;">
-            <div class="col-6 search-bar-popup-wrap" style="width: 50% !important; padding-left: 40px !important;">
+
+
+        <div class="row w-100 d-flex align-items-center justify-content-center m-0 p-0 pt-3">
+            <div class="col">
                 <div class="row">
-                    <div
-                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
-                        <div onclick='toggleSearchBarPopup("pricePerLesson-popup")' class="input-and-text">
-                            <div>
-                                price Per Lesson
-                            </div>
+                    <div class="col container d-flex align-items-center justify-content-center">
+                        <div onclick='toggleSearchBarPopup("pricePerLesson-popup")'>
+                            <div>price Per Lesson</div>
                             <button
                                 class="btn btn-sm btn-outline-secondary container d-flex align-items-center justify-content-center search-bar-button">
                                 <span class="currency">
@@ -488,18 +424,12 @@
                                 <div style="color: black; text-align: center;"
                                     class="container d-flex align-items-center justify-content-center">
                                 </div>
-                                <section class="range-slider">
-                                    <span class="rangeValues"></span>
-                                    <input id="min-price-val" onclick='updateformData("priceRangeMin", "min-price-val")'
-                                        value="5" min="1" max="50" step="0.1" type="range">
-                                    <input id="max-price-val" onclick='updateformData("priceRangeMax", "max-price-val")'
-                                        value="10" min="1" max="50" step="0.1" type="range">
-                                </section>
+                                <div style="margin: 4em w-100" class="regular-slider"></div>
+
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                    <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick='toggleSearchBarPopup("orderBy-popup")' class="input-and-text"
                             style="width: 150px !important;">
                             <div>
@@ -552,10 +482,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6 search-bar-popup-wrap">
+            <div class="col">
                 <div class="row">
-                    <div
-                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                    <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick='toggleSearchBarPopup("timeRange-popup")' class="input-and-text">
                             <div style="height: 21px;"></div>
 
@@ -570,9 +499,8 @@
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="col-md-6 col-lg-6 col-xl-6 mx-auto mb-6 container d-flex align-items-center justify-content-center search-bar-popup-wrap">
-                        <div onclick="clearSearchBarPopups()" class="input-and-text">
+                    <div class="col container d-flex align-items-center justify-content-center">
+                        <div onclick="clearSearchBarPopups()">
                             <div style="height: 21px;"></div>
 
                             <div>
@@ -593,13 +521,10 @@
 
 
 
-
-
 <script>
+    var regularSlider = document.querySelector('.regular-slider')
 
     const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-    //localStorage.removeItem("TeachlyFormData")
-
     function formDataSetup() {
         teachlyFormDataDefault = {
             "subject": window.location.href.split("/")[4],
@@ -633,17 +558,23 @@
         range2Shown2 = document.getElementById('max-price-shown');
         range1Shown.innerHTML = teachlyFormData.priceRange[0] * curConversionRatio;
         range2Shown2.innerHTML = teachlyFormData.priceRange[1] * curConversionRatio;
-        range1 = document.getElementById('min-price-val');
-        range2 = document.getElementById('max-price-val');
-        range1.max = range1.max * curConversionRatio;
-        range1.min = range1.min * curConversionRatio;
-        range1.step = range1.step * curConversionRatio;
-        range2.max = range2.max * curConversionRatio;
-        range2.min = range2.min * curConversionRatio;
-        range2.step = range2.step * curConversionRatio;
-        range1.value = teachlyFormData.priceRange[0];
-        range2.value = teachlyFormData.priceRange[1];
+        regularSlider = document.querySelector('.regular-slider')
+        var prefixFormat = wNumb({ decimals: 2})
 
+        slider = noUiSlider.create(regularSlider, {
+            start: [teachlyFormData.priceRange[0], teachlyFormData.priceRange[1]],
+            connect: true,
+            margin: 5 * curConversionRatio,
+            range: { min: 0, max: 60 * curConversionRatio },
+            tooltips: [prefixFormat, prefixFormat],
+            pips: {
+                mode: 'steps',
+                density: 5,
+            },
+        })
+        slider.on('update', function (values) {
+            updateformData("priceRange", values)
+        })
 
         document.getElementById("searchBy-input").value = teachlyFormData.searchby;
         document.getElementById(teachlyFormData.orderBy.replaceAll(" ", "-")).checked = true;
@@ -772,23 +703,14 @@
 
         }
 
-        else if (type == "priceRangeMin" || (type == "priceRangeMax")) {
-
-            if (type == "priceRangeMin") {
-                value = document.getElementById(val).value
-                teachlyFormData["priceRange"][0] = value / curConversionRatio;
-                document.getElementById('min-price-shown').innerHTML = value;
-
-            }
-            else {
-                value = document.getElementById(val).value
-                teachlyFormData["priceRange"][1] = value / curConversionRatio;
-                document.getElementById('max-price-shown').innerHTML = document.getElementById(val).value;
-
-            }
-            teachlyFormData[type] = val;
+        else if (type == "priceRange") {
+            min = val[0] / curConversionRatio;
+            max = val[1] / curConversionRatio;
+            console.log([min, max])
+            document.getElementById('min-price-shown').innerHTML = min
+            document.getElementById('max-price-shown').innerHTML = max
+            teachlyFormData["priceRange"] = [min, max];
             updateCurrency(curConversionRatio)
-
         }
 
         else if (type == "searchBy") {
