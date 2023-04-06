@@ -1,0 +1,32 @@
+#footer {
+    background-color: #343A40;
+    color: rgb(213, 214, 214);
+    padding-bottom: 5px;
+    height: auto !important;
+}
+.connect-with-us-symbol {
+    max-width: 30px !important;
+    font-size: 25px;
+    margin: 0px !important;
+    padding: 0px !important;
+    text-align: center;
+}
+.contact-col {
+    min-width: 220px !important;
+    max-width: 350px !important;
+}
+.mn-w-150 {
+    min-width: 150px;
+}
+.mn-w-140 {
+    min-width: 140px;
+}
+.mn-w-300 {
+    min-width: 300px;
+}
+.mx-w-500 {
+    min-width: 500px;
+}
+.mx-w-180 {
+    min-width: 180px;
+}

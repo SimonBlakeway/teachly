@@ -42,7 +42,7 @@
 }
 
 #toggle-nav {
-    height: 10vh !important;
+    height: 60px;
     margin: auto;
     cursor: pointer;
     flex-wrap: wrap;
@@ -52,7 +52,8 @@
     justify-content: space-around;
     width: 100%;
     padding: 0px;
-    margin-top: -5px;
+    margin-top: -7px;
+    font-size: 30px !important;
 }
 
 .nav-popup {
@@ -126,6 +127,14 @@
 #large-screen-teachly {
     height: 60px;
     width: 120px !important;
+}
+
+.w-130 {
+    width: 130px !important;
+}
+
+.w-130 {
+    width: 130px !important;
 }
 
 @media only screen and (max-width: 1045px) {

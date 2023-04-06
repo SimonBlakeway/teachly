@@ -11,6 +11,7 @@
   .registration-form {
     border-radius: 15px;
     background-color: rgb(255, 255, 255) !important;
+    max-width: 800px;
   }
 
   .profile-input {
@@ -69,7 +70,7 @@
 </style>
 <section id="register" class="d-flex justify-content-center align-items-center">
   <div class="py-5 row justify-content-center align-items-center h-100" style="width: 80% !important;">
-    <div class="col">
+    <div class="col d-flex justify-content-center align-items-center">
       <div class="registration-form p-4 p-md-5">
         <h3 class="p-4">{{context.bodyContext.registrationForm}}</h3>
         <form onsubmit="return false" class="registration-form-color">

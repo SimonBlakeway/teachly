@@ -1,21 +1,21 @@
 <link rel="stylesheet" href="/css/navbar.css">
 <nav class="navbar" onclick="clearNavPopups()">
-    <div id="toggle-nav">
-        <div style="height: 60px;">
-            <a class="navbar-brand" style="font-size: 30px; padding-left: 5px !important" href="\ ">Teachly</a>
+    <div id="toggle-nav" class="p-0">
+        <div>
+            <a class="navbar-brand pl-1 p-2 fs-2 text-light" href="\ ">Teachly</a>
         </div>
-        <div style="font-size: 30px; margin-right:10px;">
-            <i onclick="toggleNav()" class="fa fa-bars" style="height: 25px; color:aliceblue"></i>
+        <div class="mr-2">
+            <i onclick="toggleNav()" class="fa fa-bars text-light"></i>
         </div>
-        <div id="settings-buttons" style="height: 60px; padding:10px;" onclick="event.stopPropagation();">
-            <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary"
-                style="text-transform: uppercase;">{{settings.lang}}</button>
+        <div id="settings-buttons" class="d-flex align-items-center" onclick="event.stopPropagation();">
+            <button onclick="toggleNavPopup('language-popup')" type="button"
+                class="btn btn-primary m-1 text-uppercase">{{settings.lang}}</button>
             <button onclick="toggleNavPopup('currency-popup')" type="button"
-                class="btn btn-primary">{{settings.cur}}</button>
+                class="btn btn-primary m-1">{{settings.cur}}</button>
         </div>
     </div>
     <div id="navlist" class="row d-flex align-items-center justify-content-center">
-        <div id="large-screen-teachly"><a class="navbar-brand" style="font-size: 30px;" href="\ ">Teachly</a></div>
+        <div id="large-screen-teachly"><a class="navbar-brand pl-1 p-2 fs-3 text-light" href="\ ">Teachly</a></div>
         <div class="col d-flex align-items-center justify-content-center">
             <div class="row d-flex align-items-center justify-content-center">
                 <div class="col d-flex align-items-center justify-content-center">
@@ -36,11 +36,10 @@
                 </div>
             </div>
         </div>
-        <div id="settings-buttons-list" class="" style="width: 130px !important; float:right;"
+        <div id="settings-buttons-list" class="float-right w-130 p-1"
             onclick="event.stopPropagation();">
-            <div style="margin-top: -20px !important; width:110px !important">
-                <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary"
-                    style="text-transform: uppercase;">{{settings.lang}}</button>
+            <div>
+                <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary text-uppercase">{{settings.lang}}</button>
                 <button onclick="toggleNavPopup('currency-popup')" type="button"
                     class="btn btn-primary">{{settings.cur}}</button>
             </div>

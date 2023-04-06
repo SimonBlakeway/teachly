@@ -1,0 +1,58 @@
+#login {
+    background-color: rgb(247, 247, 247);
+    width: 100%;
+    font-size: 18px;
+    min-height: 85vh !important;
+  }
+
+  .popup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    background-color: aliceblue;
+    border-radius: 5%;
+    min-width: 200px;
+    min-height: 100px;
+    max-width: 300px;
+    max-height: 200px;
+    width: 40%;
+    height: fit-content;
+    padding: 10px 0px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-input {
+    width: 100px;
+    height: 40px;
+    text-align: center;
+  }
+
+  #login-form-col {
+    border-radius: 15px;
+    background-color: rgb(189, 210, 210);
+    min-width: 240px;
+    padding: 30px !important;
+
+  }
+
+
+.mn-w-150 {
+    min-width: 150px;
+}
+.mn-w-140 {
+    min-width: 140px;
+}
+.mn-w-300 {
+    min-width: 300px;
+}
+.mx-w-500 {
+    min-width: 500px;
+}
+.mx-w-180 {
+    min-width: 180px;
+}

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="{{context.language}}">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,91 +10,25 @@
   <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
   <title>{{context.bodyContext.title}}</title>
 </head>
-
 <body>
-
-
-
-
   {{#if context.navbar}}
   {{> _navbar navbarContext = context.navbar settings = context.settings}}
   {{/if}}
-
   {{#if context.userNavbar}}
   {{> _userNavbar navbarContext = context.userNavbar settings = context.settings}}
   {{/if}}
-
   {{{body}}}
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.14.1/ckeditor.js"
     integrity="sha256-bEIQpI72w9NJuIVhTLFUF2/8uxl0u5800r8ddViuv+o=" crossorigin="anonymous"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-
-
-
-
   {{#if context.footer}}
   {{>_footer footerContext = context.footer companyInfo = context.companyInfo}}
   {{/if}}
-
   {{#if context.cookiesPopup}}
   {{>_cookiesPopup cookiesText = context.cookiesPopup}}
   {{/if}}
-
 </body>
-
-
-<script>
-  const userLang = "{{context.settings.lang}}"
-  const userCur = "{{context.settings.cur}}"
-  var curConversionRatio = "{{context.settings.curRatio}}"
-
-
-  function prettyifyDate(date) { // it comes in as seconds from epoch
-    var secs = date - Math.floor(Date.now() / 1000)
-    if (secs < 60) return secs + " sec(s) ago";
-    if (secs < 3600) return Math.floor(secs / 60) + " min(s) ago";
-    if (secs < 86400) return Math.floor(secs / 3600) + " hour(s) ago";
-    if (secs < 604800) return Math.floor(secs / 86400) + " day(s) ago";
-    return date.toDateString();
-  }
-
-  function updateCurrency(ratio) {
-    curVals = document.getElementsByClassName("currency")
-    for (let i = 0; i < curVals.length; i++) {
-      convertedCur = Number(curVals[i].children[0].innerHTML) * Number(ratio)
-      convertedCur = convertedCur.toLocaleString(userLang, { style: 'currency', currency: userCur });
-      curVals[i].children[1].innerHTML = convertedCur
-    }
-  }
-
-
-
-
-  setInterval(async function () {
-    try {
-      res = await axios({ method: 'get', url: `/get/curConversionRatio/${userCur}` })
-      if (res.data.ratio != undefined) {
-        updateCurrency(res.data.ratio)
-        curConversionRatio = res.data.ratio
-      }
-      else {
-
-      }
-    }
-    catch (err) {
-
-    }
-  }, 300000);
-
-  window.addEventListener('load', function () {
-    updateCurrency(curConversionRatio)
-  }, false);
-
-
-</script>
-
+<script src="/js/mainLayout.js"></script>
 </html>

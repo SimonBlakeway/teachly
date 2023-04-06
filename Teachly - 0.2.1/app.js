@@ -3,10 +3,10 @@ const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
-const exphbs  = require('express-handlebars');
+const exphbs = require('express-handlebars');
 const app = express()
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser'); 
+const cookieParser = require('cookie-parser');
 //cors = require('cors'); // useful, but a security risk
 const db = require('./config/db');
 const customTimers = require('./customTimers');
@@ -16,7 +16,7 @@ dotenv.config(dotenv.config({ path: './config/config.env' }));
 
 
 //setting up the timers
-customTimers.timerSetup() 
+customTimers.timerSetup()
 
 // Body parser
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }))
@@ -42,7 +42,7 @@ const {
 } = require('./helpers/hbs');
 
 // Handlebars
-app.engine('.hbs', exphbs.engine({ 
+app.engine('.hbs', exphbs.engine({
   helpers: { //the list of helpers I want to be able to use in .hbs files
     formatDate,
     linkSetup,
@@ -50,7 +50,7 @@ app.engine('.hbs', exphbs.engine({
   },
   defaultLayout: 'main',
   extname: '.hbs', // this is where you can change the extension name
-})); 
+}));
 app.set('view engine', '.hbs');
 app.set('views', './views/webpage-templates/hbs-templates');
 
@@ -62,9 +62,19 @@ app.use(function (req, res, next) {
 })
 
 // Static folders
-app.use(express.static(path.join(__dirname, 'public'), {
-  maxAge: 60
-}))
+//app.use(express.static(path.join(__dirname, 'public'), {
+//  maxAge: 300
+//}))
+
+
+app.use('/', express.static(path.join(__dirname, 'public'), {
+  setHeaders: function (res, path) {
+    res.set("Cache-Control", "private, max-age=3000");
+  }
+}));
+
+
+
 
 // general Routes
 app.use('/', require('./routes/index'))
