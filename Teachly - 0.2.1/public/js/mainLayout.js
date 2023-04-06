@@ -1,6 +1,3 @@
-const userLang = "{{context.settings.lang}}"
-const userCur = "{{context.settings.cur}}"
-var curConversionRatio = "{{context.settings.curRatio}}"
 function prettyifyDate(date) { // it comes in as seconds from epoch
     var secs = date - Math.floor(Date.now() / 1000)
     if (secs < 60) return secs + " sec(s) ago";
@@ -17,21 +14,16 @@ function updateCurrency(ratio) {
         curVals[i].children[1].innerHTML = convertedCur
     }
 }
-setInterval(async function () {
-    try {
-        res = await axios({ method: 'get', url: `/get/curConversionRatio/${userCur}` })
-        if (res.data.ratio != undefined) {
-            updateCurrency(res.data.ratio)
-            curConversionRatio = res.data.ratio
+function updateCurrencyInterval() {
+    setInterval(async function () {
+        try {
+            res = await axios({ method: 'get', url: `/get/curConversionRatio/${userCur}` })
+            if (res.data.ratio != undefined) { updateCurrency(res.data.ratio) }
+            else { }
+            console.log(res)
         }
-        else {
-
+        catch (err) {
         }
-    }
-    catch (err) {
-
-    }
-}, 300000);
-window.addEventListener('load', function () {
-    updateCurrency(curConversionRatio)
-}, false);
+    }, 300000);
+    window.addEventListener('load', function () { updateCurrency(curConversionRatio) }, false);
+}

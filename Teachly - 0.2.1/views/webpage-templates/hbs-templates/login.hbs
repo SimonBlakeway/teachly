@@ -1,26 +1,25 @@
 <link rel="stylesheet" href="/css/login.css">
 
-
 <section id="login" class="d-flex justify-content-center align-items-center">
-  <section id="form-section" class="row container p-1 py-4 m-0" style="max-width: 600px;">
+  <section id="form-section" class="row container p-1 py-4 m-0 mx-w-600p">
     <div class="col-12 p-md-5" id="login-form-col">
       <form onsubmit="return false">
-        <div class="row py-3 d-flex justify-content-center align-items-center">
-          <div class="col" style="min-width: 200px; max-width: 300px;">
+        <div class="row py-3">
+          <div class="col mn-w-200 mx-w-300p">
             <label class="form-label text" for="firstName">{{context.bodyContext.fullName}}</label>
             <input required type="text" id="username"
-              class="form-control form-control-md border border-info rounded login-input" />
+              class="form-control form-control-md border border-info rounded login-input mn-w-150p" />
           </div>
-          <div class="col" style="min-width: 200px; max-width: 300px;">
-            <label class="form-label text" for="password">{{context.bodyContext.password}}</label>
+          <div class="col mn-w-200 mx-w-300p">
+            <label class="form-label text d-flex" for="password">{{context.bodyContext.password}}</label>
             <input required type="password" id="password"
-              class="form-control form-control-md border border-info rounded login-input" />
+              class="form-control form-control-md border border-info rounded login-input mn-w-150p" />
           </div>
         </div>
         <div class="row">
           <div class="col-12 mb-4">
             <div class="form-ch-eck d-flex justify-content-center mb-4">
-              <label class="form-check-label" style="text-align: center;">
+              <label class="form-check-label text-center">
                 {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
                   class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
               </label>
@@ -33,11 +32,11 @@
             <div>
 
               <p>
-              <div id="sign-in-with-oauth" class="section" style="text-align: center;">
-                <a href="/auth/google" class="btn red darken-1" style="width: 200px;">
+              <div id="sign-in-with-oauth" class="section text-center ">
+                <a href="/auth/google" class="btn red darken-1 w-200">
                   <i class="fab fa-google left"></i> Log In With Google
                 </a>
-                <a href="/auth/facebook" class="btn blue darken-2" style="width: 200px;">
+                <a href="/auth/facebook" class="btn blue darken-2 w-200">
                   <i class="fab fa-facebook left fa-small"></i> Log In With Facebook
                 </a>
               </div>

@@ -1,58 +1,80 @@
 #login {
-    background-color: rgb(247, 247, 247);
-    width: 100%;
-    font-size: 18px;
-    min-height: 85vh !important;
-  }
-
-  .popup {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-    background-color: aliceblue;
-    border-radius: 5%;
-    min-width: 200px;
-    min-height: 100px;
-    max-width: 300px;
-    max-height: 200px;
-    width: 40%;
-    height: fit-content;
-    padding: 10px 0px;
-    display: none;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .login-input {
-    width: 100px;
-    height: 40px;
-    text-align: center;
-  }
-
-  #login-form-col {
-    border-radius: 15px;
-    background-color: rgb(189, 210, 210);
-    min-width: 240px;
-    padding: 30px !important;
-
-  }
-
-
-.mn-w-150 {
-    min-width: 150px;
+  background: rgb(85, 138, 230);
+  background: -webkit-linear-gradient(to bottom right, rgba(3, 71, 117), rgba(85, 138, 230));
+  background: linear-gradient(to bottom right, rgb(3, 71, 117), rgb(85, 138, 230));
+  width: 100%;
+  font-size: 18px;
+  min-height: 85vh !important;
 }
-.mn-w-140 {
-    min-width: 140px;
+
+.popup {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  background-color: aliceblue;
+  border-radius: 5%;
+  min-width: 200px;
+  min-height: 100px;
+  max-width: 300px;
+  max-height: 200px;
+  width: 40%;
+  height: fit-content;
+  padding: 10px 0px;
+  display: none;
+  justify-content: center;
+  align-items: center;
 }
-.mn-w-300 {
-    min-width: 300px;
+
+.login-input {
+  height: 40px;
+  text-align: center;
 }
-.mx-w-500 {
-    min-width: 500px;
+
+#login-form-col {
+  border-radius: 15px;
+  background-color: rgb(189, 210, 210);
+  min-width: 240px;
+  padding: 30px !important;
+
 }
-.mx-w-180 {
-    min-width: 180px;
+
+.w-200p {
+  width: 200px;
+}
+
+
+.mn-w-150p {
+  min-width: 150px;
+}
+
+.mn-w-140p {
+  min-width: 140px;
+}
+
+.mn-w-200p {
+  min-width: 200px;
+}
+
+.mn-w-300p {
+  min-width: 300px;
+}
+
+
+.mx-w-180p {
+  max-width: 180px;
+}
+
+.mx-w-300p {
+  max-width: 300px;
+}
+
+.mx-w-500p {
+  max-width: 500px;
+}
+
+.mx-w-600p {
+  max-width: 600px !important;
 }
