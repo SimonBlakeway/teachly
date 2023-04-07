@@ -56,7 +56,6 @@ function navCurSearch() {
         }
     }
 }
-var a = "ss"
 
 function changeNavSettings(settingName, change) {
 
@@ -120,17 +119,15 @@ window.addEventListener('load', function () {
 
 
 
-    axios.get('/get/validLanguages').then(res => {
-        if (res.data == "404") { }
-        else {
-            arr = res.data.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
-            for (let i = 0; i < arr.length; i++) {
-                node = document.createElement("li");
-                node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${arr[i][1]}")'>${arr[i][0]}</div>`;
-                document.getElementById("language-change").appendChild(node);
-            }
-        }
-    })
+    
+    arr = currenciesArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
+    for (let i = 0; i < arr.length; i++) {
+        node = document.createElement("li");
+        node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${arr[i][1]}")'>${arr[i][0]}</div>`;
+        document.getElementById("language-change").appendChild(node);
+    }
+
+
 
 
     axios.get('/get/validCurrencies').then(res => {

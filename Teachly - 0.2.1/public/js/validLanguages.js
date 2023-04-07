@@ -1,0 +1,1 @@
+langugeArr = ["English","普通话","हिंदी","Española","française","العربية الفصحى","বাঙ্গালি","русский","Português","Indonesia","Afrikaans"]

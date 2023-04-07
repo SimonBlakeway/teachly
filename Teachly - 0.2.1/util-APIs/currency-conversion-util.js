@@ -1,13 +1,13 @@
 dotenv = require('dotenv')
 dotenv.config({ path: './config/config.env' }) // to get api key
-const { get } = require('axios');
+const axios = require('axios');
 
 //url for the currency api
 Currency_API_URL = ` https://v6.exchangerate-api.com/v6/${process.env.CURRENCY_API_KEY}/latest/USD`
 global.currencyObj = {}
 
 
-/*s
+/*
   the solution I'm using for the api is pretty straightforward,
   the only I'm making a GET request to an api that returns a json
   object containg all currency convertion ratios using USD as the 
@@ -18,6 +18,26 @@ global.currencyObj = {}
   one I'll do it
 */
 
+
+/*
+    the timeout time is worked out by how often I can make a call to the api,
+    on the free version it's 1500/month, and the number chosen uses of as 
+    many of those as possible paced evenly, while also being a whole number
+*/
+
+
+async function CurrencyAPISetup() {
+  try {
+    res = await axios.get(Currency_API_URL, { headers: { "Accept-Encoding": "gzip,deflate,compress" } });
+    global.currencyObj = res.data
+  } catch (err) {
+    console.log(err)
+    console.log("err")
+  }
+}
+
+
+/*
 function CurrencyAPISetup() {
   //the header is there to fix a bug
   get(Currency_API_URL, { headers: { "Accept-Encoding": "gzip,deflate,compress" } }).then((res, err) => {
@@ -39,15 +59,10 @@ function CurrencyAPISetup() {
     .catch(err => {
       console.log(err)
       console.log("err")
-      CurrencyAPISetup()
+      setTimeout(CurrencyAPISetup(), 1000 * 60) //1 min
     })
-  /*
-      the timeout time is worked out by how often I can make a call to the api,
-      on the free version it's 1500/month, and the number chosen uses of as 
-      many of those as possible paced evenly, while also being a whole number
-  */
 }
+*/
 
 
-
-exports.CurrencyAPISetup = CurrencyAPISetup
+module.exports = { CurrencyAPISetup }

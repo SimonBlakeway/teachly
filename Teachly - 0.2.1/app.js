@@ -16,7 +16,7 @@ dotenv.config(dotenv.config({ path: './config/config.env' }));
 
 
 //setting up the timers
-//customTimers.timerSetup()
+customTimers.timerSetup()
 
 // Body parser
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }))

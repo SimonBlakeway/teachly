@@ -142,11 +142,6 @@
         margin-top: 500px;
     }
 
-    .search-bar-popup-wrap {
-        position: relative;
-        display: inline-block;
-    }
-
     .input-and-text {
         width: 130px !important;
         height: 100px !important;
@@ -354,7 +349,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                    <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick='toggleSearchBarPopup("speciality-popup")'>
                             <div class="mb-3">Speciality Search</div>
                             <input class="search-bar-input form-control form-control-md border border-info rounded"
@@ -369,7 +364,7 @@
             </div>
             <div class="col">
                 <div class="row">
-                    <div class="col container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                    <div class="col container d-flex align-items-center justify-content-center">
                         <div>
                             <div class="mb-3">search By Keyword</div>
                             <input class="search-bar-input form-control form-control-md border border-info rounded"
@@ -379,7 +374,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col container d-flex align-items-center justify-content-center search-bar-popup-wrap">
+                    <div class="col container d-flex align-items-center justify-content-center">
                         <div class="" onclick='toggleSearchBarPopup("taughtIn-popup")'>
                             <div class="mb-3">Taught In</div>
                             <input class="search-bar-input form-control form-control-md border border-info rounded"
@@ -393,8 +388,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <div class="row w-100 d-flex align-items-center justify-content-center m-0 p-0 pt-3">
             <div class="col">
@@ -420,25 +413,19 @@
                         </div>
                         <div class="product-search-popup popup container d-flex align-items-center justify-content-center"
                             id="pricePerLesson-popup">
-                            <div class="container" style="text-align: center;">
-                                <div style="color: black; text-align: center;"
-                                    class="container d-flex align-items-center justify-content-center">
+                            <div class="container text-center">
+                                <div class="container d-flex align-items-center justify-content-center text-dark">
                                 </div>
                                 <div style="margin: 4em w-100" class="regular-slider"></div>
-
                             </div>
                         </div>
                     </div>
                     <div class="col container d-flex align-items-center justify-content-center">
-                        <div onclick='toggleSearchBarPopup("orderBy-popup")' class="input-and-text"
-                            style="width: 150px !important;">
-                            <div>
-                                order By
-                            </div>
-                            <button id="orderBy-button" style="width: 150px !important;"
-                                class="btn btn-sm btn-outline-secondary search-bar-button text-capitalize">order By <i
-                                    style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
-                                    aria-hidden="true"></i></button>
+                        <div onclick='toggleSearchBarPopup("orderBy-popup")'>
+                            <div>order By</div>
+                            <button id="orderBy-button"
+                                class="btn btn-sm btn-outline-secondary search-bar-button text-capitalize">order By
+                                <i class="fa fa-caret-down fa-2x" aria-hidden="true"></i></button>
                         </div>
                         <div class="product-search-popup popup" id="orderBy-popup">
                             <form action="#">
@@ -485,23 +472,21 @@
             <div class="col">
                 <div class="row">
                     <div class="col container d-flex align-items-center justify-content-center">
-                        <div onclick='toggleSearchBarPopup("timeRange-popup")' class="input-and-text">
-                            <div style="height: 21px;"></div>
+                        <div onclick='toggleSearchBarPopup("timeRange-popup")'>
+                            <div>‎ </div>
 
 
                             <button class="btn btn-sm btn-outline-secondary search-bar-button text-capitalize">timeRange
-                                <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x" <i
-                                    style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
-                                    aria-hidden="true"></i></button>
+                                <i class="fa fa-caret-down fa-2x"></i></button>
                         </div>
                         <div class="product-search-popup popup" id="timeRange-popup">
-                            <div id="timeRange-popup-rows" style="text-align: center; width:100%">
+                            <div id="timeRange-popup-rows" class="text-center w-100">
                             </div>
                         </div>
                     </div>
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick="clearSearchBarPopups()">
-                            <div style="height: 21px;"></div>
+                            <div>‎ </div>
 
                             <div>
                                 <button onclick="searchCourses()"
@@ -522,6 +507,9 @@
 
 
 <script>
+
+
+
     var regularSlider = document.querySelector('.regular-slider')
 
     const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
@@ -559,7 +547,7 @@
         range1Shown.innerHTML = teachlyFormData.priceRange[0] * curConversionRatio;
         range2Shown2.innerHTML = teachlyFormData.priceRange[1] * curConversionRatio;
         regularSlider = document.querySelector('.regular-slider')
-        var prefixFormat = wNumb({ decimals: 2})
+        var prefixFormat = wNumb({ decimals: 2 })
 
         slider = noUiSlider.create(regularSlider, {
             start: [teachlyFormData.priceRange[0], teachlyFormData.priceRange[1]],
@@ -597,6 +585,7 @@
 
     async function formSetup() {
         document.getElementById("subject-search-input").placeholder = window.location.href.split("/")[4]
+        timeRange = document.getElementById("timeRange-popup-rows")
 
         for (let i = 0; i <= 6; i++) {
             outerDiv = document.createElement("div");
@@ -614,7 +603,7 @@
                 innerDiv.onclick = function () { updateformData(`${days[i]}`, `${j}-${j + 1}`) }
                 outerDiv.appendChild(innerDiv);
             }
-            document.getElementById("timeRange-popup-rows").appendChild(outerDiv);
+            timeRange.appendChild(outerDiv);
         }
 
         // Initialize Slider
