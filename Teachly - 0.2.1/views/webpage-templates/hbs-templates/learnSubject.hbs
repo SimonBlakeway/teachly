@@ -606,19 +606,6 @@
             timeRange.appendChild(outerDiv);
         }
 
-        // Initialize Slider
-        let sliderSections = document.getElementsByClassName("range-slider");
-        for (var x = 0; x < sliderSections.length; x++) {
-            var sliders = sliderSections[x].getElementsByTagName("input");
-            for (var y = 0; y < sliders.length; y++) {
-                if (sliders[y].type === "range") {
-                    sliders[y].oninput = getVals;
-                    // Manually trigger event first time to display values
-                    sliders[y].oninput();
-                }
-            }
-        }
-
         button = document.getElementById("toggel-search-bar-button")
         bar = document.getElementById("product-search-bar")
         symbol = document.getElementById("toggel-search-bar-button-symbol")

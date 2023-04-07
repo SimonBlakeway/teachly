@@ -119,28 +119,24 @@ window.addEventListener('load', function () {
 
 
 
-    
-    arr = currenciesArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
+  
+    arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
     for (let i = 0; i < arr.length; i++) {
+        langPair = arr[i].split(",")
         node = document.createElement("li");
-        node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${arr[i][1]}")'>${arr[i][0]}</div>`;
+        node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${langPair[1]}")'>${langPair[0]}</div>`;
         document.getElementById("language-change").appendChild(node);
     }
 
+    arr = currenciesArr.sort((a, b) => { return a.split(",")[0].localeCompare(b.split(",")[0], userLang) })
+    for (let i = 0; i < arr.length; i++) {
+        node = document.createElement("li");
+        node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
+        console.log(node.innerHTML)
+        document.getElementById("currency-change").appendChild(node);
 
 
-
-    axios.get('/get/validCurrencies').then(res => {
-        if (res.data == "404") { }
-        else {
-            arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-            for (let i = 0; i < arr.length; i++) {
-                node = document.createElement("li");
-                node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
-                document.getElementById("currency-change").appendChild(node);
-            }
-        }
-    })
+    }
 })
 
 

@@ -1,1 +1,1 @@
-langugeArr = ["English","普通话","हिंदी","Española","française","العربية الفصحى","বাঙ্গালি","русский","Português","Indonesia","Afrikaans"]
+languageArr =  [ 'English,en','普通话,zh','हिंदी,hi','Española,es','française,fr','العربية الفصحى,ar','বাঙ্গালি,bn','русский,ru','Português,pt','Indonesia,id','Afrikaans,af' ] 

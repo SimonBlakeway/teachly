@@ -94,8 +94,8 @@ function contextSetup(settings, partials = [], pageName) {
     return context
   }
   catch (err) {
-    console.log(err)
-    return {}
+    console.log("context setup err")
+    return contextSetup({cur: "USD", lang: "en"}, partials, pageName)
   }
 }
 

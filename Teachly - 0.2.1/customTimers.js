@@ -24,7 +24,8 @@ function generateValidLanguagesStaticFile() {
   for (i = 0; i < validLanguagesObj.fullName.length; i++) {
     validLanguagesArr[i] = [validLanguagesObj.fullName[i], validLanguagesObj.code[i]];
   }
-  const content = "langugeArr = " + jsonToString(validLanguagesObj.fullName)
+  //const content = "langugeArr = " + validLanguagesArr
+  const content = "languageArr = " +  " [ '" + validLanguagesArr.join("','") + "' ] ";
   fs.writeFile('./public/js/validLanguages.js', content, err => {
     if (err) {
       console.error(err);
