@@ -46,10 +46,12 @@
         color: white;
         width: 100% !important;
         padding-top: 20px;
+        padding-bottom: 20px;
         margin: 0px !important;
         margin-top: -50px !important;
         margin-bottom: 50px;
-        height: 260px;
+        height: auto !important;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
 
     .product-search-popup {
@@ -89,23 +91,18 @@
         /* Safari and Chrome */
     }
 
+
+
     #pricePerLesson-popup {
         width: 300px;
-        height: 160px !important;
+        height: 160px;
         margin-top: 220px;
         margin-left: 200px;
-        padding: 0px;
-        border-width: 5px;
     }
 
     #subject-popup {
-        text-align: left;
         width: 200px;
-        padding: 10px;
-        overflow: auto;
-        font-size: 20px;
         margin-top: 400px;
-        padding-left: 20px !important;
         margin-left: 50px;
 
     }
@@ -113,14 +110,12 @@
     #speciality-popup {
         width: 280px;
         height: 300px;
-        padding: 10px;
-        font-size: 20px;
         margin-left: 80px;
         margin-top: 400px;
     }
 
     #orderBy-popup {
-        width: 240px;
+        width: 280px;
         height: 200px;
         margin-top: 270px;
 
@@ -131,23 +126,16 @@
         height: 460px;
         margin-top: 530px;
         margin-right: 220px;
-        align-items: center;
-        justify-content: center;
     }
 
     #taughtIn-popup {
-        width: 200px;
+        width: 250px;
         height: 400px;
         margin-left: -35px;
         margin-top: 500px;
     }
 
-    .input-and-text {
-        width: 130px !important;
-        height: 100px !important;
-        color: white;
-        text-align: center;
-    }
+
 
     .day-div {
         background-color: #89c4ff;
@@ -176,16 +164,6 @@
         border-radius: 14px 7px;
     }
 
-    .search-bar-button {
-        margin-top: 5px !important;
-        width: 140px !important;
-        height: 40px !important;
-    }
-
-    input {
-        text-align: center;
-    }
-
     .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -203,99 +181,42 @@
 
     }
 
-    @media only screen and (max-width: 600px) {
-        #speciality-popup {
-            margin-left: 150px;
-        }
+    .w-20p {
+        width: 20px !important;
     }
 
-    @media only screen and (max-width: 450px) {
-        #timeRange-popup {
-            height: 520px;
-            width: 315px !important;
-            margin-right: 140px !important;
-            margin-top: 640px;
-            border-left-width: 3px !important;
-            border-right-width: 3px !important;
-            padding: -5px !important;
-        }
-
-        #pricePerLesson-popup {}
-
-        #subject-popup {
-            margin-left: 100px;
-        }
-
-        #speciality-popup {
-            margin-left: 150px;
-        }
-
-        #orderBy-popup {
-            width: 240px;
-            height: 200px;
-            top: 65px;
-
-        }
-
-        #taughtIn-popup {
-            margin-left: -50px;
-        }
-
-        .search-bar-button {
-            width: 120px !important;
-            height: 40px !important;
-        }
-
-        .search-bar-input {
-            width: 120px !important;
-            height: 40px !important;
-        }
+    .mr-5p {
+        margin-right: 5px;
     }
 
+    .mn-w-135p {
+        min-width: 135px;
+    }
+
+    .mn-w-152 {
+        min-width: 152px;
+    }
+
+    .mn-h-46p {
+        min-height: 48px;
+    }
+
+
+    @media only screen and (max-width: 450px) {}
 
     @media only screen and (max-width: 770px) {
-
-        #speciality-popup {
-            margin-left: 150px;
-        }
-
-        .input-and-text {
-            width: 140px !important;
-        }
-
-        input {
-            width: 140px !important;
-        }
-
-
-        #product-search-bar {
-
-            padding-top: 40px;
-            padding-bottom: 40px;
-            height: 500px;
-
-        }
-
-        #timeRange-popup {
-            width: 340px !important;
-            height: 520px;
-            border-width: 15px;
-            margin-right: 150px !important;
-            margin-top: 640px;
-        }
 
         .bd-placeholder-img-lg {
             font-size: 3.5rem;
         }
 
-        #product-search-bar {
-            display: none;
-            visibility: hidden;
-        }
-
         #toggel-search-bar-button {
             display: block;
             visibility: visible;
+        }
+
+        #taughtIn-popup {
+            margin-left: -25% !important;
         }
     }
 
@@ -310,6 +231,13 @@
             visibility: hidden;
         }
 
+    }
+
+    @media only screen and (max-width: 900px) {
+
+        #taughtIn-popup {
+            margin-left: -10%;
+        }
     }
 
     .fa-circle {
@@ -339,9 +267,8 @@
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div class="" onclick='toggleSearchBarPopup("subject-popup")'>
                             <div class="mb-3">Subject Search</div>
-                            <input
-                                class="search-bar-input form-control form-control-md border border-info rounded profile-input"
-                                type="text" id="subject-search-input" onkeyup="subjectSearch()"></input>
+                            <input class="form-control form-control-md border border-info rounded mn-w-135p" type="text"
+                                id="subject-search-input" onkeyup='searchBox("subject-links", "subject-search-input")'></input>
                         </div>
                         <div class="product-search-popup popup" id="subject-popup">
                             <ul id="subject-links">
@@ -352,9 +279,8 @@
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick='toggleSearchBarPopup("speciality-popup")'>
                             <div class="mb-3">Speciality Search</div>
-                            <input class="search-bar-input form-control form-control-md border border-info rounded"
-                                type="text" id="speciality-search-input" placeholder=""
-                                onkeyup="specialitySearch()"></input>
+                            <input class="form-control form-control-md border border-info rounded mn-w-135p" type="text"
+                                id="speciality-search-input" placeholder="" onkeyup='searchBox("speciality-checkboxes", "speciality-search-input")'></input>
                         </div>
                         <div class="product-search-popup popup" id="speciality-popup">
                             <div id="speciality-checkboxes"></div>
@@ -367,7 +293,7 @@
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div>
                             <div class="mb-3">search By Keyword</div>
-                            <input class="search-bar-input form-control form-control-md border border-info rounded"
+                            <input class="form-control form-control-md border border-info rounded mn-w-135p"
                                 id="searchBy-input" type="text" placeholder=""
                                 onkeyup='updateformData("searchBy", "searchBy-input")'></input>
                             <div class="popup">
@@ -377,9 +303,9 @@
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div class="" onclick='toggleSearchBarPopup("taughtIn-popup")'>
                             <div class="mb-3">Taught In</div>
-                            <input class="search-bar-input form-control form-control-md border border-info rounded"
+                            <input class="form-control form-control-md border border-info rounded mn-w-135p"
                                 id="taughtIn-search-input" type="text" placeholder=""
-                                onkeyup="taughtInSearch()"></input>
+                                onkeyup='searchBox("taughtIn-checkboxes", "taughtIn-search-input")'></input>
                         </div>
                         <div class="taughtIn-search-popup popup" id="taughtIn-popup">
                             <div id="taughtIn-checkboxes"></div>
@@ -394,9 +320,9 @@
                 <div class="row">
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick='toggleSearchBarPopup("pricePerLesson-popup")'>
-                            <div>price Per Lesson</div>
+                            <div class="mb-3">price Per Lesson</div>
                             <button
-                                class="btn btn-sm btn-outline-secondary container d-flex align-items-center justify-content-center search-bar-button">
+                                class="btn btn-md btn-outline-secondary container d-flex align-items-center justify-content-center mn-w-152 mn-h-46p">
                                 <span class="currency">
                                     <span id="min-price-shown" style="display: none;">50.000</span>
                                     <span></span>
@@ -422,48 +348,41 @@
                     </div>
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick='toggleSearchBarPopup("orderBy-popup")'>
-                            <div>order By</div>
+                            <div class="mb-3">order By</div>
                             <button id="orderBy-button"
-                                class="btn btn-sm btn-outline-secondary search-bar-button text-capitalize">order By
-                                <i class="fa fa-caret-down fa-2x" aria-hidden="true"></i></button>
+                                class="d-flex align-items-center justify-content-center btn btn-md btn-outline-secondary text-capitalize mn-w-152 mn-h-46p">
+                                <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
+                                    aria-hidden="true"></i></button>
                         </div>
                         <div class="product-search-popup popup" id="orderBy-popup">
-                            <form action="#">
-                                <p>
-                                    <label>
-                                        <input name="group1" type="radio" class="filled-in" id="Popularity"
-                                            onclick='updateformData("orderBy", "Popularity")' />
-                                        <span>Popularity</span>
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
-                                        <input name="group1" type="radio" class="filled-in" id="Price:-highest-first"
-                                            onclick='updateformData("orderBy", "Price:-highest-first")' />
-                                        <span>Price: highest first</span>
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
-                                        <input name="group1" type="radio" class="filled-in" id="Price:-lowest-first"
-                                            onclick='updateformData("orderBy", "Price:-lowest-first")' />
-                                        <span>Price: lowest first</span>
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
-                                        <input name="group1" type="radio" class="filled-in" id="Number-of-reviews"
-                                            onclick='updateformData("orderBy", "Number-of-reviews")' />
-                                        <span>Number of reviews</span>
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
-                                        <input name="group1" type="radio" class="filled-in" id="Best-rating"
-                                            onclick='updateformData("orderBy", "Best-rating")' />
-                                        <span>Best rating</span>
-                                    </label>
-                                </p>
+                            <form action="#" class="p-2 ">
+                                <input class="form-check-input" onclick='updateformData("orderBy", "Popularity")'
+                                    type="radio" value="Popularity" name="Order-By" id="Popularity">
+                                <label class="form-check-label text-dark" for="Popularity">Popularity</label>
+
+                                <br>
+                                <input class="form-check-input"
+                                    onclick='updateformData("orderBy", "Price:-highest-first")' type="radio"
+                                    value="Price:-highest-first" name="Order-By" id="Price:-highest-first">
+                                <label class="form-check-label text-dark" for="Price:-highest-first">Price: highest
+                                    first</label>
+
+                                <br>
+                                <input class="form-check-input"
+                                    onclick='updateformData("orderBy", "Price:-lowest-first")' type="radio"
+                                    value="Price:-lowest-first" name="Order-By" id="Price:-lowest-first">
+                                <label class="form-check-label text-dark" for="Price:-lowest-first">Price:
+                                    lowest-first</label>
+                                <br>
+                                <input class="form-check-input" onclick='updateformData("orderBy", "Number-of-reviews")'
+                                    type="radio" value="Number-of-reviews" name="Order-By"
+                                    id="Number-of-reviews">
+                                <label class="form-check-label text-dark" for="Number-of-reviews">Number of
+                                    reviews</label>
+                                <br>
+                                <input class="form-check-input" onclick='updateformData("orderBy", "Best-rating")'
+                                    type="radio" value="Best-rating" name="Order-By" id="Best-rating">
+                                <label class="form-check-label text-dark" for="Best-rating">Best rating</label>
                             </form>
                         </div>
                     </div>
@@ -473,11 +392,11 @@
                 <div class="row">
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick='toggleSearchBarPopup("timeRange-popup")'>
-                            <div>‎ </div>
-
-
-                            <button class="btn btn-sm btn-outline-secondary search-bar-button text-capitalize">timeRange
-                                <i class="fa fa-caret-down fa-2x"></i></button>
+                            <div class="mb-3">‎ </div>
+                            <button
+                                class="d-flex align-items-center justify-content-center btn btn-md btn-outline-secondary text-capitalize mn-w-152 mn-h-46p">timeRange
+                                <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
+                                    aria-hidden="true"></i></button>
                         </div>
                         <div class="product-search-popup popup" id="timeRange-popup">
                             <div id="timeRange-popup-rows" class="text-center w-100">
@@ -486,11 +405,10 @@
                     </div>
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick="clearSearchBarPopups()">
-                            <div>‎ </div>
-
+                            <div class="mb-3">‎ </div>
                             <div>
                                 <button onclick="searchCourses()"
-                                    class="btn btn-sm btn-outline-secondary search-bar-button text-capitalize">search
+                                    class="btn btn-md btn-outline-secondary text-capitalize mn-w-152 mn-h-46p">search
                                 </button>
                             </div>
                         </div>
@@ -499,15 +417,11 @@
             </div>
         </div>
     </div>
-
-
-
 </div>
 
 
 
 <script>
-
 
 
     var regularSlider = document.querySelector('.regular-slider')
@@ -530,7 +444,6 @@
                 "saturday": [],
                 "sunday": []
             }
-
         }
         teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
         if (teachlyFormData === null) {
@@ -541,16 +454,16 @@
             teachlyFormData = teachlyFormDataDefault
             localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
         }
-
         range1Shown = document.getElementById('min-price-shown');
-        range2Shown2 = document.getElementById('max-price-shown');
+        range2Shown = document.getElementById('max-price-shown');
         range1Shown.innerHTML = teachlyFormData.priceRange[0] * curConversionRatio;
-        range2Shown2.innerHTML = teachlyFormData.priceRange[1] * curConversionRatio;
+        range2Shown.innerHTML = teachlyFormData.priceRange[1] * curConversionRatio;
+
         regularSlider = document.querySelector('.regular-slider')
         var prefixFormat = wNumb({ decimals: 2 })
 
         slider = noUiSlider.create(regularSlider, {
-            start: [teachlyFormData.priceRange[0], teachlyFormData.priceRange[1]],
+            start: [teachlyFormData.priceRange[0] * curConversionRatio, teachlyFormData.priceRange[1] * curConversionRatio],
             connect: true,
             margin: 5 * curConversionRatio,
             range: { min: 0, max: 60 * curConversionRatio },
@@ -563,17 +476,31 @@
         slider.on('update', function (values) {
             updateformData("priceRange", values)
         })
-
+        setInterval(async function () {
+            try {
+                priceRange = JSON.parse(localStorage.getItem("TeachlyFormData")).priceRange
+                range1Shown = document.getElementById('min-price-shown');
+                range2Shown = document.getElementById('max-price-shown');
+                range1Shown.innerHTML = priceRange[0] * curConversionRatio;
+                range2Shown.innerHTML = priceRange[1] * curConversionRatio;
+                slider.updateOptions({
+                    margin: 5 * curConversionRatio,
+                    range: { min: 0, max: 60 * curConversionRatio },
+                });
+                slider.set([priceRange[0] * curConversionRatio, priceRange[1] * curConversionRatio]);
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }, 300000);
         document.getElementById("searchBy-input").value = teachlyFormData.searchby;
         document.getElementById(teachlyFormData.orderBy.replaceAll(" ", "-")).checked = true;
         document.getElementById('orderBy-button').innerHTML = teachlyFormData.orderBy;
 
-
-
         for (i = 0; i < teachlyFormData.specialities.length; i++) {
             document.getElementById(teachlyFormData.specialities[i].replaceAll(" ", "-") + "-checkbox").checked = true;
         }
-        for (i = 0; i < teachlyFormData.taughtIn.length; i++) { document.getElementById(teachlyFormData.taughtIn[i].replaceAll(" ", "-") + "-checkbox").checked = true; }
+        for (i = 0; i < teachlyFormData.taughtIn.length; i++) { document.getElementById(teachlyFormData.taughtIn[i]).checked = true; }
         for (i = 0; i < Object.keys(teachlyFormData.days).length; i++) {
             for (j = 0; j < teachlyFormData.days[Object.keys(teachlyFormData.days)[i]].length; j++) {
                 document.getElementById(teachlyFormData.days[Object.keys(teachlyFormData.days)[i]][j] + "-checkbox").classList.add("active-time-slot-div");
@@ -641,86 +568,44 @@
             }
         }
         window.addEventListener("resize", searchBarResizeHandler);
-
-
-
-        setInterval(async function () {
-            try {
-                range1 = document.getElementById('min-price-val');
-                range2 = document.getElementById('max-price-val');
-                range1.max = range1.max * curConversionRatio;
-                range1.min = range1.min * curConversionRatio;
-                range1.step = range1.step * curConversionRatio;
-                range2.max = range2.max * curConversionRatio;
-                range2.min = range2.min * curConversionRatio;
-                range2.step = range2.step * curConversionRatio;
-            }
-
-            catch (err) {
-                console.log(err)
-            }
-        }, 300000);
-
-
     }
 
     function updateformData(type, val) {
         teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
-
         if (type == "specialities") {
             index = teachlyFormData["specialities"].indexOf(val)
-
-            if (index != -1) {
-                teachlyFormData["specialities"].splice(index, 1);
-            }
-            else {
-                teachlyFormData["specialities"].push(val)
-            }
-
+            if (index != -1) { teachlyFormData["specialities"].splice(index, 1) }
+            else { teachlyFormData["specialities"].push(val) }
         }
-
         else if (type == "priceRange") {
             min = val[0] / curConversionRatio;
             max = val[1] / curConversionRatio;
-            console.log([min, max])
             document.getElementById('min-price-shown').innerHTML = min
             document.getElementById('max-price-shown').innerHTML = max
             teachlyFormData["priceRange"] = [min, max];
             updateCurrency(curConversionRatio)
         }
-
         else if (type == "searchBy") {
             teachlyFormData.searchby = document.getElementById(val).value;
         }
-
         else if (type == "taughtIn") {
-            console.log(teachlyFormData["taughtIn"])
             index = teachlyFormData["taughtIn"].indexOf(val.replaceAll("-", " "))
-
-            if (index != -1) {
-                teachlyFormData["taughtIn"].splice(index, 1);
-            }
-            else {
-                teachlyFormData["taughtIn"].push(val.replaceAll("-", " "))
-            }
+            if (index != -1) { teachlyFormData["taughtIn"].splice(index, 1) }
+            else { teachlyFormData["taughtIn"].push(val.replaceAll("-", " ")) }
         }
-
         else if (type == "orderBy") {
             document.getElementById('orderBy-button').innerHTML = val.replaceAll("-", " ");
             teachlyFormData["orderBy"] = val.replaceAll("-", " ")
         }
-
         else if (Object.keys(teachlyFormData.days).includes(type)) {
 
             index = teachlyFormData.days[type].indexOf(val)
 
             if (index != -1) {
-                console.log("skreee")
                 teachlyFormData.days[type].splice(index, 1);
                 document.getElementById(val + "-checkbox").classList.remove("active-time-slot-div");
             }
             else {
-                console.log("reee")
                 teachlyFormData.days[type].push(val)
                 document.getElementById(val + "-checkbox").classList.add("active-time-slot-div");
             }
@@ -730,47 +615,16 @@
         localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
     }
 
-    function subjectSearch() {
-        var input, filter;
-        input = document.getElementById("subject-search-input");
-        filter = input.value.toUpperCase();
-        a = document.getElementsByClassName("subject-link-li");
-        for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
+    function searchBox(boxId, inputId) {
+        console.log(boxId,inputId)
+        filter = document.getElementById(inputId).value.toUpperCase();
+        boxChildren = document.getElementById(boxId).children;
+        for (i = 0; i < boxChildren.length; i++) {
+            txtValue = boxChildren[i].textContent || boxChildren[i].innerHTML;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                a[i].style.display = "";
+                boxChildren[i].style.display = "";
             } else {
-                a[i].style.display = "none";
-            }
-        }
-    }
-
-    function specialitySearch() {
-        var input, filter;
-        input = document.getElementById("speciality-search-input");
-        filter = input.value.toUpperCase();
-        checkboxes = document.getElementsByClassName("speciality-checkboxes-p");
-        for (i = 0; i < checkboxes.length; i++) {
-            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                checkboxes[i].style.display = "";
-            } else {
-                checkboxes[i].style.display = "none";
-            }
-        }
-    }
-
-    function taughtInSearch() {
-        var input, filter;
-        input = document.getElementById("taughtIn-search-input");
-        filter = input.value.toUpperCase();
-        checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
-        for (i = 0; i < checkboxes.length; i++) {
-            txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                checkboxes[i].style.display = "";
-            } else {
-                checkboxes[i].style.display = "none";
+                boxChildren[i].style.display = "none";
             }
         }
     }
@@ -796,19 +650,6 @@
         }
     }
 
-    function getVals() {
-        // Get slider values
-        var parent = this.parentNode;
-        var slides = parent.getElementsByTagName("input");
-        var slide1 = parseFloat(slides[0].value);
-        var slide2 = parseFloat(slides[1].value);
-        // Neither slider will clip the other, so make sure we determine which is larger
-        if (slide1 > slide2) { var tmp = slide2; slide2 = slide1; slide1 = tmp; }
-
-        var displayElement = parent.getElementsByClassName("rangeValues")[0];
-        displayElement.innerHTML = slide1 + " - " + slide2;
-    }
-
     window.addEventListener('load', function () {
         formSetupRes = formSetup()
         //populate subject
@@ -823,7 +664,7 @@
                 }
             }
         })
-        //populate subject
+        //populate Specialities
         validSpecialities = axios.get(`/get/validSpecialities/${window.location.href.split("/")[4]}`).then(res => {
             if (res.data == "404") {
             }
@@ -840,23 +681,19 @@
                 }
             }
         })
-        //populate subject
-        validLanguagesFullName = axios.get('/get/validLanguagesFullName').then(res => {
-            if (res.data == "404") { }
-            else {
-                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-                for (let i = 0; i < arr.length; i++) {
-                    p = document.createElement("p");
-                    p.className = "taughtIn-checkboxes-p"
-                    label = document.createElement("label");
-                    label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
-                    label.innerHTML = `<input onclick="updateformData('taughtIn', '${arr[i].replaceAll(" ", "-")}')" type="checkbox" id="${res.data[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")}-checkbox" value="${arr[i].replaceAll(" ", "-")}-checkbox"><span>${arr[i]}</label>`
-                    p.appendChild(label);
-                    document.getElementById("taughtIn-checkboxes").appendChild(p);
-                }
-            }
-        })
-        Promise.all([formSetupRes, validSubject, validSpecialities, validLanguagesFullName]).then((values) => {
+
+        //populate taughtin
+        arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
+        for (let i = 0; i < arr.length; i++) {
+            langPair = arr[i].split(",")
+            node = document.createElement("li");
+            node.innerHTML = `
+                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[1]}" name="${langPair[0]}" onclick='updateformData("taughtIn", "${langPair[1]}")'></input>
+                    <label class="form-check-label text-dark" for=${langPair[0]}>${langPair[0]}</label><br>`;
+            document.getElementById("taughtIn-checkboxes").appendChild(node);
+        }
+
+        Promise.all([formSetupRes, validSubject, validSpecialities]).then((values) => {
             formDataSetup()
             updateCurrency(curConversionRatio)
         });
@@ -892,8 +729,6 @@
                     'Content-Type': 'application/json',
                 },
             })
-
-            console.log(res.data)
 
             if (res.data.err) {
                 if (res.data.err == 404) {
@@ -936,8 +771,7 @@
         }
     }
 
-
-    function taughInToggle(dotsId, MoreId, btnId) {
+    function taughtInToggle(dotsId, MoreId, btnId) {
         var dots = document.getElementById(dotsId);
         var moreText = document.getElementById(MoreId);
         var btnText = document.getElementById(btnId);
@@ -952,7 +786,6 @@
             moreText.style.display = "inline";
         }
     }
-
 
     function readMoreDescToggle(dotsId, MoreId, btnId) {
         var dots = document.getElementById(dotsId);
@@ -1082,14 +915,14 @@
                                         <div class="row d-flex justify-content-center" style="width: 100% !important;">
                                             <div class="col-6 col-md-6 d-flex justify-content-center"
                                                 style="width: 130px !important;">
-                                                <button class="btn btn-sm btn-outline-secondary text-capitalize"
+                                                <button class="btn btn-md btn-outline-secondary text-capitalize"
                                                     style="width: 130px !important;">
                                                     book lesson
                                                 </button>
                                             </div>
                                             <div class="col-6 col-md-6 d-flex justify-content-center"
                                                 style="width: 130px !important;">
-                                                <button class="btn btn-sm btn-outline-secondary text-capitalize"
+                                                <button class="btn btn-md btn-outline-secondary text-capitalize"
                                                     style="width: 130px !important;">
                                                     message
                                                 </button>

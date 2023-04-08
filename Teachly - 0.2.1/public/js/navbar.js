@@ -1,4 +1,3 @@
-
 var nav = document.getElementById('navlist');
 
 function windowResizeHandler() {
@@ -14,18 +13,15 @@ function windowResizeHandler() {
 }
 
 function toggleNav() {
-
     if (nav.style.display === "none") {
         nav.style.display = "block";
         nav.style.visibility = "visible";
     }
-
     else {
         nav.style.display = "none";
         nav.style.visibility = "hidden";
     }
 }
-
 
 function navLangSearch() {
     var input, filter;
@@ -58,12 +54,10 @@ function navCurSearch() {
 }
 
 function changeNavSettings(settingName, change) {
-
     changeObj = {
         settingName: settingName,
         change: change
     }
-
     axios.post('/auth/settings', changeObj)
         .then(res => {
             window.location.reload();
@@ -83,9 +77,7 @@ function toggleNavPopup(id) {
             document.getElementById("nav-" + id.split("-")[0] + "-search-input").focus(); //auto focus on input in popup
         }
         catch {
-
         }
-
     }
     else {
         popup.style.display = "none";
@@ -101,11 +93,8 @@ function clearNavPopups() {
     }
 }
 
-
 window.addEventListener('load', function () {
-
     var nav = document.getElementById('navlist');
-
     if (window.innerWidth > 1045) {
         nav.style.visibility = "visible";
         nav.style.display = "block";
@@ -117,9 +106,6 @@ window.addEventListener('load', function () {
 
     window.addEventListener("resize", windowResizeHandler);
 
-
-
-  
     arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
     for (let i = 0; i < arr.length; i++) {
         langPair = arr[i].split(",")
@@ -132,14 +118,6 @@ window.addEventListener('load', function () {
     for (let i = 0; i < arr.length; i++) {
         node = document.createElement("li");
         node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
-        console.log(node.innerHTML)
         document.getElementById("currency-change").appendChild(node);
-
-
     }
 })
-
-
-
-
-

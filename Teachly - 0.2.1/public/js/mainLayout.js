@@ -18,9 +18,10 @@ function updateCurrencyInterval() {
     setInterval(async function () {
         try {
             res = await axios({ method: 'get', url: `/get/curConversionRatio/${userCur}` })
-            if (res.data.ratio != undefined) { updateCurrency(res.data.ratio) }
-            else { }
-            console.log(res)
+            if (res.data.ratio != undefined) { 
+                updateCurrency(res.data.ratio) 
+                curConversionRatio = res.data.ratio
+            }
         }
         catch (err) {
         }
