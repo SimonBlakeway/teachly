@@ -205,6 +205,19 @@ function isValidSubjectSpeciality(lang, subject, specialities) {
   }
 }
 
+function isValidSubjectSpecialityNoSubject(lang, speciality) {
+try {
+    keys = Object.keys(validspecialitiesObj[lang])
+    for (i=0; i < keys.length; i++) {
+      if (validspecialitiesObj[lang][keys[i]].includes(speciality)) {return keys[i]}
+    }
+    return false
+} catch (error) {
+  console.log(error)
+  return false
+}
+}
+
 function isValidAvailableTimes(obj) {
 
   /**
@@ -736,6 +749,7 @@ module.exports = {
   createCourse,
   isValidSubject,
   isValidSubjectSpeciality,
+  isValidSubjectSpecialityNoSubject,
   createChat,
   convertTimeRangeToQuery,
   convertspecialityArrToQuery,

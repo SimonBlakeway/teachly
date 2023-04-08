@@ -16,20 +16,44 @@ router.get('/', async (req, res) => {
 
 // @desc    view user profile
 // @route   GET /user/id
-router.get('/:subject', async (req, res) => {
+router.get('/:str', async (req, res) => {
   try {
-    if (utils.isValidSubject(req.settings.lang, req.params['subject'])) {
-      res.render('learnSubject', {
+    str = req.params['str'].replace("-", " ");
+    if (utils.isValidSubject(req.settings.lang, str)) {
+      setting = req.settings
+      setting.subject
+      setting.speciality
+      setting.subject = str
+      setting.speciality = ""
+      res.render('learn', {
         layout: "main",
-        context: contextSetup(req.settings, ["footer", "navbar"], "learnSubject"),
+        context: contextSetup(settings, ["footer", "navbar"], "learn"),
       })
     }
     else {
-      res.send("invalid subject")
+      posSpec = isValidSubjectSpecialityNoSubject(req.settings.lang, str)
+      if (posSpec) {
+        setting = req.settings
+        setting.subject 
+        setting.speciality
+        setting.subject = ""
+        setting.speciality = str
+        res.render('learn', {
+          layout: "main",
+          context: contextSetup(settings, ["footer", "navbar"], "learn"),
+        })
+      }
+      else {
+        res.render('learnLandingPage', {
+          layout: "main",
+          context: contextSetup(req.settings, ["navbar", "footer"], "learnLandingPage"),
+        })
+
+      }
     }
   } catch (error) {
+    console.log(error)
     res.send("error")
-
   }
 })
 

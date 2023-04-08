@@ -16,7 +16,7 @@ dotenv.config(dotenv.config({ path: './config/config.env' }));
 
 
 //setting up the timers
-customTimers.timerSetup()
+//customTimers.timerSetup()
 
 // Body parser
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }))
@@ -61,19 +61,12 @@ app.use(function (req, res, next) {
   next()
 })
 
-// Static folders
-//app.use(express.static(path.join(__dirname, 'public'), {
-//  maxAge: 300
-//}))
-
 
 app.use('/', express.static(path.join(__dirname, 'public'), {
   setHeaders: function (res, path) {
     res.set("Cache-Control", "private, max-age=60");
   }
 }));
-
-
 
 
 // general Routes

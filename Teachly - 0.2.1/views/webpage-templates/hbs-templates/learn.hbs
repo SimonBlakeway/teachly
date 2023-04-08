@@ -422,6 +422,10 @@
 
 
 <script>
+    const subject = "{{context.settings.subject}}"
+    const speciality = "{{context.settings.speciality}}"
+
+
 
 
     var regularSlider = document.querySelector('.regular-slider')
@@ -429,7 +433,7 @@
     const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
     function formDataSetup() {
         teachlyFormDataDefault = {
-            "subject": window.location.href.split("/")[4],
+            "subject": subject,
             "specialities": [],
             "priceRange": [1, 50],
             "searchby": "",
@@ -511,7 +515,7 @@
     }
 
     async function formSetup() {
-        document.getElementById("subject-search-input").placeholder = window.location.href.split("/")[4]
+        document.getElementById("subject-search-input").placeholder = subject
         timeRange = document.getElementById("timeRange-popup-rows")
 
         for (let i = 0; i <= 6; i++) {
@@ -665,7 +669,7 @@
             }
         })
         //populate Specialities
-        validSpecialities = axios.get(`/get/validSpecialities/${window.location.href.split("/")[4]}`).then(res => {
+        validSpecialities = axios.get(`/get/validSpecialities/${subject}`).then(res => {
             if (res.data == "404") {
             }
             else {
