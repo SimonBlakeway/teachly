@@ -1,3 +1,7 @@
+<script src="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.js"></script>
+<script src="https://unpkg.com/wnumb@1.1.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.css">
+
 <style>
   #create-course {
     /* fallback for old browsers */
@@ -9,7 +13,7 @@
     height: 80%;
     width: 100%;
     font-size: 18px;
-    margin-top: -140px;
+    margin-top: -200px;
   }
 
   .course-input {
@@ -30,7 +34,7 @@
   #course-image {
     font-size: 15px;
     font-family: calibri;
-    width: 100%;
+    width: 120px !important;
     height: 46px;
     padding: 4px;
     -webkit-border-radius: 3px;
@@ -41,10 +45,6 @@
     text-align: center;
     background-color: rgb(210, 233, 231);
     cursor: pointer;
-  }
-
-  .subject-li {
-    text-decoration: none;
   }
 
   .popup {
@@ -152,123 +152,84 @@
     border-radius: 14px 7px;
   }
 
-  .course-col {
-    background-color: gold;
-    text-align: center;
-    padding: 10px !important;
-    min-height: 80px !important;
-    max-width: 300px !important;
-    min-width: 170px !important;
-    margin: 10px !important;
-    border-radius: 5%;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  .mn-w-270p {
+    min-width: 270px;
   }
 
-  @media only screen and (max-width: 770px) {
-
-    #speciality-popup {}
-
-    #timeRange-popup {
-      width: 340px !important;
-      height: 520px;
-      border-width: 15px;
-      margin-right: 150px !important;
-      margin-top: 640px;
-    }
-
-    .course-col {
-      background-color: goldenrod;
-      max-width: 200px !important;
-    }
-
+  .bg-dkr-lght-color {
+    background-color: #daecfd;
   }
 
-  @media only screen and (max-width: 600px) {
-    #speciality-popup {}
-  }
-
-  @media only screen and (max-width: 500px) {
-    .popup {
-      width: 80%;
-      height: 45%;
-    }
-
-    .course-input {
-      width: 80%;
-    }
-  }
-
-  @media only screen and (max-width: 450px) {
-    #timeRange-popup {
-      height: 520px;
-      width: 315px !important;
-      margin-right: 140px !important;
-      margin-top: 640px;
-      border-left-width: 3px !important;
-      border-right-width: 3px !important;
-      padding: -5px !important;
-    }
-
-    #pricePerLesson-popup {}
-
-    #subject-popup {}
-
-    #speciality-popup {}
-
-
-    #taughtIn-popup {}
-  }
-
-  @media only screen and (max-width: 300px) {
-    .popup {
-      width: 80%;
-      height: 50%;
-      padding: 0px;
-    }
+  .h-33 {
+    height: 33.33333%;
   }
 </style>
 
-<section id="create-course" onclick="clearCoursePopups()">
-  <div class="container py-5">
-    <div class="row justify-content-center align-items-center h-100">
-      <div class="col-12 col-lg-9 col-xl-7">
-        <div class="registration-form-color" style="border-radius: 15px; background-color: rgb(210, 233, 231);">
-          <div class="p-4 p-md-5">
-
-
-            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">{{context.bodyContext.registrationForm}}</h3>
-
-            <div class="row container d-flex align-items-center justify-content-center"
-              onclick="event.stopPropagation();" style="margin: 0px !important;">
-
-              <div class="col container d-flex align-items-center justify-content-center course-col"
-                onclick='toggleCoursePopup("subject-popup")'>
-                <div>
-                  <div style="font-size: 25px; font-weight:500; margin-bottom: 10px;">subject</div>
-                  <div id="subject">choose</div>
-                </div>
-                <div class="popup" id="subject-popup">
-                  <div>
-                    <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                      id="subject-search-input" onkeyup="subjectSearch()"></input>
-                  </div>
-                  <ul id="subject-links" onclick='toggleCoursePopup("subject-popup")'>
-                  </ul>
+<section id="create-course" class="py-5 px-0 mx-0" onclick="clearCoursePopups()">
+  <div class="container bg-light shadow rounded w-75 mn-w-270p">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-12 p-1">
+        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">{{context.bodyContext.registrationForm}}</h3>
+        <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
+          onclick="event.stopPropagation();">
+          <div class="col container d-flex align-items-center justify-content-center p-0 bg-dkr-lght-color"
+            onclick='toggleCoursePopup("subject-popup")'>
+            <div>
+              <div class="mb-1">subject</div>
+              <div id="subject">choose</div>
+            </div>
+            <div class="popup" id="subject-popup">
+              <div>
+                <input class="course-input form-control form-control-lg border border-info rounded" type="text"
+                  id="subject-search-input" onkeyup="subjectSearch()"></input>
+              </div>
+              <ul id="subject-links" onclick='toggleCoursePopup("subject-popup")'>
+              </ul>
+            </div>
+          </div>
+          <div class="col container d-flex align-items-center justify-content-center p-0 bg-dkr-lght-color">
+            <div onclick='toggleCoursePopup("speciality-popup")'>
+              <div class="mb-1">specialities</div>
+              <div id="specialities">ㅤ</div>
+            </div>
+            <div class="popup" id="speciality-popup">
+              <input class="course-input form-control form-control-lg border border-info rounded" type="text"
+                id="speciality-search-input" placeholder="" onkeyup="specialitySearch()"></input>
+              <div id="speciality-checkboxes"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
+          onclick="event.stopPropagation();">
+          <div class="col d-flex align-items-center justify-content-center bg-dkr-lght-color">
+            <div>
+              <div class="mb-1">description</div>
+              <textarea style="height: auto !important; text-align:left;" id="subject-search-input" name="" rows="8"
+                cols="70" class="course-input form-control form-control-lg border border-info rounded"></textarea>
+            </div>
+          </div>
+          <div class="col bg-dkr-lght-color">
+            <div class="row d-flex align-items-center justify-content-center h-33">
+              <div class="my-2">Course Image</div>
+              <div id="course-image" onclick="getFile()" style="padding-top: 10px; height: 44px;">click to upload
+                image, ratio 16:9</div>
+              <div class="border border-info rounded " style='height: 0px;width: 0px; overflow:hidden;'><input required
+                  id="upfile" type="file" value="upload" onchange="sub(this)" accept="image/*" /></div>
+            </div>
+            <div class="row d-flex align-items-center justify-content-center h-33">
+              <div class="my-2">price range</div>
+              <div class="d-flex align-items-center justify-content-center">
+                <div class="">
+                  <div style="margin: 4em w-100" id="regular-slider"></div>
                 </div>
               </div>
-
-              <div class="col container d-flex align-items-center justify-content-center course-col">
+            </div>
+            <div class="row d-flex align-items-center justify-content-center h-33">
+              <div>
                 <div onclick='toggleCoursePopup("speciality-popup")'>
-
-                  <div style="font-size: 25px; font-weight:500; margin-bottom: 10px;">specialities</div>
-                  <div id="specialities">ㅤ</div>
+                  <div class="my-2">Taught In</div>
+                  <div id="specialities">Choose</div>
                 </div>
-
                 <div class="popup" id="speciality-popup">
                   <input class="course-input form-control form-control-lg border border-info rounded" type="text"
                     id="speciality-search-input" placeholder="" onkeyup="specialitySearch()"></input>
@@ -276,104 +237,21 @@
                 </div>
               </div>
             </div>
-
-
-
-            <div class="row container d-flex align-items-center justify-content-center"
-              onclick="event.stopPropagation();" style="margin: 0px !important;">
-
-              <div class="col container d-flex align-items-center justify-content-center course-col">
-                <div>
-
-                  <div style="font-size: 25px; font-weight:500; margin-bottom: 10px;">description</div>
-
-                  <textarea style="height: auto !important; text-align:left;" id="subject-search-input" name="" rows="8"
-                    cols="70" class="course-input form-control form-control-lg border border-info rounded"></textarea>
-
-                </div>
-
-              </div>
-
-
-
-
-
-              <div class="col">
-
-                <div class="row container d-flex align-items-center justify-content-center course-col" style="margin-left: 0px !important;">
-
-                  <div style="font-size: 25px; font-weight:500; margin-bottom: 10px;">Course Image</div>
-
-                  <div id="course-image" onclick="getFile()" style="padding-top: 10px; height: 44px;">click to upload
-                    image, ratio 16:9</div>
-                  <div class="border border-info rounded " style='height: 0px;width: 0px; overflow:hidden;'><input
-                      required id="upfile" type="file" value="upload" onchange="sub(this)" accept="image/*" /></div>
-
-                </div>
-
-                <div class="row container d-flex align-items-center justify-content-center course-col" style="margin-left: 0px !important;">
-
-                  <div style="font-size: 25px; font-weight:500; margin-bottom: 10px;">price range</div>
-
-
-                  <div class="container d-flex align-items-center justify-content-center">
-                    <div class="container" style="text-align: center; margin-left: -30px !important;">
-
-                      <section class="range-slider">
-                        <span class="rangeValues"></span>
-                        <input id="min-price-val" onclick='updateformData("priceRangeMin", "min-price-val")' value="5"
-                          min="1" max="50" step="0.1" type="range">
-                        <input id="max-price-val" onclick='updateformData("priceRangeMax", "max-price-val")' value="10"
-                          min="1" max="50" step="0.1" type="range">
-                      </section>
-
-                    </div>
-                  </div>
-
-
-
-                </div>
-
-                <div class="row container d-flex align-items-center justify-content-center course-col" style="margin-left: 0px !important;">
-                  <div>
-
-                    <div onclick='toggleCoursePopup("speciality-popup")'>
-
-                      <div style="font-size: 25px; font-weight:500; margin-bottom: 10px;">Taught In</div>
-                      <div id="specialities">ㅤ</div>
-                    </div>
-
-                    <div class="popup" id="speciality-popup">
-                      <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                        id="speciality-search-input" placeholder="" onkeyup="specialitySearch()"></input>
-                      <div id="speciality-checkboxes"></div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-
-
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <div class="form-check d-flex justify-content-center mb-5">
+              <label class="form-check-label">
+                {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
+                  class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
+              </label>
             </div>
-
-
-            <div class="row">
-              <div class="col-md-12 mb-4">
-                <div class="form-check d-flex justify-content-center mb-5">
-                  <label class="form-check-label">
-                    {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
-                      class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
-                  </label>
-                </div>
-                <div class="d-flex justify-content-center">
-                  <button type='submit' onclick="sendSigninReq()"
-                    class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
-                    {{context.bodyContext.createCourse}}</button>
-                </div>
-              </div>
+            <div class="d-flex justify-content-center">
+              <button type='submit' onclick="sendSigninReq()"
+                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                {{context.bodyContext.createCourse}}</button>
             </div>
-
           </div>
         </div>
       </div>
@@ -382,151 +260,23 @@
 </section>
 
 
-<div id="email-popup" class="popup">
-  <form onsubmit="return false" id="">
-    <label id="email-label" class="text" for="email-input"
-      style="font-size: 18px;">{{context.bodyContext.emailPopup.text}}</label>
-    <br>
-    <input maxlength="5" type="numbers" required type="text" id="email-input"
-      class="form-control form-control-lg border border-info rounded course-input" />
-    <br>
-    <button id="email-popup-submit" type='submit' onclick="sendEmailCode()"
-      class="btn btn-success btn-block btn-lg">{{context.bodyContext.emailPopup.submitButtonText}}</button>
-  </form>
-</div>
-
-<div id="err-popup" class="popup" style="height: 20%; width: 40%;">
+<div id="err-popup" class="popup">
   <div id="email-err">{{context.bodyContext.errPopup.emailErr}}</div>
   <div id="name-err">{{context.bodyContext.errPopup.nameErr}}</div>
 </div>
 
-<div id="emailcode-err-popup" class="popup" style="height: 10%; width: 20%;">
+<div id="emailcode-err-popup" class="popup">
   <div>{{context.bodyContext.emailCode.invalidEmailCode}}</div>
 </div>
 
 
 <script>
-  function getFile() {
-    document.getElementById("upfile").click();
-  }
-
-  function sub(obj) {
-    var file = obj.value;
-    var fileName = file.split("\\");
-    document.getElementById("profile-image").innerHTML = fileName[fileName.length - 1];
-  }
-
-  sendEmailCode = async function () {
-    emailCode = $("#email-input").val();
-    email = $("#email").val();
-    res = await axios.get('/auth/emailValidation', { params: { "emailCode": emailCode, "email": email } });
-    if (res.data.err) {
-      console.log(res.data.err)
-
-      $("#emailcode-err-popup").attr("display", "grid");
-      setTimeout(function () {
-        $("#emailcode-err-popup").fadeOut('fast')
-      }, 1000);
-
-    }
-    else {
-      window.location = "/"
-    }
-  }
-
-
-
-  sendSigninReq = async function () {
-    try {
-      reader = new FileReader();
-      reader.onloadend = () => {
-        sendReq([$("#username").val(), reader.result, $("#password").val(), $("#email").val()])
-      };
-      reader.readAsDataURL($('#upfile').prop('files')[0])
-
-      sendReq = async function (arr) {
-        try {
-          formData = {
-            'name': arr[0],
-            'profileImage': arr[1],
-            'password': arr[2],
-            'email': arr[3],
-          }
-          res = await axios({
-            method: 'post',
-            url: '/auth/register',
-            data: formData,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-          if (res.data.err) {
-            $("#err-popup").attr("display", "grid");
-            document.getElementById("err-popup").style.display = "grid";
-            if (res.data.err == "name taken") {
-              $('#name-err').show();
-              $('#email-err').hide();
-              setTimeout(function () {
-                $('#err-popup').fadeOut('fast')
-              }, 1000);
-            }
-            if (res.data.err == "email taken") {
-              $('#name-err').hide();
-              $('#email-err').show();
-              setTimeout(function () {
-                $('#err-popup').fadeOut('fast')
-              }, 1000);
-            }
-          }
-          else {
-
-            document.getElementById("email-popup").style.display = "grid";
-            document.getElementById("form-section").style.visibility = "hidden";
-          }
-        }
-        catch (err) {
-          console.log(err)
-        }
-      }
-    }
-    catch {
-
-    }
-  }
-</script>
-</section>
-
-<div id="test-slider"></div>
-
-<script>
-
-  var slider = document.getElementById('test-slider');
-  noUiSlider.create(slider, {
-   start: [20, 80],
-   connect: true,
-   step: 1,
-   orientation: 'horizontal', // 'horizontal' or 'vertical'
-   range: {
-     'min': 0,
-     'max': 100
-   },
-   format: wNumb({
-     decimals: 0
-   })
-  });
-
-
-
-
 
   function subjectSearch() {
     var input, filter;
     input = document.getElementById("subject-search-input");
     filter = input.value.toUpperCase();
 
-    a = document.getElementsByClassName("subject-li");
-
-    console.log(a)
     for (i = 0; i < a.length; i++) {
       txtValue = a[i].textContent || a[i].innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -595,25 +345,110 @@
     }
   }
 
-  function getVals() {
-    // Get slider values
-    var parent = this.parentNode;
-    var slides = parent.getElementsByTagName("input");
-    var slide1 = parseFloat(slides[0].value);
-    var slide2 = parseFloat(slides[1].value);
-    // Neither slider will clip the other, so make sure we determine which is larger
-    if (slide1 > slide2) { var tmp = slide2; slide2 = slide1; slide1 = tmp; }
-
-    var displayElement = parent.getElementsByClassName("rangeValues")[0];
-    displayElement.innerHTML = slide1 + " - " + slide2;
-  }
-
   function chooseInput(subject) {
     clearCoursePopups()
     console.log(subject)
   }
 
+  function getFile() {
+    document.getElementById("upfile").click();
+  }
+
+  function sub(obj) {
+    var file = obj.value;
+    var fileName = file.split("\\");
+    document.getElementById("profile-image").innerHTML = fileName[fileName.length - 1];
+  }
+
+  sendSigninReq = async function () {
+    try {
+      reader = new FileReader();
+      reader.onloadend = () => {
+        sendReq([$("#username").val(), reader.result, $("#password").val(), $("#email").val()])
+      };
+      reader.readAsDataURL($('#upfile').prop('files')[0])
+
+      sendReq = async function (arr) {
+        try {
+          formData = {
+            'name': arr[0],
+            'profileImage': arr[1],
+            'password': arr[2],
+            'email': arr[3],
+          }
+          res = await axios({
+            method: 'post',
+            url: '/auth/register',
+            data: formData,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          if (res.data.err) {
+            $("#err-popup").attr("display", "grid");
+            document.getElementById("err-popup").style.display = "grid";
+            if (res.data.err == "name taken") {
+              $('#name-err').show();
+              $('#email-err').hide();
+              setTimeout(function () {
+                $('#err-popup').fadeOut('fast')
+              }, 1000);
+            }
+            if (res.data.err == "email taken") {
+              $('#name-err').hide();
+              $('#email-err').show();
+              setTimeout(function () {
+                $('#err-popup').fadeOut('fast')
+              }, 1000);
+            }
+          }
+          else {
+
+            document.getElementById("email-popup").style.display = "grid";
+            document.getElementById("form-section").style.visibility = "hidden";
+          }
+        }
+        catch (err) {
+          console.log(err)
+        }
+      }
+    }
+    catch {
+
+    }
+  }
+
+
   window.addEventListener('load', function () {
+
+    regularSlider = document.getElementById("regular-slider")
+    prefixFormat = wNumb({ decimals: 2 })
+    slider = noUiSlider.create(regularSlider, {
+      start: [1 * curConversionRatio, 60 * curConversionRatio],
+      connect: true,
+      margin: 5 * curConversionRatio,
+      range: { min: 0, max: 60 * curConversionRatio },
+      tooltips: [prefixFormat, prefixFormat],
+      pips: {
+        mode: 'steps',
+        density: 5,
+      },
+    })
+    setInterval(async function () {
+      try {
+        slider.updateOptions({
+          margin: 5 * curConversionRatio,
+          range: { min: 0, max: 60 * curConversionRatio },
+        });
+        slider.set([priceRange[0] * curConversionRatio, priceRange[1] * curConversionRatio]);
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }, 300000);
+
+
+
     axios.get('/get/validSubject').then(res => {
       if (res.data == "404") { }
       else {
@@ -644,9 +479,10 @@
         }
       }
     })
+
+
   })
 
 
 </script>
-
-
+</section>
