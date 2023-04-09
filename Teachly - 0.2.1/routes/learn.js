@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 // @route   GET /subject or speciality
 router.get('/:str', async (req, res) => {
   try {
-    str = req.params['str'].replace("-", " ");
+    str = req.params['str'].replaceAll("-", " ");
     if (utils.isValidSubject(req.settings.lang, str)) {
       setting = req.settings
       setting.subject

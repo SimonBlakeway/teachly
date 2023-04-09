@@ -111,7 +111,7 @@ async function ImagePrep(imgStr, name) {
       1 alter the image based of it's data, since images come in a variety of sizes and shapes there's no one size fits all function 
 
     */
-    name = name.replace(" ", "-")
+    name = name.replaceAll(" ", "-")
     directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing
     fileName = `${name}.jpeg`
     alteredFileName = `${name}-altered.jpeg`
