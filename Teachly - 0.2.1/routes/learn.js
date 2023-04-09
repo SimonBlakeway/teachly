@@ -5,7 +5,7 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
-// @desc    view user profile
+// @desc    learn landing page 
 // @route   GET /user/id
 router.get('/', async (req, res) => {
   res.render('learnLandingPage', {
@@ -14,8 +14,8 @@ router.get('/', async (req, res) => {
   })
 })
 
-// @desc    view user profile
-// @route   GET /user/id
+// @desc    learn page  
+// @route   GET /subject or speciality
 router.get('/:str', async (req, res) => {
   try {
     str = req.params['str'].replace("-", " ");
@@ -31,12 +31,12 @@ router.get('/:str', async (req, res) => {
       })
     }
     else {
-      posSpec = isValidSubjectSpecialityNoSubject(req.settings.lang, str)
-      if (posSpec) {
+      posSub = utils.isValidSubjectSpecialityNoSubject(req.settings.lang, str)
+      if (posSub) {
         setting = req.settings
         setting.subject 
         setting.speciality
-        setting.subject = ""
+        setting.subject = posSub
         setting.speciality = str
         res.render('learn', {
           layout: "main",

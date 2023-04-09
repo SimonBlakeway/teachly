@@ -108,7 +108,7 @@
     }
 
     #speciality-popup {
-        width: 280px;
+        width: 300px;
         height: 300px;
         margin-left: 80px;
         margin-top: 400px;
@@ -268,7 +268,8 @@
                         <div class="" onclick='toggleSearchBarPopup("subject-popup")'>
                             <div class="mb-3">Subject Search</div>
                             <input class="form-control form-control-md border border-info rounded mn-w-135p" type="text"
-                                id="subject-search-input" onkeyup='searchBox("subject-links", "subject-search-input")'></input>
+                                id="subject-search-input"
+                                onkeyup='searchBox("subject-links", "subject-search-input")'></input>
                         </div>
                         <div class="product-search-popup popup" id="subject-popup">
                             <ul id="subject-links">
@@ -280,7 +281,8 @@
                         <div onclick='toggleSearchBarPopup("speciality-popup")'>
                             <div class="mb-3">Speciality Search</div>
                             <input class="form-control form-control-md border border-info rounded mn-w-135p" type="text"
-                                id="speciality-search-input" placeholder="" onkeyup='searchBox("speciality-checkboxes", "speciality-search-input")'></input>
+                                id="speciality-search-input" placeholder=""
+                                onkeyup='searchBox("speciality-checkboxes", "speciality-search-input")'></input>
                         </div>
                         <div class="product-search-popup popup" id="speciality-popup">
                             <div id="speciality-checkboxes"></div>
@@ -375,8 +377,7 @@
                                     lowest-first</label>
                                 <br>
                                 <input class="form-check-input" onclick='updateformData("orderBy", "Number-of-reviews")'
-                                    type="radio" value="Number-of-reviews" name="Order-By"
-                                    id="Number-of-reviews">
+                                    type="radio" value="Number-of-reviews" name="Order-By" id="Number-of-reviews">
                                 <label class="form-check-label text-dark" for="Number-of-reviews">Number of
                                     reviews</label>
                                 <br>
@@ -428,10 +429,11 @@
 
 
 
-    var regularSlider = document.querySelector('.regular-slider')
 
     const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
     function formDataSetup() {
+
+
         teachlyFormDataDefault = {
             "subject": subject,
             "specialities": [],
@@ -450,21 +452,33 @@
             }
         }
         teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
+
         if (teachlyFormData === null) {
             teachlyFormData = teachlyFormDataDefault
             localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
         }
+
         if (teachlyFormData.subject != teachlyFormDataDefault.subject) {
             teachlyFormData = teachlyFormDataDefault
             localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
         }
+
+        if (!(teachlyFormData.specialities.includes(speciality))) {
+            teachlyFormData = teachlyFormDataDefault
+            teachlyFormData.specialities.push(speciality)
+
+            for (i = 0; i < teachlyFormData.specialities.length; i++) {
+                document.getElementById(teachlyFormData.specialities[i].replaceAll(" ", "-")).checked = true;
+            }
+        }
+
         range1Shown = document.getElementById('min-price-shown');
         range2Shown = document.getElementById('max-price-shown');
         range1Shown.innerHTML = teachlyFormData.priceRange[0] * curConversionRatio;
         range2Shown.innerHTML = teachlyFormData.priceRange[1] * curConversionRatio;
 
         regularSlider = document.querySelector('.regular-slider')
-        var prefixFormat = wNumb({ decimals: 2 })
+        prefixFormat = wNumb({ decimals: 2 })
 
         slider = noUiSlider.create(regularSlider, {
             start: [teachlyFormData.priceRange[0] * curConversionRatio, teachlyFormData.priceRange[1] * curConversionRatio],
@@ -497,12 +511,14 @@
                 console.log(err)
             }
         }, 300000);
+
         document.getElementById("searchBy-input").value = teachlyFormData.searchby;
         document.getElementById(teachlyFormData.orderBy.replaceAll(" ", "-")).checked = true;
         document.getElementById('orderBy-button').innerHTML = teachlyFormData.orderBy;
 
+
         for (i = 0; i < teachlyFormData.specialities.length; i++) {
-            document.getElementById(teachlyFormData.specialities[i].replaceAll(" ", "-") + "-checkbox").checked = true;
+            document.getElementById(teachlyFormData.specialities[i].replaceAll(" ", "-")).checked = true;
         }
         for (i = 0; i < teachlyFormData.taughtIn.length; i++) { document.getElementById(teachlyFormData.taughtIn[i]).checked = true; }
         for (i = 0; i < Object.keys(teachlyFormData.days).length; i++) {
@@ -620,7 +636,6 @@
     }
 
     function searchBox(boxId, inputId) {
-        console.log(boxId,inputId)
         filter = document.getElementById(inputId).value.toUpperCase();
         boxChildren = document.getElementById(boxId).children;
         for (i = 0; i < boxChildren.length; i++) {
@@ -642,7 +657,7 @@
     }
 
     function toggleSearchBarPopup(id) {
-        var subjectPopup = document.getElementById(id);
+        subjectPopup = document.getElementById(id);
         if (subjectPopup.style.display == "block") {
             subjectPopup.style.display = "none";
             subjectPopup.style.visibility = "hidden";
@@ -675,13 +690,12 @@
             else {
                 arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
                 for (let i = 0; i < arr.length; i++) {
-                    p = document.createElement("p");
-                    p.className = "speciality-checkboxes-p";
-                    label = document.createElement("label");
-                    label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
-                    label.innerHTML = `<input onclick="updateformData('specialities', '${arr[i].replaceAll(" ", "-")}')"  type="checkbox" id="${arr[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")} checkbox" value="${arr[i]}-checkbox"><span>${arr[i]}</label>`
-                    p.appendChild(label);
-                    document.getElementById("speciality-checkboxes").appendChild(p);
+                    node = document.createElement("div");
+                    specialityWithBars = arr[i].replace(" ", "-")
+                    node.innerHTML = `
+                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${specialityWithBars}" name="${specialityWithBars}" onclick='updateformData("taughtIn", "${specialityWithBars}")'></input>
+                    <label class="form-check-label text-dark fs-5" for=${specialityWithBars}>${arr[i]}</label><br>`;
+                    document.getElementById("speciality-checkboxes").appendChild(node);
                 }
             }
         })
@@ -690,7 +704,7 @@
         arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
         for (let i = 0; i < arr.length; i++) {
             langPair = arr[i].split(",")
-            node = document.createElement("li");
+            node = document.createElement("div");
             node.innerHTML = `
                     <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[1]}" name="${langPair[0]}" onclick='updateformData("taughtIn", "${langPair[1]}")'></input>
                     <label class="form-check-label text-dark" for=${langPair[0]}>${langPair[0]}</label><br>`;
