@@ -1,7 +1,3 @@
-<script src="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.js"></script>
-<script src="https://unpkg.com/wnumb@1.1.0"></script>
-<link rel="stylesheet" href="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.css">
-
 <style>
   #create-course {
     /* fallback for old browsers */
@@ -159,24 +155,23 @@
   .bg-dkr-lght-color {
     background-color: #daecfd;
   }
-
-  .h-33 {
-    height: 33.33333%;
-  }
 </style>
 
 <section id="create-course" class="py-5 px-0 mx-0" onclick="clearCoursePopups()">
   <div class="container bg-light shadow rounded w-75 mn-w-270p">
     <div class="row d-flex justify-content-center align-items-center">
+
+
+
+
       <div class="col-12 p-1">
         <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">{{context.bodyContext.registrationForm}}</h3>
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
           onclick="event.stopPropagation();">
-          <div class="col container d-flex align-items-center justify-content-center p-0 bg-dkr-lght-color"
-            onclick='toggleCoursePopup("subject-popup")'>
+          <div class="col p-2 bg-dkr-lght-color m-2" onclick='toggleCoursePopup("subject-popup")'>
             <div>
-              <div class="mb-1">subject</div>
-              <div id="subject">choose</div>
+              <div class="my-2">subject</div>
+              <div id="subject" class="text-center py-2 border rounded border-primary">choose</div>
             </div>
             <div class="popup" id="subject-popup">
               <div>
@@ -187,10 +182,10 @@
               </ul>
             </div>
           </div>
-          <div class="col container d-flex align-items-center justify-content-center p-0 bg-dkr-lght-color">
-            <div onclick='toggleCoursePopup("speciality-popup")'>
-              <div class="mb-1">specialities</div>
-              <div id="specialities">ㅤ</div>
+          <div class="col p-2 bg-dkr-lght-color m-2" onclick='toggleCoursePopup("speciality-popup")'>
+            <div>
+              <div class="my-2">specialities</div>
+              <div id="specialities" class="text-center py-2 border rounded border-primary">choose</div>
             </div>
             <div class="popup" id="speciality-popup">
               <input class="course-input form-control form-control-lg border border-info rounded" type="text"
@@ -201,57 +196,80 @@
         </div>
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
           onclick="event.stopPropagation();">
-          <div class="col d-flex align-items-center justify-content-center bg-dkr-lght-color">
-            <div>
-              <div class="mb-1">description</div>
-              <textarea style="height: auto !important; text-align:left;" id="subject-search-input" name="" rows="8"
-                cols="70" class="course-input form-control form-control-lg border border-info rounded"></textarea>
+          <div class="col p-0 m-2 d-flex align-items-center justify-content-center bg-dkr-lght-color" style="height:220px;">
+            <div class="mn-w-270p bg-dkr-lght-color p-3">
+              <div class="my-2">description</div>
+              <textarea style="height:max-content;"  id="subject-search-input" name="" rows="5" cols="80" maxlength="20"
+                class="form-control form-control-lg border border-info rounded fs-6 text-left"></textarea>
             </div>
           </div>
-          <div class="col bg-dkr-lght-color">
-            <div class="row d-flex align-items-center justify-content-center h-33">
-              <div class="my-2">Course Image</div>
-              <div id="course-image" onclick="getFile()" style="padding-top: 10px; height: 44px;">click to upload
-                image, ratio 16:9</div>
-              <div class="border border-info rounded " style='height: 0px;width: 0px; overflow:hidden;'><input required
-                  id="upfile" type="file" value="upload" onchange="sub(this)" accept="image/*" /></div>
-            </div>
-            <div class="row d-flex align-items-center justify-content-center h-33">
-              <div class="my-2">price range</div>
-              <div class="d-flex align-items-center justify-content-center">
-                <div class="">
-                  <div style="margin: 4em w-100" id="regular-slider"></div>
+          <div class="col p-0 m-2"  style="height:225px;">
+            <div class="row d-flex align-items-center justify-content-center m-0 p-2 mb-3 bg-dkr-lght-color mn-w-270p">
+              <div class="h-200p">
+                <div class="my-2">Course Image</div>
+                <div class="d-flex align-items-center justify-content-center">
+                  <div id="course-image" class="border rounded border-primary" onclick="getFile()"
+                    style="padding-top: 10px; height: 44px; width:240px !important; overflow:hidden;">click to upload
+                    image, ratio 16:9</div>
+                  <div class="" style='height: 0px;width: 0px; overflow:hidden;'><input required id="upfile" type="file"
+                      value="upload" onchange="sub(this)" accept="image/*" /></div>
                 </div>
               </div>
             </div>
-            <div class="row d-flex align-items-center justify-content-center h-33">
-              <div>
-                <div onclick='toggleCoursePopup("speciality-popup")'>
-                  <div class="my-2">Taught In</div>
-                  <div id="specialities">Choose</div>
+            <div class="row d-flex align-items-center justify-content-center m-0 p-2 mt-3 bg-dkr-lght-color mn-w-270p"
+              onclick='toggleCoursePopup("subject-popup")'>
+              <div class="h-200p">
+                <div>
+                  <div class="my-2">taught in</div>
+                  <div class="d-flex align-items-center justify-content-center w-100 text-center" id="subject">
+                    <div class="border rounded border-primary d-flex align-items-center justify-content-center py-2">choose
+                    </div>
+                  </div>
                 </div>
-                <div class="popup" id="speciality-popup">
-                  <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                    id="speciality-search-input" placeholder="" onkeyup="specialitySearch()"></input>
-                  <div id="speciality-checkboxes"></div>
+                <div class="popup" id="subject-popup">
+                  <div>
+                    <input class="course-input form-control form-control-lg border border-info rounded" type="text"
+                      id="subject-search-input" onkeyup="subjectSearch()"></input>
+                  </div>
+                  <ul id="subject-links" onclick='toggleCoursePopup("subject-popup")'>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12 mb-4">
-            <div class="form-check d-flex justify-content-center mb-5">
-              <label class="form-check-label">
-                {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
-                  class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
-              </label>
-            </div>
-            <div class="d-flex justify-content-center">
-              <button type='submit' onclick="sendSigninReq()"
-                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
-                {{context.bodyContext.createCourse}}</button>
-            </div>
+      </div>
+
+
+
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-check d-flex justify-content-center mb-5">
+            <label class="form-check-label">
+              {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
+                class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
+            </label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button type='submit' onclick="sendSigninReq()"
+              class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+              {{context.bodyContext.createCourse}}</button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-4">
+          <div class="form-check d-flex justify-content-center mb-5">
+            <label class="form-check-label">
+              {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
+                class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
+            </label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button type='submit' onclick="sendSigninReq()"
+              class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+              {{context.bodyContext.createCourse}}</button>
           </div>
         </div>
       </div>
@@ -272,47 +290,15 @@
 
 <script>
 
-  function subjectSearch() {
-    var input, filter;
-    input = document.getElementById("subject-search-input");
-    filter = input.value.toUpperCase();
-
-    for (i = 0; i < a.length; i++) {
-      txtValue = a[i].textContent || a[i].innerText;
+  function searchBox(boxId, inputId) {
+    filter = document.getElementById(inputId).value.toUpperCase();
+    boxChildren = document.getElementById(boxId).children;
+    for (i = 0; i < boxChildren.length; i++) {
+      txtValue = boxChildren[i].textContent || boxChildren[i].innerHTML;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        a[i].style.display = "";
+        boxChildren[i].style.display = "";
       } else {
-        a[i].style.display = "none";
-      }
-    }
-  }
-
-  function specialitySearch() {
-    var input, filter;
-    input = document.getElementById("speciality-search-input");
-    filter = input.value.toUpperCase();
-    checkboxes = document.getElementsByClassName("speciality-checkboxes-p");
-    for (i = 0; i < checkboxes.length; i++) {
-      txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        checkboxes[i].style.display = "";
-      } else {
-        checkboxes[i].style.display = "none";
-      }
-    }
-  }
-
-  function taughtInSearch() {
-    var input, filter;
-    input = document.getElementById("taughtIn-search-input");
-    filter = input.value.toUpperCase();
-    checkboxes = document.getElementsByClassName("taughtIn-checkboxes-p");
-    for (i = 0; i < checkboxes.length; i++) {
-      txtValue = checkboxes[i].textContent || checkboxes[i].innerHTML;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        checkboxes[i].style.display = "";
-      } else {
-        checkboxes[i].style.display = "none";
+        boxChildren[i].style.display = "none";
       }
     }
   }
@@ -420,34 +406,6 @@
 
 
   window.addEventListener('load', function () {
-
-    regularSlider = document.getElementById("regular-slider")
-    prefixFormat = wNumb({ decimals: 2 })
-    slider = noUiSlider.create(regularSlider, {
-      start: [1 * curConversionRatio, 60 * curConversionRatio],
-      connect: true,
-      margin: 5 * curConversionRatio,
-      range: { min: 0, max: 60 * curConversionRatio },
-      tooltips: [prefixFormat, prefixFormat],
-      pips: {
-        mode: 'steps',
-        density: 5,
-      },
-    })
-    setInterval(async function () {
-      try {
-        slider.updateOptions({
-          margin: 5 * curConversionRatio,
-          range: { min: 0, max: 60 * curConversionRatio },
-        });
-        slider.set([priceRange[0] * curConversionRatio, priceRange[1] * curConversionRatio]);
-      }
-      catch (err) {
-        console.log(err)
-      }
-    }, 300000);
-
-
 
     axios.get('/get/validSubject').then(res => {
       if (res.data == "404") { }
