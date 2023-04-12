@@ -76,22 +76,13 @@
     /* Safari and Chrome */
   }
 
-  #pricePerLesson-popup {
-    width: 300px;
-    height: 160px !important;
-    margin-top: 220px;
-    margin-left: 200px;
-    padding: 0px;
-    border-width: 5px;
-  }
-
   #subject-popup {
     text-align: left;
-    width: 200px;
+    width: 240px;
     padding: 10px;
-    overflow: auto;
     font-size: 20px;
-    margin-top: 400px;
+    margin-top: 0px;
+    margin-left: 130px;
     padding-left: 20px !important;
 
 
@@ -155,15 +146,15 @@
   .bg-dkr-lght-color {
     background-color: #daecfd;
   }
+
+  .w-240p {
+    width: 240px;
+  }
 </style>
 
 <section id="create-course" class="py-5 px-0 mx-0" onclick="clearCoursePopups()">
   <div class="container bg-light shadow rounded w-75 mn-w-270p">
     <div class="row d-flex justify-content-center align-items-center">
-
-
-
-
       <div class="col-12 p-1">
         <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">{{context.bodyContext.registrationForm}}</h3>
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
@@ -171,12 +162,14 @@
           <div class="col p-2 bg-dkr-lght-color m-2" onclick='toggleCoursePopup("subject-popup")'>
             <div>
               <div class="my-2">subject</div>
-              <div id="subject" class="text-center py-2 border rounded border-primary">choose</div>
+              <div class="d-flex align-items-center justify-content-center">
+                <div id="subject" class="text-center py-2 border rounded border-primary w-240p">choose</div>
+              </div>
             </div>
             <div class="popup" id="subject-popup">
               <div>
                 <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                  id="subject-search-input" onkeyup="subjectSearch()"></input>
+                  id="subject-search-input" onkeyup="searchBox('subject-links', 'subject-search-input')"></input>
               </div>
               <ul id="subject-links" onclick='toggleCoursePopup("subject-popup")'>
               </ul>
@@ -185,7 +178,9 @@
           <div class="col p-2 bg-dkr-lght-color m-2" onclick='toggleCoursePopup("speciality-popup")'>
             <div>
               <div class="my-2">specialities</div>
-              <div id="specialities" class="text-center py-2 border rounded border-primary">choose</div>
+              <div class="d-flex align-items-center justify-content-center">
+                <div id="specialities" class="text-center py-2 border rounded border-primary w-240p">choose</div>
+              </div>
             </div>
             <div class="popup" id="speciality-popup">
               <input class="course-input form-control form-control-lg border border-info rounded" type="text"
@@ -205,7 +200,8 @@
             </div>
           </div>
           <div class="col p-0 m-2" style="height:225px;">
-            <div class="row d-flex align-items-center justify-content-center m-0 p-2 mb-3 bg-dkr-lght-color mn-w-270p" style="height: 104.5px;">
+            <div class="row d-flex align-items-center justify-content-center m-0 p-2 mb-3 bg-dkr-lght-color mn-w-270p"
+              style="height: 104.5px;">
               <div class="h-200p">
                 <div class="my-2">Course Image</div>
                 <div class="d-flex align-items-center justify-content-center">
@@ -217,23 +213,24 @@
                 </div>
               </div>
             </div>
-            <div class="row d-flex align-items-center justify-content-center m-0 p-2 mt-3 bg-dkr-lght-color mn-w-270p" style="height: 104.5px;"
-              onclick='toggleCoursePopup("subject-popup")'>
+            <div class="row d-flex align-items-center justify-content-center m-0 p-2 mt-3 bg-dkr-lght-color mn-w-270p"
+              style="height: 104.5px;" onclick='toggleCoursePopup("taughtIn-popup")'>
               <div class="h-200p">
                 <div>
                   <div class="my-2">taught in</div>
                   <div class="d-flex align-items-center justify-content-center w-100 text-center" id="taughtIn">
-                    <div class="border rounded border-primary d-flex align-items-center justify-content-center py-2">
+                    <div
+                      class="border rounded border-primary d-flex align-items-center justify-content-center py-2 w-240p">
                       choose
                     </div>
                   </div>
                 </div>
-                <div class="popup" id="subject-popup">
+                <div class="popup" id="taughtIn-popup">
                   <div>
                     <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                      id="subject-search-input" onkeyup="subjectSearch()"></input>
+                      id="taughIn-search-input" onkeyup="subjectSearch()"></input>
                   </div>
-                  <ul id="subject-links" onclick='toggleCoursePopup("subject-popup")'>
+                  <ul id="taughtIn-list" onclick='toggleCoursePopup("subject-popup")'>
                   </ul>
                 </div>
               </div>
@@ -291,8 +288,32 @@
 
 
 <script>
+  var specialitiesObj = {};
+
+  function setSubject(subject) {
+    document.getElementById("subject").innerText = subject
+
+    document.getElementById("subject-links").innerHTML = ""
+
+    for (let i = 0; i < arr.length; i++) {
+      arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+      p = document.createElement("p");
+      p.className = "speciality-checkboxes-p";
+      label = document.createElement("label");
+      label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
+      label.innerHTML = `<input type="checkbox" id="${arr[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")} checkbox" value="${arr[i]}-checkbox"><span>${arr[i]}</label>`
+      p.appendChild(label);
+      document.getElementById("speciality-checkboxes").appendChild(p);
+    }
+  }
+
+
 
   function searchBox(boxId, inputId) {
+
+    console.log(specialitiesObj)
+
+
     filter = document.getElementById(inputId).value.toUpperCase();
     boxChildren = document.getElementById(boxId).children;
     for (i = 0; i < boxChildren.length; i++) {
@@ -333,11 +354,6 @@
     }
   }
 
-  function chooseInput(subject) {
-    clearCoursePopups()
-    console.log(subject)
-  }
-
   function getFile() {
     document.getElementById("upfile").click();
   }
@@ -345,7 +361,7 @@
   function sub(obj) {
     var file = obj.value;
     var fileName = file.split("\\");
-    document.getElementById("profile-image").innerHTML = fileName[fileName.length - 1];
+    document.getElementById("course-image").innerHTML = fileName[fileName.length - 1];
   }
 
   sendSigninReq = async function () {
@@ -409,6 +425,20 @@
 
   window.addEventListener('load', function () {
 
+
+
+    //populate taughtin
+    arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
+    for (let i = 0; i < arr.length; i++) {
+      langPair = arr[i].split(",")
+      node = document.createElement("div");
+      node.innerHTML = `
+                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[1]}" name="${langPair[0]}" onclick='updateformData("taughtIn", "${langPair[1]}")'></input>
+                    <label class="form-check-label text-dark" for=${langPair[0]}>${langPair[0]}</label><br>`;
+      document.getElementById("taughtIn-list").appendChild(node);
+    }
+
+
     axios.get('/get/validSubject').then(res => {
       if (res.data == "404") { }
       else {
@@ -416,20 +446,16 @@
         for (i = 0; i < arr.length; i++) {
           axios.get(`/get/validSpecialities/${arr[i]}`).then(res => {
             if (res.data == "404") {
-            }
+            } //convert to await?
             else {
-              arr = res.data
-              for (let i = 0; i < arr.length; i++) {
-                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-                p = document.createElement("p");
-                p.className = "speciality-checkboxes-p";
-                label = document.createElement("label");
-                label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
-                label.innerHTML = `<input type="checkbox" id="${arr[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")} checkbox" value="${arr[i]}-checkbox"><span>${arr[i]}</label>`
-                p.appendChild(label);
-                document.getElementById("speciality-checkboxes").appendChild(p);
-              }
+              specArr = res.data
+              console.log(`${arr[i]}`)
+
+              specialitiesObj[`${arr[i]}`] = specArr
+              //console.log(specialitiesObj)
             }
+
+
           })
         }
         for (let i = 0; i < arr.length; i++) {
