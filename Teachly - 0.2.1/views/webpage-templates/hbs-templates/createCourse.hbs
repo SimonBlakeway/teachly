@@ -82,34 +82,62 @@
     padding: 10px;
     font-size: 20px;
     margin-top: 0px;
-    margin-left: 130px;
     padding-left: 20px !important;
+    margin-top: 420px;
 
 
   }
 
   #speciality-popup {
-    width: 280px;
+    width: 310px;
     height: 300px;
     padding: 10px;
     font-size: 20px;
-    margin-top: 400px;
+    margin-top: 420px;
+    border-width: 5px;
+    font-size: 12px;
+    padding-bottom: 20px;
   }
 
   #timeRange-popup {
-    width: 460px;
+    width: 300px;
     height: 460px;
-    margin-top: 530px;
-    margin-right: 220px;
-    align-items: center;
-    justify-content: center;
+    margin-top: 590px;
+    margin-right: 0px;
+    border-width: 10px;
+  }
+
+  .day-div {
+    background-color: #89c4ff;
+    width: 100% !important;
+    height: 50px;
+    margin: 2px;
+    text-align: center;
+    font-size: 30px;
+    margin: 5px;
+  }
+
+  .time-slot-div {
+    background-color: #89c4ff;
+    border-radius: 12px 6px;
+    width: 85px !important;
+    height: 50px;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+    margin-top: 1px;
+    margin: 2px !important;
+
+  }
+
+  .active-time-slot-div {
+    background-color: #277dd3;
+    border-radius: 14px 7px;
   }
 
   #taughtIn-popup {
-    width: 200px;
+    width: 250px;
     height: 400px;
-    margin-left: -35px;
-    margin-top: 500px;
+    margin-top: 200px;
   }
 
   .day-div {
@@ -150,16 +178,28 @@
   .w-240p {
     width: 240px;
   }
+
+  #subject-box {
+    list-style-type: none;
+    text-align: center;
+    padding: 0px;
+  }
+
+  li {
+    padding: 5px;
+    text-align: center;
+  }
 </style>
 
-<section id="create-course" class="py-5 px-0 mx-0" onclick="clearCoursePopups()">
-  <div class="container bg-light shadow rounded w-75 mn-w-270p">
+<section id="create-course" class="py-5 px-0 mx-0 d-flex justify-content-center align-items-center" onclick="clearCoursePopups()">
+  <div class="container bg-light shadow-md rounded-3 w-75 mn-w-270p">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-12 p-1">
         <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">{{context.bodyContext.registrationForm}}</h3>
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
           onclick="event.stopPropagation();">
-          <div class="col p-2 bg-dkr-lght-color m-2" onclick='toggleCoursePopup("subject-popup")'>
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
+            onclick='toggleCoursePopup("subject-popup")'>
             <div>
               <div class="my-2">subject</div>
               <div class="d-flex align-items-center justify-content-center">
@@ -169,29 +209,31 @@
             <div class="popup" id="subject-popup">
               <div>
                 <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                  id="subject-search-input" onkeyup="searchBox('subject-links', 'subject-search-input')"></input>
+                  id="subject-search-input" onkeyup="searchBox('subject-box', 'subject-search-input')"></input>
               </div>
-              <ul id="subject-links" onclick='toggleCoursePopup("subject-popup")'>
+              <ul id="subject-box" onclick='toggleCoursePopup("subject-popup")'>
               </ul>
             </div>
           </div>
-          <div class="col p-2 bg-dkr-lght-color m-2" onclick='toggleCoursePopup("speciality-popup")'>
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
+            onclick='toggleCoursePopup("speciality-popup")'>
             <div>
               <div class="my-2">specialities</div>
               <div class="d-flex align-items-center justify-content-center">
                 <div id="specialities" class="text-center py-2 border rounded border-primary w-240p">choose</div>
               </div>
             </div>
-            <div class="popup" id="speciality-popup">
+            <div class="popup" id="speciality-popup" onclick="event.stopPropagation();">
               <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                id="speciality-search-input" placeholder="" onkeyup="specialitySearch()"></input>
-              <div id="speciality-checkboxes"></div>
+                id="speciality-search-input" placeholder=""
+                onkeyup="searchBox('speciality-checkboxes', 'speciality-search-input')"></input>
+              <div id="speciality-checkboxes" class="pt-4"></div>
             </div>
           </div>
         </div>
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
           onclick="event.stopPropagation();">
-          <div class="col p-0 m-2 d-flex align-items-center justify-content-center bg-dkr-lght-color"
+          <div class="col p-0 m-2 d-flex align-items-center justify-content-center bg-dkr-lght-color mn-w-270p"
             style="height:225px !important;">
             <div class="mn-w-270p bg-dkr-lght-color p-3 h-100">
               <div class="my-2">description</div>
@@ -199,7 +241,7 @@
                 class="form-control form-control-lg border border-info rounded fs-6 text-left"></textarea>
             </div>
           </div>
-          <div class="col p-0 m-2" style="height:225px;">
+          <div class="col p-0 m-2 mn-w-270p" style="height:225px;">
             <div class="row d-flex align-items-center justify-content-center m-0 p-2 mb-3 bg-dkr-lght-color mn-w-270p"
               style="height: 104.5px;">
               <div class="h-200p">
@@ -230,9 +272,34 @@
                     <input class="course-input form-control form-control-lg border border-info rounded" type="text"
                       id="taughIn-search-input" onkeyup="subjectSearch()"></input>
                   </div>
-                  <ul id="taughtIn-list" onclick='toggleCoursePopup("subject-popup")'>
+                  <ul id="taughtIn-list" class="p-0 pt-3" onclick='toggleCoursePopup("subject-popup")'>
                   </ul>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
+          onclick="event.stopPropagation();">
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p">
+            <div>
+              <div class="my-2">Price in {{context.settings.cur}}</div>
+              <div class="d-flex align-items-center justify-content-center">
+                <input type="number" id="price"
+                  class="course-input form-control form-control-lg border border-info rounded"></input>
+              </div>
+            </div>
+          </div>
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
+            onclick='toggleCoursePopup("timeRange-popup")'>
+            <div>
+              <div class="my-2">Time Range</div>
+              <div class="d-flex align-items-center justify-content-center">
+                <div id="subject" class="text-center py-2 border rounded border-primary w-240p">choose</div>
+              </div>
+            </div>
+            <div class="popup" id="timeRange-popup">
+              <div id="timeRange-popup-rows" class="text-center w-100 p-0" onclick="event.stopPropagation();">
               </div>
             </div>
           </div>
@@ -240,23 +307,6 @@
       </div>
 
 
-
-
-      <div class="row">
-        <div class="col-6">
-          <div class="form-check d-flex justify-content-center mb-5">
-            <label class="form-check-label">
-              {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
-                class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
-            </label>
-          </div>
-          <div class="d-flex justify-content-center">
-            <button type='submit' onclick="sendSigninReq()"
-              class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
-              {{context.bodyContext.createCourse}}</button>
-          </div>
-        </div>
-      </div>
       <div class="row">
         <div class="col-md-12 mb-4">
           <div class="form-check d-flex justify-content-center mb-5">
@@ -292,28 +342,51 @@
 
   function setSubject(subject) {
     document.getElementById("subject").innerText = subject
-
-    document.getElementById("subject-links").innerHTML = ""
-
+    document.getElementById("speciality-checkboxes").innerHTML = ""
+    arr = specialitiesObj[`${subject}`]
+    if (arr == "") {
+      node = document.createElement("div");
+      node.innerHTML = "no specialties";
+      document.getElementById("speciality-checkboxes").appendChild(node);
+      return
+    }
     for (let i = 0; i < arr.length; i++) {
-      arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-      p = document.createElement("p");
-      p.className = "speciality-checkboxes-p";
-      label = document.createElement("label");
-      label.htmlFor = `${arr[i].replaceAll(" ", "-")}-checkbox`
-      label.innerHTML = `<input type="checkbox" id="${arr[i].replaceAll(" ", "-")}-checkbox" name="${arr[i].replaceAll(" ", "-")} checkbox" value="${arr[i]}-checkbox"><span>${arr[i]}</label>`
-      p.appendChild(label);
-      document.getElementById("speciality-checkboxes").appendChild(p);
+      node = document.createElement("div");
+      node.className = "my-2"
+      specialityWithBars = arr[i].replaceAll(" ", "-").replaceAll("'", "&apos")
+      node.innerHTML = `
+                    <input class="form-check-input" type="checkbox" id="${specialityWithBars}" name="${specialityWithBars}" onclick='setSpeciality("${specialityWithBars}")'></input>
+                    <label class="form-check-label text-dark" for=${specialityWithBars}>${arr[i]}</label><br>`;
+      document.getElementById("speciality-checkboxes").appendChild(node);
+    }
+    clearCoursePopups()
+  }
+
+  function setSpeciality(speciality) {
+    console.log("speciality", speciality)
+    clearCoursePopups()
+  }
+
+  function setTimeRange(day, timeRange) {
+    timeRangeCheckbox = document.getElementById(`${day}-${timeRange}-checkbox`)
+    classNameArr = timeRangeCheckbox.className.split(" ")
+    isActivated = classNameArr.indexOf("active-time-slot-div")
+    if (isActivated != -1) {
+      classNameArr.splice(isActivated, 1)
+      timeRangeCheckbox.className = classNameArr.join(" ")
+    }
+    else {
+      timeRangeCheckbox.className += " active-time-slot-div"
     }
   }
 
+  function setTaughtIn(language) {
+    console.log("language", language)
+    clearCoursePopups()
+  }
 
 
   function searchBox(boxId, inputId) {
-
-    console.log(specialitiesObj)
-
-
     filter = document.getElementById(inputId).value.toUpperCase();
     boxChildren = document.getElementById(boxId).children;
     for (i = 0; i < boxChildren.length; i++) {
@@ -423,9 +496,48 @@
   }
 
 
-  window.addEventListener('load', function () {
+  window.addEventListener('load', async function () {
 
+    async function populateSubjects() {
+      try {
+        res = await axios.get('/get/validSubject')
+        let arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+        for (let i = 0; i < arr.length; i++) {
+          node = document.createElement("li");
+          node.innerHTML = `<div class="subject-li" onclick='setSubject("${arr[i]}")''>${arr[i]}</div>`;
+          document.getElementById("subject-box").appendChild(node);
+        }
+        return arr
+      }
+      catch (err) {
+      }
+    }
 
+    async function populateSpecialities(subjects) {
+      async function appendSpec(subject) {
+        res = await axios.get(`/get/validSpecialities/${subject}`)
+        specArr = [];
+        if (res.data) {
+          specArr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+        }
+        else {
+          specArr = ""
+        }
+        specialitiesObj[`${subject}`] = specArr
+      }
+      try {
+        for (i = 0; i < subjects.length; i++) {
+          appendSpec(subjects[i])
+        }
+      }
+      catch (err) {
+      }
+
+    }
+
+    subjects = await populateSubjects()
+
+    populateSpecialities(subjects)
 
     //populate taughtin
     arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
@@ -439,33 +551,25 @@
     }
 
 
-    axios.get('/get/validSubject').then(res => {
-      if (res.data == "404") { }
-      else {
-        arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-        for (i = 0; i < arr.length; i++) {
-          axios.get(`/get/validSpecialities/${arr[i]}`).then(res => {
-            if (res.data == "404") {
-            } //convert to await?
-            else {
-              specArr = res.data
-              console.log(`${arr[i]}`)
-
-              specialitiesObj[`${arr[i]}`] = specArr
-              //console.log(specialitiesObj)
-            }
-
-
-          })
-        }
-        for (let i = 0; i < arr.length; i++) {
-          node = document.createElement("li");
-          node.innerHTML = `<div class="subject-li" onclick='chooseInput("${arr[i]}")''>${arr[i]}</div>`;
-          document.getElementById("subject-links").appendChild(node);
-        }
+    let days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+    timeRange = document.getElementById("timeRange-popup-rows")
+    for (let i = 0; i <= 6; i++) {
+      outerDiv = document.createElement("div");
+      outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3";
+      dayVal = document.createElement("div");
+      dayVal.className = "day-div px-0"
+      dayVal.innerHTML = `${days[i]}`;
+      outerDiv.appendChild(dayVal);
+      for (let j = 0; j <= 23; j++) {
+        innerDiv = document.createElement("div");
+        innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
+        innerDiv.innerHTML = `${j} - ${j + 1}`;
+        innerDiv.id = `${days[i]}-${j}-${j + 1}-checkbox`;
+        innerDiv.onclick = function () { setTimeRange(`${days[i]}`, `${j}-${j + 1}`) }
+        outerDiv.appendChild(innerDiv);
       }
-    })
-
+      timeRange.appendChild(outerDiv);
+    }
 
   })
 
