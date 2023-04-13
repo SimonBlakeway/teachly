@@ -279,7 +279,7 @@ exports.settings = function (req, res) {
         cur: req.settings.cur
       }
       settings = jwt.encode(settings, process.env.JWT_SECRET)
-      res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: utils.isTrue(process.env.SECURE), expires: new Date(Date.now() + (30 * 24 * 3600000)) })
     }
 
 

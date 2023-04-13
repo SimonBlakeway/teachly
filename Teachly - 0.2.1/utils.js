@@ -41,6 +41,14 @@ function isInt(value) {
   return !isNaN(value) && (x | 0) === x;
 }
 
+function isTrue(input) { 
+  if (typeof input == 'string') {  //is basically just for reading bools from the .env file
+      return input.toLowerCase() == 'true';
+  }
+
+  return !!input;
+}
+
 
 
 
@@ -220,17 +228,6 @@ try {
 
 function isValidAvailableTimes(obj) {
 
-  /**
- * obj = {
- *  "monday": [],
- *  "tuesday": [],
- *  "wednesday": [],
- *  "thursday": [],
- *  "friday": [],
- *  "saturday": [],
- *  "sunday": [],
- * }
- */
 
 
   if (Object.keys(obj).length != 7) {
@@ -755,4 +752,5 @@ module.exports = {
   convertspecialityArrToQuery,
   convertOrderByToQuery,
   convertSearchByKeywordToQuery,
+  isTrue,
 }

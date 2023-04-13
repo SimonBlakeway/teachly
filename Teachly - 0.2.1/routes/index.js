@@ -5,7 +5,6 @@ const { contextSetup } = require(process.cwd() + '/utils.js');
 // @desc    Landing page
   // @route   GET / 
 router.get('/', async (req, res) => {
-  //res.clearCookie('userCookie');
   //res.clearCookie('userRefreshToken');
   res.render('landingPage', {
     layout: 'main',

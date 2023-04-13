@@ -208,8 +208,12 @@
             <div>
               <div class="my-2">{{context.bodyContext.subject}}</div>
               <div class="d-flex align-items-center justify-content-center">
-                <input disabled default="erer" id="subject" class="text-center py-2 border rounded border-primary w-240p">
-                  {{context.bodyContext.choose}}</input>
+                <div id="subject" class="text-center py-2 border rounded border-primary w-240p">
+                  {{context.bodyContext.choose}}</div>
+                <div
+                  style='height: 0px;width: 0px; overflow:hidden; position: absolute; margin-right: 200px;  margin-bottom: -17px;'>
+                  <input required id="hidden-subject-input" />
+                </div>
               </div>
             </div>
             <div class="popup" id="subject-popup">
@@ -260,8 +264,10 @@
                   <div id="course-image" class="border rounded border-primary bg-dkr-lght-color" onclick="getFile()"
                     style="padding-top: 10px; height: 44px; width:240px !important; overflow:hidden;">
                     {{context.bodyContext.clickUploadImageRatio}}</div>
-                  <div class="" style='height: 0px;width: 0px; overflow:hidden; position: absolute; margin-right: 200px'><input required id="upfile" type="file"
-                      value="upload" onchange="sub(this)" accept="image/*" /></div>
+                  <div class=""
+                    style='height: 0px;width: 0px; overflow:hidden; position: absolute; margin-right: 320px; margin-bottom: 20px;'>
+                    <input required id="upfile" type="file" value="upload" onchange="sub(this)" accept="image/*" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -278,11 +284,12 @@
                   </div>
                 </div>
                 <div class="popup" id="taughtIn-popup">
-                  <div>
+                  <div class="d-flex align-items-center justify-content-center">
                     <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                      id="taughIn-search-input" onkeyup="subjectSearch()"></input>
+                      id="taughtIn-search-input" style="width: 90% !important; margin:5px;"
+                      onkeyup="searchBox('taughtIn-list', 'taughIn-search-input')"></input>
                   </div>
-                  <ul id="taughtIn-list" class="p-0 pt-3" onclick='toggleCoursePopup("subject-popup")'>
+                  <ul id="taughtIn-list" class="p-0 pt-3" onclick='toggleCoursePopup("taughtIn-popup")'>
                   </ul>
                 </div>
               </div>
@@ -331,13 +338,13 @@
 
 
 <div id="err-popup" class="popup">
-  <div id="subject-err">{{context.bodyContext.errPopup.nameErr}}</div>
-  <div id="speciality-err">{{context.bodyContext.errPopup.nameErr}}</div>
-  <div id="description-err">{{context.bodyContext.errPopup.nameErr}}</div>
-  <div id="image-err">{{context.bodyContext.errPopup.nameErr}}</div>
-  <div id="taughtIn-err">{{context.bodyContext.errPopup.nameErr}}</div>
-  <div id="price-err">{{context.bodyContext.errPopup.emailErr}}</div>
-  <div id="timeRange-err">{{context.bodyContext.errPopup.emailErr}}</div>
+  <div class="err" id="subject-err">{{context.bodyContext.errPopup.nameErr}}</div>
+  <div class="err" id="speciality-err">{{context.bodyContext.errPopup.nameErr}}</div>
+  <div class="err" id="description-err">{{context.bodyContext.errPopup.nameErr}}</div>
+  <div class="err" id="image-err">{{context.bodyContext.errPopup.nameErr}}</div>
+  <div class="err" id="taughtIn-err">{{context.bodyContext.errPopup.nameErr}}</div>
+  <div class="err" id="price-err">{{context.bodyContext.errPopup.emailErr}}</div>
+  <div class="err" id="timeRange-err">{{context.bodyContext.errPopup.emailErr}}</div>
 </div>
 
 
@@ -349,6 +356,7 @@
 
   function setSubject(subject) {
     document.getElementById("subject").innerText = subject
+    document.getElementById("hidden-subject-input").value = subject
     document.getElementById("speciality-checkboxes").innerHTML = ""
     arr = specialitiesObj[`${subject}`]
     if (arr == "") {
@@ -456,6 +464,22 @@
     }
   }
 
+  function toggleErrPopup(errName) {
+    var ErrPopups = document.getElementById("err");
+    for (i = 0; i < ErrPopups.length; i++) {
+      ErrPopups[i].style.display = "none";
+      ErrPopups[i].style.visibility = "hidden";
+
+    }
+    chosenPopup = document.getElementById(errName + "-err")
+    chosenPopup.style.display = "block";
+    chosenPopup.style.visibility = "visible";
+
+    popup = document.getElementById("err-popup")
+    popup.style.display = "block";
+    popup.style.visibility = "visible";
+  }
+
   function getFile() {
     clearCoursePopups()
     document.getElementById("upfile").click();
@@ -511,15 +535,14 @@
         }
 
 
-
-
-        if (courseData.descript) {
-
-        }
-        if (courseData.price) {
+        if (courseData.price <= 0) {
+          toggleErrPopup("price")
 
         }
-        if (courseData.timeRange) {
+
+        if (courseData.timeRange == false) {
+          toggleErrPopup("price")
+          return
 
         }
 
