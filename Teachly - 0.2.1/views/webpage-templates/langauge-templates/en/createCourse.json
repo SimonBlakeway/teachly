@@ -1,15 +1,21 @@
-{    
-    "title": "Login With Teachly",
-    "fullName": "Name",
-    "password": "Password",
-    "IAgreeTo": "I agree all statements in",
-    "TOS": "Terms of service",
-    "LOGIN": "LOGIN",
-    "dontHaveAccount": "Don't have an acount?",
-    "createOne": " create one",
-    "or": "or",
+{
+    "title": "Create A Course With Teachly",
+    "createCourseForm": "create A Course Form",
+    "subject": "Subject",
+    "choose": "Choose",
+    "specialities": "specialities",
+    "pleaseChoosesSubject": "please choose a subject",
+    "clickUploadImageRatio": "click to upload image, ratio 16:9",
+    "createCourse": "create Course",
+
+
     "errPopup": {
-        "nameErr": "wrong name",
-        "passwordErr": "wrong password"
+        "subjectErr": "{{context.bodyContext.errPopup.nameErr}}",
+        "specialityErr": "{{context.bodyContext.errPopup.nameErr}}",
+        "descriptionErr": "{{context.bodyContext.errPopup.nameErr}}",
+        "imageErr": "{{context.bodyContext.errPopup.nameErr}}",
+        "taughtInErr": "{{context.bodyContext.errPopup.nameErr}}",
+        "priceErr": "{{context.bodyContext.errPopup.emailErr}}",
+        "timeRangeErr": "{{context.bodyContext.errPopup.emailErr}}"
     }
 }
