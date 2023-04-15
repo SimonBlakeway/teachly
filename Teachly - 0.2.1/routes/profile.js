@@ -103,18 +103,3 @@ router.get('/messages', async (req, res) => {
 
 
 module.exports = router
-
-obj = {
-  "questionType": "Fill-in-the-blank",
-}
-
-obj = {
-  "questionType": "Multiple-choice",
-}
-
-obj = {
-  "questionType": "Multiple-select",
-  "explanation": "",
-  "answers": [],
-  "corectAnswers": ""
-}

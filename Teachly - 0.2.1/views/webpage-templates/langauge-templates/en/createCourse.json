@@ -1,14 +1,18 @@
 {
     "title": "Create A Course With Teachly",
-    "createCourseForm": "create A Course Form",
+    "createCourseForm": "Create A Course With Teachly",
     "subject": "Subject",
     "choose": "Choose",
     "specialities": "specialities",
     "pleaseChoosesSubject": "please choose a subject",
+    "description": "description",
+    "maxLenDesChars": "maximum length 512 chars",
+    "courseImg": "Course Image",
+    "taughtIn": "taught in",
+    "priceIn": "Price In",
+    "timeRange": "Time Range",
     "clickUploadImageRatio": "click to upload image, ratio 16:9",
     "createCourse": "create Course",
-
-
     "errPopup": {
         "subjectErr": "{{context.bodyContext.errPopup.nameErr}}",
         "specialityErr": "{{context.bodyContext.errPopup.nameErr}}",
