@@ -1,10 +1,12 @@
 <link rel="stylesheet" href="/css/navbar.css">
 <script src="/js/validCurrencies.js"></script>
 <script src="/js/validLanguages.js"></script>
-<nav class="navbar" onclick="clearNavPopups()">
-    <div id="toggle-nav" class="p-0">
-        <div>
-            <a class="navbar-brand pl-1 p-2 fs-2 text-light" href="\ ">Teachly</a>
+
+
+<div id="teachly-navbar" class="bg-dark p-0 m-0" onclick="clearNavPopups()">
+    <div id="toggle-nav" class="p-0 m-0">
+        <div class="">
+            <a class="navbar-brand p-2 fs-2 text-light" href="\ ">Teachly</a>
         </div>
         <div class="mr-2">
             <i onclick="toggleNav()" class="fa fa-bars text-light"></i>
@@ -16,8 +18,8 @@
                 class="btn btn-primary m-1">{{settings.cur}}</button>
         </div>
     </div>
-    <div id="navlist" class="row d-flex align-items-center justify-content-center">
-        <div id="large-screen-teachly"><a class="navbar-brand pl-1 p-2 fs-3 text-light" href="\ ">Teachly</a></div>
+    <div id="navlist" class="row d-flex align-items-center justify-content-center m-0 p-0">
+        <div id="large-screen-teachly" class="pt-1"><a class="navbar-brand pl-1 p-2 fs-2 text-light" href="\ ">Teachly</a></div>
         <div class="col d-flex align-items-center justify-content-center">
             <div class="row d-flex align-items-center justify-content-center">
                 <div class="col d-flex align-items-center justify-content-center">
@@ -38,16 +40,16 @@
                 </div>
             </div>
         </div>
-        <div id="settings-buttons-list" class="float-right w-130 p-1"
-            onclick="event.stopPropagation();">
+        <div id="settings-buttons-list" class="float-right w-130 p-1" onclick="event.stopPropagation();">
             <div>
-                <button onclick="toggleNavPopup('language-popup')" type="button" class="btn btn-primary text-uppercase">{{settings.lang}}</button>
+                <button onclick="toggleNavPopup('language-popup')" type="button"
+                    class="btn btn-primary text-uppercase">{{settings.lang}}</button>
                 <button onclick="toggleNavPopup('currency-popup')" type="button"
                     class="btn btn-primary">{{settings.cur}}</button>
             </div>
         </div>
     </div>
-</nav>
+</div>
 <div id="nav-popup-holder">
     <div style="float: right; margin-right:0px;">
         <div style="margin-left:-255px;">

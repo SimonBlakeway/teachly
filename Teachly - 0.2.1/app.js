@@ -64,7 +64,7 @@ app.use(function (req, res, next) {
 
 app.use('/', express.static(path.join(__dirname, 'public'), {
   setHeaders: function (res, path) {
-    res.set("Cache-Control", "private, max-age=60");
+    res.set("Cache-Control", "private, max-age=0");
   }
 }));
 

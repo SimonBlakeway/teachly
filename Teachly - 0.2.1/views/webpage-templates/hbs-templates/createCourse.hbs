@@ -9,10 +9,11 @@
     height: 80%;
     width: 100%;
     font-size: 18px;
-    margin-top: -200px;
+
     background-image: url("/images/blue-bg.jpg") !important;
     background-repeat: no-repeat;
     background-size: 100% 100% ;
+
   }
 
   .custom-rounded {
@@ -201,9 +202,9 @@
     overflow-x: hidden;
   }
 </style>
-<section id="create-course" class="py-5 px-0 mx-0 d-flex justify-content-center align-items-center w-100"
+<section id="create-course" class="py-5 px-0 mx-0 mt-5 d-flex justify-content-center align-items-center w-100"
   onclick="clearCoursePopups()">
-  <div class="container bg-light shadow-md w-75 mn-w-270p custom-rounded" style="margin-bottom: 10vh;">
+  <div class="container bg-light shadow-md w-75 mn-w-270p custom-rounded">
     <form onsubmit="return false" class="row d-flex justify-content-center align-items-center">
       <div class="col-12 p-1">
         <h3 class="m-4 fs-2">{{context.bodyContext.createCourseForm}}</h3>
