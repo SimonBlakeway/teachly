@@ -66,7 +66,6 @@
         vertical-align: middle;
         padding: -5px;
         margin-left: 10px;
-        float: right;
     }
 
     .profile-img {
@@ -74,115 +73,133 @@
         height: 47px;
         border-radius: 50%;
         text-align: center;
-        float: right;
         margin-left: 10px;
         margin-right: 10px;
     }
 </style>
 
-<nav class="navbar text-light">
+<div class="navbar text-light">
+
+
     <div style="float: left; padding-left: 10px;">
         <h2>Teachly</h2>
     </div>
 
+    <div class="float-right">
+
+
+        <div class="nav-popup" id="navlist-popup">
+            <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
+            <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
+        </div>
+
+        <div class="nav-popup" id="notifications-popup">
+            <div class="popup-link" style="padding: 15px;">
+                <h3>
+                    {{navbarContext.notificationsPopup.notifications}}
+                </h3>
+            </div>
+            <ul class="navlist-list" id="notificationss-list" style="height: 100%;">
+            </ul>
+        </div>
+
+        <div id="profile-buttons" class="d-flex align-items-center justify-content-center">
+            <button onclick="toggleProfile()" type="button" class="profile-img"
+                style="background-image: url('profile/img'); background-repeat: no-repeat; background-size: cover;"></button>
+            <button onclick="toggleMessages()" type="button" id="messages" class="circle-icon"><i
+                    class='fas fa-comments' aria-hidden="true" style="height: 25px !important;"></i></button>
+            <button onclick="toggleNotifications()" type="button" id="notifications" class="circle-icon"><i
+                    class="fa fa-bell" aria-hidden="true" style="height: 25px !important;"></i></button>
 
 
 
-
-    <div id="profile-buttons" class="d-flex align-items-center justify-content-center" style="width: 450px;">
-        <button onclick="toggleProfile()" type="button" class="profile-img"
-            style="background-image: url('profile/img'); background-repeat: no-repeat; background-size: cover;"></button>
-        <button onclick="toggleMessages()" type="button" id="messages" class="circle-icon"><i class='fas fa-comments'
-                aria-hidden="true" style="height: 25px !important;"></i></button>
-        <button onclick="toggleNotifications()" type="button" id="notifications" class="circle-icon"><i
-                class="fa fa-bell" aria-hidden="true" style="height: 25px !important;"></i></button>
+            <div id="settings-buttons-list" class="w-130 p-1" onclick="event.stopPropagation();">
+                <div class="d-flex align-items-center justify-content-center">
+                    <div>
+                        <button onclick="toggleNavPopup('language-popup')" type="button"
+                            class="btn btn-primary text-uppercase">{{settings.lang}}</button>
 
 
-
-        <div id="settings-buttons-list" class="w-130 p-1" onclick="event.stopPropagation();">
-            <div class="d-flex align-items-center justify-content-center">
-                <div>
-                    <button onclick="toggleNavPopup('language-popup')" type="button"
-                        class="btn btn-primary text-uppercase">{{settings.lang}}</button>
-
-
-                    <div class="nav-popup" id="language-popup">
-                        <div style="text-align: center; margin: 10px; font-size:25px">language</div>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
-                                id="nav-language-search-input" style="width: 120px !important;"
-                                onkeyup="navLangSearch()"></input>
+                        <div class="nav-popup" id="language-popup">
+                            <div style="text-align: center; margin: 10px; font-size:25px">language</div>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <input class="nav-input form-control form-control-lg border border-info rounded"
+                                    type="text" id="nav-language-search-input" style="width: 120px !important;"
+                                    onkeyup="navLangSearch()"></input>
+                            </div>
+                            <ul id="language-change" class="nav-list">
+                            </ul>
                         </div>
-                        <ul id="language-change" class="nav-list">
-                        </ul>
+                    </div>
+                    <div>
+                        <button onclick="toggleNavPopup('currency-popup')" type="button"
+                            class="btn btn-primary">{{settings.cur}}</button>
+
+                        <div class="nav-popup" id="currency-popup">
+                            <div style="text-align: center; margin: 10px; font-size:25px">currency</div>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <input class="nav-input form-control form-control-lg border border-info rounded"
+                                    type="text" id="nav-currency-search-input"
+                                    style="width: 80px !important; text-transform: uppercase;"
+                                    onkeyup="navCurSearch()"></input>
+                            </div>
+                            <ul id="currency-change" class="nav-list">
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
-                <div>
-                    <button onclick="toggleNavPopup('currency-popup')" type="button"
-                        class="btn btn-primary">{{settings.cur}}</button>
+            </div>
 
-                    <div class="nav-popup" id="currency-popup">
-                        <div style="text-align: center; margin: 10px; font-size:25px">currency</div>
-                        <div class="d-flex align-items-center justify-content-center">
-                            <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
-                                id="nav-currency-search-input"
-                                style="width: 80px !important; text-transform: uppercase;"
-                                onkeyup="navCurSearch()"></input>
-                        </div>
-                        <ul id="currency-change" class="nav-list">
-                        </ul>
-                    </div>
 
-                </div>
+
+            <div style="width: 40px;" class="m-0 ">
+                <i onclick="toggleNavlist()" class="fa fa-bars" style="height: 40px; width: 40px; font-size: 40px;"></i>
             </div>
         </div>
 
+        <div class="nav-popup" id="profile-popup">
+            <div class="popup-link">
 
+                {{settings.name}}
+                <img src="profile/img" alt="user profile image" class="profile-img"
+                    style="background-repeat: no-repeat; background-size: cover; margin-right: 10px; float: left;"
+                    loading="lazy"></a>
 
-        <div style="width: 40px;" class="m-0 ">
-            <i onclick="toggleNavlist()" class="fa fa-bars" style="height: 40px; width: 40px; font-size: 40px;"></i>
+            </div>
+            <ul class="navlist-list">
+                <li><a href="\profile\settings">{{navbarContext.profilePopup.settings}}</a></li>
+                <li><a href="\help">{{navbarContext.profilePopup.help}}</a></li>
+                <li><a href="\profile\display">{{navbarContext.profilePopup.display}}</a></li>
+                <li><a href="\feedback">{{navbarContext.profilePopup.feedback}}</a></li>
+                <li><a href="\auth\logout">{{navbarContext.profilePopup.logout}}</a></li>
+            </ul>
         </div>
-    </div>
 
-    <div class="nav-popup" id="profile-popup">
-        <div class="popup-link">
+        <div class="nav-popup" id="messages-popup">
+            <div class="popup-link" style="padding: 15px;">
+                <h2>
+                    {{navbarContext.messagesPopup.messages}}
+                </h2>
+            </div>
+            <ul class="navlist-list" id="messages-list">
+            </ul>
+        </div>
 
-            {{settings.name}}
-            <img src="profile/img" alt="user profile image" class="profile-img"
-                style="background-repeat: no-repeat; background-size: cover; margin-right: 10px; float: left;"
-                loading="lazy"></a>
 
-        </div>
-        <ul class="navlist-list">
-            <li><a href="\profile\settings">{{navbarContext.profilePopup.settings}}</a></li>
-            <li><a href="\help">{{navbarContext.profilePopup.help}}</a></li>
-            <li><a href="\profile\display">{{navbarContext.profilePopup.display}}</a></li>
-            <li><a href="\feedback">{{navbarContext.profilePopup.feedback}}</a></li>
-            <li><a href="\auth\logout">{{navbarContext.profilePopup.logout}}</a></li>
-        </ul>
     </div>
-    <div class="nav-popup" id="messages-popup">
-        <div class="popup-link" style="padding: 15px;">
-            <h2>
-                {{navbarContext.messagesPopup.messages}}
-            </h2>
-        </div>
-        <ul class="navlist-list" id="messages-list">
-        </ul>
-    </div>
-    <div class="nav-popup" id="notifications-popup">
-        <div class="popup-link" style="padding: 15px;">
-            <h3>
-                {{navbarContext.notificationsPopup.notifications}}
-            </h3>
-        </div>
-        <ul class="navlist-list" id="notificationss-list" style="height: 100%;">
-        </ul>
-    </div>
-    <div class="nav-popup" id="navlist-popup">
-        <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
-        <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
-    </div>
+</div>
+</div>
+<div class="nav-popup" id="navlist-popup">
+    <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
+    <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
+</div>
+</nav>
+</div>
+<div class="nav-popup" id="navlist-popup">
+    <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
+    <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
+</div>
 </nav>
 
 
