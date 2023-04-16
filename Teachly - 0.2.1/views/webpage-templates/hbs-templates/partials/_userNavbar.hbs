@@ -186,62 +186,8 @@
 </nav>
 
 
+
 <script>
-
-    var profile = document.getElementById('profile-popup');
-    var messages = document.getElementById('messages-popup');
-    var notifications = document.getElementById('notifications-popup');
-    var navlist = document.getElementById('navlist-popup');
-    messages.style.display = "none";
-    profile.style.display = "none";
-    notifications.style.display = "none";
-    navlist.style.display = "none";
-
-
-    window.onload = async function () {
-
-
-        axios.get('/profile/notifications').then(res => {
-
-            if (res.data == "404") {
-                console.log("no notifications")
-            }
-            else {
-
-                document.getElementById("notificationss-list").innerHTML = '';
-
-                for (let i = 0; i < res.data.length; i++) {
-
-                    node = document.createElement("li");
-                    node.innerHTML = `<div style="height: 20px; font-size: 20px; line-height: 20px; margin-bottom: 10px;">${res.data[i].text}</div><div style="height: 20px; font-size: 16px; line-height: 16px;">${prettyifyDate(res.data[i].createdAt)}</div>`
-                    document.getElementById("notificationss-list").appendChild(node);
-                }
-            }
-
-        })
-
-
-        axios.get('/profile/messages').then(res => {
-
-            if (res.data == "404") {
-            }
-            else {
-                for (let i = 0; i < res.data.length; i++) {
-
-                }
-            }
-
-        })
-
-
-
-        setInterval(() => {
-
-        }, 21600000) // six hours in milliseconds
-    };
-
-
-
     function navLangSearch() {
         var input, filter;
         input = document.getElementById("nav-language-search-input");
@@ -286,82 +232,6 @@
             });
     }
 
-    function toggleMessages() {
-        clearPopups()
-        messages.style.display = "none";
-        messages.style.visibility = "hidden";
-    }
-
-    function toggleProfile() {
-
-        if (profile.style.display === "none") {
-
-            profile.style.display = "block";
-            profile.style.visibility = "visible";
-
-            notifications.style.display = "none";
-            notifications.style.visibility = "hidden";
-
-            messages.style.display = "none";
-            messages.style.visibility = "hidden";
-
-            navlist.style.display = "none";
-            navlist.style.visibility = "hidden";
-        }
-
-        else {
-            profile.style.display = "none";
-            profile.style.visibility = "hidden";
-        }
-    }
-
-    function toggleNotifications() {
-
-        if (notifications.style.display === "none") {
-
-            notifications.style.display = "block";
-            notifications.style.visibility = "visible";
-
-
-            profile.style.display = "none";
-            profile.style.visibility = "hidden";
-
-            messages.style.display = "none";
-            messages.style.visibility = "hidden";
-
-            navlist.style.display = "none";
-            navlist.style.visibility = "hidden";
-        }
-
-        else {
-            notifications.style.display = "none";
-            notifications.style.visibility = "hidden";
-        }
-    }
-
-    function toggleNavlist() {
-
-        if (navlist.style.display === "none") {
-
-            navlist.style.display = "block";
-            navlist.style.visibility = "visible";
-
-            notifications.style.display = "none";
-            notifications.style.visibility = "hidden";
-
-            messages.style.display = "none";
-            messages.style.visibility = "hidden";
-
-            notifications.style.display = "none";
-            notifications.style.visibility = "hidden";
-        }
-
-        else {
-            navlist.style.display = "none";
-            navlist.style.visibility = "hidden";
-        }
-    }
-
     async function logout() {
         res = await axios.get('/auth/logout');
         if (res.data.err) {
@@ -372,8 +242,6 @@
         }
 
     }
-
-
 
     function toggleNavPopup(id) {
         var popup = document.getElementById(id);
@@ -401,7 +269,62 @@
         }
     }
 
+    window.addEventListener('load', function () {
+
+        arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
+        for (let i = 0; i < arr.length; i++) {
+            langPair = arr[i].split(",")
+            node = document.createElement("li");
+            node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${langPair[1]}")'>${langPair[0]}</div>`;
+            document.getElementById("language-change").appendChild(node);
+        }
+
+        arr = currenciesArr.sort((a, b) => { return a.split(",")[0].localeCompare(b.split(",")[0], userLang) })
+        for (let i = 0; i < arr.length; i++) {
+            node = document.createElement("li");
+            node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
+            document.getElementById("currency-change").appendChild(node);
+        }
 
 
 
+
+
+
+        axios.get('/profile/notifications').then(res => {
+
+            if (res.data == "404") {
+                console.log("no notifications")
+            }
+            else {
+
+                document.getElementById("notificationss-list").innerHTML = '';
+
+                for (let i = 0; i < res.data.length; i++) {
+
+                    node = document.createElement("li");
+                    node.innerHTML = `<div style="height: 20px; font-size: 20px; line-height: 20px; margin-bottom: 10px;">${res.data[i].text}</div><div style="height: 20px; font-size: 16px; line-height: 16px;">${prettyifyDate(res.data[i].createdAt)}</div>`
+                    document.getElementById("notificationss-list").appendChild(node);
+                }
+            }
+
+        })
+
+
+        axios.get('/profile/messages').then(res => {
+
+            if (res.data == "404") {
+            }
+            else {
+                for (let i = 0; i < res.data.length; i++) {
+
+                }
+            }
+
+        })
+
+
+
+
+    })
 </script>
