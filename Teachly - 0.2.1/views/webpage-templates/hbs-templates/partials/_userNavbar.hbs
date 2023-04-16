@@ -80,32 +80,17 @@
 
 <div class="navbar text-light">
 
-
     <div style="float: left; padding-left: 10px;">
         <h2>Teachly</h2>
     </div>
 
     <div class="float-right">
 
-        <div class="nav-popup" id="navlist-popup">
-            <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
-            <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
-        </div>
-
-        <div class="nav-popup" id="notifications-popup">
-            <div class="popup-link" style="padding: 15px;">
-                <h3>
-                    {{navbarContext.notificationsPopup.notifications}}
-                </h3>
-            </div>
-            <ul class="navlist-list" id="notificationss-list" style="height: 100%;">
-            </ul>
-        </div>
-
         <div id="profile-buttons" class="d-flex align-items-center justify-content-center">
 
             <div style="width: 40px;" class="m-0 ">
-                <i onclick="toggleNavlist()" class="fa fa-bars" style="height: 40px; width: 40px; font-size: 40px;"></i>
+                <i onclick="toggleNavPopup('navlist-popup')" class="fa fa-bars"
+                    style="height: 40px; width: 40px; font-size: 40px;"></i>
             </div>
 
             <div id="settings-buttons-list" class="w-130 p-1" onclick="event.stopPropagation();">
@@ -146,13 +131,14 @@
                 </div>
             </div>
 
-            <button onclick="toggleNotifications()" type="button" id="notifications" class="circle-icon">
+            <button onclick="toggleNavPopup('notifications-popup')" type="button" id="notifications"
+                class="circle-icon">
                 <i class="fa fa-bell" aria-hidden="true" style="height: 25px !important;"></i></button>
 
-            <button onclick="toggleMessages()" type="button" id="messages" class="circle-icon"><i
+            <button onclick="toggleNavPopup('messages-popup')" type="button" id="messages" class="circle-icon"><i
                     class='fas fa-comments' aria-hidden="true" style="height: 25px !important;"></i></button>
 
-            <button onclick="toggleProfile()" type="button" class="profile-img"
+            <button onclick="toggleNavPopup('profile-popup')" type="button" class="profile-img"
                 style="background-image: url('profile/img'); background-repeat: no-repeat; background-size: cover;"></button>
 
         </div>
@@ -185,21 +171,25 @@
             </ul>
         </div>
 
+        <div class="nav-popup" id="navlist-popup">
+            <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
+            <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
+        </div>
 
+        <div class="nav-popup" id="notifications-popup">
+            <div class="popup-link" style="padding: 15px;">
+                <h3>
+                    {{navbarContext.notificationsPopup.notifications}}
+                </h3>
+            </div>
+            <ul class="navlist-list" id="notificationss-list" style="height: 100%;">
+            </ul>
+        </div>
     </div>
 </div>
-</div>
-<div class="nav-popup" id="navlist-popup">
-    <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
-    <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
-</div>
-</nav>
-</div>
-<div class="nav-popup" id="navlist-popup">
-    <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
-    <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
-</div>
-</nav>
+
+
+
 
 
 
