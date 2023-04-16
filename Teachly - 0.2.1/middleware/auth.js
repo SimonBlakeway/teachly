@@ -1,5 +1,3 @@
-// auth.js
-const User = require("../models/user");
 const jwt = require("jwt-simple");
 dotenv = require('dotenv')
 /*
@@ -8,17 +6,13 @@ dotenv = require('dotenv')
   article, is should add enough potection
 */
 
-
-
-
 // Load config
 dotenv.config({ path: './config/config.env' })
-
 
 module.exports = {
   authenticate: function (req, res, next) {  //is user is authorized for content
     try {
-      var decoded = jwt.decode(req.cookies.token, process.env.JWT_SECRET);  
+      var decoded = jwt.decode(req.cookies.token, process.env.JWT_SECRET);
       if (true) { //is user is authorized for content
         return next()
       }
@@ -29,27 +23,37 @@ module.exports = {
     return next()
   },
   ensureGuest: function (req, res, next) { //make sure user is guest
-      try {
-      var decoded = jwt.decode(req.cookies.token, process.env.JWT_SECRET);
-        res.redirect('/dashboard');
-        return next();
-      }
-      catch {
-        var decoded = jwt.decode(req.cookies.token, process.env.JWT_SECRET);
-         res.redirect('/dashboard');
-         return next();        
-      }
-  
-  }, 
-  ensureAuthorized: function (req, res, next) { 
     try {
-    if (req.hostname != process.env.DOMAIN) { //if the request comes from a different domain it might be CSRF
-      res.send("403 Forbidden")     
-    }
+      var decoded = jwt.decode(req.cookies.token, process.env.JWT_SECRET);
+      res.redirect('/dashboard');
+      return next();
     }
     catch {
-    res.send("400 Bad Request")       
+      var decoded = jwt.decode(req.cookies.token, process.env.JWT_SECRET);
+      res.redirect('/dashboard');
+      return next();
     }
 
-}, // I might need more auth functions
+  },
+  ensureUser: function (req, res, next) { //make sure user is user
+    if (req.settings.isUser == false) {
+      res.redirect('/dashboard');
+      return next();
+    }
+    return next();
+  },
+  ensureSafe: function (req, res, next) {
+    try {
+      if (req.hostname != process.env.DOMAIN) { //if the request comes from a different domain it might be CSRF
+        res.send("403 Forbidden")
+      }
+      else {
+        return next();
+      }
+    }
+    catch {
+      res.send("400 Bad Request")
+    }
+
+  }, // I might need more auth functions
 }

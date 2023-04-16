@@ -26,6 +26,7 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 5
 app.use(cookieParser());
 
 // middleware
+app.use(require('./middleware/auth.js').ensureSafe)
 app.use(require('./middleware/customMiddleware.js').cookieSettings)
 app.use(require('./middleware/customMiddleware.js').refreshToken)
 

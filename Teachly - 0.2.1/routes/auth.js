@@ -6,7 +6,7 @@ authController = require('../controllers/authController')
 
 router.post("/login",  bodyParser.json({ limit: "1mb" }),  authController.login)
 
-router.post("/register", bodyParser.json({ limit: "50mb" }), authController.register)
+router.post("/register", bodyParser.json({ limit: "10mb" }), authController.register)
 
 router.get('/logout', authController.logout)
 

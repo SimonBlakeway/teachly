@@ -3,6 +3,9 @@ const router = express.Router()
 const { contextSetup } = require(process.cwd() + '/utils.js');
 const utils = require(process.cwd() + '/utils.js');
 const db = require('../config/db');
+const bodyParser = require('body-parser');
+
+router.use(require('../middleware/auth.js').ensureUser)
 
 // @desc    teach landing page
 // @route   GET /
@@ -36,21 +39,24 @@ router.get('/createCourse', async (req, res) => {
 
 // @desc    createCourse
 // @route   POST /
-router.post('/createCourse', async (req, res) => {
+router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res) => {
   try {
+    courseData = req.body
+
+
     // this function asumes the data is not clean
-    courseData.courseImg = await ImagePrep(courseData.courseImg, "course-id=" + userInfo.id)
+    courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.setting.id)
     courseData.description = compiledConvert(courseData.description)
 
-    if (!courseData.courseImg) {
-      res.json({ "err": "invalid image" })
-    }
+    if (!courseData.image) { res.json({ "err": "invalid image" }) }
+    console.log("heeloo")
     if (!((isValidLanguage(courseData.taughtIn, fullName = false)) >= 0)) {
       return { "err": "invalid Language" }
     }
     if (!isInt(courseData.pricePerLesson) || ((courseData.pricePerLesson <= 0) || (courseData.pricePerLesson > 50))) {
       return { "err": "invalid pricePerLesson" }
     }
+    console.log("heeloo")
     if ((courseData.pricePerLesson < 0) || (courseData.pricePerLesson > 50)) {
       console.log(courseData.pricePerLesson > 0)
       console.log("Sf")
@@ -73,6 +79,8 @@ router.post('/createCourse', async (req, res) => {
     if (!isValidAvailableTimes(courseData.availableTimes)) {
       return { "err": "invalid availableTimes" }
     }
+
+    console.log("heeloo")
 
     courseObj = {
       description: courseData.description,
@@ -103,7 +111,8 @@ router.post('/createCourse', async (req, res) => {
     } catch (error) {
       return false
     }
-  } catch (error) {
+  } catch (err) {
+    console.log(err)
     return false
   }
 })
@@ -146,7 +155,7 @@ router.get('/course/:courseId/messages', async (req, res) => { //[req.params.cou
 // @desc    course settings
 // @route   GET /
 router.get('/course/:courseId/settings', async (req, res) => { //[req.params.courseId]
-  try { 
+  try {
     console.log(req.settings)
 
     res.render('createCourse', {

@@ -110,7 +110,7 @@ exports.register = async function (req, res) {
       console.log(randInt)
 
       try {
-        response = await db.query(`INSERT INTO user_info ("name", "email", "profileImg", "lang", "createdAt", "passHash", "emailCode", "cur", "loginType", "userRefreshToken", "qualifications") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`, [user.name, user.email, user.profileImage, req.settings.lang, Math.floor(Date.now() / 1000), user.password, "00" + randInt, req.settings.cur, "custom", [{}], [{}]]);
+        response = await db.query(`INSERT INTO user_info ("name", "email", "profileImg", "lang", "createdAt", "passHash", "emailCode", "cur", "loginType", "userRefreshToken" ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [user.name, user.email, user.profileImage, req.settings.lang, Math.floor(Date.now() / 1000), user.password, "00" + randInt, req.settings.cur, "custom", [{}] ]);
         //email.sendSignUpEmail(user.email, randInt, req.settings.lang)  
         res.sendStatus(200)
       } catch (error) {

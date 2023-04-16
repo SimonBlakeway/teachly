@@ -96,7 +96,9 @@ router.get('/messages', async (req, res) => {
     }
     res.send(result.rows)
   } catch (error) {
-    res.sendStatus(404)
+    console.log(error)
+    res.json({"messages": "none"})
+    //res.sendStatus(404)
   }
 })
 

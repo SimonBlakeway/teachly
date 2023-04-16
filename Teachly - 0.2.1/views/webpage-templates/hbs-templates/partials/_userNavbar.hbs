@@ -1,3 +1,8 @@
+<link rel="stylesheet" href="/css/nvbar.css">
+<script src="/js/validCurrencies.js"></script>
+<script src="/js/validLanguages.js"></script>
+
+
 <style>
     .navbar {
         position: relative;
@@ -75,24 +80,69 @@
     }
 </style>
 
-<nav class="navbar">
+<nav class="navbar text-light">
     <div style="float: left; padding-left: 10px;">
         <h2>Teachly</h2>
     </div>
-    <div id="profile-buttons">
+
+
+
+
+
+    <div id="profile-buttons" class="d-flex align-items-center justify-content-center" style="width: 450px;">
         <button onclick="toggleProfile()" type="button" class="profile-img"
             style="background-image: url('profile/img'); background-repeat: no-repeat; background-size: cover;"></button>
         <button onclick="toggleMessages()" type="button" id="messages" class="circle-icon"><i class='fas fa-comments'
                 aria-hidden="true" style="height: 25px !important;"></i></button>
         <button onclick="toggleNotifications()" type="button" id="notifications" class="circle-icon"><i
                 class="fa fa-bell" aria-hidden="true" style="height: 25px !important;"></i></button>
-        <div style="width: 30px !important; height: 30px !important; float: right; margin: 0px !important;">
-            <i onclick="toggleNavlist()" class="fa fa-bars"
-                style="height: 40px; width: 40px; font-size: 40px; margin-top: 4px; margin-left: -20px;"></i>
+
+
+
+        <div id="settings-buttons-list" class="w-130 p-1" onclick="event.stopPropagation();">
+            <div class="d-flex align-items-center justify-content-center">
+                <div>
+                    <button onclick="toggleNavPopup('language-popup')" type="button"
+                        class="btn btn-primary text-uppercase">{{settings.lang}}</button>
+
+
+                    <div class="nav-popup" id="language-popup">
+                        <div style="text-align: center; margin: 10px; font-size:25px">language</div>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
+                                id="nav-language-search-input" style="width: 120px !important;"
+                                onkeyup="navLangSearch()"></input>
+                        </div>
+                        <ul id="language-change" class="nav-list">
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <button onclick="toggleNavPopup('currency-popup')" type="button"
+                        class="btn btn-primary">{{settings.cur}}</button>
+
+                    <div class="nav-popup" id="currency-popup">
+                        <div style="text-align: center; margin: 10px; font-size:25px">currency</div>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
+                                id="nav-currency-search-input"
+                                style="width: 80px !important; text-transform: uppercase;"
+                                onkeyup="navCurSearch()"></input>
+                        </div>
+                        <ul id="currency-change" class="nav-list">
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div style="width: 40px;" class="m-0 ">
+            <i onclick="toggleNavlist()" class="fa fa-bars" style="height: 40px; width: 40px; font-size: 40px;"></i>
         </div>
     </div>
-
-
 
     <div class="nav-popup" id="profile-popup">
         <div class="popup-link">
@@ -192,6 +242,49 @@
 
 
 
+    function navLangSearch() {
+        var input, filter;
+        input = document.getElementById("nav-language-search-input");
+        filter = input.value.toUpperCase();
+        list = document.getElementById("language-change").children;
+        for (i = 0; i < list.length; i++) {
+            txtValue = list[i].textContent || list[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                list[i].style.display = "block";
+            } else {
+                list[i].style.display = "none";
+            }
+        }
+    }
+
+    function navCurSearch() {
+        var input, filter;
+        input = document.getElementById("nav-currency-search-input");
+        filter = input.value.toUpperCase();
+        list = document.getElementById("currency-change").children;
+        for (i = 0; i < list.length; i++) {
+            txtValue = list[i].textContent || list[i].innerHTML;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                list[i].style.display = "block";
+            } else {
+                list[i].style.display = "none";
+            }
+        }
+    }
+
+    function changeNavSettings(settingName, change) {
+        changeObj = {
+            settingName: settingName,
+            change: change
+        }
+        axios.post('/auth/settings', changeObj)
+            .then(res => {
+                window.location.reload();
+            })
+            .catch(err => {
+                console.log(error);
+            });
+    }
 
     function toggleMessages() {
         clearPopups()
@@ -269,9 +362,6 @@
         }
     }
 
-
-
-
     async function logout() {
         res = await axios.get('/auth/logout');
         if (res.data.err) {
@@ -284,6 +374,32 @@
     }
 
 
+
+    function toggleNavPopup(id) {
+        var popup = document.getElementById(id);
+        if ((popup.style.display != "block")) {
+            clearNavPopups()
+            popup.style.display = "block";
+            popup.style.visibility = "visible";
+            try {
+                document.getElementById("nav-" + id.split("-")[0] + "-search-input").focus(); //auto focus on input in popup
+            }
+            catch {
+            }
+        }
+        else {
+            popup.style.display = "none";
+            popup.style.visibility = "hidden";
+        }
+    }
+
+    function clearNavPopups() {
+        popupArr = document.getElementsByClassName("nav-popup")
+        for (i = 0; i < popupArr.length; i++) {
+            popupArr[i].style.display = "none";
+            popupArr[i].style.visibility = "hidden";
+        }
+    }
 
 
 

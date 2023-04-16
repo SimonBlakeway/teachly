@@ -9,10 +9,15 @@
     height: 80%;
     width: 100%;
     font-size: 18px;
-
     background-image: url("/images/blue-bg.jpg") !important;
     background-repeat: no-repeat;
-    background-size: 100% 100% ;
+    background-size: 100% 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
   }
 
@@ -310,7 +315,7 @@
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
           onclick="event.stopPropagation();">
           <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p">
-            <div>
+            <div onclick="clearCoursePopups()">
               <div class="my-2">{{context.bodyContext.priceIn}} {{context.settings.cur}}</div>
               <div class="d-flex align-items-center justify-content-center">
                 <input type="number" id="price" required min="1" style="width: 240px !important;"
@@ -328,7 +333,7 @@
                   {{context.bodyContext.choose}}
                   <div
                     style='height: 0px;width: 0px; overflow:hidden; position: absolute; margin-right: 200px;  margin-bottom: -20px;'>
-                    <input required id="hidden-timeRange-input" />
+                    <input required id="hidden-timeRange-input" for="nach" />
                   </div>
                 </div>
               </div>
@@ -413,6 +418,16 @@
     else {
       timeRangeCheckbox.className += " active-time-slot-div"
     }
+
+
+    timeRanges = document.getElementsByClassName("active-time-slot-div")
+    field = document.getElementById('hidden-timeRange-input');
+    if (timeRanges.length != 0) {
+      field.value = "activated"
+    }
+    else {
+      field.value = field.defaultValue; //setting to "" stops required from working
+    }
   }
 
   function setTaughtIn() {
@@ -432,15 +447,20 @@
   }
 
   function searchBox(boxId, inputId) {
-    filter = document.getElementById(inputId).value.toUpperCase();
-    boxChildren = document.getElementById(boxId).children;
-    for (i = 0; i < boxChildren.length; i++) {
-      txtValue = boxChildren[i].textContent || boxChildren[i].innerHTML;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        boxChildren[i].style.display = "";
-      } else {
-        boxChildren[i].style.display = "none";
+    try {
+      filter = document.getElementById(inputId).value.toUpperCase();
+      boxChildren = document.getElementById(boxId).children;
+      for (i = 0; i < boxChildren.length; i++) {
+        txtValue = boxChildren[i].textContent || boxChildren[i].innerHTML;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          boxChildren[i].style.display = "";
+        } else {
+          boxChildren[i].style.display = "none";
+        }
       }
+    }
+    catch (err) {
+
     }
   }
 
@@ -486,6 +506,9 @@
     popup = document.getElementById("err-popup")
     popup.style.display = "block";
     popup.style.visibility = "visible";
+    setTimeout(function () {
+      $(`#${errName}-err`).fadeOut('fast')
+    }, 1000);
   }
 
   function getFile() {
@@ -512,7 +535,7 @@
       for (i = 0; i < arr.length; i++) {
         index = days.indexOf(arr[i].split("-")[0])
         if (index != -1) {
-          subObj = `${arr[index].split("-")[0]}`
+          subObj = days[index]
           if (obj[subObj]) {
             obj[subObj].push(arr[i].split("-").slice(1, 3).join("-"))
           }
@@ -523,10 +546,45 @@
       }
       return Object.keys(obj) != 0 ? obj : false
     }
+
+    function basicCourseObjCheck(obj) {
+      if (obj.subject == "") { return false }
+      if (obj.description == "") { return false }
+      if (obj.taughtIn == "") { return false }
+      if (obj.price == "") { return false }
+      if (obj.price > 60) { return false }
+      if (obj.price < 1) { return false }
+      if (obj.timeRange == "") { return false }
+      return true
+    }
+
+    async function sendReq(courseData) {
+      try {
+        res = await axios({
+          method: 'post',
+          url: '/teach/createCourse',
+          data: courseData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        if (res.data.err) {
+
+        }
+        else {
+          //send to profile
+        }
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+
+
+
     try {
       reader = new FileReader();
       reader.onloadend = () => {
-
         courseData = {
           subject: $("#subject").text(),
           speciality: $("#specialities").text(),
@@ -541,53 +599,17 @@
             return `${day}-${time}`
           }).get())
         }
-        if (courseData.price <= 0) {
-          toggleErrPopup("price")
+        if (!basicCourseObjCheck(courseData)) {
           return
         }
-
-
-        if (courseData.timeRange == false) {
-          toggleErrPopup("timeRange")
-          return
-        }
-        if (courseData.taughtIn == "") {
-          toggleErrPopup("taughtIn")
-          return
-        }
-
-
-        //sendReq(courseData)
+        sendReq(courseData)
       };
       reader.readAsDataURL($('#upfile').prop('files')[0])
 
-      sendReq = async function (courseData) {
-        try {
-          res = await axios({
-            method: 'post',
-            url: '/auth/register',
-            data: courseData,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-          if (res.data.err) {
-            setTimeout(function () {
-              $('#err-popup').fadeOut('fast')
-            }, 1000);
-          }
-
-          else {
-            //send to profile
-          }
-        }
-        catch (err) {
-          console.log(err)
-        }
-      }
     }
     catch (err) {
       console.log(err)
+
     }
   }
 
@@ -666,7 +688,7 @@
 
     //populate price input
     price = document.getElementById("price")
-    price.max = 60 * 1
+    price.max = 60 * curConversionRatio
 
   })
 
