@@ -41,9 +41,9 @@ function isInt(value) {
   return !isNaN(value) && (x | 0) === x;
 }
 
-function isTrue(input) { 
+function isTrue(input) {
   if (typeof input == 'string') {  //is basically just for reading bools from the .env file
-      return input.toLowerCase() == 'true';
+    return input.toLowerCase() == 'true';
   }
 
   return !!input;
@@ -55,7 +55,7 @@ function isTrue(input) {
 function getCurrencyFromLanguageCode(code) {
   try {
     cur = countryCodeToCurrency[code]
-    if (cur == undefined) {return "USD"}
+    if (cur == undefined) { return "USD" }
     return cur
   }
   catch {
@@ -103,7 +103,7 @@ function contextSetup(settings, partials = [], pageName) {
   }
   catch (err) {
     console.log("context setup err")
-    return contextSetup({cur: "USD", lang: "en"}, partials, pageName)
+    return contextSetup({ cur: "USD", lang: "en" }, partials, pageName)
   }
 }
 
@@ -214,16 +214,16 @@ function isValidSubjectSpeciality(lang, subject, specialities) {
 }
 
 function isValidSubjectSpecialityNoSubject(lang, speciality) {
-try {
+  try {
     keys = Object.keys(validspecialitiesObj[lang])
-    for (i=0; i < keys.length; i++) {
-      if (validspecialitiesObj[lang][keys[i]].includes(speciality)) {return keys[i]}
+    for (i = 0; i < keys.length; i++) {
+      if (validspecialitiesObj[lang][keys[i]].includes(speciality)) { return keys[i] }
     }
     return false
-} catch (error) {
-  console.log(error)
-  return false
-}
+  } catch (error) {
+    console.log(error)
+    return false
+  }
 }
 
 function isValidAvailableTimes(obj) {
@@ -267,7 +267,20 @@ function isValidAvailableTimes(obj) {
 async function hashString(str) {
   try {
     str = await bcrypt.hash(str + hashAdd, saltNum)
+    console.log(str)
     return String(str)
+  } catch (error) {
+    console.log(error)
+  }
+  // Return null if error
+  return null
+}
+
+async function compareHash(str, hash) {
+  try {
+    bool = await bcrypt.compare(str + hashAdd, hash)
+    return bool
+
   } catch (error) {
     console.log(error)
   }
@@ -355,52 +368,40 @@ function genUserCookie(user) {
   return encodedCookie
 }
 
+
 async function genUserRefreshToken(id) {
   userRefreshToken = genSafeRandomStr(20)
 
 
   try {
     let result = await db.query(`SELECT "userRefreshToken" FROM user_info WHERE id = $1`, [id]);
-    if (result.rowCount > 0) {
-      for (i = 0; i < result.rows.length; i++) {
-        if (Object.keys(result.rows[i].userRefreshToken).length === 0) {
 
-          token = {
-            userRefreshToken: userRefreshToken,
-            id: id,
-            accountNumber: i + 1,
-            createdAt: Math.floor(Date.now() / 1000)
-          }
-          tokenForDb = {
-            userRefreshToken: userRefreshToken,
-            accountNumber: i + 1,
-            createdAt: Math.floor(Date.now() / 1000)
-          }
-          encodedToken = jwt.encode(token, process.env.JWT_SECRET)
-
-          try {
-            db.query(`UPDATE user_info SET "userRefreshToken" [ $1 ] = $2 WHERE id = $3;`, [i + 1, tokenForDb, id]);
-            return encodedToken
-          } catch (error) {
-            console.log(error)
-          }
-        }
-      }
+    accountNumber = ""
+    let arr = result.rows[0].userRefreshToken
+    let index = arr.findIndex(obj => Object.keys(obj).length === 0);
+    if (index != -1) {
+      accountNumber = index
     }
+    else {
+      accountNumber = result.rows[0].userRefreshToken.length
+    }
+
     token = {
       userRefreshToken: userRefreshToken,
       id: id,
-      accountNumber: result.rows.length + 1, //if issue, remove ones
+      accountNumber: accountNumber,
       createdAt: Math.floor(Date.now() / 1000)
     }
-    tokenForDb = {
+    userRefreshTokens = result.rows[0].userRefreshToken
+    userRefreshTokens[accountNumber] = {
       userRefreshToken: userRefreshToken,
-      accountNumber: result.rows.length + 1,
+      accountNumber: accountNumber,
       createdAt: Math.floor(Date.now() / 1000)
     }
+
     encodedToken = jwt.encode(token, process.env.JWT_SECRET)
     try {
-      db.query(`UPDATE user_info SET "userRefreshToken" = array_append("userRefreshToken", $1) WHERE id = $2;`, [tokenForDb, id]);
+      db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2;`, [userRefreshTokens, id]);
       return encodedToken
     } catch (error) {
       console.log(error)
@@ -412,43 +413,45 @@ async function genUserRefreshToken(id) {
 
 async function refreshUserToken(id, refreshString, accountNumber, createdAt) {
   try {
-    let result = await db.query('select "userRefreshToken" [ $1 ] FROM user_info WHERE id = $2', [accountNumber, id]);
+    let result = await db.query('select "userRefreshToken" FROM user_info WHERE id = $1', [id]);
     if (result.rowCount == 0) {
       return false
     }
-    if (result.rows[0].userRefreshToken.createdAt != createdAt) {
-      db.query(`UPDATE user_info SET "userRefreshToken" [ $1 ] = $2 WHERE id = $3`, [accountNumber, {}, id]);
+    if (result.rows[0].userRefreshToken[accountNumber].userRefreshToken != refreshString) {
+     newRefreshTokens = result.rows[0].userRefreshToken
+     newRefreshTokens[accountNumber] = {}
+      db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
       return false
     }
-    if (result.rows[0].userRefreshToken.accountNumber != accountNumber) {
-      db.query(`UPDATE user_info SET "userRefreshToken" [ $1 ] = $2 WHERE id = $3`, [accountNumber, {}, id]);
-      return false
-    }
-    if (result.rows[0].userRefreshToken.userRefreshToken != refreshString) {
-      db.query(`UPDATE user_info SET "userRefreshToken" [ $1 ] = $2 WHERE id = $3`, [accountNumber, {}, id]);
-      return false
-    }
-    if (Object.keys(result.rows[0].userRefreshToken).length == 0) { // if {}
-      db.query(`UPDATE user_info SET "userRefreshToken" [ $1 ] = $2 WHERE id = $3`, [accountNumber, {}, id]);
-      return false
-    }
+    if (result.rows[0].userRefreshToken[accountNumber].createdAt != createdAt) {
+      newRefreshTokens = result.rows[0].userRefreshToken
+      newRefreshTokens[accountNumber] = {}
+       db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
+       return false
+     }
+
+     console.log(result.rows[0].userRefreshToken)
 
 
     userRefreshToken = genSafeRandomStr(20)
     date = Math.floor(Date.now() / 1000)
-    tokenForDb = {
-      userRefreshToken: userRefreshToken,
-      accountNumber: accountNumber,
-      createdAt: date
-    }
+
     token = {
       userRefreshToken: userRefreshToken,
       id: id,
       accountNumber: accountNumber,
       createdAt: date
     }
+
+    userRefreshTokens = result.rows[0].userRefreshToken
+    userRefreshTokens[accountNumber] = {
+      userRefreshToken: userRefreshToken,
+      accountNumber: accountNumber,
+      createdAt: date
+    }
+
     try {
-      db.query(`UPDATE user_info SET "userRefreshToken" [ $1 ] = $2 WHERE id = $3`, [accountNumber, tokenForDb, id]);
+      db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2;`, [userRefreshTokens, id]);
       encodedToken = jwt.encode(token, process.env.JWT_SECRET)
       return encodedToken
     } catch (error) {
@@ -535,7 +538,7 @@ function convertspecialityArrToQuery(lang, subjectName, specialities) {
       else { str = ` OR ( '${specialities[i]}' = ANY ("specialities") )` }
       queryString += str
     }
-    if (queryString == "AND (" ) {return false}
+    if (queryString == "AND (") { return false }
     return queryString + ` ) \r\n`
   }
   catch (err) {
@@ -728,6 +731,7 @@ module.exports = {
   contextSetup,
   isValidLanguage,
   hashString,
+  compareHash,
   ImagePrep,
   LZCompress,
   LZDecompress,

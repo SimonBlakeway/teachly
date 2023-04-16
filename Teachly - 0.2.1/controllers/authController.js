@@ -24,28 +24,37 @@ const { get } = require('axios');
 
 
 
+//db.query(`DELETE FROM user_info`);
+
 //this group is for manual login/signin, 
+
 exports.login = async function (req, res) {
   user = req.body
   if (req.settings.isUser == true) { res.redirect("/") }
 
-  //user.password = await utils.hashString(user.password)
   user.name = user.name.trim()
+
+
+
 
 
   try {
     result = await db.query(`SELECT email, name, lang, cur, id, "passHash", "userRefreshToken" FROM user_info WHERE name = $1`, [user.name]);
+
+
     if (result.rowCount == 0) {
       res.json({ "err": "invalid name" })
       return
     }
-    console.log(result.rows[0].passHash.trim())
-    if (result.rows[0].passHash.trim() != user.password) {
+    isSame = await utils.compareHash(user.password, result.rows[0].passHash.trim())
+    if (isSame == false) {
       res.json({ "err": "invalid password" })
       return
     }
     try {
       userToken = await utils.genUserRefreshToken(result.rows[0].id)
+
+
       userCookie = await utils.genUserCookie(result.rows[0])
 
       res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
@@ -58,35 +67,6 @@ exports.login = async function (req, res) {
   } catch (error) {
     console.log(error)
   }
-
-
-
-  db.query(`SELECT email, name, lang, cur, id, "passHash" FROM user_info WHERE name = $1`, [user.name], async (err, result) => {
-    if (result.rowCount == 0) {
-      res.json({ "err": "invalid name" })
-      return
-    }
-    if (result.rows[0].passHash.trim() != user.password) {
-      res.json({ "err": "invalid password" })
-      return
-    }
-
-
-    db.query(`SELECT * FROM user_refresh_token WHERE id = $1`, [result.rows[0].id], (err, tokenResult) => {
-      userToken = utils.genUserRefreshToken(result.rows[0].id)
-      userCookie = utils.genUserCookie(result.rows[0])
-
-      res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-      res.cookie('userRefreshToken', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-      res.sendStatus(200)
-      return
-
-    })
-  })
-
-
-
-
 };
 exports.register = async function (req, res) {
   try {
@@ -107,10 +87,10 @@ exports.register = async function (req, res) {
       }
       user = await utils.cleanUserData(user)
       randInt = utils.genSafeRandomNum(100000, 1000000)
-      console.log(randInt)
+      console.log(randInt, "randint")
 
       try {
-        response = await db.query(`INSERT INTO user_info ("name", "email", "profileImg", "lang", "createdAt", "passHash", "emailCode", "cur", "loginType", "userRefreshToken" ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [user.name, user.email, user.profileImage, req.settings.lang, Math.floor(Date.now() / 1000), user.password, "00" + randInt, req.settings.cur, "custom", [{}] ]);
+        response = await db.query(`INSERT INTO user_info ("name", "email", "profileImg", "lang", "createdAt", "passHash", "emailCode", "cur", "loginType", "userRefreshToken" ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [user.name, user.email, user.profileImage, req.settings.lang, Math.floor(Date.now() / 1000), user.password, "00" + randInt, req.settings.cur, "custom", [{}]]);
         //email.sendSignUpEmail(user.email, randInt, req.settings.lang)  
         res.sendStatus(200)
       } catch (error) {
@@ -211,16 +191,16 @@ exports.facebookLogin = async function (req, res) {
 
 
 
-exports.logout = function (req, res) {
+exports.logout = async function (req, res) {
 
-  /**
-   * when the user logs out we need to delete the refresh token, 
-   * so after the user logsout a hacker can't use the cookie to get user access 
-   * 
-   * as well as just keeping the db clean
-   */
   try {
-    db.query(`UPDATE user_info SET "userRefreshToken" [$1] =  $2 WHERE id = $1`, [req.settings.accountNumber, req.settings.id]);
+    let result = await db.query('select "userRefreshToken" FROM user_info WHERE id = $1', [req.settings.id]);
+
+
+    newRefreshTokens = result.rows[0].userRefreshToken
+    newRefreshTokens[req.settings.accountNumber] = {}
+    db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
+
     res.clearCookie('userCookie');
     res.clearCookie('userRefreshToken');
     res.redirect("/")

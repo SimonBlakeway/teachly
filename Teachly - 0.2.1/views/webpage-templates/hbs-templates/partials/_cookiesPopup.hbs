@@ -4,9 +4,10 @@
   width: 50%;
   height:fit-content;
   min-height: 30%;
+  min-width: 200px;
   text-align: center;
   padding: 20px;
-  background: cyan;
+  background-color: aliceblue;
   border-radius: 20px;
   text-align: center;
   align-items: center;
@@ -19,7 +20,7 @@
   z-index: 999;
 }
 </style>  
-  <div id="cookies-popup">                 
+  <div id="cookies-popup" class="shadow-lg">                 
       <div  class="email-input-form">
         <h2>{{cookiesText.cookiesPopupText}}<a href="">{{cookiesText.termsAndConditions}}</a></h2>
         <button type="submit" id="email-popup-submit" onclick="acceptCookies()">✖</button>
