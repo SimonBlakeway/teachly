@@ -415,23 +415,23 @@ async function refreshUserToken(id, refreshString, accountNumber, createdAt) {
   try {
     let result = await db.query('select "userRefreshToken" FROM user_info WHERE id = $1', [id]);
     if (result.rowCount == 0) {
+      console.log("dflkdfvmwjsvnj")
       return false
     }
     if (result.rows[0].userRefreshToken[accountNumber].userRefreshToken != refreshString) {
-     newRefreshTokens = result.rows[0].userRefreshToken
+  console.log("osaindoinsncao")
+      newRefreshTokens = result.rows[0].userRefreshToken
      newRefreshTokens[accountNumber] = {}
       db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
       return false
     }
     if (result.rows[0].userRefreshToken[accountNumber].createdAt != createdAt) {
+      console.log("alsmasjcfn")
       newRefreshTokens = result.rows[0].userRefreshToken
       newRefreshTokens[accountNumber] = {}
        db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
        return false
      }
-
-     console.log(result.rows[0].userRefreshToken)
-
 
     userRefreshToken = genSafeRandomStr(20)
     date = Math.floor(Date.now() / 1000)

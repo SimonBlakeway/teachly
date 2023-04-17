@@ -74,9 +74,10 @@ function cookieSettings(req, res, next) {
 
 async function refreshToken(req, res, next) {
   if (req.settings.isUser) {
-    if ((Math.floor(Date.now() / 1000) - req.settings.tokenCreatedAt) >= 10) { //15 min 900
+    if ((Math.floor(Date.now() / 1000) - req.settings.tokenCreatedAt) >= 900) { //15 min 900
       userToken = await utils.refreshUserToken(req.settings.id, req.settings.refreshString, req.settings.accountNumber, req.settings.tokenCreatedAt)
       if (userToken == false) {
+        console.log("sfnwjvnjvnjwnvjvnjwnvjwnvjwvnwjvn")
         res.clearCookie('userCookie');
         res.clearCookie('userRefreshToken');
         res.redirect("/")

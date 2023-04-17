@@ -199,7 +199,7 @@ exports.logout = async function (req, res) {
 
     newRefreshTokens = result.rows[0].userRefreshToken
     newRefreshTokens[req.settings.accountNumber] = {}
-    db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
+    db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, req.settings.id]);
 
     res.clearCookie('userCookie');
     res.clearCookie('userRefreshToken');

@@ -39,13 +39,14 @@
     left: 0;
     margin: auto;
     width: 40%;
-    height: 40%;
+    min-width: 300px;
+    height: fit-content;
     padding: 20px;
-    background: cyan;
     border-radius: 20px;
     display: none;
     justify-content: center;
     align-items: center;
+    border-width: 10px;
   }
 
   #email-popup-submit {
@@ -126,23 +127,26 @@
   </div>
 </section>
 
-<div id="email-popup" class="popup">
-  <form onsubmit="return false" id="email-input-form">
-    <label id="email-label" class="text" for="email-input"
+    
+    
+    
+<div id="email-popup" class="popup p-5 bg-light shadow-lg">
+  <form onsubmit="return false" id="email-input-form" class="d-flex flex-column">
+    <label id="email-label" class="text text-center" for="email-input"
       style="font-size: 18px;">{{context.bodyContext.emailPopup.text}}</label>
     <br>
     <input maxlength="5" type="numbers" required type="text" id="email-input"
       class="form-control form-control-lg border border-info rounded profile-input" />
     <br>
     <button id="email-popup-submit" type='submit' onclick="sendEmailCode()"
-      class="btn btn-success btn-block btn-lg">{{context.bodyContext.emailPopup.submitButtonText}}</button>
+      class="btn btn-outline-primary btn-lg">{{context.bodyContext.emailPopup.submitButtonText}}</button>
   </form>
 </div>
-<div id="err-popup" class="popup" style="height: 20%; width: 40%;">
+<div id="err-popup" class="popup p-5 bg-light shadow-lg">
   <div id="email-err">{{context.bodyContext.errPopup.emailErr}}</div>
   <div id="name-err">{{context.bodyContext.errPopup.nameErr}}</div>
 </div>
-<div id="emailcode-err-popup" class="popup" style="height: 10%; width: 20%;">
+<div id="emailcode-err-popup" class="popup p-5 bg-light shadow-lg text-center" style="height: 10%; width: 20%;">
   <div>{{context.bodyContext.emailCode.invalidEmailCode}}</div>
 </div>
 
