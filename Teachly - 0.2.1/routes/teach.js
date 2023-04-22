@@ -4,6 +4,9 @@ const { contextSetup } = require(process.cwd() + '/utils.js');
 const utils = require(process.cwd() + '/utils.js');
 const db = require('../config/db');
 const bodyParser = require('body-parser');
+const { compile } = require('html-to-text');
+const options = { wordwrap: false, };
+const compiledConvert = compile(options);
 
 router.use(require('../middleware/auth.js').ensureUser)
 
@@ -25,6 +28,10 @@ router.get('/', (req, res) => {
 // @route   GET /
 router.get('/createCourse', async (req, res) => {
   try {
+    if (req.settings.isUser == false) {
+      res.redirect("/login")
+      return
+    }
     console.log(req.settings)
 
     res.render('createCourse', {
@@ -45,40 +52,30 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
 
 
     // this function asumes the data is not clean
-    courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.setting.id)
+    courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.settings.id)
     courseData.description = compiledConvert(courseData.description)
 
     if (!courseData.image) { res.json({ "err": "invalid image" }) }
-    console.log("heeloo")
-    if (!((isValidLanguage(courseData.taughtIn, fullName = false)) >= 0)) {
+    if (!((utils.isValidLanguage(courseData.taughtIn, fullName = true)) >= 0)) {
       return { "err": "invalid Language" }
     }
-    if (!isInt(courseData.pricePerLesson) || ((courseData.pricePerLesson <= 0) || (courseData.pricePerLesson > 50))) {
+    courseData.taughtIn = utils.langugeToLanguageCode(courseData.taughtIn)
+    if (!utils.isInt(courseData.pricePerLesson) || ((courseData.pricePerLesson <= 0) || (courseData.pricePerLesson > 60))) {
       return { "err": "invalid pricePerLesson" }
     }
-    console.log("heeloo")
-    if ((courseData.pricePerLesson < 0) || (courseData.pricePerLesson > 50)) {
-      console.log(courseData.pricePerLesson > 0)
-      console.log("Sf")
-      return { "err": "invalid pricePerLesson" }
-    }
-    if (courseData.pricePerLesson > 50) {
-      console.log("death")
-      return { "err": "invalid pricePerLesson" }
-    }
-    if (!(isValidSubject(courseData.taughtIn, courseData.subject))) {
+    if (!(utils.isValidSubject(courseData.taughtIn, courseData.subject))) {
       return { "err": "invalid subject" }
     }
-    if (typeof courseData.offersTrialLesson != "boolean") {
-      return { "err": "invalid offersTrialLesson" }
-    }
-    if (!isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) {
+
+    if (!utils.isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) {
       return { "err": "invalid specialities" }
 
     }
-    if (!isValidAvailableTimes(courseData.availableTimes)) {
+    if (!utils.isValidAvailableTimes(courseData.availableTimes)) {
+      console.log("ererererer")
       return { "err": "invalid availableTimes" }
     }
+    console.log("7")
 
     console.log("heeloo")
 

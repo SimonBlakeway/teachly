@@ -587,12 +587,12 @@
       reader.onloadend = () => {
         courseData = {
           subject: $("#subject").text(),
-          speciality: $("#specialities").text(),
+          specialities: $("#specialities").text().split(", "),
           description: $("#description").val(),
           image: reader.result,
           taughtIn: $("#taughtIn").text(),
-          price: $("#price").val(),
-          timeRange: convertTimeRange($(".active-time-slot-div").map(function () {
+          pricePerLesson: $("#price").val(),
+          availableTimes: convertTimeRange($(".active-time-slot-div").map(function () {
             idArr = this.id.split("-")
             day = `${idArr[0]}`
             time = `${idArr[1]}-${idArr[2]}`
