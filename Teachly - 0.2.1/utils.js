@@ -183,35 +183,28 @@ function isValidSubject(lang, subject) {
 }
 
 function isValidSubjectSpeciality(lang, subject, specialities) {
-
-  if ((!!specialities) && (specialities.constructor === Array)) {
-    try {
-      lang = lang.substring(0, 2)
+  try {
+    if ((!!specialities) && (specialities.constructor === Array)) {
       for (i = 0; i < specialities.length; i++) {
         if (!(validspecialitiesObj[lang][subject].includes(specialities[i]))) {
           return false
         }
       }
       return true
-    } catch (err) {
-      console.log(err)
-      return false
     }
-
-  }
-  else {
-    try {
-      lang = lang.substring(0, 2)
+    else {
       if (!(validspecialitiesObj[lang][subject].includes(specialities))) {
         return false
       }
       return true
-    } catch (err) {
-      console.log(err)
-      return false
     }
   }
+  catch (err) {
+    console.log(err)
+    return false
+  }
 }
+
 
 function isValidSubjectSpecialityNoSubject(lang, speciality) {
   try {
@@ -227,27 +220,26 @@ function isValidSubjectSpecialityNoSubject(lang, speciality) {
 }
 
 function isValidAvailableTimes(obj) {
-
-
-
-  if (Object.keys(obj).length != 7) {
-    return false
-  }
-
-  function checkDay(day) {
-    for (i = 0; i < day.length; i++) {
-      if (day[i].length != 3) { return false }
-      firstInt = parseInt(day[i][0])
-      secondInt = parseInt(day[i][2])
-      if (0 >= firstInt >= 24) { return false }
-      if (0 >= firstInt >= 24) { return false }
-      if (day[i][1] != "-") { return false }
-      if (((firstInt + 1) != secondInt)) { return false }
-    }
-    return true
-  }
-
   try {
+
+    if (Object.keys(obj).length != 7) {
+      return false
+    }
+
+    function checkDay(day) {
+      for (i = 0; i < day.length; i++) {
+        if (day[i].length != 3) { return false }
+        firstInt = parseInt(day[i][0])
+        secondInt = parseInt(day[i][2])
+        if (0 >= firstInt >= 24) { return false }
+        if (0 >= firstInt >= 24) { return false }
+        if (day[i][1] != "-") { return false }
+        if (((firstInt + 1) != secondInt)) { return false }
+      }
+      return true
+    }
+
+
 
     if (!checkDay(obj.monday)) { return false }
     if (!checkDay(obj.tuesday)) { return false }
@@ -260,6 +252,7 @@ function isValidAvailableTimes(obj) {
     return true
   }
   catch (err) {
+    console.log(err)
     return false
   }
 }
@@ -419,9 +412,9 @@ async function refreshUserToken(id, refreshString, accountNumber, createdAt) {
       return false
     }
     if (result.rows[0].userRefreshToken[accountNumber].userRefreshToken != refreshString) {
-  console.log("osaindoinsncao")
+      console.log("osaindoinsncao")
       newRefreshTokens = result.rows[0].userRefreshToken
-     newRefreshTokens[accountNumber] = {}
+      newRefreshTokens[accountNumber] = {}
       db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
       return false
     }
@@ -429,9 +422,9 @@ async function refreshUserToken(id, refreshString, accountNumber, createdAt) {
       console.log("alsmasjcfn")
       newRefreshTokens = result.rows[0].userRefreshToken
       newRefreshTokens[accountNumber] = {}
-       db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
-       return false
-     }
+      db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
+      return false
+    }
 
     userRefreshToken = genSafeRandomStr(20)
     date = Math.floor(Date.now() / 1000)
@@ -468,6 +461,21 @@ async function createNotification(id, text) {
     db.query(`INSERT INTO user_info (notifications) VALUES ($1) WHERE id=$2`, [{ text: text, createdAt: Math.floor(Date.now() / 1000) }, id]);
   } catch (error) {
     console.log(error)
+  }
+}
+
+function langugeToLanguageCode(lang) {
+  validLanguagesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validLanguages.json`))
+  try {
+    index = validLanguagesObj["fullName"].indexOf(lang)
+    if (index != -1) {
+      return validLanguagesObj["code"][index]
+    }
+    return false
+  }
+  catch (err) {
+    console.log(err)
+    return false
   }
 }
 
@@ -757,4 +765,7 @@ module.exports = {
   convertOrderByToQuery,
   convertSearchByKeywordToQuery,
   isTrue,
+  isInt,
+  langugeToLanguageCode,
+  isValidAvailableTimes
 }
