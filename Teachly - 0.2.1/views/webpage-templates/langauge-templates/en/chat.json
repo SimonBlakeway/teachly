@@ -1,0 +1,15 @@
+{    
+    "title": "Login With Teachly",
+    "fullName": "Name",
+    "password": "Password",
+    "IAgreeTo": "I agree all statements in",
+    "TOS": "Terms of service",
+    "LOGIN": "LOGIN",
+    "dontHaveAccount": "Don't have an acount?",
+    "createOne": " create one",
+    "or": "or",
+    "errPopup": {
+        "nameErr": "wrong name",
+        "passwordErr": "wrong password"
+    }
+}

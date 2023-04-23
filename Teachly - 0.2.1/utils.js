@@ -174,8 +174,7 @@ function isValidLanguage(str, fullName = false) {
 
 function isValidSubject(lang, subject) {
   try {
-    lang = lang.substring(0, 2)
-    return validSubjectObj[lang].includes(subject)
+    return validSubjectObj["en"].includes(subject)
   }
   catch (err) {
     return false
@@ -186,7 +185,7 @@ function isValidSubjectSpeciality(lang, subject, specialities) {
   try {
     if ((!!specialities) && (specialities.constructor === Array)) {
       for (i = 0; i < specialities.length; i++) {
-        if (!(validspecialitiesObj[lang][subject].includes(specialities[i]))) {
+        if (!(validspecialitiesObj["en"][subject].includes(specialities[i]))) {
           return false
         }
       }
@@ -220,12 +219,8 @@ function isValidSubjectSpecialityNoSubject(lang, speciality) {
 }
 
 function isValidAvailableTimes(obj) {
+  days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",]
   try {
-
-    if (Object.keys(obj).length != 7) {
-      return false
-    }
-
     function checkDay(day) {
       for (i = 0; i < day.length; i++) {
         if (day[i].length != 3) { return false }
@@ -238,17 +233,13 @@ function isValidAvailableTimes(obj) {
       }
       return true
     }
-
-
-
-    if (!checkDay(obj.monday)) { return false }
-    if (!checkDay(obj.tuesday)) { return false }
-    if (!checkDay(obj.wednesday)) { return false }
-    if (!checkDay(obj.thursday)) { return false }
-    if (!checkDay(obj.friday)) { return false }
-    if (!checkDay(obj.saturday)) { return false }
-    if (!checkDay(obj.sunday)) { return false }
-
+    keys = Object.keys(obj)
+    for (i = 0; i < keys.length; i++) {
+      if (days.includes(keys[i])) {
+        if (checkDay(obj[keys[i]]) == false) return false
+      }
+      else { return false }
+    }
     return true
   }
   catch (err) {
@@ -463,6 +454,23 @@ async function createNotification(id, text) {
     console.log(error)
   }
 }
+
+
+
+function sendNotification(id) {
+  // global.io.emit("er", "erer")
+
+  // the “foo” event will be broadcast to all connected clients in the “room-101” room
+  io.to("room-101").emit("foo", "bar");
+}
+
+function sendNotificationAll(id) {
+  // global.io.emit("er", "erer")
+
+  // the “foo” event will be broadcast to all connected clients in the “room-101” room
+  io.to("room-101").emit("foo", "bar");
+}
+
 
 function langugeToLanguageCode(lang) {
   validLanguagesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validLanguages.json`))
