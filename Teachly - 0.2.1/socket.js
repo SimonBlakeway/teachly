@@ -28,9 +28,9 @@ module.exports = {
   setIo: (server) => {
     const io = new Server(server);
     io.on("connection", function (socket) {
-      cookies = cookiePrep(socket.handshake.headers.cookie)
+     // cookies = cookiePrep(socket.handshake.headers.cookie)
       console.log("ree")
-      if (Object.keys(cookies.userRefreshToken) == 0) { socket.disconnect() }
+      //if (Object.keys(cookies.userRefreshToken) == 0) { socket.disconnect() }
 
 /*
       socket.on("new user", function (data) {
