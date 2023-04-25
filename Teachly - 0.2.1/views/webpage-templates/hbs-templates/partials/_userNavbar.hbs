@@ -280,11 +280,36 @@
 
 
 
+<script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+    integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+    crossorigin="anonymous"></script>
+<script>
+    const origin = window.location.origin;
+    const socket = io.connect(origin);
+
+
+    // client-side
+    socket.on("connect", () => {
+        console.log("socket connected"); 
+    });
+
+    socket.on("old notifications", () => {
+        console.log("old notifications"); 
+    });
+
+    socket.on("old notifications", () => {
+        console.log("old notifications"); 
+    });
+
+    socket.on("disconnect", () => {
+        console.log("socket disconected"); 
+    });
+</script>
+
 
 
 
 <script>
-    console.log(document.getElementById("re").style.borderColor)
 
     function navLangSearch() {
         var input, filter;
@@ -384,44 +409,6 @@
             node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
             document.getElementById("currency-change").appendChild(node);
         }
-
-
-
-
-
-
-        axios.get('/profile/notifications').then(res => {
-
-            if (res.data == "404") {
-                console.log("no notifications")
-            }
-            else {
-
-                document.getElementById("notificationss-list").innerHTML = '';
-
-                for (let i = 0; i < res.data.length; i++) {
-
-                    node = document.createElement("li");
-                    node.innerHTML = `<div style="height: 20px; font-size: 20px; line-height: 20px; margin-bottom: 10px;">${res.data[i].text}</div><div style="height: 20px; font-size: 16px; line-height: 16px;">${prettyifyDate(res.data[i].createdAt)}</div>`
-                    document.getElementById("notificationss-list").appendChild(node);
-                }
-            }
-
-        })
-
-
-        axios.get('/profile/messages').then(res => {
-
-            if (res.data == "404") {
-            }
-            else {
-                for (let i = 0; i < res.data.length; i++) {
-
-                }
-            }
-
-        })
-
 
 
 

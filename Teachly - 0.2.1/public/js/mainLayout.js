@@ -1,4 +1,5 @@
 function prettyifyDate(date) { // it comes in as seconds from epoch
+    console.log([date])
     var secs = date - Math.floor(Date.now() / 1000)
     if (secs < 60) return secs + " sec(s) ago";
     if (secs < 3600) return Math.floor(secs / 60) + " min(s) ago";
