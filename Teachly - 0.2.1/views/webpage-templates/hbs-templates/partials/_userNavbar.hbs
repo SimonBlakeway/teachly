@@ -145,6 +145,18 @@
             display: none;
         }
     }
+
+    .icon-signaler {
+        position: absolute;
+        background: radial-gradient(#abb5d3, #909fcc, #546ac2, #2432c5, #1825b7);
+        border-radius: 45%;
+        width: 18px;
+        height: 18px;
+        margin-left: 40px;
+        margin-top: -5px !important;
+        padding: 0px;
+        display: none;
+    }
 </style>
 
 <div class="navbar text-light" onclick="clearNavPopups()">
@@ -175,18 +187,25 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <div class="icon-signaler" id="notification-signaler"></div>
+                <button onclick="toggleNavPopup('notifications-popup')" type="button"
+                    class="circle-icon bg-primary d-flex align-items-center justify-content-center" id="notifications">
+                    <i class="fa fa-bell" aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
+            </div>
+            <div>
+                <div class="icon-signaler" id="messages-signaler"></div>
+                <button onclick="toggleNavPopup('messages-popup')" type="button" id="messages"
+                    class="circle-icon bg-primary d-flex align-items-center justify-content-center"><i
+                        class='fas fa-comments' aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
+            </div>
+            <div>
+                <div class="icon-signaler" id="profile-signaler"></div>
+                <button onclick="toggleNavPopup('profile-popup')" type="button" class="profile-img"
+                    style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover;">
+                </button>
 
-            <button onclick="toggleNavPopup('notifications-popup')" type="button"
-                class="circle-icon bg-primary d-flex align-items-center justify-content-center" id="notifications">
-                <i class="fa fa-bell" aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
-
-            <button onclick="toggleNavPopup('messages-popup')" type="button" id="messages"
-                class="circle-icon bg-primary d-flex align-items-center justify-content-center"><i
-                    class='fas fa-comments' aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
-
-            <button onclick="toggleNavPopup('profile-popup')" type="button" class="profile-img"
-                style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover;"></button>
-
+            </div>
         </div>
 
 
@@ -287,22 +306,54 @@
     const origin = window.location.origin;
     const socket = io.connect(origin);
 
+    switchSignaler(id, turnOn = false) {
+        signaler = document.getElementById(`${id}-signaler`)
+        if (turnOn) {
+            signaler.style.display = "block"
+            return
+        }
+
+        if (signaler.style.display == "block") {
+            signaler.style.display = "none"
+        }
+        else {
+            signaler.style.display = "block"
+        }
+
+    }
+
 
     // client-side
     socket.on("connect", () => {
-        console.log("socket connected"); 
+        console.log("socket connected");
     });
 
-    socket.on("old notifications", () => {
-        console.log("old notifications"); 
+    socket.on("old notifications", (data) => {
+        console.log("old notifications");
     });
 
-    socket.on("old notifications", () => {
-        console.log("old notifications"); 
+    socket.on("old messages", (data) => {
+        console.log(data)
+        console.log("old messages");
+    });
+
+    socket.on("notification", (data) => {
+        switchSignaler("notification", turnOn = true)
+        console.log("old notifications");
+
+        
+    });
+
+    socket.on("message", (data) => {
+        switchSignaler("message", turnOn = true)
+
+        //fill messages
+
+        console.log("old messages");
     });
 
     socket.on("disconnect", () => {
-        console.log("socket disconected"); 
+        console.log("socket disconected");
     });
 </script>
 

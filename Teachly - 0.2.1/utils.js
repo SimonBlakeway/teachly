@@ -357,7 +357,6 @@ function genUserCookie(userInfo) {
   return encodedCookie
 }
 
-
 async function genUserRefreshToken(id) {
   user_refresh_token = genSafeRandomStr(20)
 
@@ -402,22 +401,18 @@ async function genUserRefreshToken(id) {
   }
 }
 
-
- 
-
 async function refreshUserToken(id, refreshString, accountNumber, created_at) {
   try {
     let result = await db.query('select "user_refresh_token" FROM user_info WHERE id = $1', [id]);
     if (result.rowCount == 0) {
-      console.log("dflkdfvmwjsvnj")
-      return false
+      throw new Error('row count is 0');
     }
     if (result.rows[0].user_refresh_token[accountNumber].user_refresh_token != refreshString) {
       console.log("osaindoinsncao")
       newRefreshTokens = result.rows[0].user_refresh_token
       newRefreshTokens[accountNumber] = {}
       db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2`, [newRefreshTokens, id]);
-      return false
+      throw new Error('user refresh tokens are not the same');
     }
     if (result.rows[0].user_refresh_token[accountNumber].created_at != created_at) {
       console.log("alsmasjcfn")
@@ -579,51 +574,34 @@ function sendNotification(text, id) {
       created_at: Math.floor(Date.now() / 1000),
       userId: id,
     }
-    db.query(`INSERT INTO user_info ("text", "created_at", "global", "userId") VALUES ($1, $2, $$3)`, [notObj.d]);
-    io.to(`${id}`).emit("notification", notObj);
+    db.query(`
+    INSERT INTO user_info 
+    (text, created_at, user_id)
+    VALUES ($1, $2, $3)`, 
+    [notObj.text, notObj.created_at, notObj.userId]);
+    io.to(`${id}-notification`).emit("notification", notObj);
 
   }
   catch (err) {
     console.log(err)
+    throw new Error(`error: ${err}`)
   }
 }
 
-function createCourse() {
-
-  if (courseData.pricePerLesson > 50) {
-    return { "err": "invalid pricePerLesson" }
-  }
-  if (!(isValidSubject(courseData.taughtIn, courseData.subject))) {
-    return { "err": "invalid subject" }
-  }
-  if (typeof courseData.offersTrialLesson != "boolean") {
-    return { "err": "invalid offersTrialLesson" }
-  }
-  if (!isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) {
-    return { "err": "invalid specialities" }
-  }
-  if (courseData.pricePerLesson > 50) {
-    return { "err": "invalid pricePerLesson" }
-  }
-  if (!(isValidSubject(courseData.taughtIn, courseData.subject))) {
-    return { "err": "invalid subject" }
-  }
-  if (typeof courseData.offersTrialLesson != "boolean") {
-    return { "err": "invalid offersTrialLesson" }
-  }
-  if (!isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) {
-    return { "err": "invalid specialities" }
-  }
-}
-
-function sendNotificationGlobal(id) {
+function sendNotificationGlobal(id, text) {
   try {
     notObj = {
       text: compiledConvert(text),
       created_at: Math.floor(Date.now() / 1000),
       global: true,
     }
-    db.query(`INSERT INTO user_info ("text", "created_at", "global") VALUES ($1, $2, $$3)`, [notObj.d]);
+    db.query(`
+    INSERT INTO notifications 
+    (text, created_at, is_global)
+    VALUES ($1, $2, $3)
+    WHERE id = $4`, 
+    [notObj.text, notObj.created_at, notObj.is_global , id]);
+
     io.emit("notification", notObj);
   }
   catch (err) {
@@ -743,5 +721,7 @@ module.exports = {
   isTrue,
   isInt,
   langugeToLanguageCode,
-  isValidAvailableTimes
+  isValidAvailableTimes,
+  sendNotification,
+  sendNotificationGlobal
 }

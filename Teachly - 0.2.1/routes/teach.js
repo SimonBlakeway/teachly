@@ -32,7 +32,6 @@ router.get('/createCourse', async (req, res) => {
       res.redirect("/login")
       return
     }
-    console.log(req.settings)
 
     res.render('createCourse', {
       layout: "main",
