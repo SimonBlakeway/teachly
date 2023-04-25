@@ -340,13 +340,11 @@ async function cleanUserData(user) {
 }
 
 function genUserCookie(userInfo) {
-
+   // the idea behind this is that it takes the data from a PG row and return the user cookie
   chatIds = []
-
   for(i = 0; i < userInfo.length; i++) {
     chatIds.push(userInfo[i].chat_id);
   }
-  // the idea behind this is that it takes the data from a PG row and return the user cookie
   payload = {
     name: userInfo[0].name.trim(),
     lang: userInfo[0].lang.trim(),
@@ -355,7 +353,6 @@ function genUserCookie(userInfo) {
     created_at: Math.floor(Date.now() / 1000),
     chatIds: chatIds
   }
-  console.log("payload")
   encodedCookie = jwt.encode(payload, process.env.JWT_SECRET)
   return encodedCookie
 }
@@ -366,34 +363,36 @@ async function genUserRefreshToken(id) {
 
 
   try {
-    let result = await db.query(`SELECT "user_refresh_token" FROM user_info WHERE id = $1`, [id]);
-
+    let result = await db.query(`SELECT user_refresh_token FROM user_info WHERE id = $1`, [id]);
     accountNumber = ""
     let arr = result.rows[0].user_refresh_token
     let index = arr.findIndex(obj => Object.keys(obj).length === 0);
-    if (index != -1) {
-      accountNumber = index
+    if (index != -1) {  
+      accountNumber = index + 1 //postgres indexes start at 1
     }
     else {
-      accountNumber = result.rows[0].user_refresh_token.length
+      accountNumber = result.rows[0].user_refresh_token.length + 1
     }
-
+    
+    date = Math.floor(Date.now() / 1000)
     token = {
       user_refresh_token: user_refresh_token,
       id: id,
       accountNumber: accountNumber,
-      created_at: Math.floor(Date.now() / 1000)
+      created_at: date
     }
-    user_refresh_token = result.rows[0].user_refresh_token
-    user_refresh_token[accountNumber] = {
+    console.log(accountNumber)
+
+
+    db_token = {
       user_refresh_token: user_refresh_token,
       accountNumber: accountNumber,
-      created_at: Math.floor(Date.now() / 1000)
+      created_at: date
     }
 
     encodedToken = jwt.encode(token, process.env.JWT_SECRET)
     try {
-      db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2;`, [user_refresh_token, id]);
+     // db.query(`UPDATE user_info SET user_refresh_token [${accountNumber}] = $1 WHERE id = $2;`, [db_token, id]);
       return encodedToken
     } catch (error) {
       console.log(error)
@@ -402,6 +401,9 @@ async function genUserRefreshToken(id) {
     console.log(error)
   }
 }
+
+
+ 
 
 async function refreshUserToken(id, refreshString, accountNumber, created_at) {
   try {
@@ -443,11 +445,13 @@ async function refreshUserToken(id, refreshString, accountNumber, created_at) {
     }
 
     try {
-      db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2;`, [user_refresh_token, id]);
+      console.log(typeof user_refresh_token)
+      await db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2;`, [user_refresh_token, id]);
       encodedToken = jwt.encode(token, process.env.JWT_SECRET)
       return encodedToken
     } catch (error) {
       console.log(error)
+      console.log("error")
     }
   } catch (error) {
     console.log(error)

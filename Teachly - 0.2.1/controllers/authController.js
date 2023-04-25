@@ -21,26 +21,7 @@ const email = require('../util-APIs/email-util')
 const utils = require('../utils')
 const db = require('../config/db');
 const { get } = require('axios');
-//196 197
-response = db.query(`INSERT INTO chat ( created_at, teacher_id, student_id ) VALUES ($1, $2, $3)`, [ Math.floor(Date.now() / 1000), 196, 196 ]);
 
-async function ree() {
-  result = await db.query(`
-                  SELECT 
-                    user_info.email,
-                    user_info.id,
-                    user_info.name,
-                    user_info.lang,
-                    chat.chat_id
-                  FROM user_info
-                  LEFT JOIN chat ON (user_info.id = chat.teacher_id OR user_info.id = chat.student_id)
-                  WHERE user_info.id = $1`,[196] );
-
- return result.rows  
-}
-ree().then(res => {
- // utils.genUserCookie(res).rows
-})
 
 async function skree() {
   result = await db.query(`SELECT * FROM chat`, );
@@ -93,9 +74,7 @@ exports.login = async function (req, res) {
       return
     }
     try {
-     // console.log("reeee")
       userToken = await utils.genUserRefreshToken(result.rows[0].id)
-
       userCookie = await utils.genUserCookie(result.rows)
       res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
@@ -272,7 +251,6 @@ exports.settings = function (req, res) {
 
   try {
     change = req.body
-    console.log(req.settings)
 
     if ((req.cookies.userCookie)) {
       if (validSettings.includes(change.settingName) && (Object.keys(change).length != 0)) {

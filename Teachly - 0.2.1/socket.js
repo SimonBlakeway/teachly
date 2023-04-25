@@ -58,20 +58,19 @@ module.exports = {
           socket.disconnect()
           return
         }
-
       }
       catch (err) {
         socket.disconnect()
         return
       }
       id = cookies.user_refresh_token.id
-
       //join rooms
-      rooms = cookies.userCookie.rooms
-      socket.join(`${id}`)
-     // for (let i = 0; i < rooms.length; i++) {
-     //   socket.join(`${rooms[i]}`)
-      //}
+      rooms = cookies.userCookie.chatIds
+      
+      socket.join(`${id}-user`)
+      for (let i = 0; i < rooms.length; i++) {
+        socket.join(`${rooms[i]}-chat`)
+      }
       sendMessagesNotifications(id)
       sendNotifications(id)
 
