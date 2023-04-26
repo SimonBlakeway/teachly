@@ -21,11 +21,8 @@ dotenv.config(dotenv.config({ path: './config/config.env' }));
 // Body parser
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }))
 //app.use(bodyParser.json({ limit: "10mb" }))
-
-
 app.use(cookieParser());
 
-// middleware
 app.use(require('./middleware/auth.js').ensureSafe)
 app.use(require('./middleware/customMiddleware.js').cookieSettings)
 app.use(require('./middleware/customMiddleware.js').refreshToken)
@@ -65,7 +62,7 @@ app.use(function (req, res, next) {
 
 app.use('/', express.static(path.join(__dirname, 'public'), {
   setHeaders: function (res, path) {
-    res.set("Cache-Control", "private, max-age=600");
+    res.set("Cache-Control", "private, max-age=0");
   }
 }));
 
@@ -93,9 +90,17 @@ app.use('/profile', require('./routes/profile'))
 app.use(require('./middleware/customMiddleware.js').redirectUnmatched)
 
 
-const PORT = process.env.PORT || 3000
 
-app.listen(
-  PORT,
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-)
+
+const http = require('http');
+const server = http.createServer(app);  // this is to create http server with express for socket.io
+const socketio = require('./socket.js');
+const io = socketio.setIo(server);
+
+
+// Static files
+app.use(express.static("public"));
+
+server.listen(3001, () => {
+    console.log('server listening on port 3001');
+})

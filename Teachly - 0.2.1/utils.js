@@ -63,7 +63,7 @@ function getCurrencyFromLanguageCode(code) {
   }
 }
 
-function contextSetup(settings, partials = [], pageName) {
+function contextSetup(settings, partials = [], pageName, layout = "main") {
   try {
     context = {};
     context.companyInfo = {
@@ -95,6 +95,8 @@ function contextSetup(settings, partials = [], pageName) {
 
     context.bodyContext = JSON.parse(fs.readFileSync(`./views/webpage-templates/langauge-templates/${settings.lang}/${pageName}.json`))
 
+    context.layoutContext = JSON.parse(fs.readFileSync(`./views/webpage-templates/langauge-templates/${settings.lang}/layouts/${layout}.json`))
+
     context.language = settings.lang
     for (i = 0; i < partials.length; i++) {
       context[`${partials[i]}`] = JSON.parse(fs.readFileSync(`./views/webpage-templates/langauge-templates/${settings.lang}/partials/${partials[i]}.json`))
@@ -103,9 +105,11 @@ function contextSetup(settings, partials = [], pageName) {
   }
   catch (err) {
     console.log("context setup err")
+    console.log(err)
     return contextSetup({ cur: "USD", lang: "en" }, partials, pageName)
   }
 }
+
 
 async function ImagePrep(imgStr, name) {
   try {
@@ -174,8 +178,7 @@ function isValidLanguage(str, fullName = false) {
 
 function isValidSubject(lang, subject) {
   try {
-    lang = lang.substring(0, 2)
-    return validSubjectObj[lang].includes(subject)
+    return validSubjectObj["en"].includes(subject)
   }
   catch (err) {
     return false
@@ -186,7 +189,7 @@ function isValidSubjectSpeciality(lang, subject, specialities) {
   try {
     if ((!!specialities) && (specialities.constructor === Array)) {
       for (i = 0; i < specialities.length; i++) {
-        if (!(validspecialitiesObj[lang][subject].includes(specialities[i]))) {
+        if (!(validspecialitiesObj["en"][subject].includes(specialities[i]))) {
           return false
         }
       }
@@ -220,12 +223,8 @@ function isValidSubjectSpecialityNoSubject(lang, speciality) {
 }
 
 function isValidAvailableTimes(obj) {
+  days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",]
   try {
-
-    if (Object.keys(obj).length != 7) {
-      return false
-    }
-
     function checkDay(day) {
       for (i = 0; i < day.length; i++) {
         if (day[i].length != 3) { return false }
@@ -238,17 +237,13 @@ function isValidAvailableTimes(obj) {
       }
       return true
     }
-
-
-
-    if (!checkDay(obj.monday)) { return false }
-    if (!checkDay(obj.tuesday)) { return false }
-    if (!checkDay(obj.wednesday)) { return false }
-    if (!checkDay(obj.thursday)) { return false }
-    if (!checkDay(obj.friday)) { return false }
-    if (!checkDay(obj.saturday)) { return false }
-    if (!checkDay(obj.sunday)) { return false }
-
+    keys = Object.keys(obj)
+    for (i = 0; i < keys.length; i++) {
+      if (days.includes(keys[i])) {
+        if (checkDay(obj[keys[i]]) == false) return false
+      }
+      else { return false }
+    }
     return true
   }
   catch (err) {
@@ -348,53 +343,59 @@ async function cleanUserData(user) {
   return user
 }
 
-function genUserCookie(user) {
+function genUserCookie(userInfo) {
   // the idea behind this is that it takes the data from a PG row and return the user cookie
+  chatIds = []
+  for (i = 0; i < userInfo.length; i++) {
+    chatIds.push(userInfo[i].chat_id);
+  }
   payload = {
-    name: user.name.trim(),
-    lang: user.lang.trim(),
-    cur: user.cur,
-    id: user.id,
-    createdAt: Math.floor(Date.now() / 1000)
-  };
+    name: userInfo[0].name.trim(),
+    lang: userInfo[0].lang.trim(),
+    cur: userInfo[0].cur,
+    id: userInfo[0].id,
+    created_at: Math.floor(Date.now() / 1000),
+    chatIds: chatIds
+  }
   encodedCookie = jwt.encode(payload, process.env.JWT_SECRET)
   return encodedCookie
 }
 
-
 async function genUserRefreshToken(id) {
-  userRefreshToken = genSafeRandomStr(20)
+  user_refresh_token = genSafeRandomStr(20)
 
 
   try {
-    let result = await db.query(`SELECT "userRefreshToken" FROM user_info WHERE id = $1`, [id]);
-
+    let result = await db.query(`SELECT user_refresh_token FROM user_info WHERE id = $1`, [id]);
     accountNumber = ""
-    let arr = result.rows[0].userRefreshToken
+    let arr = result.rows[0].user_refresh_token
     let index = arr.findIndex(obj => Object.keys(obj).length === 0);
     if (index != -1) {
-      accountNumber = index
+      accountNumber = index + 1 //postgres indexes start at 1
     }
     else {
-      accountNumber = result.rows[0].userRefreshToken.length
+      accountNumber = result.rows[0].user_refresh_token.length + 1
     }
 
+    date = Math.floor(Date.now() / 1000)
     token = {
-      userRefreshToken: userRefreshToken,
+      user_refresh_token: user_refresh_token,
       id: id,
       accountNumber: accountNumber,
-      createdAt: Math.floor(Date.now() / 1000)
+      created_at: date
     }
-    userRefreshTokens = result.rows[0].userRefreshToken
-    userRefreshTokens[accountNumber] = {
-      userRefreshToken: userRefreshToken,
+    console.log(accountNumber)
+
+
+    db_token = {
+      user_refresh_token: user_refresh_token,
       accountNumber: accountNumber,
-      createdAt: Math.floor(Date.now() / 1000)
+      created_at: date
     }
 
     encodedToken = jwt.encode(token, process.env.JWT_SECRET)
     try {
-      db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2;`, [userRefreshTokens, id]);
+      // db.query(`UPDATE user_info SET user_refresh_token [${accountNumber}] = $1 WHERE id = $2;`, [db_token, id]);
       return encodedToken
     } catch (error) {
       console.log(error)
@@ -404,61 +405,53 @@ async function genUserRefreshToken(id) {
   }
 }
 
-async function refreshUserToken(id, refreshString, accountNumber, createdAt) {
+async function refreshUserToken(id, refreshString, accountNumber, created_at) {
   try {
-    let result = await db.query('select "userRefreshToken" FROM user_info WHERE id = $1', [id]);
+    let result = await db.query('select "user_refresh_token" FROM user_info WHERE id = $1', [id]);
     if (result.rowCount == 0) {
-      console.log("dflkdfvmwjsvnj")
-      return false
+      throw new Error('row count is 0');
     }
-    if (result.rows[0].userRefreshToken[accountNumber].userRefreshToken != refreshString) {
+    if (result.rows[0].user_refresh_token[accountNumber].user_refresh_token != refreshString) {
       console.log("osaindoinsncao")
-      newRefreshTokens = result.rows[0].userRefreshToken
+      newRefreshTokens = result.rows[0].user_refresh_token
       newRefreshTokens[accountNumber] = {}
-      db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
-      return false
+      db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2`, [newRefreshTokens, id]);
+      throw new Error('user refresh tokens are not the same');
     }
-    if (result.rows[0].userRefreshToken[accountNumber].createdAt != createdAt) {
+    if (result.rows[0].user_refresh_token[accountNumber].created_at != created_at) {
       console.log("alsmasjcfn")
-      newRefreshTokens = result.rows[0].userRefreshToken
+      newRefreshTokens = result.rows[0].user_refresh_token
       newRefreshTokens[accountNumber] = {}
-      db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, id]);
+      db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2`, [newRefreshTokens, id]);
       return false
     }
 
-    userRefreshToken = genSafeRandomStr(20)
+    user_refresh_token = genSafeRandomStr(20)
     date = Math.floor(Date.now() / 1000)
 
     token = {
-      userRefreshToken: userRefreshToken,
+      user_refresh_token: user_refresh_token,
       id: id,
       accountNumber: accountNumber,
-      createdAt: date
+      created_at: date
     }
 
-    userRefreshTokens = result.rows[0].userRefreshToken
-    userRefreshTokens[accountNumber] = {
-      userRefreshToken: userRefreshToken,
+    user_refresh_token = result.rows[0].user_refresh_token
+    user_refresh_token[accountNumber] = {
+      user_refresh_token: user_refresh_token,
       accountNumber: accountNumber,
-      createdAt: date
+      created_at: date
     }
 
     try {
-      db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2;`, [userRefreshTokens, id]);
+      console.log(typeof user_refresh_token)
+      await db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2;`, [user_refresh_token, id]);
       encodedToken = jwt.encode(token, process.env.JWT_SECRET)
       return encodedToken
     } catch (error) {
       console.log(error)
+      console.log("error")
     }
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function createNotification(id, text) {
-  try {
-    text = compiledConvert(text)
-    db.query(`INSERT INTO user_info (notifications) VALUES ($1) WHERE id=$2`, [{ text: text, createdAt: Math.floor(Date.now() / 1000) }, id]);
   } catch (error) {
     console.log(error)
   }
@@ -478,8 +471,6 @@ function langugeToLanguageCode(lang) {
     return false
   }
 }
-
-
 
 function convertTimeRangeToQuery(obj) {
 
@@ -580,81 +571,49 @@ function convertSearchByKeywordToQuery(str) {
 
 }
 
-
-
-
-
-
-//ned wrk
-async function createCourse(courseData, userInfo) {
+function sendNotification(text, id) {
   try {
-    // this function asumes the data is not clean
-    courseData.courseImg = await ImagePrep(courseData.courseImg, "course-id=" + userInfo.id)
-    courseData.description = compiledConvert(courseData.description)
+    notObj = {
+      text: compiledConvert(text),
+      created_at: Math.floor(Date.now() / 1000),
+      userId: id,
+    }
+    db.query(`
+    INSERT INTO notifications 
+    (text, created_at, user_id)
+    VALUES ($1, $2, $3)`,
+      [notObj.text, notObj.created_at, notObj.userId]);
+    global.io.to(`${id}-user`).emit("notification", notObj);
 
-    if (!courseData.courseImg) {
-      return { "err": "invalid image" }
-    }
-    if (!((isValidLanguage(courseData.taughtIn, fullName = false)) >= 0)) {
-      return { "err": "invalid Language" }
-    }
-    if (!isInt(courseData.pricePerLesson) || ((courseData.pricePerLesson <= 0) || (courseData.pricePerLesson > 50))) {
-      return { "err": "invalid pricePerLesson" }
-    }
-    if ((courseData.pricePerLesson < 0) || (courseData.pricePerLesson > 50)) {
-      return { "err": "invalid pricePerLesson" }
-    }
-    if (courseData.pricePerLesson > 50) {
-      return { "err": "invalid pricePerLesson" }
-    }
-    if (!(isValidSubject(courseData.taughtIn, courseData.subject))) {
-      return { "err": "invalid subject" }
-    }
-    if (typeof courseData.offersTrialLesson != "boolean") {
-      return { "err": "invalid offersTrialLesson" }
-    }
-    if (!isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) {
-      return { "err": "invalid specialities" }
-
-    }
-    if (!isValidAvailableTimes(courseData.availableTimes)) {
-      return { "err": "invalid availableTimes" }
-    }
-
-    courseObj = {
-      description: courseData.description,
-      createdAt: Math.floor(Date.now() / 1000),
-      taughtIn: courseData.taughtIn,
-      offersTrialLesson: courseData.offersTrialLesson,
-      pricePerLesson: courseData.pricePerLesson,
-      subject: courseData.subject,
-      specialities: courseData.specialities,
-      availableTimes: courseData.availableTimes,
-      courseImg: courseData.courseImg
-    }
-    try {
-      //result = await db.query('select "qualifications" FROM user_info WHERE id = $1', [userInfo.id]);
-      //console.log(result)
-
-      try {
-        //result = await db.query(`INSERT INTO "teacher_course ( "description", "createdAt", "taughtIn", "offersTrialLesson", "pricePerLesson", subject, specialities, "timeSchedule", "teacherId") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, [courseObj.description, courseObj.createdAt, courseObj.taughtIn, courseObj.offersTrialLesson, courseObj.pricePerLesson, courseObj.subject, courseObj.specialities, courseObj.availableTimes, userInfo.id]);
-
-
-
-      } catch (error) {
-        return false
-      }
-
-
-
-    } catch (error) {
-      return false
-    }
-  } catch (error) {
-    return false
   }
-
+  catch (err) {
+    console.log(err)
+    throw new Error(`error: ${err}`)
+  }
 }
+
+
+function sendNotificationGlobal(id, text) {
+  try {
+    notObj = {
+      text: compiledConvert(text),
+      created_at: Math.floor(Date.now() / 1000),
+      global: true,
+    }
+    db.query(`
+    INSERT INTO notifications 
+    (text, created_at, is_global)
+    VALUES ($1, $2, $3)
+    WHERE id = $4`,
+      [notObj.text, notObj.created_at, notObj.is_global, id]);
+
+    io.emit("notification", notObj);
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
 //ned wrk
 async function createChat(studintId, courseId) {
 
@@ -679,16 +638,16 @@ async function createChat(studintId, courseId) {
       //if the course doesn't exist, return 
       return
     }
-    if (result.rows[0].user_info.bannedUsers.inludes()) {
+    if (result.rows[0].user_info.banned_users.inludes()) {
       //if the user is banned by the teacher, return
       return
     }
 
 
     try {
-      db.query(`INSERT INTO chat ("tutorId", "pupilId", "createdAT") 
+      db.query(`INSERT INTO chat (student_id, teacher_id, "created_at") 
                 VALUES ($1, $2, $3) 
-                RETURNING *`, [id, userRefreshToken, accountNumber]);
+                RETURNING *`, [id, user_refresh_token, accountNumber]);
     } catch (error) {
       console.log(error)
     }
@@ -715,11 +674,12 @@ async function sendMessage(id, text, chatId) {
   text = compiledConvert(text)
   messagesObj = {
     text: text,
-    createdAt: Math.floor(Date.now() / 1000),
-    userId: id
+    created_at: Math.floor(Date.now() / 1000),
+    userId: id,
+    chatId: chatId
   }
   try {
-    db.query(`INSERT INTO chat ("message") VALUES ($1) WHERE chatId = $2 AND (teacherId = $3 OR studentId = $3)`, [messagesObj, chatId, id], (err, result) => {
+    db.query(`INSERT INTO message VALUES ($1) WHERE chatId = $2 AND (teacherId = $3 OR studentId = $3)`, [messagesObj, chatId, id], (err, result) => {
       if (err) {
         console.log(err)
       }
@@ -753,9 +713,7 @@ module.exports = {
   refreshUserToken,
   encrypt,
   decrypt,
-  createNotification,
   sendMessage,
-  createCourse,
   isValidSubject,
   isValidSubjectSpeciality,
   isValidSubjectSpecialityNoSubject,
@@ -767,5 +725,7 @@ module.exports = {
   isTrue,
   isInt,
   langugeToLanguageCode,
-  isValidAvailableTimes
+  isValidAvailableTimes,
+  sendNotification,
+  sendNotificationGlobal
 }

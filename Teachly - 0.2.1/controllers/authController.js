@@ -23,8 +23,17 @@ const db = require('../config/db');
 const { get } = require('axios');
 
 
+async function skree() {
+  result = await db.query(`SELECT id FROM user_info`, );
 
-//db.query(`DELETE FROM user_info`);
+console.log(result.rows)    
+}
+
+
+
+
+
+
 
 //this group is for manual login/signin, 
 
@@ -39,26 +48,34 @@ exports.login = async function (req, res) {
 
 
   try {
-    result = await db.query(`SELECT email, name, lang, cur, id, "passHash", "userRefreshToken" FROM user_info WHERE name = $1`, [user.name]);
+    result = await db.query(`
+    SELECT 
+      user_info.email, 
+      user_info.name,
+      user_info.lang,
+      user_info.cur, 
+      user_info.id, 
+      user_info.pass_hash,
+      chat.chat_id
+    FROM user_info
+    JOIN chat ON (user_info.id = chat.teacher_id OR user_info.id = chat.student_id)
+    WHERE name = $1`, [user.name]);
 
 
     if (result.rowCount == 0) {
       res.json({ "err": "invalid name" })
       return
     }
-    isSame = await utils.compareHash(user.password, result.rows[0].passHash.trim())
+    isSame = await utils.compareHash(user.password, result.rows[0].pass_hash.trim())
     if (isSame == false) {
       res.json({ "err": "invalid password" })
       return
     }
     try {
       userToken = await utils.genUserRefreshToken(result.rows[0].id)
-
-
-      userCookie = await utils.genUserCookie(result.rows[0])
-
+      userCookie = await utils.genUserCookie(result.rows)
       res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-      res.cookie('userRefreshToken', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       res.sendStatus(200)
 
     } catch (error) {
@@ -90,7 +107,7 @@ exports.register = async function (req, res) {
       console.log(randInt, "randint")
 
       try {
-        response = await db.query(`INSERT INTO user_info ("name", "email", "profileImg", "lang", "createdAt", "passHash", "emailCode", "cur", "loginType", "userRefreshToken" ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [user.name, user.email, user.profileImage, req.settings.lang, Math.floor(Date.now() / 1000), user.password, "00" + randInt, req.settings.cur, "custom", [{}]]);
+        response = await db.query(`INSERT INTO user_info ("name", "email", "profile_img", "lang", "created_at", "pass_hash", "email_code", "cur", "login_type", "user_refresh_token" ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [user.name, user.email, user.profileImage, req.settings.lang, Math.floor(Date.now() / 1000), user.password, "00" + randInt, req.settings.cur, "custom", [{}]]);
         //email.sendSignUpEmail(user.email, randInt, req.settings.lang)  
         res.sendStatus(200)
       } catch (error) {
@@ -108,43 +125,53 @@ exports.emailValidation = async function (req, res) {
     res.redirect("/") //is user already has an account
     return
   }
-  if (!(req.query.emailCode && req.query.email)) {
+  if (!(req.query.email_code && req.query.email)) {
     res.redirect("/") //make sure the right values are there
     return
   }
-  emailCode = parseInt(req.query.emailCode)
+  email_code = parseInt(req.query.email_code)
   userEmail = decodeURI(req.query.email)
 
 
 
   try {
-    result = await db.query(`SELECT email, "emailCode", name, lang, cur, id FROM user_info WHERE email = $1`, [userEmail]);
+    result = await db.query(`
+    SELECT
+      user_info.email, 
+      user_info.name,
+      user_info.lang,
+      user_info.cur, 
+      user_info.id, 
+      user_info.pass_hash,
+      chat.chat_id
+    LEFT JOIN chat ON (user_info.id = chat.teacher_id OR user_info.id = chat.student_id)
+    FROM user_info WHERE email = $1`, [userEmail]);
     if (result.rowCount == 0) {
       res.redirect("/") //if the user with email address doesn't exist, redirect, only applicable to mal requests
       return
     }
-    if (result.rows[0].emailCode.trim() == "true") {
+    if (result.rows[0].email_code.trim() == "true") {
       res.redirect("/") //if the email address already exists, redirect, only applicable to mal requests
       return
     }
-    if (parseInt(result.rows[0].emailCode) > 9999999) {
+    if (parseInt(result.rows[0].email_code) > 9999999) {
 
       res.redirect("/") //if the user has tried to log in 9 times redirect
       return
     }
-    if (result.rows[0].emailCode.substring(2, 7) != emailCode.toString()) {
-      emailCode = "0" + (parseInt(result.rows[0].emailCode[1] + 1)) + result.rows[0].emailCode.substring(2, 7);
+    if (result.rows[0].email_code.substring(2, 7) != email_code.toString()) {
+      email_code = "0" + (parseInt(result.rows[0].email_code[1] + 1)) + result.rows[0].email_code.substring(2, 7);
 
-      db.query(`UPDATE user_info email SET "emailCode" = $1, WHERE WHERE email = $2;`, [emailCode, userEmail])
-      res.json({ "err": "wrong emailCode" })
+      db.query(`UPDATE user_info email SET "email_code" = $1, WHERE WHERE email = $2;`, [email_code, userEmail])
+      res.json({ "err": "wrong email_code" })
       return
     }
     userToken = await utils.genUserRefreshToken(result.rows[0].id)
-    userCookie = await utils.genUserCookie(result.rows[0])
-    db.query(`UPDATE user_info SET "emailCode" = $1 WHERE email = $2;`, ["true", userEmail])
+    userCookie = await utils.genUserCookie(result.rows)
+    db.query(`UPDATE user_info SET email_code = $1 WHERE email = $2;`, ["true", userEmail])
 
     res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-    res.cookie('userRefreshToken', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+    res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
     res.sendStatus(200)
 
   } catch (error) {
@@ -194,15 +221,15 @@ exports.facebookLogin = async function (req, res) {
 exports.logout = async function (req, res) {
 
   try {
-    let result = await db.query('select "userRefreshToken" FROM user_info WHERE id = $1', [req.settings.id]);
+    let result = await db.query('select "user_refresh_token" FROM user_info WHERE id = $1', [req.settings.id]);
 
 
-    newRefreshTokens = result.rows[0].userRefreshToken
+    newRefreshTokens = result.rows[0].user_refresh_token
     newRefreshTokens[req.settings.accountNumber] = {}
-    db.query(`UPDATE user_info SET "userRefreshToken" = $1 WHERE id = $2`, [newRefreshTokens, req.settings.id]);
+    db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2`, [newRefreshTokens, req.settings.id]);
 
     res.clearCookie('userCookie');
-    res.clearCookie('userRefreshToken');
+    res.clearCookie('user_refresh_token');
     res.redirect("/")
   } catch (error) {
     console.log(error)
@@ -222,18 +249,18 @@ exports.settings = function (req, res) {
 
   try {
     change = req.body
-    console.log(req.settings)
 
     if ((req.cookies.userCookie)) {
       if (validSettings.includes(change.settingName) && (Object.keys(change).length != 0)) {
-        if (req.cookies.userRefreshToken) {
-
+        if (req.cookies.req.user_refresh_token) {
+   
           userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
-          userRefreshToken = jwt.decode(req.cookies.userRefreshToken, process.env.JWT_SECRET)
+          userToken[`${change.settingName}`] = change.change
+          user_refresh_token = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
 
-
+          db.query(`UPDATE user_info SET ${change.settingName} = $1 WHERE id = $2;`, [change.change, req.settings.id])
           res.cookie('userCookie', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-          res.cookie('userRefreshToken', userRefreshToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+          res.cookie('user_refresh_token', user_refresh_token, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
         }
         else {
           userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)

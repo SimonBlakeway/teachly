@@ -100,7 +100,9 @@
         vertical-align: middle;
     }
 
-    .navlist-list {}
+    .navlist-list {
+        height: 200px;
+    }
 
     .navlist-list li {
         width: 100%;
@@ -132,6 +134,16 @@
         margin-right: 10px;
     }
 
+    #notifications-popup {
+        height: 360px;
+        width: 250px;
+        border-width: 5px;
+        border-bottom-width: 20px;
+
+
+
+    }
+
     @media only screen and (max-width: 460px) {
         .dispr-mx-442p {
             visibility: hidden;
@@ -144,6 +156,32 @@
             visibility: hidden;
             display: none;
         }
+    }
+
+    .icon-signaler {
+        position: absolute;
+        background: radial-gradient(#abb5d3, #909fcc, #546ac2, #2432c5, #1825b7);
+        border-radius: 45%;
+        width: 18px;
+        height: 18px;
+        margin-left: 40px;
+        margin-top: -5px !important;
+        padding: 0px;
+        display: none;
+    }
+
+    #notifications-list {
+        height: 300px !important;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    #notifications-list::-webkit-scrollbar {
+        display: none;
     }
 </style>
 
@@ -175,18 +213,25 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <div class="icon-signaler" id="notification-signaler"></div>
+                <button onclick="toggleNavPopup('notifications-popup')" type="button"
+                    class="circle-icon bg-primary d-flex align-items-center justify-content-center" id="notifications">
+                    <i class="fa fa-bell" aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
+            </div>
+            <div>
+                <div class="icon-signaler" id="messages-signaler"></div>
+                <button onclick="toggleNavPopup('messages-popup')" type="button" id="messages"
+                    class="circle-icon bg-primary d-flex align-items-center justify-content-center"><i
+                        class='fas fa-comments' aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
+            </div>
+            <div>
+                <div class="icon-signaler" id="profile-signaler"></div>
+                <button onclick="toggleNavPopup('profile-popup')" type="button" class="profile-img"
+                    style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover;">
+                </button>
 
-            <button onclick="toggleNavPopup('notifications-popup')" type="button"
-                class="circle-icon bg-primary d-flex align-items-center justify-content-center" id="notifications">
-                <i class="fa fa-bell" aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
-
-            <button onclick="toggleNavPopup('messages-popup')" type="button" id="messages"
-                class="circle-icon bg-primary d-flex align-items-center justify-content-center"><i
-                    class='fas fa-comments' aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
-
-            <button onclick="toggleNavPopup('profile-popup')" type="button" class="profile-img"
-                style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover;"></button>
-
+            </div>
         </div>
 
 
@@ -266,13 +311,15 @@
             <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
         </div>
 
-        <div class="nav-popup" id="notifications-popup">
-            <div class="popup-link" style="padding: 15px;">
+        <div class="nav-popup d-flex flex-column" id="notifications-popup" onclick="event.stopPropagation();">
+            <div class="popup-link pt-0 mr-0" style="padding: 15px;">
                 <h3>
                     {{navbarContext.notificationsPopup.notifications}}
                 </h3>
             </div>
-            <ul class="navlist-list" id="notificationss-list" style="height: 100%;">
+            <ul class="navlist-list d-flex flex-column p-0 m-0" id="notifications-list" style="height: 100%;">
+                <div class="d-flex align-items-center justify-content-center">
+                    {{navbarContext.notificationsPopup.noNotifications}}</div>
             </ul>
         </div>
     </div>
@@ -280,11 +327,101 @@
 
 
 
+<script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+    integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+    crossorigin="anonymous"></script>
+<script>
+    const origin = window.location.origin;
+    const socket = io.connect(origin);
+
+    function switchSignaler(id, turnOn = false) {
+        signaler = document.getElementById(`${id}-signaler`)
+        if (turnOn) {
+            signaler.style.display = "block"
+            return
+        }
+        if (signaler.style.display == "block") {
+            signaler.style.display = "none"
+        }
+        else {
+            signaler.style.display = "block"
+        }
+    }
+
+
+    // client-side
+    socket.on("connect", () => {
+        console.log("socket connected");
+    });
+
+    socket.on("old notifications", (data) => {
+        switchSignaler("notification", turnOn = true)
+
+
+        notOuter = document.getElementById("notifications-list")
+        notOuter.innerHTML = '';
+
+        for (let i = 0; i < data.length; i++) {
+
+
+
+            box = document.createElement("li")
+            box.className = "px-0  mx-0 py-1"
+
+            divClass = ""
+
+            if (i != 0) {
+                divClass = "border border-top-5 border-light"
+            }
+            box.innerHTML = `
+              <div class="${divClass}">${data[i].text}</div>
+              <div class="pt-1">${prettyifyDate(data[i].created_at)}</div>
+              `
+            notOuter.appendChild(box)
+        }
+    });
+
+    socket.on("old messages", (data) => {
+        console.log("old messages");
+        console.log(data)
+    });
+
+    socket.on("notification", (data) => {
+        switchSignaler("notification", turnOn = true)
+        console.log("notifications");
+        console.log(data)
+
+        notOuter = document.getElementById("notifications-list")
+        console.log([data.length], "free")
+
+        for (let i = 0; i < data.length; i++) {
+
+            box = createElement("li")
+            box.innerHTML = `
+              <div>${data[i].text}</div>
+              <div>${data[i].created_at}</div>
+              `
+            notOuter.appendChild(box)
+        }
+    });
+
+    socket.on("message", (data) => {
+        switchSignaler("message", turnOn = true)
+
+        //fill messages
+        console.log("old messages");
+        console.log(data)
+    });
+
+    socket.on("disconnect", () => {
+        console.log("socket disconected");
+    });
+</script>
+
 
 
 
 <script>
-    console.log(document.getElementById("re").style.borderColor)
 
     function navLangSearch() {
         var input, filter;
@@ -342,7 +479,6 @@
     }
 
     function toggleNavPopup(id) {
-        console.log("erer")
         var popup = document.getElementById(id);
         if ((popup.style.display != "block")) {
             clearNavPopups()
@@ -384,44 +520,6 @@
             node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
             document.getElementById("currency-change").appendChild(node);
         }
-
-
-
-
-
-
-        axios.get('/profile/notifications').then(res => {
-
-            if (res.data == "404") {
-                console.log("no notifications")
-            }
-            else {
-
-                document.getElementById("notificationss-list").innerHTML = '';
-
-                for (let i = 0; i < res.data.length; i++) {
-
-                    node = document.createElement("li");
-                    node.innerHTML = `<div style="height: 20px; font-size: 20px; line-height: 20px; margin-bottom: 10px;">${res.data[i].text}</div><div style="height: 20px; font-size: 16px; line-height: 16px;">${prettyifyDate(res.data[i].createdAt)}</div>`
-                    document.getElementById("notificationss-list").appendChild(node);
-                }
-            }
-
-        })
-
-
-        axios.get('/profile/messages').then(res => {
-
-            if (res.data == "404") {
-            }
-            else {
-                for (let i = 0; i < res.data.length; i++) {
-
-                }
-            }
-
-        })
-
 
 
 

@@ -32,7 +32,6 @@ router.get('/createCourse', async (req, res) => {
       res.redirect("/login")
       return
     }
-    console.log(req.settings)
 
     res.render('createCourse', {
       layout: "main",
@@ -57,27 +56,24 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
 
     if (!courseData.image) { res.json({ "err": "invalid image" }) }
     if (!((utils.isValidLanguage(courseData.taughtIn, fullName = true)) >= 0)) {
-      return { "err": "invalid Language" }
+      res.send({ "err": "invalid Language" })
     }
     courseData.taughtIn = utils.langugeToLanguageCode(courseData.taughtIn)
     if (!utils.isInt(courseData.pricePerLesson) || ((courseData.pricePerLesson <= 0) || (courseData.pricePerLesson > 60))) {
-      return { "err": "invalid pricePerLesson" }
+      res.send({ "err": "invalid pricePerLesson" })
     }
     if (!(utils.isValidSubject(courseData.taughtIn, courseData.subject))) {
-      return { "err": "invalid subject" }
+      res.send({ "err": "invalid subject" })
     }
 
     if (!utils.isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) {
-      return { "err": "invalid specialities" }
+      res.send({ "err": "invalid specialities" })
 
     }
     if (!utils.isValidAvailableTimes(courseData.availableTimes)) {
       console.log("ererererer")
       return { "err": "invalid availableTimes" }
     }
-    console.log("7")
-
-    console.log("heeloo")
 
     courseObj = {
       description: courseData.description,
@@ -91,20 +87,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       courseImg: courseData.courseImg
     }
     try {
-      //result = await db.query('select "qualifications" FROM user_info WHERE id = $1', [userInfo.id]);
-      console.log(result)
-
-      try {
-        //result = await db.query(`INSERT INTO "teacher_course ( "description", "createdAt", "taughtIn", "offersTrialLesson", "pricePerLesson", subject, specialities, "timeSchedule", "teacherId") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, [courseObj.description, courseObj.createdAt, courseObj.taughtIn, courseObj.offersTrialLesson, courseObj.pricePerLesson, courseObj.subject, courseObj.specialities, courseObj.availableTimes, userInfo.id]);
-
-
-
-      } catch (error) {
-        return false
-      }
-
-
-
+      result = await db.query(`INSERT INTO "teacher_course ( "description", "createdAt", "taughtIn", "pricePerLesson", subject, specialities, "timeSchedule", "teacherId") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [courseObj.description, courseObj.createdAt, courseObj.taughtIn, courseObj.pricePerLesson, courseObj.subject, courseObj.specialities, courseObj.availableTimes, userInfo.id]);
     } catch (error) {
       return false
     }
@@ -169,3 +152,5 @@ router.get('/course/:courseId/settings', async (req, res) => { //[req.params.cou
 
 
 module.exports = router
+
+

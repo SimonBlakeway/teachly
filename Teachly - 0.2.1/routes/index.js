@@ -5,7 +5,8 @@ const { contextSetup } = require(process.cwd() + '/utils.js');
 // @desc    Landing page
 // @route   GET / 
 router.get('/', async (req, res) => {
-  //res.clearCookie('userRefreshToken');
+  //res.clearCookie('user_refresh_token')
+  //res.clearCookie('userCookie')
   res.render('landingPage', {
     layout: 'main',
     context: contextSetup(req.settings, ["navbar", "footer"], "landingPage"),

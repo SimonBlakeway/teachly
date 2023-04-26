@@ -11,14 +11,14 @@ function cookieSettings(req, res, next) {
   settings = {}
 
   if (req.cookies.userCookie) {
-    if (req.cookies.userRefreshToken) {
+    if (req.cookies.user_refresh_token) {
       try {
-        userToken = jwt.decode(req.cookies.userRefreshToken, process.env.JWT_SECRET)
+        userToken = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
         userCookie = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
         if (userToken.id != userCookie.id) {
           console.log("the ids aren't the same, logging out")
           res.clearCookie('userCookie');
-          res.clearCookie('userRefreshToken');
+          res.clearCookie('user_refresh_token');
           res.redirect("/")
         }
         settings = userCookie
@@ -33,7 +33,7 @@ function cookieSettings(req, res, next) {
       }
       catch (err) {
         res.clearCookie('userCookie');
-        res.clearCookie('userRefreshToken');
+        res.clearCookie('user_refresh_token');
         res.redirect("/")
       }
     }
@@ -79,11 +79,11 @@ async function refreshToken(req, res, next) {
       if (userToken == false) {
         console.log("sfnwjvnjvnjwnvjvnjwnvjwnvjwvnwjvn")
         res.clearCookie('userCookie');
-        res.clearCookie('userRefreshToken');
+        res.clearCookie('user_refresh_token');
         res.redirect("/")
       }
       else {
-      res.cookie('userRefreshToken', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       return next()
       }
     }
