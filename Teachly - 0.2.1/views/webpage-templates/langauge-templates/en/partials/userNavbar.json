@@ -1,17 +1,18 @@
 {  
     "profilePopup": {
-        "logout": "logout",
-        "settings": "settings",
-        "help": "help",
-        "display": "display",
-        "feedback": "feedback"
+        "logout": "Logout",
+        "settings": "Settings",
+        "help": "Help",
+        "display": "Display",
+        "feedback": "Feedback"
     },
     "messagesPopup": {
-        "messages": "messages"
+        "messages": "Messages"
 
     },
     "notificationsPopup": {
-        "notifications": "notifications"
+        "notifications": "Notifications",
+        "noNotifications":  "No Notifications"
     },
     "navlistPopup": {
         "learn": "learn",

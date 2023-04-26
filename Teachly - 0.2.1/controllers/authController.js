@@ -24,18 +24,16 @@ const { get } = require('axios');
 
 
 async function skree() {
-  result = await db.query(`SELECT * FROM chat`, );
+  result = await db.query(`SELECT id FROM user_info`, );
 
 console.log(result.rows)    
 }
 
 
-//ree()
-
-//skree()
 
 
-//db.query(`DELETE FROM user_info`);
+
+
 
 //this group is for manual login/signin, 
 

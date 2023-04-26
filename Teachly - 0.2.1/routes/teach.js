@@ -152,3 +152,5 @@ router.get('/course/:courseId/settings', async (req, res) => { //[req.params.cou
 
 
 module.exports = router
+
+

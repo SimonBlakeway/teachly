@@ -21,7 +21,7 @@ function cookiePrep(str) {
 
 async function sendNotifications(id) {
   try {
-    result = await db.query(`select * FROM "notifications" WHERE 'user_id' = $1 OR 'is_global' = $2`, [id, true]);
+    result = await db.query(`select * FROM notifications WHERE user_id = $1 OR is_global = $2`, [id, true]);
     if (result.rowCount != 0) {
       io.to(`${id}-user`).emit("old notifications", result.rows);
     }
@@ -72,7 +72,6 @@ module.exports = {
         sendMessagesNotifications(id)
         sendNotifications(id)
 
-        io.to(`${id}-user`).emit("old messages", "hello");
 
 
         socket.on("get messages", () => {
@@ -81,6 +80,10 @@ module.exports = {
         });
 
         socket.on("message user", function (data) {
+          //io.emit("chat message", data);
+        });
+
+        socket.on("delete notification", function (data) {
           //io.emit("chat message", data);
         });
 

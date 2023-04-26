@@ -285,13 +285,16 @@
             <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
         </div>
 
-        <div class="nav-popup" id="notifications-popup">
-            <div class="popup-link" style="padding: 15px;">
+        <div class="nav-popup d-flex flex-column" id="notifications-popup">
+            <div class="popup-link pt-0 mr-0" style="padding: 15px;">
                 <h3>
                     {{navbarContext.notificationsPopup.notifications}}
                 </h3>
             </div>
-            <ul class="navlist-list" id="notificationss-list" style="height: 100%;">
+            <ul class="navlist-list d-flex align-items-center justify-content-center p-0 m-0" id="notifications-list"
+                style="height: 100%;">
+                <div class="d-flex align-items-center justify-content-center">
+                    {{navbarContext.notificationsPopup.noNotifications}}</div>
             </ul>
         </div>
     </div>
@@ -306,20 +309,18 @@
     const origin = window.location.origin;
     const socket = io.connect(origin);
 
-    switchSignaler(id, turnOn = false) {
+    function switchSignaler(id, turnOn = false) {
         signaler = document.getElementById(`${id}-signaler`)
         if (turnOn) {
             signaler.style.display = "block"
             return
         }
-
         if (signaler.style.display == "block") {
             signaler.style.display = "none"
         }
         else {
             signaler.style.display = "block"
         }
-
     }
 
 
@@ -329,27 +330,53 @@
     });
 
     socket.on("old notifications", (data) => {
-        console.log("old notifications");
+        switchSignaler("notification", turnOn = true)
+
+
+        notOuter = document.getElementById("notifications-list")
+        console.log([data.length], "free")
+
+        for (let i = 0; i < data.length; i++) {
+
+            box = document.createElement("li")
+            box.innerHTML = `
+              <div>${data[i].text}</div>
+              <div>${data[i].created_at}</div>
+              `
+            notOuter.appendChild(box)
+        }
     });
 
     socket.on("old messages", (data) => {
-        console.log(data)
         console.log("old messages");
+        console.log(data)
     });
 
     socket.on("notification", (data) => {
         switchSignaler("notification", turnOn = true)
-        console.log("old notifications");
+        console.log("notifications");
+        console.log(data)
 
-        
+        notOuter = document.getElementById("notifications-list")
+        console.log([data.length], "free")
+
+        for (let i = 0; i < data.length; i++) {
+
+            box = createElement("li")
+            box.innerHTML = `
+              <div>${data[i].text}</div>
+              <div>${data[i].created_at}</div>
+              `
+            notOuter.appendChild(box)
+        }
     });
 
     socket.on("message", (data) => {
         switchSignaler("message", turnOn = true)
 
         //fill messages
-
         console.log("old messages");
+        console.log(data)
     });
 
     socket.on("disconnect", () => {
@@ -418,7 +445,6 @@
     }
 
     function toggleNavPopup(id) {
-        console.log("erer")
         var popup = document.getElementById(id);
         if ((popup.style.display != "block")) {
             clearNavPopups()

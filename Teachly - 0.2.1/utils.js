@@ -575,11 +575,11 @@ function sendNotification(text, id) {
       userId: id,
     }
     db.query(`
-    INSERT INTO user_info 
+    INSERT INTO notifications 
     (text, created_at, user_id)
     VALUES ($1, $2, $3)`, 
     [notObj.text, notObj.created_at, notObj.userId]);
-    io.to(`${id}-notification`).emit("notification", notObj);
+    global.io.to(`${id}-user`).emit("notification", notObj);
 
   }
   catch (err) {
@@ -587,6 +587,7 @@ function sendNotification(text, id) {
     throw new Error(`error: ${err}`)
   }
 }
+
 
 function sendNotificationGlobal(id, text) {
   try {
@@ -608,7 +609,6 @@ function sendNotificationGlobal(id, text) {
     console.log(err)
   }
 }
-
 
 //ned wrk
 async function createChat(studintId, courseId) {
