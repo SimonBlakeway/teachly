@@ -100,7 +100,9 @@
         vertical-align: middle;
     }
 
-    .navlist-list {}
+    .navlist-list {
+        height: 200px;
+    }
 
     .navlist-list li {
         width: 100%;
@@ -132,6 +134,16 @@
         margin-right: 10px;
     }
 
+    #notifications-popup {
+        height: 360px;
+        width: 250px;
+        border-width: 5px;
+        border-bottom-width: 20px;
+
+
+
+    }
+
     @media only screen and (max-width: 460px) {
         .dispr-mx-442p {
             visibility: hidden;
@@ -155,6 +167,20 @@
         margin-left: 40px;
         margin-top: -5px !important;
         padding: 0px;
+        display: none;
+    }
+
+    #notifications-list {
+        height: 300px !important;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    #notifications-list::-webkit-scrollbar {
         display: none;
     }
 </style>
@@ -285,14 +311,13 @@
             <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
         </div>
 
-        <div class="nav-popup d-flex flex-column" id="notifications-popup">
+        <div class="nav-popup d-flex flex-column" id="notifications-popup" onclick="event.stopPropagation();">
             <div class="popup-link pt-0 mr-0" style="padding: 15px;">
                 <h3>
                     {{navbarContext.notificationsPopup.notifications}}
                 </h3>
             </div>
-            <ul class="navlist-list d-flex align-items-center justify-content-center p-0 m-0" id="notifications-list"
-                style="height: 100%;">
+            <ul class="navlist-list d-flex flex-column p-0 m-0" id="notifications-list" style="height: 100%;">
                 <div class="d-flex align-items-center justify-content-center">
                     {{navbarContext.notificationsPopup.noNotifications}}</div>
             </ul>
@@ -334,14 +359,23 @@
 
 
         notOuter = document.getElementById("notifications-list")
-        console.log([data.length], "free")
+        notOuter.innerHTML = '';
 
         for (let i = 0; i < data.length; i++) {
 
+
+
             box = document.createElement("li")
+            box.className = "px-0  mx-0 py-1"
+
+            divClass = ""
+
+            if (i != 0) {
+                divClass = "border border-top-5 border-light"
+            }
             box.innerHTML = `
-              <div>${data[i].text}</div>
-              <div>${data[i].created_at}</div>
+              <div class="${divClass}">${data[i].text}</div>
+              <div class="pt-1">${prettyifyDate(data[i].created_at)}</div>
               `
             notOuter.appendChild(box)
         }

@@ -63,7 +63,7 @@ function getCurrencyFromLanguageCode(code) {
   }
 }
 
-function contextSetup(settings, partials = [], pageName) {
+function contextSetup(settings, partials = [], pageName, layout = "main") {
   try {
     context = {};
     context.companyInfo = {
@@ -95,6 +95,8 @@ function contextSetup(settings, partials = [], pageName) {
 
     context.bodyContext = JSON.parse(fs.readFileSync(`./views/webpage-templates/langauge-templates/${settings.lang}/${pageName}.json`))
 
+    context.layoutContext = JSON.parse(fs.readFileSync(`./views/webpage-templates/langauge-templates/${settings.lang}/layouts/${layout}.json`))
+
     context.language = settings.lang
     for (i = 0; i < partials.length; i++) {
       context[`${partials[i]}`] = JSON.parse(fs.readFileSync(`./views/webpage-templates/langauge-templates/${settings.lang}/partials/${partials[i]}.json`))
@@ -103,9 +105,11 @@ function contextSetup(settings, partials = [], pageName) {
   }
   catch (err) {
     console.log("context setup err")
+    console.log(err)
     return contextSetup({ cur: "USD", lang: "en" }, partials, pageName)
   }
 }
+
 
 async function ImagePrep(imgStr, name) {
   try {
@@ -340,9 +344,9 @@ async function cleanUserData(user) {
 }
 
 function genUserCookie(userInfo) {
-   // the idea behind this is that it takes the data from a PG row and return the user cookie
+  // the idea behind this is that it takes the data from a PG row and return the user cookie
   chatIds = []
-  for(i = 0; i < userInfo.length; i++) {
+  for (i = 0; i < userInfo.length; i++) {
     chatIds.push(userInfo[i].chat_id);
   }
   payload = {
@@ -366,13 +370,13 @@ async function genUserRefreshToken(id) {
     accountNumber = ""
     let arr = result.rows[0].user_refresh_token
     let index = arr.findIndex(obj => Object.keys(obj).length === 0);
-    if (index != -1) {  
+    if (index != -1) {
       accountNumber = index + 1 //postgres indexes start at 1
     }
     else {
       accountNumber = result.rows[0].user_refresh_token.length + 1
     }
-    
+
     date = Math.floor(Date.now() / 1000)
     token = {
       user_refresh_token: user_refresh_token,
@@ -391,7 +395,7 @@ async function genUserRefreshToken(id) {
 
     encodedToken = jwt.encode(token, process.env.JWT_SECRET)
     try {
-     // db.query(`UPDATE user_info SET user_refresh_token [${accountNumber}] = $1 WHERE id = $2;`, [db_token, id]);
+      // db.query(`UPDATE user_info SET user_refresh_token [${accountNumber}] = $1 WHERE id = $2;`, [db_token, id]);
       return encodedToken
     } catch (error) {
       console.log(error)
@@ -577,8 +581,8 @@ function sendNotification(text, id) {
     db.query(`
     INSERT INTO notifications 
     (text, created_at, user_id)
-    VALUES ($1, $2, $3)`, 
-    [notObj.text, notObj.created_at, notObj.userId]);
+    VALUES ($1, $2, $3)`,
+      [notObj.text, notObj.created_at, notObj.userId]);
     global.io.to(`${id}-user`).emit("notification", notObj);
 
   }
@@ -600,8 +604,8 @@ function sendNotificationGlobal(id, text) {
     INSERT INTO notifications 
     (text, created_at, is_global)
     VALUES ($1, $2, $3)
-    WHERE id = $4`, 
-    [notObj.text, notObj.created_at, notObj.is_global , id]);
+    WHERE id = $4`,
+      [notObj.text, notObj.created_at, notObj.is_global, id]);
 
     io.emit("notification", notObj);
   }
