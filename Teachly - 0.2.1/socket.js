@@ -83,9 +83,14 @@ module.exports = {
           //io.emit("chat message", data);
         });
 
-        socket.on("delete notification", function (data) {
-          //io.emit("chat message", data);
+        socket.on("delete notification", async function (data) {
+          try {
+            result = await db.query(`DELETE FROM notifications WHERE notification_id = $1 AND user_id = $2 ;`, [data, cookies.user_refresh_token.id]);
+          } catch (error) {
+            console.log(error)
+          }
         });
+
 
         socket.on("disconnect", (reason) => {
           // ...

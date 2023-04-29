@@ -97,41 +97,6 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
   }
 })
 
-
-
-
-// @desc    course chat
-// @route   GET /
-router.get('/course/:courseId/chat', async (req, res) => { //[req.params.courseId]
-  try {
-    console.log(req.settings)
-
-    res.render('createCourse', {
-      layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "createCourse"),
-    })
-  }
-  catch (err) {
-    res.json({ "err": err })
-  }
-})
-
-// @desc    course chat
-// @route   GET /
-router.get('/course/:courseId/messages', async (req, res) => { //[req.params.courseId]
-  try { // npm i socket.io 
-    console.log(req.settings)
-
-    res.render('createCourse', {
-      layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "createCourse"),
-    })
-  }
-  catch (err) {
-    res.json({ "err": err })
-  }
-})
-
 // @desc    course settings
 // @route   GET /
 router.get('/course/:courseId/settings', async (req, res) => { //[req.params.courseId]

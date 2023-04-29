@@ -570,10 +570,10 @@
           },
         })
         if (res.data.err) {
-
+          //toggleErrPopup(res.data.err)
         }
         else {
-          //send to profile
+          window.location.href = window.location.origin + "/";
         }
       }
       catch (err) {
