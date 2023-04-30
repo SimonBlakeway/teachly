@@ -573,6 +573,7 @@
           //toggleErrPopup(res.data.err)
         }
         else {
+          console.log("reee")
           window.location.href = window.location.origin + "/";
         }
       }
@@ -590,8 +591,8 @@
           subject: $("#subject").text(),
           specialities: $("#specialities").text().split(", "),
           description: $("#description").val(),
-          image: reader.result,
-          taughtIn: $("#taughtIn").text(),
+          courseImg: reader.result,
+          taughtIn: $("#taughtIn").text().split(", "),
           pricePerLesson: $("#price").val(),
           availableTimes: convertTimeRange($(".active-time-slot-div").map(function () {
             idArr = this.id.split("-")

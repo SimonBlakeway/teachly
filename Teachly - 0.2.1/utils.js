@@ -6,6 +6,7 @@ const LZString = require('lz-string');
 const db = require('./config/db');
 const jwt = require("jwt-simple");
 const { compile } = require('html-to-text');
+const { type } = require('os');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
@@ -158,22 +159,25 @@ async function ImagePrep(imgStr, name) {
     })
     fs.unlink(directoryPath + alteredFileName, err => {
       if (err) {
+        console.log(err)
         throw err
       }
     })
     return LZCompress(data)
   } catch (error) {
+    console.log(error)
     return false
   }
 }
 
 function isValidLanguage(str, fullName = false) {
-  if (fullName) {
-    return validLanguagesObj["fullName"].indexOf(str)
+  subGroup = fullName ? "fullName" : "code"
+  if (typeof str == "array") {
+    for (i = 0; i < str.length; i++) {
+      if (validLanguagesObj[subGroup].indexOf(str) == -1) { return false }
+    }
   }
-  else {
-    return validLanguagesObj["code"].indexOf(str)
-  }
+  return true
 }
 
 function isValidSubject(lang, subject) {

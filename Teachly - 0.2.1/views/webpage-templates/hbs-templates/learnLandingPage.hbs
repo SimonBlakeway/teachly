@@ -151,6 +151,7 @@
     })
     if (showCourses) { courseDiv.setAttribute("style", "display: flex !important;") }
     else { courseDiv.setAttribute("style", "display: none !important;") }
+    window.scrollBy(0, 200);
 
   }
 
@@ -207,10 +208,10 @@
   <div id="landing-page-search-bar" class="container" style="width: 100% !important;">
     <div class="d-flex align-items-center justify-content-center flex-column gap-4" style="height: 90vh;">
       <div class="d-flex" style="width: 70%; max-width: 400px;">
-        <input id="search-bar-search-input" class="form-control me-1" type="search"
+        <input style="height: 40px;" id="search-bar-search-input" class="form-control me-1" type="search"
           placeholder="search subjects, specialities, or courses" aria-label="Search">
         <button onclick="SearchBarSearch()"
-          style="margin-left: 10px; margin-top: 5px !important; width: 50px; height: 40px !important;"
+          style="margin-left: 10px; height: 45px; width: 55px; margin-top: -2.5px !important;"
           class="btn btn-outline-primary" type="submit">
           <i class="fa fa-search"></i>
         </button>

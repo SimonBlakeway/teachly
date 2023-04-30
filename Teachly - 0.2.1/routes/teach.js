@@ -54,26 +54,17 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
     courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.settings.id)
     courseData.description = compiledConvert(courseData.description)
 
-    if (!courseData.image) { res.json({ "err": "invalid image" }) }
-    if (!((utils.isValidLanguage(courseData.taughtIn, fullName = true)) >= 0)) {
-      res.send({ "err": "invalid Language" })
+
+    if (!courseData.image) {
+      throw new Error("invalid image")
     }
+
+    if (!((utils.isValidLanguage(courseData.taughtIn, fullName = true)) >= 0)) { throw new Error("invalid Language") }
     courseData.taughtIn = utils.langugeToLanguageCode(courseData.taughtIn)
-    if (!utils.isInt(courseData.pricePerLesson) || ((courseData.pricePerLesson <= 0) || (courseData.pricePerLesson > 60))) {
-      res.send({ "err": "invalid pricePerLesson" })
-    }
-    if (!(utils.isValidSubject(courseData.taughtIn, courseData.subject))) {
-      res.send({ "err": "invalid subject" })
-    }
-
-    if (!utils.isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) {
-      res.send({ "err": "invalid specialities" })
-
-    }
-    if (!utils.isValidAvailableTimes(courseData.availableTimes)) {
-      console.log("ererererer")
-      return { "err": "invalid availableTimes" }
-    }
+    if (!utils.isInt(courseData.pricePerLesson) || ((courseData.pricePerLesson <= 0) || (courseData.pricePerLesson > 60))) { throw new Error("invalid pricePerLesson") }
+    if (!(utils.isValidSubject(courseData.taughtIn, courseData.subject))) { throw new Error("invalid subject") }
+    if (!utils.isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) { throw new Error("invalid specialities") }
+    if (!utils.isValidAvailableTimes(courseData.availableTimes)) { throw new Error("invalid availableTimes") }
 
     courseObj = {
       description: courseData.description,
@@ -87,13 +78,16 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       courseImg: courseData.courseImg
     }
     try {
-      result = await db.query(`INSERT INTO "teacher_course ( "description", "createdAt", "taughtIn", "pricePerLesson", subject, specialities, "timeSchedule", "teacherId") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [courseObj.description, courseObj.createdAt, courseObj.taughtIn, courseObj.pricePerLesson, courseObj.subject, courseObj.specialities, courseObj.availableTimes, userInfo.id]);
+      result = await db.query(`INSERT INTO teacher_course ( description, created_at, taught_in, price_per_lesson, subject, specialities, time_schedule, teacher_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [courseObj.description, courseObj.createdAt, courseObj.taughtIn, courseObj.pricePerLesson, courseObj.subject, courseObj.specialities, courseObj.availableTimes, req.settings.id]);
+      res.send({ "result": true })
+      console.log("send message good")
     } catch (error) {
-      return false
+      console.log(error)
+      res.send({ "err": error })
     }
   } catch (err) {
     console.log(err)
-    return false
+    res.send({ "err": err })
   }
 })
 
