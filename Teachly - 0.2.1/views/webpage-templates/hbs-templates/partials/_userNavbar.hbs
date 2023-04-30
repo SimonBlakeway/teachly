@@ -2,7 +2,6 @@
 <script src="/js/validCurrencies.js"></script>
 <script src="/js/validLanguages.js"></script>
 
-
 <style>
     .nav-popup {
         position: absolute;
@@ -340,8 +339,6 @@
     </div>
 </div>
 
-
-
 <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
     integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
     crossorigin="anonymous"></script>
@@ -362,15 +359,11 @@
             signaler.style.display = "block"
         }
     }
-
-
     function deleteNotification(notId) {
         removeElement(`${notId}-notification`)
         socket.emit('delete notification', notId);
 
     }
-
-
     function redirectByUrl(url, notId) {
         notification = document.getElementById(`${id}-notification`)
         socket.emit('delete notification', notId);
@@ -382,7 +375,7 @@
         }
     }
 
-    // client-side
+
     socket.on("connect", () => {
         console.log("socket connected");
     });
@@ -450,9 +443,6 @@
         console.log("socket disconected");
     });
 </script>
-
-
-
 
 <script>
 
@@ -539,22 +529,25 @@
 
     window.addEventListener('load', function () {
 
-        arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
-        for (let i = 0; i < arr.length; i++) {
-            langPair = arr[i].split(",")
-            node = document.createElement("li");
-            node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${langPair[1]}")'>${langPair[0]}</div>`;
-            document.getElementById("language-change").appendChild(node);
+        async function langSetup() {
+            arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
+            for (let i = 0; i < arr.length; i++) {
+                langPair = arr[i].split(",")
+                node = document.createElement("li");
+                node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${langPair[1]}")'>${langPair[0]}</div>`;
+                document.getElementById("language-change").appendChild(node);
+            }
+        }
+        async function curSetup() {
+            arr = currenciesArr.sort((a, b) => { return a.split(",")[0].localeCompare(b.split(",")[0], userLang) })
+            for (let i = 0; i < arr.length; i++) {
+                node = document.createElement("li");
+                node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
+                document.getElementById("currency-change").appendChild(node);
+            }
         }
 
-        arr = currenciesArr.sort((a, b) => { return a.split(",")[0].localeCompare(b.split(",")[0], userLang) })
-        for (let i = 0; i < arr.length; i++) {
-            node = document.createElement("li");
-            node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
-            document.getElementById("currency-change").appendChild(node);
-        }
-
-
-
+        langSetup()
+        curSetup()
     })
 </script>
