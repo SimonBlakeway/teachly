@@ -6,7 +6,6 @@ const LZString = require('lz-string');
 const db = require('./config/db');
 const jwt = require("jwt-simple");
 const { compile } = require('html-to-text');
-const { type } = require('os');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
@@ -50,14 +49,14 @@ function isTrue(input) {
   return !!input;
 }
 
-function escapeStr(str)  {
+function escapeStr(str) {
   //char to be replaced as needed
   return unsafe.replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 }
 
-function unEscapeStr(str)  {
+function unEscapeStr(str) {
   //char to be replaced as needed
-  return unsafe.replaceAll('&quot;', '"').replaceAll("&#039;","'");
+  return unsafe.replaceAll('&quot;', '"').replaceAll("&#039;", "'");
 }
 
 
@@ -124,7 +123,7 @@ function contextSetup(settings, partials = [], pageName, layout = "main") {
 
 
 
-async function ImagePrep(imgStr, name, dimensions = {length: 1440, height: 1440}, maxSize = 2073600) {
+async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 }, maxSize = 2073600) {
   try {
     /*
       this function prepares the image to 
@@ -147,7 +146,6 @@ async function ImagePrep(imgStr, name, dimensions = {length: 1440, height: 1440}
     org = Math.round((maxSize / (base64Image.length * 0.75)) * 100)
 
 
-
     imageQualityRatio = org > 100 ? qal : org
     imageQualityRatio = imageQualityRatio > 100 ? 100 : imageQualityRatio
     imageQualityRatio = 100 // remove if image too big
@@ -155,7 +153,7 @@ async function ImagePrep(imgStr, name, dimensions = {length: 1440, height: 1440}
     fs.writeFileSync(directoryPath + fileName, base64Image, { encoding: 'base64' }); //converts string to images
 
     imgMetadata = await sharp(directoryPath + fileName).metadata(); // I need the metadata to get the heigth and width
-    ratio = imgMetadata.length >= imgMetadata.width ? dimensions.height / imgMetadata.length : dimensions.width / imgMetadata.width
+    ratio = imgMetadata.height >= imgMetadata.width ? dimensions.height / imgMetadata.height : dimensions.width / imgMetadata.width
     await sharp(directoryPath + fileName)
       .resize({
         width: Math.round(imgMetadata.width * ratio),
@@ -488,49 +486,16 @@ function langugeToLanguageCode(lang) {
   }
 }
 
-function convertTimeRangeToQuery(obj) {
-
-
-
-
-  function convertDay(day, dayName) {
-    var str = "";
-    for (i = 0; i < day.length; i++) {
-      if (day[i].length != 3) { return false }
-      firstInt = Number(day[i][0])
-      secondInt = Number(day[i][2])
-      if (0 >= firstInt >= 24) { return false }
-      if (0 >= firstInt >= 24) { return false }
-      if (day[i][1] != "-") { return false }
-      if (((firstInt + 1) != secondInt)) { return false }
-      if (i > 0) { dayQuery = ` OR ( '${day[i]}' = ANY ("${dayName}") ) ` }
-      else { dayQuery = ` ( '${day[i]}' = ANY ("${dayName}") )` }
-      str += dayQuery
-    }
-    if (str == "") { return false }
-    return str
-  }
+function convertTimeRangeToQuery(arr) {
   try {
     var queryString = `AND (`
-    if (Object.keys(obj).length != 7) {
-      return false
-    }
-    queryArr = [1, 2, 3, 4, 5, 6]
-    queryArr[0] = (convertDay(obj.monday, "mondayTimeTable"))
-    queryArr[1] = (convertDay(obj.tuesday, "tuesdayTimeTable"))
-    queryArr[2] = (convertDay(obj.wednesday, "wednesdayTimeTable"))
-    queryArr[3] = (convertDay(obj.thursday, "thursdayTimeTable"))
-    queryArr[4] = (convertDay(obj.friday, "fridayTimeTable"))
-    queryArr[5] = (convertDay(obj.saturday, "saturdayTimeTable"))
-    queryArr[6] = (convertDay(obj.sunday, "sundaysTimeTable"))
-    for (i = 0; i < queryArr.length; i++) {
-      if (queryArr[i] != false) {
-        if (i == 0) {
-          queryString += queryArr[i]
-        }
-        else {
-          queryString += " OR " + queryArr[i]
-        }
+
+    for (i = 0; i < arr.length; i++) {
+      if (i == 0) {
+        queryString += ` ( ${specialities[i]} = ANY (time_schedule) )`
+      }
+      else {
+        queryString += `OR ( ${specialities[i]} = ANY (time_schedule) )`
       }
     }
     queryString += ` )`
@@ -578,13 +543,19 @@ function convertOrderByToQuery(str) {
 
 }
 
-//ned wrk
 function convertSearchByKeywordToQuery(str) {
-  queryString = `tsvector @@`
-
-  return false
-
-
+  try {
+    if (str) {
+      queryString = `AND tsvector @@ to_tsquery('${str}') \n`
+      return queryString
+    }
+    else {
+      return false
+    }
+  }
+  catch (err) {
+    throw err
+  }
 }
 
 function sendNotification(text, id) {

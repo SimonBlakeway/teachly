@@ -594,12 +594,12 @@
           courseImg: reader.result,
           taughtIn: $("#taughtIn").text().split(", "),
           pricePerLesson: $("#price").val(),
-          availableTimes: convertTimeRange($(".active-time-slot-div").map(function () {
+          availableTimes: $(".active-time-slot-div").map(function () {
             idArr = this.id.split("-")
             day = `${idArr[0]}`
             time = `${idArr[1]}-${idArr[2]}`
             return `${day}-${time}`
-          }).get())
+          }).get()
         }
         if (!basicCourseObjCheck(courseData)) {
           return

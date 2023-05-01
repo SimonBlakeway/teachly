@@ -7,27 +7,13 @@
   }
 
   .bg-image {
-    background-image: url('images/img-1.jpg');
-    filter: blur(8px) contrast(1.2);
-    -webkit-filter: blur(8px) contrast(1.2);
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    background-image: url('images/img-4.png')
   }
 
-  .bg-text {
-    color: #c2c7ed;
-    font-weight: bold;
-    position: absolute;
-    top: 200%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    width: 80%;
-    padding: 20px;
-    text-align: center;
-  }
 
   .underline-none {
     text-decoration-line: none;
@@ -83,12 +69,12 @@
     </div>
   </section>
   <div class="row content px-1 my-5" style="height: 80vh;">
-    <div class="col bdr-lgt-bl">
-      <div class="bg-image">
-      </div>
-      <div class="bg-text">
-        <h1>{{context.bodyContext.companyPromise.header}}</h1>
-        <p>{{context.bodyContext.companyPromise.paragraph}}</p>
+    <div class="col">
+      <div class="bg-image d-flex align-items-center justify-content-center">
+        <div style="width: 50%; min-width: 280px;"  >
+          <h1>{{context.bodyContext.companyPromise.header}}</h1>
+          <p>{{context.bodyContext.companyPromise.paragraph}}</p>
+        </div>
       </div>
     </div>
   </div>

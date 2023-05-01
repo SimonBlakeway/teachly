@@ -8,6 +8,13 @@ const { compile } = require('html-to-text');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
+async function ree() {
+  result = await db.query("select * from teacher_course;")
+  console.log(result.rows)
+}
+//ree()
+//db.query("TRUNCATE teacher_course;")
+
 router.use(require('../middleware/auth.js').ensureUser)
 
 // @desc    teach landing page
@@ -50,7 +57,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
     courseData = req.body
 
     // this function asumes the data is not clean
-    courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.settings.id, dimensions = {length: 1800, height: 3200}, maxSize = 5760000)
+    courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.settings.id, dimensions = {width: 1800, height: 3200}, maxSize = 5760000)
     courseData.description = compiledConvert(courseData.description)
 
 
@@ -77,7 +84,21 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       courseImg: courseData.courseImg
     }
     try {
-      result = await db.query(`INSERT INTO teacher_course ( description, created_at, taught_in, price_per_lesson, subject, specialities, time_schedule, teacher_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [courseObj.description, courseObj.createdAt, courseObj.taughtIn, courseObj.pricePerLesson, courseObj.subject, courseObj.specialities, courseObj.availableTimes, req.settings.id]);
+      result = await db.query(`
+      INSERT INTO teacher_course ( 
+        description,
+        created_at,
+        taught_in, 
+        price_per_lesson,
+        subject, 
+        specialities, 
+        time_schedule,
+        teacher_id,
+        teacher_name,
+        ts_vector
+          ) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ) )`, 
+        [courseObj.description, courseObj.createdAt, courseObj.taughtIn, courseObj.pricePerLesson, courseObj.subject, courseObj.specialities, courseObj.availableTimes, req.settings.id, req.settings.name, [req.settings.name, courseObj.description].join(" ") ]);
       res.send({ "result": true })
       console.log("send message good")
     } catch (error) {

@@ -466,15 +466,8 @@
             "searchby": "",
             "taughtIn": [],
             "orderBy": "Popularity",
-            "days": {
-                "monday": [],
-                "tuesday": [],
-                "wednesday": [],
-                "thursday": [],
-                "friday": [],
-                "saturday": [],
-                "sunday": []
-            }
+            "availableTimes": []
+
         }
         teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
 
@@ -543,11 +536,8 @@
         document.getElementById('orderBy-button').innerHTML = teachlyFormData.orderBy;
 
         for (i = 0; i < teachlyFormData.taughtIn.length; i++) { document.getElementById(teachlyFormData.taughtIn[i]).checked = true; }
-        for (i = 0; i < Object.keys(teachlyFormData.days).length; i++) {
-            for (j = 0; j < teachlyFormData.days[Object.keys(teachlyFormData.days)[i]].length; j++) {
-                document.getElementById(teachlyFormData.days[Object.keys(teachlyFormData.days)[i]][j] + "-checkbox").classList.add("active-time-slot-div");
-
-            }
+        for (i = 0; i < teachlyFormData.availableTimes.length; i++) {
+            document.getElementById(teachlyFormData.availableTimes[i]).classList.add("active-time-slot-div");
         }
 
     }
@@ -569,8 +559,8 @@
                 innerDiv = document.createElement("div");
                 innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
                 innerDiv.innerHTML = `${j} - ${j + 1}`;
-                innerDiv.id = `${j}-${j + 1}-checkbox`;
-                innerDiv.onclick = function () { updateformData(`${days[i]}`, `${j}-${j + 1}`) }
+                innerDiv.id = `${j}-${j + 1}-${days[i]}`;
+                innerDiv.onclick = function () { updateformData(`availableTimes`, `${j}-${j + 1}-${days[i]}`) }
                 outerDiv.appendChild(innerDiv);
             }
             timeRange.appendChild(outerDiv);
@@ -641,17 +631,17 @@
             document.getElementById('orderBy-button').innerHTML = val.replaceAll("-", " ");
             teachlyFormData["orderBy"] = val.replaceAll("-", " ")
         }
-        else if (Object.keys(teachlyFormData.days).includes(type)) {
+        else if (type == "availableTimes") {
 
-            index = teachlyFormData.days[type].indexOf(val)
+            index = teachlyFormData.availableTimes.indexOf(val)
 
             if (index != -1) {
-                teachlyFormData.days[type].splice(index, 1);
-                document.getElementById(val + "-checkbox").classList.remove("active-time-slot-div");
+                teachlyFormData.availableTimes.splice(index, 1);
+                document.getElementById(val).classList.remove("active-time-slot-div");
             }
             else {
                 teachlyFormData.days[type].push(val)
-                document.getElementById(val + "-checkbox").classList.add("active-time-slot-div");
+                document.getElementById(val).classList.add("active-time-slot-div");
             }
 
         }

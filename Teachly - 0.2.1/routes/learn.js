@@ -69,7 +69,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   orderByQueryString = utils.convertOrderByToQuery(reqObj.orderBy)
   timeRangeQueryString = utils.convertTimeRangeToQuery(reqObj.days)
   amount = (reqObj.amount) ? (reqObj.amount) : 10;
-  searchByKeywordQueryString = utils.convertSearchByKeywordToQuery(reqObj.searchByKeyword)
+  searchByKeywordQueryString = utils.convertSearchByKeywordToQuery(reqObj.searchby)
   pagePlace = Number(reqObj.pagePlace) ? Number(reqObj.pagePlace) * 10 : 0;
   if (((pricePerLessonRange[0] > 50) || (pricePerLessonRange[0] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
   if (((pricePerLessonRange[1] > 50) || (pricePerLessonRange[1] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
@@ -82,13 +82,13 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   AND price_per_lesson < ${pricePerLessonRange[1]}  
   `
   if (specialityQueryString) { queryString += "" + specialityQueryString }
-  //if (searchByKeywordQueryString) { queryString += searchByKeywordQueryString }
-  //if (timeRangeQueryString) { queryString += "  " + timeRangeQueryString }
-  //if (orderByQueryString) { queryString += orderByQueryString }
+  if (searchByKeywordQueryString) { queryString += searchByKeywordQueryString }
+  if (timeRangeQueryString) { queryString += "  " + timeRangeQueryString }
+  if (orderByQueryString) { queryString += orderByQueryString }
   queryString += `  LIMIT ${amount} OFFSET ${pagePlace};`
   try {
     //result = await db.query(queryString);
-    console.log(specialityQueryString)
+    console.log(queryString)
     //console.log(result)
     if (  false) { //result.rows.length  != 0) {
     //  res.json({ "result": result.rows })
