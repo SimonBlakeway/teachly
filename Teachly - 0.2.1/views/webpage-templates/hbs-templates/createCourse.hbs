@@ -681,7 +681,7 @@
         innerDiv = document.createElement("div");
         innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
         innerDiv.innerHTML = `${j} - ${j + 1}`;
-        innerDiv.id = `${days[i]}-${j}-${j + 1}-checkbox`;
+        innerDiv.id = `${j}-${j + 1}-${days[i]}`;
         innerDiv.onclick = function () { setTimeRange(`${days[i]}`, `${j}-${j + 1}`) }
         outerDiv.appendChild(innerDiv);
       }

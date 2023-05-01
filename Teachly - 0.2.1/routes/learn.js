@@ -67,7 +67,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   subject = reqObj.subject ? (reqObj.subject) : "english";
   specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, reqObj.specialities)
   orderByQueryString = utils.convertOrderByToQuery(reqObj.orderBy)
-  timeRangeQueryString = utils.convertTimeRangeToQuery(reqObj.days)
+  timeRangeQueryString = utils.convertTimeRangeToQuery(reqObj.availableTimes)
   amount = (reqObj.amount) ? (reqObj.amount) : 10;
   searchByKeywordQueryString = utils.convertSearchByKeywordToQuery(reqObj.searchby)
   pagePlace = Number(reqObj.pagePlace) ? Number(reqObj.pagePlace) * 10 : 0;
