@@ -8,16 +8,14 @@
 
   .bg-image {
     background-image: url('images/img-1.jpg');
-    filter: blur(8px);
-    -webkit-filter: blur(8px);
+    filter: blur(8px) contrast(1.2);
+    -webkit-filter: blur(8px) contrast(1.2);
     height: 100%;
-    width: 100vw !important;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
   }
 
-  /* Position text in the middle of the page/image */
   .bg-text {
     color: #c2c7ed;
     font-weight: bold;
@@ -41,35 +39,26 @@
   }
 
   .bdr-lgt-bl {
+    border-style: solid;
+    border-color: #a1a1df;
     border-width: 5px;
-    border-color: #9ac0d8;
   }
 
   .custom-rounded {
     border-radius: 3%;
   }
 </style>
-
-
-
 <div class="container-fluid text-center blue-gradient" style="margin-top: -20px !important;">
-
-
-  <!-- Section: advanced get a tutor pitch -->
   <div class="row content m-5 mt-0 py-5" style="padding-top: 200px !important; height: 90vh;">
-
     <div class="col text-left">
-      <h1 class="bdr-lgt-bl">{{context.bodyContext.getATutorPitch.header}}</h1>
+      <h1>{{context.bodyContext.getATutorPitch.header}}</h1>
       <h2>{{context.bodyContext.getATutorPitch.subHeader}}</h2>
       <p>{{context.bodyContext.getATutorPitch.paragraph}}</p>
       <button class="btn btn-outline-dark mt-5"> <a href="/learn"
           class="underline-none">{{context.bodyContext.getATutorPitch.buttonText}}</a>
       </button>
     </div>
-
   </div>
-  <!-- Section: advanced get a tutor pitch -->
-  <!-- Section: quality guarantee -->
   <section>
     <div class="row content">
       <div class="col-sm-12 text-center">
@@ -93,10 +82,8 @@
       </div>
     </div>
   </section>
-  <!-- Section: quality guarantee -->
-  <!-- Section: company promise -->
-  <div class="row content px-0 my-5" style="height: 80vh;">
-    <div class="col p-0 bdr-lgt-bl">
+  <div class="row content px-1 my-5" style="height: 80vh;">
+    <div class="col bdr-lgt-bl">
       <div class="bg-image">
       </div>
       <div class="bg-text">
@@ -105,18 +92,13 @@
       </div>
     </div>
   </div>
-
-
-
-  <!-- Section: company promise -->
-  <!-- Section: find a tutor -->
   <div class="row content px-0 my-5 pt-5">
     <div class="col-sm-7 text-left px-5">
       <h1>{{context.bodyContext.findATutor.header}}</h1>
       <p>{{context.bodyContext.findATutor.paragraph}}</p>
       <h4>{{context.bodyContext.findATutor.promise1}}</h4>
       <h4>{{context.bodyContext.findATutor.promise2}}</h4>
-      <button class="btn btn-outline-dark mt-5"> <a href="/teach" class="underline-none">
+      <button class="btn btn-outline-dark mt-5"> <a href="/learn" class="underline-none">
           {{context.bodyContext.findATutor.buttonText}}</a></button>
     </div>
     <div class="col-sm-5">
@@ -124,8 +106,6 @@
         class="small-img" loading="lazy" />
     </div>
   </div>
-  <!-- Section: find a tutor -->
-  <!-- Section: become a tutor -->
   <div class="row content px-0 py-5 mt-5">
     <div class="col-sm-7 text-left px-5">
       <h1>{{context.bodyContext.becomeATutor.header}}</h1>
@@ -140,5 +120,4 @@
         class="small-img" loading="lazy" />
     </div>
   </div>
-  <!-- Section: become a tutor -->
 </div>

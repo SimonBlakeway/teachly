@@ -49,9 +49,8 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
   try {
     courseData = req.body
 
-
     // this function asumes the data is not clean
-    courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.settings.id)
+    courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.settings.id, dimensions = {length: 1800, height: 3200}, maxSize = 5760000)
     courseData.description = compiledConvert(courseData.description)
 
 

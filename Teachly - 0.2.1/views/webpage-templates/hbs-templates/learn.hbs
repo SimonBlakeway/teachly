@@ -298,8 +298,8 @@
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div class="" onclick='toggleSearchBarPopup("subject-popup")'>
                             <div class="my-3">Subject Search</div>
-                            <input class="form-control form-control-md border border-info rounded mn-w-152p" type="text"
-                                id="subject-search-input"
+                            <input required class="form-control form-control-md border border-info rounded mn-w-152p"
+                                type="text" id="subject-search-input"
                                 onkeyup='searchBox("subject-links", "subject-search-input")'></input>
                         </div>
                         <div class="popup" id="subject-popup">
@@ -311,8 +311,8 @@
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div onclick='toggleSearchBarPopup("speciality-popup")'>
                             <div class="my-3">Speciality Search</div>
-                            <input class="form-control form-control-md border border-info rounded mn-w-152p" type="text"
-                                id="speciality-search-input" placeholder=""
+                            <input required class="form-control form-control-md border border-info rounded mn-w-152p"
+                                type="text" id="speciality-search-input" placeholder=""
                                 onkeyup='searchBox("speciality-checkboxes", "speciality-search-input")'></input>
                         </div>
                         <div class="popup" id="speciality-popup">
@@ -326,7 +326,7 @@
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div>
                             <div class="my-3">search By Keyword</div>
-                            <input class="form-control form-control-md border border-info rounded mn-w-152p"
+                            <input required class="form-control form-control-md border border-info rounded mn-w-152p"
                                 id="searchBy-input" type="text" placeholder=""
                                 onkeyup='updateformData("searchBy", "searchBy-input")'></input>
                             <div class="popup">
@@ -336,7 +336,7 @@
                     <div class="col container d-flex align-items-center justify-content-center">
                         <div class="" onclick='toggleSearchBarPopup("taughtIn-popup")'>
                             <div class="my-3">Taught In</div>
-                            <input class="form-control form-control-md border border-info rounded mn-w-152p"
+                            <input required class="form-control form-control-md border border-info rounded mn-w-152p"
                                 id="taughtIn-search-input" type="text" placeholder=""
                                 onkeyup='searchBox("taughtIn-checkboxes", "taughtIn-search-input")'></input>
                         </div>
@@ -389,12 +389,13 @@
                         </div>
                         <div class="popup" id="orderBy-popup">
                             <form action="#" class="p-2 ">
-                                <input class="form-check-input" onclick='updateformData("orderBy", "Popularity")'
-                                    type="radio" value="Popularity" name="Order-By" id="Popularity">
+                                <input required class="form-check-input"
+                                    onclick='updateformData("orderBy", "Popularity")' type="radio" value="Popularity"
+                                    name="Order-By" id="Popularity">
                                 <label class="form-check-label text-dark" for="Popularity">Popularity</label>
 
                                 <br>
-                                <input class="form-check-input"
+                                <input required class="form-check-input"
                                     onclick='updateformData("orderBy", "Price:-highest-first")' type="radio"
                                     value="Price:-highest-first" name="Order-By" id="Price:-highest-first">
                                 <label class="form-check-label text-dark" for="Price:-highest-first">Price: highest

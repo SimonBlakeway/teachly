@@ -50,6 +50,16 @@ function isTrue(input) {
   return !!input;
 }
 
+function escapeStr(str)  {
+  //char to be replaced as needed
+  return unsafe.replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+}
+
+function unEscapeStr(str)  {
+  //char to be replaced as needed
+  return unsafe.replaceAll('&quot;', '"').replaceAll("&#039;","'");
+}
+
 
 
 
@@ -112,10 +122,12 @@ function contextSetup(settings, partials = [], pageName, layout = "main") {
 }
 
 
-async function ImagePrep(imgStr, name) {
+
+
+async function ImagePrep(imgStr, name, dimensions = {length: 1440, height: 1440}, maxSize = 2073600) {
   try {
     /*
-      this function prepares the profile image to 
+      this function prepares the image to 
       be added into the database as a string,
 
       the rough ouline is
@@ -130,9 +142,9 @@ async function ImagePrep(imgStr, name) {
     alteredFileName = `${name}-altered.jpeg`
     base64Image = imgStr.split(';base64,').pop(); //the "cap" needs to be removed before it can be converted into an image
     //imageQualityRatio = ((414330 / (base64Image.length *  0.75)) * 100) > 100 ? 100 : Math.round( (414330 / (base64Image.length *  0.75)) * 100) // this is the quality percentage, so if an image has a very high quality this line will find the perfect percentage to get it into the tight range, if not it sets the quality percentate to max
-    var val = 2073600
-    qal = Math.round((2073600 / (base64Image.length * 0.75)) / 8)
-    org = Math.round((2073600 / (base64Image.length * 0.75)) * 100)
+    var val = maxSize
+    qal = Math.round((maxSize / (base64Image.length * 0.75)) / 8)
+    org = Math.round((maxSize / (base64Image.length * 0.75)) * 100)
 
 
 
@@ -143,7 +155,7 @@ async function ImagePrep(imgStr, name) {
     fs.writeFileSync(directoryPath + fileName, base64Image, { encoding: 'base64' }); //converts string to images
 
     imgMetadata = await sharp(directoryPath + fileName).metadata(); // I need the metadata to get the heigth and width
-    ratio = imgMetadata.length >= imgMetadata.width ? 1440 / imgMetadata.length : 1440 / imgMetadata.width
+    ratio = imgMetadata.length >= imgMetadata.width ? dimensions.height / imgMetadata.length : dimensions.width / imgMetadata.width
     await sharp(directoryPath + fileName)
       .resize({
         width: Math.round(imgMetadata.width * ratio),
@@ -163,7 +175,7 @@ async function ImagePrep(imgStr, name) {
         throw err
       }
     })
-    return LZCompress(data)
+    return LZCompress(data) //compress image for storage
   } catch (error) {
     console.log(error)
     return false
@@ -535,10 +547,10 @@ function convertspecialityArrToQuery(lang, subjectName, specialities) {
   var queryString = `AND (`
   try {
     for (i = 0; i < specialities.length; i++) {
-      if (!(utils.isValidSubjectSpeciality(lang, subjectName, specialities[i]))) { return false }
+      if (!(isValidSubjectSpeciality(lang, subjectName, specialities[i]))) { return false }
       str = "";
-      if (i == 0) { str = ` ( '${specialities[i]}' = ANY ("specialities") )` }
-      else { str = ` OR ( '${specialities[i]}' = ANY ("specialities") )` }
+      if (i == 0) { str = ` ( '${specialities[i]}' = ANY (specialities) )` }
+      else { str = ` OR ( '${specialities[i]}' = ANY (specialities) )` }
       queryString += str
     }
     if (queryString == "AND (") { return false }
@@ -553,11 +565,11 @@ function convertspecialityArrToQuery(lang, subjectName, specialities) {
 
 function convertOrderByToQuery(str) {
   var orderByValidTypes = {
-    "Popularity": `  ORDER BY "numberOfActiveStudents" ASC`,
-    "Price: highest first": `  ORDER BY "PricePerLesson" ASC`,
-    "Price: lowest first": `  ORDER BY "PricePerLesson" DESC`,
-    "Number of reviews": `  ORDER BY "numberOfReviews" ASC`,
-    "Best rating": `  ORDER BY "rating" ASC`,
+    "Popularity": `  ORDER BY number_of_active_students ASC`,
+    "Price: highest first": `  ORDER BY price_per_lesson ASC`,
+    "Price: lowest first": `  ORDER BY price_per_lesson DESC`,
+    "Number of reviews": `  ORDER BY numberOfReviews ASC`,
+    "Best rating": `  ORDER BY rating ASC`,
   }
 
 
@@ -731,5 +743,8 @@ module.exports = {
   langugeToLanguageCode,
   isValidAvailableTimes,
   sendNotification,
-  sendNotificationGlobal
+  sendNotificationGlobal,
+  escapeStr,
+  unEscapeStr,
+
 }
