@@ -146,6 +146,7 @@ async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 
     org = Math.round((maxSize / (base64Image.length * 0.75)) * 100)
 
 
+
     imageQualityRatio = org > 100 ? qal : org
     imageQualityRatio = imageQualityRatio > 100 ? 100 : imageQualityRatio
     imageQualityRatio = 100 // remove if image too big
@@ -162,6 +163,7 @@ async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 
       .jpeg({ mozjpeg: true, quality: imageQualityRatio, }) //,  quality: imageQualityRatio, })
       .toFile(directoryPath + alteredFileName);
     data = Buffer.from(fs.readFileSync(directoryPath + alteredFileName)).toString('base64');
+    console.log(Date.now(), "in util 3")
     fs.unlink(directoryPath + fileName, err => {
       if (err) {
         throw err
@@ -173,10 +175,12 @@ async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 
         throw err
       }
     })
-    return LZCompress(data) //compress image for storage
+    comp = LZCompress(data) //compress image for storage
+    return comp //compress image for storage
+ 
   } catch (error) {
-    console.log(error)
-    return false
+    throw new error("errer: image prep")
+
   }
 }
 
@@ -240,14 +244,14 @@ function isValidAvailableTimes(arr) {
   days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   try {
     for (i = 0; i < arr.length; i++) {
-      day = arr[i].split("_")[1]
-      time = arr[i].split("_")[0]
+      time = arr[i].split("_")
+      day = time[1]
+      time = time[0]
       if (days.includes(day) == false) { return false }
       firstInt = parseInt(time[0])
       secondInt = parseInt(time[2])
       if (0 >= firstInt >= 24) { return false }
       if (0 >= secondInt >= 24) { return false }
-      if (day[i][1] != "-") { return false }
       if (((firstInt + 1) != secondInt)) { return false }
 
     }
@@ -308,7 +312,8 @@ function decrypt(str) {
 
 function LZCompress(string) {
   try {
-    return LZString.compressToUTF16(string);
+    comp = LZString.compressToUTF16(string);
+    return comp
   } catch (err) {
     console.log(err)
     return err

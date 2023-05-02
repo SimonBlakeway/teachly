@@ -8,12 +8,15 @@ const { compile } = require('html-to-text');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
-async function ree() {
-  result = await db.query("select * from teacher_course;")
-  console.log(result.rows)
+function courseImagePrep(imgStr) {
+  //the "cap" needs to be removed before it can be converted into an image
+  console.log(Date.now())
+  base64Image = imgStr.split(';base64,').pop();
+  comp = utils.LZCompress(base64Image)
+  console.log(Date.now())
+  return comp
 }
-//ree()
-//db.query("TRUNCATE teacher_course;")
+
 
 router.use(require('../middleware/auth.js').ensureUser)
 
@@ -54,24 +57,10 @@ router.get('/createCourse', async (req, res) => {
 // @route   POST /
 router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res) => {
   try {
+    res.send({ "result": true })
     courseData = req.body
-
-    // this function asumes the data is not clean
-    courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.settings.id, dimensions = {width: 1800, height: 3200}, maxSize = 5760000)
+    courseData.image = await courseImagePrep(courseData.courseImg)
     courseData.description = compiledConvert(courseData.description)
-
-
-    if (!courseData.image) {
-      throw new Error("invalid image")
-    }
-
-    if (!((utils.isValidLanguage(courseData.taughtIn, fullName = true)) >= 0)) { throw new Error("invalid Language") }
-    courseData.taughtIn = utils.langugeToLanguageCode(courseData.taughtIn)
-    if (!utils.isInt(courseData.pricePerLesson) || ((courseData.pricePerLesson <= 0) || (courseData.pricePerLesson > 60))) { throw new Error("invalid pricePerLesson") }
-    if (!(utils.isValidSubject(courseData.taughtIn, courseData.subject))) { throw new Error("invalid subject") }
-    if (!utils.isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) { throw new Error("invalid specialities") }
-    if (!utils.isValidAvailableTimes(courseData.availableTimes)) { throw new Error("invalid availableTimes") }
-
     courseObj = {
       description: courseData.description,
       createdAt: Math.floor(Date.now() / 1000),
@@ -85,25 +74,32 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
     }
     try {
       result = await db.query(`
-      INSERT INTO teacher_course ( 
-        description,
-        created_at,
-        taught_in, 
-        price_per_lesson,
-        subject, 
-        specialities, 
-        time_schedule,
-        teacher_id,
-        teacher_name,
-        ts_vector
-          ) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ) )`, 
-        [courseObj.description, courseObj.createdAt, courseObj.taughtIn, courseObj.pricePerLesson, courseObj.subject, courseObj.specialities, courseObj.availableTimes, req.settings.id, req.settings.name, [req.settings.name, courseObj.description].join(" ") ]);
-      res.send({ "result": true })
-      console.log("send message good")
+          INSERT INTO teacher_course ( 
+            description,
+            created_at,
+            taught_in, 
+            price_per_lesson,
+            subject, 
+            specialities, 
+            time_schedule,
+            teacher_id,
+            teacher_name,
+            ts_vector
+              ) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ) )`,
+        [courseObj.description,
+        courseObj.createdAt,
+        courseObj.taughtIn,
+        courseObj.pricePerLesson,
+        courseObj.subject,
+        courseObj.specialities,
+        courseObj.availableTimes,
+        req.settings.id,
+        req.settings.name,
+        [req.settings.name, courseObj.description].join(" ")
+        ]);
     } catch (error) {
       console.log(error)
-      res.send({ "err": error })
     }
   } catch (err) {
     console.log(err)
