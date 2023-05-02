@@ -236,27 +236,20 @@ function isValidSubjectSpecialityNoSubject(lang, speciality) {
   }
 }
 
-function isValidAvailableTimes(obj) {
-  days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",]
+function isValidAvailableTimes(arr) {
+  days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   try {
-    function checkDay(day) {
-      for (i = 0; i < day.length; i++) {
-        if (day[i].length != 3) { return false }
-        firstInt = parseInt(day[i][0])
-        secondInt = parseInt(day[i][2])
-        if (0 >= firstInt >= 24) { return false }
-        if (0 >= firstInt >= 24) { return false }
-        if (day[i][1] != "-") { return false }
-        if (((firstInt + 1) != secondInt)) { return false }
-      }
-      return true
-    }
-    keys = Object.keys(obj)
-    for (i = 0; i < keys.length; i++) {
-      if (days.includes(keys[i])) {
-        if (checkDay(obj[keys[i]]) == false) return false
-      }
-      else { return false }
+    for (i = 0; i < arr.length; i++) {
+      day = arr[i].split("_")[1]
+      time = arr[i].split("_")[0]
+      if (days.includes(day) == false) { return false }
+      firstInt = parseInt(time[0])
+      secondInt = parseInt(time[2])
+      if (0 >= firstInt >= 24) { return false }
+      if (0 >= secondInt >= 24) { return false }
+      if (day[i][1] != "-") { return false }
+      if (((firstInt + 1) != secondInt)) { return false }
+
     }
     return true
   }
@@ -492,10 +485,10 @@ function convertTimeRangeToQuery(arr) {
 
     for (i = 0; i < arr.length; i++) {
       if (i == 0) {
-        queryString += ` ( ${arr[i]} = ANY (time_schedule) )`
+        queryString += ` ( '${arr[i]}' = ANY (time_schedule) )`
       }
       else {
-        queryString += ` OR ( ${arr[i]} = ANY (time_schedule) )`
+        queryString += ` OR ( '${arr[i]}' = ANY (time_schedule) )`
       }
     }
     queryString += ` )`
@@ -718,5 +711,4 @@ module.exports = {
   sendNotificationGlobal,
   escapeStr,
   unEscapeStr,
-
 }

@@ -5,6 +5,20 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
+function escapeStrArr(arr) {
+  try {
+    newArr = []
+    for (i = 0; i < arr.length; i++) {
+      newArr.push(utils.escapeStr(arr[i]))
+
+    }
+    return newArr
+  } catch (error) {
+    console.log(error)
+    throw new Error("error, bad time_Schedule arr")
+  }
+}
+
 // @desc    learn landing page 
 // @route   GET /user/id
 router.get('/', async (req, res) => {
@@ -34,7 +48,7 @@ router.get('/:str', async (req, res) => {
       posSub = utils.isValidSubjectSpecialityNoSubject(req.settings.lang, str)
       if (posSub) {
         setting = req.settings
-        setting.subject 
+        setting.subject
         setting.speciality
         setting.subject = posSub
         setting.speciality = str
@@ -65,7 +79,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
 
   pricePerLessonRange = reqObj.pricePerLessonRange ? (reqObj.pricePerLessonRange) : [1, 50];
   subject = reqObj.subject ? (reqObj.subject) : "english";
-  specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, reqObj.specialities)
+  specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, escapeStrArr(reqObj.specialities))
   orderByQueryString = utils.convertOrderByToQuery(reqObj.orderBy)
   timeRangeQueryString = utils.convertTimeRangeToQuery(reqObj.availableTimes)
   amount = (reqObj.amount) ? (reqObj.amount) : 10;
@@ -90,8 +104,8 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
     //result = await db.query(queryString);
     console.log(queryString)
     //console.log(result)
-    if (  false) { //result.rows.length  != 0) {
-    //  res.json({ "result": result.rows })
+    if (false) { //result.rows.length  != 0) {
+      //  res.json({ "result": result.rows })
     }
     else {
       res.json({ "err": 404 })
