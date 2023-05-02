@@ -559,8 +559,8 @@
                 innerDiv = document.createElement("div");
                 innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
                 innerDiv.innerHTML = `${j} - ${j + 1}`;
-                innerDiv.id = `${j}-${j + 1}-${days[i]}`;
-                innerDiv.onclick = function () { updateformData(`availableTimes`, `${j}-${j + 1}-${days[i]}`) }
+                innerDiv.id = `${j}-${j + 1}_${days[i]}`;
+                innerDiv.onclick = function () { updateformData(`availableTimes`, `${j}-${j + 1}_${days[i]}`) }
                 outerDiv.appendChild(innerDiv);
             }
             timeRange.appendChild(outerDiv);

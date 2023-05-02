@@ -492,10 +492,10 @@ function convertTimeRangeToQuery(arr) {
 
     for (i = 0; i < arr.length; i++) {
       if (i == 0) {
-        queryString += ` ( ${specialities[i]} = ANY (time_schedule) )`
+        queryString += ` ( ${arr[i]} = ANY (time_schedule) )`
       }
       else {
-        queryString += `OR ( ${specialities[i]} = ANY (time_schedule) )`
+        queryString += ` OR ( ${arr[i]} = ANY (time_schedule) )`
       }
     }
     queryString += ` )`
@@ -503,6 +503,7 @@ function convertTimeRangeToQuery(arr) {
     if (queryString == "AND ( )") { return false }
     return queryString + `\r\n`
   } catch (error) {
+    console.log(error)
     return false
   }
 }
