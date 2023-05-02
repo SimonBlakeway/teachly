@@ -408,29 +408,21 @@
     }
   }
 
-  function setTimeRange(day, timeRange) {
-    timeRangeCheckbox = document.getElementById(`${day}-${timeRange}-checkbox`)
+  function setTimeRange(id) {
+    timeRangeCheckbox = document.getElementById(id)
     classNameArr = timeRangeCheckbox.className.split(" ")
     isActivated = classNameArr.indexOf("active-time-slot-div")
     if (isActivated != -1) {
       classNameArr.splice(isActivated, 1)
       timeRangeCheckbox.className = classNameArr.join(" ")
     }
-    else {
-      timeRangeCheckbox.className += " active-time-slot-div"
-    }
-
-
+    else { timeRangeCheckbox.className += " active-time-slot-div" }
     timeRanges = document.getElementsByClassName("active-time-slot-div")
     field = document.getElementById('hidden-timeRange-input');
-    if (timeRanges.length != 0) {
-      field.value = "activated"
-    }
-    else {
-      field.value = field.defaultValue; //setting to "" stops required from working
-    }
+    if (timeRanges.length != 0) { field.value = "activated" }
+    else { field.value = field.defaultValue; } //setting to "" stops required from working}
   }
-
+  
   function setTaughtIn() {
     innerDivs = document.getElementById("taughtIn-list").children
     chosenSpec = []
@@ -682,7 +674,7 @@
         innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
         innerDiv.innerHTML = `${j} - ${j + 1}`;
         innerDiv.id = `${j}-${j + 1}_${days[i]}`;
-        innerDiv.onclick = function () { setTimeRange(`${days[i]}`, `${j}-${j + 1}_${days[i]}`) }
+        innerDiv.onclick = function () { setTimeRange(`${j}-${j + 1}_${days[i]}`) }
         outerDiv.appendChild(innerDiv);
       }
       timeRange.appendChild(outerDiv);

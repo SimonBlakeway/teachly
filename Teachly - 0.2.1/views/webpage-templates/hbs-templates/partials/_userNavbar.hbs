@@ -1,219 +1,18 @@
-<link rel="stylesheet" href="/css/usernavbar.css">
+<link rel="stylesheet" href="/css/user_navbar.css">
 <script src="/js/validCurrencies.js"></script>
 <script src="/js/validLanguages.js"></script>
-
-<style>
-    .nav-popup {
-        position: absolute;
-        width: 300px;
-        height: 300px;
-        background-color: #ffffff;
-        display: none;
-        visibility: hidden;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        text-align: left;
-        overflow: auto;
-        -ms-overflow-style: none;
-        /* Internet Explorer 10+ */
-        scrollbar-width: none;
-        /* Firefox */
-        font-size: 20px;
-        border-radius: 10px;
-        webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        border-style: solid;
-        border-color: white;
-        border-width: 20px;
-    }
-
-    .nav-popup::-webkit-scrollbar {
-        display: none;
-    }
-
-    #language-popup {
-        width: 200px;
-        height: 400px;
-        list-style-type: none;
-    }
-
-    #currency-popup {
-        width: 150px;
-        height: 400px;
-        padding: 0px !important;
-    }
-
-    .navbar {
-        position: relative;
-        background: black;
-        width: 100%;
-        padding: 0px;
-        margin: 0px;
-        margin-bottom: 20px;
-        height: 60px;
-        z-index: 9999;
-    }
-
-    .nav-list {
-        list-style-type: none;
-        text-align: center;
-        padding: 0px;
-        padding-top: 10px;
-    }
-
-    .nav-li {
-        list-style-type: none;
-        text-align: center;
-    }
-
-    #profile-buttons {
-        height: 50px;
-        text-align: center;
-        float: right;
-
-    }
-
-    .nav-popup {
-        width: 250px;
-        height: auto;
-        border-radius: 2%;
-        padding: 5px;
-        visibility: hidden;
-        background: black;
-        border-color: black;
-        border-width: 20px;
-        position: absolute;
-        top: 65px;
-        right: 5px;
-        text-align: left;
-    }
-
-    .popup-link {
-        width: 100%;
-        height: 60px;
-        margin: auto;
-        padding: 5px;
-        font-size: 18px;
-        vertical-align: middle;
-    }
-
-    .navlist-list {
-        height: 200px;
-    }
-
-    .navlist-list li {
-        width: 100%;
-        font-size: 18px;
-        margin: 10px;
-        height: 50px;
-        line-height: 18px;
-        list-style-type: none;
-    }
-
-    .circle-icon {
-        background: #ffc0c0;
-        width: 47px;
-        height: 47px;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 0px;
-        vertical-align: middle;
-        padding: -5px;
-        margin-left: 10px;
-    }
-
-    .profile-img {
-        width: 47px;
-        height: 47px;
-        border-radius: 50%;
-        text-align: center;
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-
-    #notifications-popup {
-        height: 360px;
-        width: 280px;
-        border-width: 5px;
-        border-bottom-width: 20px;
-
-
-
-    }
-
-    @media only screen and (max-width: 460px) {
-        .dispr-mx-442p {
-            visibility: hidden;
-            display: none;
-        }
-    }
-
-    @media only screen and (min-width: 460px) {
-        .dispr-mn-442p {
-            visibility: hidden;
-            display: none;
-        }
-    }
-
-    .icon-signaler {
-        position: absolute;
-        background: radial-gradient(#abb5d3, #909fcc, #546ac2, #2432c5, #1825b7);
-        border-radius: 45%;
-        width: 18px;
-        height: 18px;
-        margin-left: 40px;
-        margin-top: -5px !important;
-        padding: 0px;
-        display: none;
-    }
-
-    #notifications-list {
-        height: 300px !important;
-        overflow-y: auto;
-        overflow-x: hidden;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-    #notifications-list::-webkit-scrollbar {
-        display: none;
-    }
-
-    .border-top-light {
-        border-top: 1px solid rgb(255, 255, 255);
-        padding-top: 8px;
-    }
-
-    .color-white {
-        color: #ffffff;
-    }
-
-    #profile-popup {
-        height: 410px;
-    }
-</style>
-
 <div class="navbar text-light" onclick="clearNavPopups()">
 
     <div style="float: left; padding-left: 10px;">
         <h2>Teachly</h2>
     </div>
-
     <div class="float-right">
-
         <div id="profile-buttons" class="d-flex align-items-center justify-content-center"
             onclick="event.stopPropagation();">
-
             <div style="width: 40px;" class="m-0 ">
                 <i onclick="toggleNavPopup('navlist-popup')" class="fa fa-bars"
                     style="height: 30px; width: 30px; font-size: 30px;"></i>
             </div>
-
             <div id="settings-buttons-list" class="dispr-mx-442p p-1" onclick="event.stopPropagation();">
                 <div class="d-flex align-items-center justify-content-center">
                     <div class="m-2">
@@ -241,13 +40,10 @@
             <div>
                 <div class="icon-signaler" id="profile-signaler"></div>
                 <button onclick="toggleNavPopup('profile-popup')" type="button" class="profile-img"
-                    style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover;">
+                    style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; margin-left: 10px; margin-right: 10px;">
                 </button>
-
             </div>
         </div>
-
-
         <div class="nav-popup" id="language-popup">
             <div style="text-align: center; margin: 10px; font-size:25px">language</div>
             <div class="d-flex align-items-center justify-content-center">
@@ -257,8 +53,6 @@
             <ul id="language-change" class="nav-list">
             </ul>
         </div>
-
-
         <div class="nav-popup" id="currency-popup">
             <div style="text-align: center; margin: 10px; font-size:25px">currency</div>
             <div class="d-flex align-items-center justify-content-center">
@@ -269,15 +63,14 @@
             <ul id="currency-change" class="nav-list">
             </ul>
         </div>
-
         <div class="nav-popup" id="profile-popup">
-            <div class="popup-link">
-
-                {{settings.name}}
-                <img src="profile/img" alt="user profile image" class="profile-img"
-                    style="background-repeat: no-repeat; background-size: cover; margin-right: 10px; float: left;"
-                    loading="lazy"></a>
-
+            <div class="popup-link row d-flex justify-content-center align-items-center">
+                <div class="col d-flex justify-content-center align-items-center">
+                    <div class="profile-img"
+                        style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; width: 47px !important;">
+                    </div>
+                </div>
+                <div class="col d-flex justify-content-center align-items-center">{{settings.name}}</div>
             </div>
             <ul class="navlist-list">
                 <li><a href="\profile\settings">{{navbarContext.profilePopup.settings}}</a></li>
@@ -287,7 +80,6 @@
                 <li><a href="\auth\logout">{{navbarContext.profilePopup.logout}}</a></li>
             </ul>
         </div>
-
         <div class="nav-popup" id="messages-popup">
             <div class="popup-link pt-0 mr-0" style="padding: 15px;">
                 <h3>
@@ -299,7 +91,6 @@
                     {{navbarContext.messagesPopup.noMessages}}</div>
             </ul>
         </div>
-
         <div class="nav-popup d-flex flex-column" id="navlist-popup">
 
 
@@ -325,7 +116,6 @@
             <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
             <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
         </div>
-
         <div class="nav-popup d-flex flex-column" id="notifications-popup" onclick="event.stopPropagation();">
             <div class="popup-link pt-0 mr-0" style="padding: 15px;">
                 <h3>
@@ -339,216 +129,7 @@
         </div>
     </div>
 </div>
-
 <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
     integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
     crossorigin="anonymous"></script>
-<script>
-    const origin = window.location.origin;
-    const socket = io.connect(origin);
-
-    function switchSignaler(id, turnOn = false) {
-        signaler = document.getElementById(`${id}-signaler`)
-        if (turnOn) {
-            signaler.style.display = "block"
-            return
-        }
-        if (signaler.style.display == "block") {
-            signaler.style.display = "none"
-        }
-        else {
-            signaler.style.display = "block"
-        }
-    }
-    function deleteNotification(notId) {
-        removeElement(`${notId}-notification`)
-        socket.emit('delete notification', notId);
-
-    }
-    function redirectByUrl(url, notId) {
-        notification = document.getElementById(`${id}-notification`)
-        socket.emit('delete notification', notId);
-        if (url[0] == "/") { //in house redirect
-            window.location.href = origin + url;
-        }
-        else { //out house redirect
-            window.location.href = url;
-        }
-    }
-
-
-    socket.on("connect", () => {
-        console.log("socket connected");
-    });
-
-    socket.on("old notifications", (data) => {
-        switchSignaler("notification", turnOn = true)
-        notOuter = document.getElementById("notifications-list")
-        notOuter.innerHTML = '';
-        for (let i = 0; i < data.length; i++) {
-            box = document.createElement("li")
-            box.className = "px-0 mx-0 py-1"
-            box.id = `${data[i].notification_id}-notification`
-            divClass = ""
-            if (data[i].url) { object.onclick = () => { redirectByUrl(data[i].url, data[i].notification_id) } }
-            box.innerHTML = `
-            <div class="d-flex border-top-light mt-1">
-              <div style="width: 220px">
-                <div>${data[i].text}</div>
-                <div class="pt-1 fs-6" style="color: #f2f2f2">${prettyifyDate(data[i].created_at)}</div>
-              </div>
-              <div onclick="event.stopPropagation();">
-                <div>
-                  <div onClick="deleteNotification('${data[i].notification_id}')" class="color-white fs-3" style="margin-left: 10px;"><i class="fa fa-times" aria-hidden="true"></i></div>
-                </div>
-              </div>
-            </div>
-              `
-            notOuter.appendChild(box)
-        }
-    });
-
-    socket.on("old messages", (data) => {
-        console.log("old messages");
-        console.log(data)
-    });
-
-    socket.on("notification", (data) => {
-        switchSignaler("notification", turnOn = true)
-        console.log("notifications");
-        console.log(data)
-
-        notOuter = document.getElementById("notifications-list")
-        console.log([data.length], "free")
-
-        for (let i = 0; i < data.length; i++) {
-
-            box = createElement("li")
-            box.innerHTML = `
-              <div>${data[i].text}</div>
-              <div>${data[i].created_at}</div>
-              `
-            notOuter.appendChild(box)
-        }
-    });
-
-    socket.on("message", (data) => {
-        switchSignaler("message", turnOn = true)
-
-        //fill messages
-        console.log("old messages");
-        console.log(data)
-    });
-
-    socket.on("disconnect", () => {
-        console.log("socket disconected");
-    });
-</script>
-
-<script>
-
-    function navLangSearch() {
-        var input, filter;
-        input = document.getElementById("nav-language-search-input");
-        filter = input.value.toUpperCase();
-        list = document.getElementById("language-change").children;
-        for (i = 0; i < list.length; i++) {
-            txtValue = list[i].textContent || list[i].innerHTML;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                list[i].style.display = "block";
-            } else {
-                list[i].style.display = "none";
-            }
-        }
-    }
-
-    function navCurSearch() {
-        var input, filter;
-        input = document.getElementById("nav-currency-search-input");
-        filter = input.value.toUpperCase();
-        list = document.getElementById("currency-change").children;
-        for (i = 0; i < list.length; i++) {
-            txtValue = list[i].textContent || list[i].innerHTML;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                list[i].style.display = "block";
-            } else {
-                list[i].style.display = "none";
-            }
-        }
-    }
-
-    function changeNavSettings(settingName, change) {
-        changeObj = {
-            settingName: settingName,
-            change: change
-        }
-        axios.post('/auth/settings', changeObj)
-            .then(res => {
-                window.location.reload();
-            })
-            .catch(err => {
-                console.log(error);
-            });
-    }
-
-    async function logout() {
-        res = await axios.get('/auth/logout');
-        if (res.data.err) {
-            console.log(res.data.err)
-        }
-        else {
-            window.location = "/"
-        }
-
-    }
-
-    function toggleNavPopup(id) {
-        var popup = document.getElementById(id);
-        if ((popup.style.display != "block")) {
-            clearNavPopups()
-            popup.style.display = "block";
-            popup.style.visibility = "visible";
-            try {
-                document.getElementById("nav-" + id.split("-")[0] + "-search-input").focus(); //auto focus on input in popup
-            }
-            catch {
-            }
-        }
-        else {
-            popup.style.display = "none";
-            popup.style.visibility = "hidden";
-        }
-    }
-
-    function clearNavPopups() {
-        popupArr = document.getElementsByClassName("nav-popup")
-        for (i = 0; i < popupArr.length; i++) {
-            popupArr[i].style.display = "none";
-            popupArr[i].style.visibility = "hidden";
-        }
-    }
-
-    window.addEventListener('load', function () {
-
-        async function langSetup() {
-            arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
-            for (let i = 0; i < arr.length; i++) {
-                langPair = arr[i].split(",")
-                node = document.createElement("li");
-                node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${langPair[1]}")'>${langPair[0]}</div>`;
-                document.getElementById("language-change").appendChild(node);
-            }
-        }
-        async function curSetup() {
-            arr = currenciesArr.sort((a, b) => { return a.split(",")[0].localeCompare(b.split(",")[0], userLang) })
-            for (let i = 0; i < arr.length; i++) {
-                node = document.createElement("li");
-                node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
-                document.getElementById("currency-change").appendChild(node);
-            }
-        }
-
-        langSetup()
-        curSetup()
-    })
-</script>
+<script src="/js/user_navbar.js"></script>

@@ -89,7 +89,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   if (((pricePerLessonRange[1] > 50) || (pricePerLessonRange[1] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
   if (!utils.isValidSubject(lang, subject)) { res.json({ "err": "invalid subject" }) }
   queryString = `
-  SELECT * FROM teacher_course
+  SELECT created_at  FROM teacher_course
   WHERE taught_in = '${lang}'
   AND subject =  '${subject}' 
   AND price_per_lesson > ${pricePerLessonRange[0]}  
@@ -101,9 +101,9 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   if (orderByQueryString) { queryString += orderByQueryString }
   queryString += `  LIMIT ${amount} OFFSET ${pagePlace};`
   try {
-    //result = await db.query(queryString);
-    console.log(queryString)
-    //console.log(result)
+    result = await db.query(queryString);
+    //console.log(queryString)
+    console.log(result.rows)
     if (false) { //result.rows.length  != 0) {
       //  res.json({ "result": result.rows })
     }
