@@ -5,6 +5,30 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
+d = `  
+    SELECT created_at  FROM teacher_course
+      WHERE taught_in = 'en'
+      AND subject =  'english'
+      AND price_per_lesson > 1
+      AND price_per_lesson < 50
+        ORDER BY number_of_active_students ASC
+      LIMIT 10 ;`
+
+async function what() {
+  try {
+    result = await db.query(`  
+    SELECT taught_in FROM teacher_course
+    
+      `)
+    console.log(result)
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
+//what()
+
 function escapeStrArr(arr) {
   try {
     newArr = []
@@ -99,11 +123,11 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   if (searchByKeywordQueryString) { queryString += searchByKeywordQueryString }
   if (timeRangeQueryString) { queryString += "  " + timeRangeQueryString }
   if (orderByQueryString) { queryString += orderByQueryString }
-  queryString += `  LIMIT ${amount} OFFSET ${pagePlace};`
+  queryString += `  LIMIT ${amount} ;` //OFFSET ${pagePlace};
   try {
-    result = await db.query(queryString);
-    //console.log(queryString)
-    console.log(result.rows)
+    //result = await db.query(queryString);
+    console.log(queryString)
+    //console.log(result.rows)
     if (false) { //result.rows.length  != 0) {
       //  res.json({ "result": result.rows })
     }

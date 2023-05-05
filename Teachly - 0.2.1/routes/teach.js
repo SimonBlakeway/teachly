@@ -9,11 +9,8 @@ const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
 function courseImagePrep(imgStr) {
-  //the "cap" needs to be removed before it can be converted into an image
-  console.log(Date.now())
   base64Image = imgStr.split(';base64,').pop();
   comp = utils.LZCompress(base64Image)
-  console.log(Date.now())
   return comp
 }
 
@@ -57,8 +54,11 @@ router.get('/createCourse', async (req, res) => {
 // @route   POST /
 router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res) => {
   try {
+  
+
     res.send({ "result": true })
     courseData = req.body
+
     courseData.image = await courseImagePrep(courseData.courseImg)
     courseData.description = compiledConvert(courseData.description)
     courseObj = {
@@ -72,6 +72,9 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       availableTimes: courseData.availableTimes,
       courseImg: courseData.courseImg
     }
+
+    console.log(courseObj.taughtIn)
+    /*
     try {
       result = await db.query(`
           INSERT INTO teacher_course ( 
@@ -101,6 +104,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
     } catch (error) {
       console.log(error)
     }
+    */
   } catch (err) {
     console.log(err)
     res.send({ "err": err })
