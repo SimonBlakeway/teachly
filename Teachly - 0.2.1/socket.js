@@ -18,10 +18,11 @@ function cookiePrep(str) {
   }
   return obj
 }
+//result = await db.query(`select * FROM notifications WHERE user_id = $1 OR is_global = $2`, [id, true]);
 
 async function sendNotifications(id) {
   try {
-    result = await db.query(`select * FROM notifications WHERE user_id = $1 OR is_global = $2`, [id, true]);
+    result = await db.query(`select * FROM notifications WHERE user_id = $1 OR (is_global = $2 AND $3 != ANY(deleted_by))`, [id, true, id]);
     if (result.rowCount != 0) {
       io.to(`${id}-user`).emit("old notifications", result.rows);
     }
@@ -83,9 +84,17 @@ module.exports = {
           //io.emit("chat message", data);
         });
 
-        socket.on("delete notification", function (data) {
-          //io.emit("chat message", data);
+        socket.on("delete notification", async function (data) {
+          try {
+            result = await db.query(`DELETE FROM notifications WHERE notification_id = $1 AND user_id = $2 AND is_global = $3;`, [data, cookies.user_refresh_token.id, false]);
+
+
+            result = await db.query(`UPDATE notifications SET deleted_by = array_append( deleted_by, $1) WHERE notification_id = $2  AND is_global = $3)`, [cookies.user_refresh_token.id, data, false]);
+          } catch (error) {
+            console.log(error)
+          }
         });
+
 
         socket.on("disconnect", (reason) => {
           // ...

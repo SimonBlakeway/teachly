@@ -20,3 +20,8 @@ function updateCurrencyInterval() {
     }, 300000);
     window.addEventListener('load', function () { updateCurrency(curConversionRatio) }, false);
 }
+
+function removeElement(id) {
+    node = document.getElementById(id)
+    node.parentNode.removeChild(node);
+}

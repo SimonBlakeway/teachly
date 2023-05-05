@@ -8,6 +8,13 @@ const { compile } = require('html-to-text');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
+function courseImagePrep(imgStr) {
+  base64Image = imgStr.split(';base64,').pop();
+  comp = utils.LZCompress(base64Image)
+  return comp
+}
+
+
 router.use(require('../middleware/auth.js').ensureUser)
 
 // @desc    teach landing page
@@ -47,34 +54,13 @@ router.get('/createCourse', async (req, res) => {
 // @route   POST /
 router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res) => {
   try {
+  
+
+    res.send({ "result": true })
     courseData = req.body
 
-
-    // this function asumes the data is not clean
-    courseData.image = await utils.ImagePrep(courseData.courseImg, "course-id=" + req.settings.id)
+    courseData.image = await courseImagePrep(courseData.courseImg)
     courseData.description = compiledConvert(courseData.description)
-
-    if (!courseData.image) { res.json({ "err": "invalid image" }) }
-    if (!((utils.isValidLanguage(courseData.taughtIn, fullName = true)) >= 0)) {
-      res.send({ "err": "invalid Language" })
-    }
-    courseData.taughtIn = utils.langugeToLanguageCode(courseData.taughtIn)
-    if (!utils.isInt(courseData.pricePerLesson) || ((courseData.pricePerLesson <= 0) || (courseData.pricePerLesson > 60))) {
-      res.send({ "err": "invalid pricePerLesson" })
-    }
-    if (!(utils.isValidSubject(courseData.taughtIn, courseData.subject))) {
-      res.send({ "err": "invalid subject" })
-    }
-
-    if (!utils.isValidSubjectSpeciality(courseData.taughtIn, courseData.subject, courseData.specialities)) {
-      res.send({ "err": "invalid specialities" })
-
-    }
-    if (!utils.isValidAvailableTimes(courseData.availableTimes)) {
-      console.log("ererererer")
-      return { "err": "invalid availableTimes" }
-    }
-
     courseObj = {
       description: courseData.description,
       createdAt: Math.floor(Date.now() / 1000),
@@ -86,49 +72,42 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       availableTimes: courseData.availableTimes,
       courseImg: courseData.courseImg
     }
+
+    console.log(courseObj.taughtIn)
+    /*
     try {
-      result = await db.query(`INSERT INTO "teacher_course ( "description", "createdAt", "taughtIn", "pricePerLesson", subject, specialities, "timeSchedule", "teacherId") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [courseObj.description, courseObj.createdAt, courseObj.taughtIn, courseObj.pricePerLesson, courseObj.subject, courseObj.specialities, courseObj.availableTimes, userInfo.id]);
+      result = await db.query(`
+          INSERT INTO teacher_course ( 
+            description,
+            created_at,
+            taught_in, 
+            price_per_lesson,
+            subject, 
+            specialities, 
+            time_schedule,
+            teacher_id,
+            teacher_name,
+            ts_vector
+              ) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ) )`,
+        [courseObj.description,
+        courseObj.createdAt,
+        courseObj.taughtIn,
+        courseObj.pricePerLesson,
+        courseObj.subject,
+        courseObj.specialities,
+        courseObj.availableTimes,
+        req.settings.id,
+        req.settings.name,
+        [req.settings.name, courseObj.description].join(" ")
+        ]);
     } catch (error) {
-      return false
+      console.log(error)
     }
+    */
   } catch (err) {
     console.log(err)
-    return false
-  }
-})
-
-
-
-
-// @desc    course chat
-// @route   GET /
-router.get('/course/:courseId/chat', async (req, res) => { //[req.params.courseId]
-  try {
-    console.log(req.settings)
-
-    res.render('createCourse', {
-      layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "createCourse"),
-    })
-  }
-  catch (err) {
-    res.json({ "err": err })
-  }
-})
-
-// @desc    course chat
-// @route   GET /
-router.get('/course/:courseId/messages', async (req, res) => { //[req.params.courseId]
-  try { // npm i socket.io 
-    console.log(req.settings)
-
-    res.render('createCourse', {
-      layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "createCourse"),
-    })
-  }
-  catch (err) {
-    res.json({ "err": err })
+    res.send({ "err": err })
   }
 })
 

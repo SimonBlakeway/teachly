@@ -32,6 +32,8 @@ function cookieSettings(req, res, next) {
         return next()
       }
       catch (err) {
+        console.log(err)
+        console.log("custom middleware 36")
         res.clearCookie('userCookie');
         res.clearCookie('user_refresh_token');
         res.redirect("/")

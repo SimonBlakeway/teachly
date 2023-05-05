@@ -3,32 +3,49 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
+    border-radius: 3%;
+  }
+
+  .bg-image {
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('images/img-4.png')
+  }
+
+
+  .underline-none {
+    text-decoration-line: none;
+  }
+
+  .blue-gradient {
+    background-color: #7475c2;
+    background-image: linear-gradient(to bottom right, #a1a1df, #9ac0d8, #b4a6d8, #939fe4, #a4a4eb, #9ea6e6);
+  }
+
+  .bdr-lgt-bl {
+    border-style: solid;
+    border-color: #a1a1df;
+    border-width: 5px;
+  }
+
+  .custom-rounded {
+    border-radius: 3%;
   }
 </style>
-
-
-
-<div class="container-fluid text-center">
-
-
-  <!-- Section: advanced get a tutor pitch -->
-  <div class="row content">
-
-    <div class="col-sm-7 text-left">
+<div class="container-fluid text-center blue-gradient" style="margin-top: -20px !important;">
+  <div class="row content m-5 mt-0 py-5" style="padding-top: 200px !important; height: 90vh;">
+    <div class="col text-left">
       <h1>{{context.bodyContext.getATutorPitch.header}}</h1>
       <h2>{{context.bodyContext.getATutorPitch.subHeader}}</h2>
       <p>{{context.bodyContext.getATutorPitch.paragraph}}</p>
-      <button>{{context.bodyContext.getATutorPitch.buttonText}}</button>
-    </div>
-    <div class="col-sm-5">
-      <img src="images/img-1.jpg" alt={{context.bodyContext.getATutorPitch.imageAlt}} width="400" height="300"
-        class="small-img" loading="lazy" />
+      <button class="btn btn-outline-dark mt-5"> <a href="/learn"
+          class="underline-none">{{context.bodyContext.getATutorPitch.buttonText}}</a>
+      </button>
     </div>
   </div>
-  <!-- Section: advanced get a tutor pitch -->
-  <!-- Section: quality guarantee -->
   <section>
-
     <div class="row content">
       <div class="col-sm-12 text-center">
         <h1>{{context.bodyContext.qualityGuarantee.whyTeachly.header}}</h1>
@@ -51,46 +68,42 @@
       </div>
     </div>
   </section>
-  <!-- Section: quality guarantee -->
-  <!-- Section: company promise -->
-  <div class="row content">
-    <div class="col-sm-12"
-      style="background-image: url('images/img-1.jpg'); background-repeat: no-repeat; background-size: cover; height: 70vh;">
-      <div style="width: 30vw; float: right; padding: 10px;" align="left">
-        <h1>{{context.bodyContext.companyPromise.header}}</h2>
+  <div class="row content px-1 my-5" style="height: 80vh;">
+    <div class="col">
+      <div class="bg-image d-flex align-items-center justify-content-center">
+        <div style="width: 50%; min-width: 280px;"  >
+          <h1>{{context.bodyContext.companyPromise.header}}</h1>
           <p>{{context.bodyContext.companyPromise.paragraph}}</p>
+        </div>
       </div>
     </div>
   </div>
-  <!-- Section: company promise -->
-  <!-- Section: find a tutor -->
-  <div class="row content">
-    <div class="col-sm-7 text-left">
+  <div class="row content px-0 my-5 pt-5">
+    <div class="col-sm-7 text-left px-5">
       <h1>{{context.bodyContext.findATutor.header}}</h1>
       <p>{{context.bodyContext.findATutor.paragraph}}</p>
       <h4>{{context.bodyContext.findATutor.promise1}}</h4>
       <h4>{{context.bodyContext.findATutor.promise2}}</h4>
-      <button>{{context.bodyContext.findATutor.buttonText}}</button>
+      <button class="btn btn-outline-dark my-5"> <a href="/learn" class="underline-none">
+          {{context.bodyContext.findATutor.buttonText}}</a></button>
     </div>
     <div class="col-sm-5">
       <img src="images/img-1.jpg" alt={{context.bodyContext.findATutor.imageAlt}} width="400" height="300"
         class="small-img" loading="lazy" />
     </div>
   </div>
-  <!-- Section: find a tutor -->
-  <!-- Section: become a tutor -->
-  <div class="row content">
-    <div class="col-sm-7 text-left">
+  <div class="row content px-0 py-5 mt-5">
+    <div class="col-sm-7 text-left px-5">
       <h1>{{context.bodyContext.becomeATutor.header}}</h1>
       <p>{{context.context.bodyContext.becomeATutor.paragraph}}</p>
       <h4>{{context.bodyContext.becomeATutor.promise1}}</h4>
       <h4>{{context.bodyContext.becomeATutor.promise2}}</h4>
-      <button>{{context.bodyContext.becomeATutor.buttonText}}</button>
+      <button class="btn btn-outline-dark my-5"> <a href="/teach" class="underline-none">
+          {{context.bodyContext.becomeATutor.buttonText}}</a> </button>
     </div>
     <div class="col-sm-5">
       <img src="images/img-1.jpg" alt={{context.bodyContext.becomeATutor.imageAlt}} width="400" height="300"
         class="small-img" loading="lazy" />
     </div>
   </div>
-  <!-- Section: become a tutor -->
 </div>

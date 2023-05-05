@@ -49,6 +49,16 @@ function isTrue(input) {
   return !!input;
 }
 
+function escapeStr(str) {
+  //char to be replaced as needed
+  return unsafe.replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+}
+
+function unEscapeStr(str) {
+  //char to be replaced as needed
+  return unsafe.replaceAll('&quot;', '"').replaceAll("&#039;", "'");
+}
+
 
 
 
@@ -111,10 +121,12 @@ function contextSetup(settings, partials = [], pageName, layout = "main") {
 }
 
 
-async function ImagePrep(imgStr, name) {
+
+
+async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 }, maxSize = 2073600) {
   try {
     /*
-      this function prepares the profile image to 
+      this function prepares the image to 
       be added into the database as a string,
 
       the rough ouline is
@@ -129,9 +141,9 @@ async function ImagePrep(imgStr, name) {
     alteredFileName = `${name}-altered.jpeg`
     base64Image = imgStr.split(';base64,').pop(); //the "cap" needs to be removed before it can be converted into an image
     //imageQualityRatio = ((414330 / (base64Image.length *  0.75)) * 100) > 100 ? 100 : Math.round( (414330 / (base64Image.length *  0.75)) * 100) // this is the quality percentage, so if an image has a very high quality this line will find the perfect percentage to get it into the tight range, if not it sets the quality percentate to max
-    var val = 2073600
-    qal = Math.round((2073600 / (base64Image.length * 0.75)) / 8)
-    org = Math.round((2073600 / (base64Image.length * 0.75)) * 100)
+    var val = maxSize
+    qal = Math.round((maxSize / (base64Image.length * 0.75)) / 8)
+    org = Math.round((maxSize / (base64Image.length * 0.75)) * 100)
 
 
 
@@ -142,7 +154,7 @@ async function ImagePrep(imgStr, name) {
     fs.writeFileSync(directoryPath + fileName, base64Image, { encoding: 'base64' }); //converts string to images
 
     imgMetadata = await sharp(directoryPath + fileName).metadata(); // I need the metadata to get the heigth and width
-    ratio = imgMetadata.length >= imgMetadata.width ? 1440 / imgMetadata.length : 1440 / imgMetadata.width
+    ratio = imgMetadata.height >= imgMetadata.width ? dimensions.height / imgMetadata.height : dimensions.width / imgMetadata.width
     await sharp(directoryPath + fileName)
       .resize({
         width: Math.round(imgMetadata.width * ratio),
@@ -151,6 +163,7 @@ async function ImagePrep(imgStr, name) {
       .jpeg({ mozjpeg: true, quality: imageQualityRatio, }) //,  quality: imageQualityRatio, })
       .toFile(directoryPath + alteredFileName);
     data = Buffer.from(fs.readFileSync(directoryPath + alteredFileName)).toString('base64');
+    console.log(Date.now(), "in util 3")
     fs.unlink(directoryPath + fileName, err => {
       if (err) {
         throw err
@@ -158,22 +171,27 @@ async function ImagePrep(imgStr, name) {
     })
     fs.unlink(directoryPath + alteredFileName, err => {
       if (err) {
+        console.log(err)
         throw err
       }
     })
-    return LZCompress(data)
+    comp = LZCompress(data) //compress image for storage
+    return comp //compress image for storage
+ 
   } catch (error) {
-    return false
+    throw new error("errer: image prep")
+
   }
 }
 
 function isValidLanguage(str, fullName = false) {
-  if (fullName) {
-    return validLanguagesObj["fullName"].indexOf(str)
+  subGroup = fullName ? "fullName" : "code"
+  if (typeof str == "array") {
+    for (i = 0; i < str.length; i++) {
+      if (validLanguagesObj[subGroup].indexOf(str) == -1) { return false }
+    }
   }
-  else {
-    return validLanguagesObj["code"].indexOf(str)
-  }
+  return true
 }
 
 function isValidSubject(lang, subject) {
@@ -222,27 +240,20 @@ function isValidSubjectSpecialityNoSubject(lang, speciality) {
   }
 }
 
-function isValidAvailableTimes(obj) {
-  days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",]
+function isValidAvailableTimes(arr) {
+  days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   try {
-    function checkDay(day) {
-      for (i = 0; i < day.length; i++) {
-        if (day[i].length != 3) { return false }
-        firstInt = parseInt(day[i][0])
-        secondInt = parseInt(day[i][2])
-        if (0 >= firstInt >= 24) { return false }
-        if (0 >= firstInt >= 24) { return false }
-        if (day[i][1] != "-") { return false }
-        if (((firstInt + 1) != secondInt)) { return false }
-      }
-      return true
-    }
-    keys = Object.keys(obj)
-    for (i = 0; i < keys.length; i++) {
-      if (days.includes(keys[i])) {
-        if (checkDay(obj[keys[i]]) == false) return false
-      }
-      else { return false }
+    for (i = 0; i < arr.length; i++) {
+      time = arr[i].split("_")
+      day = time[1]
+      time = time[0]
+      if (days.includes(day) == false) { return false }
+      firstInt = parseInt(time[0])
+      secondInt = parseInt(time[2])
+      if (0 >= firstInt >= 24) { return false }
+      if (0 >= secondInt >= 24) { return false }
+      if (((firstInt + 1) != secondInt)) { return false }
+
     }
     return true
   }
@@ -301,7 +312,8 @@ function decrypt(str) {
 
 function LZCompress(string) {
   try {
-    return LZString.compressToUTF16(string);
+    comp = LZString.compressToUTF16(string);
+    return comp
   } catch (err) {
     console.log(err)
     return err
@@ -472,49 +484,16 @@ function langugeToLanguageCode(lang) {
   }
 }
 
-function convertTimeRangeToQuery(obj) {
-
-
-
-
-  function convertDay(day, dayName) {
-    var str = "";
-    for (i = 0; i < day.length; i++) {
-      if (day[i].length != 3) { return false }
-      firstInt = Number(day[i][0])
-      secondInt = Number(day[i][2])
-      if (0 >= firstInt >= 24) { return false }
-      if (0 >= firstInt >= 24) { return false }
-      if (day[i][1] != "-") { return false }
-      if (((firstInt + 1) != secondInt)) { return false }
-      if (i > 0) { dayQuery = ` OR ( '${day[i]}' = ANY ("${dayName}") ) ` }
-      else { dayQuery = ` ( '${day[i]}' = ANY ("${dayName}") )` }
-      str += dayQuery
-    }
-    if (str == "") { return false }
-    return str
-  }
+function convertTimeRangeToQuery(arr) {
   try {
     var queryString = `AND (`
-    if (Object.keys(obj).length != 7) {
-      return false
-    }
-    queryArr = [1, 2, 3, 4, 5, 6]
-    queryArr[0] = (convertDay(obj.monday, "mondayTimeTable"))
-    queryArr[1] = (convertDay(obj.tuesday, "tuesdayTimeTable"))
-    queryArr[2] = (convertDay(obj.wednesday, "wednesdayTimeTable"))
-    queryArr[3] = (convertDay(obj.thursday, "thursdayTimeTable"))
-    queryArr[4] = (convertDay(obj.friday, "fridayTimeTable"))
-    queryArr[5] = (convertDay(obj.saturday, "saturdayTimeTable"))
-    queryArr[6] = (convertDay(obj.sunday, "sundaysTimeTable"))
-    for (i = 0; i < queryArr.length; i++) {
-      if (queryArr[i] != false) {
-        if (i == 0) {
-          queryString += queryArr[i]
-        }
-        else {
-          queryString += " OR " + queryArr[i]
-        }
+
+    for (i = 0; i < arr.length; i++) {
+      if (i == 0) {
+        queryString += ` ( '${arr[i]}' = ANY (time_schedule) )`
+      }
+      else {
+        queryString += ` OR ( '${arr[i]}' = ANY (time_schedule) )`
       }
     }
     queryString += ` )`
@@ -522,6 +501,7 @@ function convertTimeRangeToQuery(obj) {
     if (queryString == "AND ( )") { return false }
     return queryString + `\r\n`
   } catch (error) {
+    console.log(error)
     return false
   }
 }
@@ -531,10 +511,10 @@ function convertspecialityArrToQuery(lang, subjectName, specialities) {
   var queryString = `AND (`
   try {
     for (i = 0; i < specialities.length; i++) {
-      if (!(utils.isValidSubjectSpeciality(lang, subjectName, specialities[i]))) { return false }
+      if (!(isValidSubjectSpeciality(lang, subjectName, specialities[i]))) { return false }
       str = "";
-      if (i == 0) { str = ` ( '${specialities[i]}' = ANY ("specialities") )` }
-      else { str = ` OR ( '${specialities[i]}' = ANY ("specialities") )` }
+      if (i == 0) { str = ` ( '${specialities[i]}' = ANY (specialities) )` }
+      else { str = ` OR ( '${specialities[i]}' = ANY (specialities) )` }
       queryString += str
     }
     if (queryString == "AND (") { return false }
@@ -549,11 +529,11 @@ function convertspecialityArrToQuery(lang, subjectName, specialities) {
 
 function convertOrderByToQuery(str) {
   var orderByValidTypes = {
-    "Popularity": `  ORDER BY "numberOfActiveStudents" ASC`,
-    "Price: highest first": `  ORDER BY "PricePerLesson" ASC`,
-    "Price: lowest first": `  ORDER BY "PricePerLesson" DESC`,
-    "Number of reviews": `  ORDER BY "numberOfReviews" ASC`,
-    "Best rating": `  ORDER BY "rating" ASC`,
+    "Popularity": `  ORDER BY number_of_active_students ASC`,
+    "Price: highest first": `  ORDER BY price_per_lesson ASC`,
+    "Price: lowest first": `  ORDER BY price_per_lesson DESC`,
+    "Number of reviews": `  ORDER BY numberOfReviews ASC`,
+    "Best rating": `  ORDER BY rating ASC`,
   }
 
 
@@ -562,13 +542,19 @@ function convertOrderByToQuery(str) {
 
 }
 
-//ned wrk
 function convertSearchByKeywordToQuery(str) {
-  queryString = `tsvector @@`
-
-  return false
-
-
+  try {
+    if (str) {
+      queryString = `AND tsvector @@ to_tsquery('${str}') \n`
+      return queryString
+    }
+    else {
+      return false
+    }
+  }
+  catch (err) {
+    throw err
+  }
 }
 
 function sendNotification(text, id) {
@@ -727,5 +713,9 @@ module.exports = {
   langugeToLanguageCode,
   isValidAvailableTimes,
   sendNotification,
-  sendNotificationGlobal
+  sendNotificationGlobal,
+  escapeStr,
+  unEscapeStr,
 }
+
+

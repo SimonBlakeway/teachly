@@ -408,27 +408,19 @@
     }
   }
 
-  function setTimeRange(day, timeRange) {
-    timeRangeCheckbox = document.getElementById(`${day}-${timeRange}-checkbox`)
+  function setTimeRange(id) {
+    timeRangeCheckbox = document.getElementById(id)
     classNameArr = timeRangeCheckbox.className.split(" ")
     isActivated = classNameArr.indexOf("active-time-slot-div")
     if (isActivated != -1) {
       classNameArr.splice(isActivated, 1)
       timeRangeCheckbox.className = classNameArr.join(" ")
     }
-    else {
-      timeRangeCheckbox.className += " active-time-slot-div"
-    }
-
-
+    else { timeRangeCheckbox.className += " active-time-slot-div" }
     timeRanges = document.getElementsByClassName("active-time-slot-div")
     field = document.getElementById('hidden-timeRange-input');
-    if (timeRanges.length != 0) {
-      field.value = "activated"
-    }
-    else {
-      field.value = field.defaultValue; //setting to "" stops required from working
-    }
+    if (timeRanges.length != 0) { field.value = "activated" }
+    else { field.value = field.defaultValue; } //setting to "" stops required from working}
   }
 
   function setTaughtIn() {
@@ -570,10 +562,11 @@
           },
         })
         if (res.data.err) {
-
+          //toggleErrPopup(res.data.err)
         }
         else {
-          //send to profile
+          console.log("reee")
+          window.location.href = window.location.origin + "/";
         }
       }
       catch (err) {
@@ -590,15 +583,10 @@
           subject: $("#subject").text(),
           specialities: $("#specialities").text().split(", "),
           description: $("#description").val(),
-          image: reader.result,
-          taughtIn: $("#taughtIn").text(),
+          courseImg: reader.result,
+          taughtIn: $("#taughtIn").text().split(", "),
           pricePerLesson: $("#price").val(),
-          availableTimes: convertTimeRange($(".active-time-slot-div").map(function () {
-            idArr = this.id.split("-")
-            day = `${idArr[0]}`
-            time = `${idArr[1]}-${idArr[2]}`
-            return `${day}-${time}`
-          }).get())
+          availableTimes: $(".active-time-slot-div").map(function () { return this.id }).get()
         }
         if (!basicCourseObjCheck(courseData)) {
           return
@@ -680,8 +668,8 @@
         innerDiv = document.createElement("div");
         innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
         innerDiv.innerHTML = `${j} - ${j + 1}`;
-        innerDiv.id = `${days[i]}-${j}-${j + 1}-checkbox`;
-        innerDiv.onclick = function () { setTimeRange(`${days[i]}`, `${j}-${j + 1}`) }
+        innerDiv.id = `${j}-${j + 1}_${days[i]}`;
+        innerDiv.onclick = function () { setTimeRange(`${j}-${j + 1}_${days[i]}`) }
         outerDiv.appendChild(innerDiv);
       }
       timeRange.appendChild(outerDiv);
