@@ -21,7 +21,7 @@ router.use(require('../middleware/auth.js').ensureUser)
 // @route   GET /
 router.get('/', (req, res) => {
   try {
-    res.render('teach', {
+    res.render('teachLandingPage', {
       layout: "main",
       context: contextSetup(req.settings, ["navbar", "footer"], "teachLandingPage"), 
     })

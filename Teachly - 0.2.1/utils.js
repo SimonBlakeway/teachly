@@ -357,21 +357,28 @@ async function cleanUserData(user) {
 }
 
 function genUserCookie(userInfo) {
-  // the idea behind this is that it takes the data from a PG row and return the user cookie
-  chatIds = []
-  for (i = 0; i < userInfo.length; i++) {
-    chatIds.push(userInfo[i].chat_id);
+
+  try {
+    // the idea behind this is that it takes the data from a PG row and return the user cookie
+    chatIds = []
+    for (i = 0; i < userInfo.length; i++) {
+      chatIds.push(userInfo[i].chat_id);
+    }
+    payload = {
+      name: userInfo[0].name.trim(),
+      lang: userInfo[0].lang.trim(),
+      cur: userInfo[0].cur,
+      id: userInfo[0].id,
+      created_at: Math.floor(Date.now() / 1000),
+      chatIds: chatIds
+    }
+    encodedCookie = jwt.encode(payload, process.env.JWT_SECRET)
+    return encodedCookie
+  } catch (error) {
+    console.log(error)
+    console.log()
+    console.log(userInfo)
   }
-  payload = {
-    name: userInfo[0].name.trim(),
-    lang: userInfo[0].lang.trim(),
-    cur: userInfo[0].cur,
-    id: userInfo[0].id,
-    created_at: Math.floor(Date.now() / 1000),
-    chatIds: chatIds
-  }
-  encodedCookie = jwt.encode(payload, process.env.JWT_SECRET)
-  return encodedCookie
 }
 
 async function genUserRefreshToken(id) {
