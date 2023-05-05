@@ -6,6 +6,7 @@ const LZString = require('lz-string');
 const db = require('./config/db');
 const jwt = require("jwt-simple");
 const { compile } = require('html-to-text');
+const { errorMonitor } = require('events');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
@@ -177,7 +178,7 @@ async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 
     })
     comp = LZCompress(data) //compress image for storage
     return comp //compress image for storage
- 
+
   } catch (error) {
     throw new error("errer: image prep")
 
@@ -484,6 +485,46 @@ function langugeToLanguageCode(lang) {
   }
 }
 
+//a// query functions convert data from a client into valid postgresql code
+
+function convertTaughtInToQuery(languages) {
+  try {
+    if (languages == []) { return "" }
+    var queryString = `AND (`
+
+    if (languages.constructor === Array) {
+
+      for (i = 0; i < languages.length; i++) {
+
+        str = "";
+        if (i == 0) { str = ` ( '${languages[i]}' = ANY (taught_in) )` }
+        else if (i == languages.length - 1) { str = ` ( '${languages[i]}' = ANY (taught_in) ) )` }
+        else { str = ` OR ( '${languages[i]}' = ANY (taught_in) )` }
+        queryString += str
+      }
+      if (queryString == "AND (") { return false }
+      return queryString + ` \r\n`
+
+
+    }
+    else {
+      if (languages.length == 0) { return "" }//empty string
+
+      //queryString = `AND ( '${languages[i]}' = ANY (taught_in) )`
+
+      queryString += ` '${languages}' = ANY (taught_in) )`
+
+      if (queryString == "AND (") { return false }
+      return queryString + ` \r\n`
+
+    }
+
+  } catch (error) {
+    console.log(error)
+    return ""
+  }
+}
+
 function convertTimeRangeToQuery(arr) {
   try {
     var queryString = `AND (`
@@ -704,6 +745,7 @@ module.exports = {
   isValidSubjectSpeciality,
   isValidSubjectSpecialityNoSubject,
   createChat,
+  convertTaughtInToQuery,
   convertTimeRangeToQuery,
   convertspecialityArrToQuery,
   convertOrderByToQuery,
