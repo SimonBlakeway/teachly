@@ -23,8 +23,8 @@
         "p4": "Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor"
     },
     "createCourse": { 
-        "p1": "for more inforation, please read",
-        "p2": "in depth tutor rules and regulations",
-        "p3": "Create Course"
+        "createCourseButton": "Create Course",
+        "p1": "for more information, please read",
+        "p2": "in depth tutor rules and regulations"
     }
 }

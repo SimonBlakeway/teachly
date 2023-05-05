@@ -33,7 +33,7 @@ router.get('/', (req, res) => {
 
 // @desc    createCourse
 // @route   GET /
-router.get('/createCourse', async (req, res) => {
+router.get('/create-course', async (req, res) => {
   try {
     if (req.settings.isUser == false) {
       res.redirect("/login")
