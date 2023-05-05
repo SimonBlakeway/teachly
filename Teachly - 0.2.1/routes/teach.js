@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
   try {
     res.render('teach', {
       layout: "main",
-      context: contextSetup(req.settings, ["footer"], "teach"),
+      context: contextSetup(req.settings, ["navbar", "footer"], "teachLandingPage"), 
     })
   }
   catch (err) {
@@ -54,7 +54,7 @@ router.get('/createCourse', async (req, res) => {
 // @route   POST /
 router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res) => {
   try {
-  
+
 
     res.send({ "result": true })
     courseData = req.body
@@ -74,7 +74,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
     }
 
     console.log(courseObj.taughtIn)
-    /*
+
     try {
       result = await db.query(`
           INSERT INTO teacher_course ( 
@@ -103,11 +103,12 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
         ]);
     } catch (error) {
       console.log(error)
+      //res.send({ "err": err }) //maybe send error nitification to user?
     }
-    */
+
   } catch (err) {
     console.log(err)
-    res.send({ "err": err })
+    //res.send({ "err": err })
   }
 })
 
