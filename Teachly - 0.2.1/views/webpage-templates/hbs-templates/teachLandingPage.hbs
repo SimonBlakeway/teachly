@@ -46,11 +46,13 @@
     min-height: 250px;
   }
 </style>
-<div class="container-fluid text-center blue-gradient px-0 mx-0" style="margin-top: -20px !important; margin-bottom: -50px;">
+<div class="container-fluid text-center blue-gradient px-0 mx-0"
+  style="margin-top: -20px !important; margin-bottom: -50px;">
   <div class="row content px-0 mb-5  px-0 mx-0" style="margin-top: 0px !important; height: 92vh;">
     <div class="col px-0 mx-0">
       <div class="bg-image d-flex align-items-center justify-content-center px-0 mx-0">
-        <div class="px-0 mx-0" style="width: 60%; min-width: 300px; color:rgb(2, 25, 31); text-shadow: 1px 1px rgb(179, 178, 194);">
+        <div class="px-0 mx-0"
+          style="width: 60%; min-width: 300px; color:rgb(2, 25, 31); text-shadow: 1px 1px rgb(179, 178, 194);">
           <h1>{{context.bodyContext.bgText}}</h1>
         </div>
       </div>
@@ -73,17 +75,21 @@
   <div class="row content px-0 mx-0" style="margin-top: 100px;">
     <div class="col-sm-12 text-center px-3">
       <h1 class="mb-5">{{context.bodyContext.guidelines.header}}</h1>
-      <div class="row d-flex align-items-center justify-content-center">
+      <div class="row d-flex align-items-center justify-content-center mx-3">
         <div class="col">
           <div class="row">
-            <div class="col min-w-200p p-20p min-h-220p fs-5 ">{{context.bodyContext.guidelines.p1}}</div>
-            <div class="col min-w-200p p-20p min-h-220p fs-5 ">{{context.bodyContext.guidelines.p2}}</div>
+            <div class="col min-w-200p p-20p min-h-220p fs-5 shadow m-2 custom-rounded">
+              {{context.bodyContext.guidelines.p1}}</div>
+            <div class="col min-w-200p p-20p min-h-220p fs-5 shadow m-2 custom-rounded">
+              {{context.bodyContext.guidelines.p2}}</div>
           </div>
         </div>
         <div class="col">
           <div class="row">
-            <div class="col min-w-200p p-20p min-h-220p fs-5 ">{{context.bodyContext.guidelines.p3}}</div>
-            <div class="col min-w-200p p-20p min-h-220p fs-5 ">{{context.bodyContext.guidelines.p4}}</div>
+            <div class="col min-w-200p p-20p min-h-220p fs-5 shadow m-2 custom-rounded">
+              {{context.bodyContext.guidelines.p3}}</div>
+            <div class="col min-w-200p p-20p min-h-220p fs-5 shadow m-2 custom-rounded">
+              {{context.bodyContext.guidelines.p4}}</div>
           </div>
         </div>
       </div>
@@ -92,17 +98,21 @@
 
   <div class="row content px-0 mx-0">
     <h1 class="my-5">{{context.bodyContext.rules.header}}</h1>
-    <div class="row d-flex align-items-center justify-content-center mx-0 p-1">
-      <div class="col p-1">
-        <div class="row p-1">
-          <div class="col min-w-200p p-20p min-h-220p fs-5 blue-gradient custom-rounded">{{context.bodyContext.rules.p1}}</div>
-          <div class="col min-w-200p p-20p min-h-220p fs-5 blue-gradient custom-rounded">{{context.bodyContext.rules.p2}}</div>
+    <div class="row d-flex align-items-center justify-content-center mx-0">
+      <div class="col m-2">
+        <div class="row m-2">
+          <div class="col min-w-200p p-20p min-h-220p fs-5 shadow custom-rounded m-2 mt-4">{{context.bodyContext.rules.p1}}
+          </div>
+          <div class="col min-w-200p p-20p min-h-220p fs-5 shadow custom-rounded m-2 mt-4">{{context.bodyContext.rules.p2}}
+          </div>
         </div>
       </div>
-      <div class="col p-1">
-        <div class="row p-1">
-          <div class="col min-w-200p p-20p min-h-220p fs-5 blue-gradient custom-rounded">{{context.bodyContext.rules.p3}}</div>
-          <div class="col min-w-200p p-20p min-h-220p fs-5 blue-gradient custom-rounded">{{context.bodyContext.rules.p4}}</div>
+      <div class="col m-2">
+        <div class="row m-2">
+          <div class="col min-w-200p p-20p min-h-220p fs-5 shadow custom-rounded m-2 mt-4">{{context.bodyContext.rules.p3}}
+          </div>
+          <div class="col min-w-200p p-20p min-h-220p fs-5 shadow custom-rounded m-2 mt-4">{{context.bodyContext.rules.p4}}
+          </div>
         </div>
       </div>
     </div>
