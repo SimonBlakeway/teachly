@@ -67,21 +67,17 @@ router.get('/chat/:chatroomId', async (req, res) => {
   })
 })
 
-// @desc    course chat
-// @route   GET /
-router.get('/chat/:chatId', async (req, res) => { //[req.params.courseId]
-  try {
-    console.log(req.settings)
 
-    res.render('createCourse', {
-      layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "createCourse"),
-    })
-  }
-  catch (err) {
-    res.json({ "err": err })
-  }
+// @desc    view user profile
+// @route   GET /user/id
+router.get('/chat/', async (req, res) => {
+  res.render('chat', {
+    layout: "main",
+    context: contextSetup(req.settings, ["navbar", "footer"], "chat"),
+  })
 })
+
+
 
 
 
