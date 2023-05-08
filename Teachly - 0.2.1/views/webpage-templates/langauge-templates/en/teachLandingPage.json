@@ -1,0 +1,30 @@
+{
+    "title": "Teach With Teachly",
+    "bgText": "Before creating a Course, please read the terms of service",
+    "ideology": {
+        "header": "Teachly follows a free market styled aproach to courses",
+        "p1": "Anyone can create a course, however this does not guarantee that any clients will buy your course.",
+        "p2": "If your course gets bought and receives positive interactions, Teachly will promote your course to more users and exclusive benefits.",
+        "p3": "If your course receives negative interactions it will be promoted less and may recieves penalties.",
+        "p4": "If you are found attempting to exploit Teachly or are reported by users and found guilty, you may be banned."
+    },
+    "guidelines": {
+        "header": "Teachly Guidelines",
+        "p1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "p2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco",
+        "p3": "Lorem ipsum dolor Ut enim ad minim veniam, quis nostrud exercitation ullamco",
+        "p4": "Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor"
+    },
+    "rules": {
+        "header": "Teachly rules",
+        "p1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "p2": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco",
+        "p3": "Lorem ipsum dolor Ut enim ad minim veniam, quis nostrud exercitation ullamco",
+        "p4": "Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor"
+    },
+    "createCourse": { 
+        "createCourseButton": "Create Course",
+        "p1": "for more information, please read",
+        "p2": "in depth tutor rules and regulations"
+    }
+}

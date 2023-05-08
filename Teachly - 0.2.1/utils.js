@@ -6,6 +6,7 @@ const LZString = require('lz-string');
 const db = require('./config/db');
 const jwt = require("jwt-simple");
 const { compile } = require('html-to-text');
+const { errorMonitor } = require('events');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
@@ -177,7 +178,7 @@ async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 
     })
     comp = LZCompress(data) //compress image for storage
     return comp //compress image for storage
- 
+
   } catch (error) {
     throw new error("errer: image prep")
 
@@ -356,21 +357,28 @@ async function cleanUserData(user) {
 }
 
 function genUserCookie(userInfo) {
-  // the idea behind this is that it takes the data from a PG row and return the user cookie
-  chatIds = []
-  for (i = 0; i < userInfo.length; i++) {
-    chatIds.push(userInfo[i].chat_id);
+
+  try {
+    // the idea behind this is that it takes the data from a PG row and return the user cookie
+    chatIds = []
+    for (i = 0; i < userInfo.length; i++) {
+      chatIds.push(userInfo[i].chat_id);
+    }
+    payload = {
+      name: userInfo[0].name.trim(),
+      lang: userInfo[0].lang.trim(),
+      cur: userInfo[0].cur,
+      id: userInfo[0].id,
+      created_at: Math.floor(Date.now() / 1000),
+      chatIds: chatIds
+    }
+    encodedCookie = jwt.encode(payload, process.env.JWT_SECRET)
+    return encodedCookie
+  } catch (error) {
+    console.log(error)
+    console.log()
+    console.log(userInfo)
   }
-  payload = {
-    name: userInfo[0].name.trim(),
-    lang: userInfo[0].lang.trim(),
-    cur: userInfo[0].cur,
-    id: userInfo[0].id,
-    created_at: Math.floor(Date.now() / 1000),
-    chatIds: chatIds
-  }
-  encodedCookie = jwt.encode(payload, process.env.JWT_SECRET)
-  return encodedCookie
 }
 
 async function genUserRefreshToken(id) {
@@ -484,6 +492,46 @@ function langugeToLanguageCode(lang) {
   }
 }
 
+//a// query functions convert data from a client into valid postgresql code
+
+function convertTaughtInToQuery(languages) {
+  try {
+    if (languages == []) { return "" }
+    var queryString = `AND (`
+
+    if (languages.constructor === Array) {
+
+      for (i = 0; i < languages.length; i++) {
+
+        str = "";
+        if (i == 0) { str = ` ( '${languages[i]}' = ANY (taught_in) )` }
+        else if (i == languages.length - 1) { str = ` ( '${languages[i]}' = ANY (taught_in) ) )` }
+        else { str = ` OR ( '${languages[i]}' = ANY (taught_in) )` }
+        queryString += str
+      }
+      if (queryString == "AND (") { return false }
+      return queryString + ` \r\n`
+
+
+    }
+    else {
+      if (languages.length == 0) { return "" }//empty string
+
+      //queryString = `AND ( '${languages[i]}' = ANY (taught_in) )`
+
+      queryString += ` '${languages}' = ANY (taught_in) )`
+
+      if (queryString == "AND (") { return false }
+      return queryString + ` \r\n`
+
+    }
+
+  } catch (error) {
+    console.log(error)
+    return ""
+  }
+}
+
 function convertTimeRangeToQuery(arr) {
   try {
     var queryString = `AND (`
@@ -535,11 +583,7 @@ function convertOrderByToQuery(str) {
     "Number of reviews": `  ORDER BY numberOfReviews ASC`,
     "Best rating": `  ORDER BY rating ASC`,
   }
-
-
-
   return orderByValidTypes[str] + "\r\n"
-
 }
 
 function convertSearchByKeywordToQuery(str) {
@@ -704,6 +748,7 @@ module.exports = {
   isValidSubjectSpeciality,
   isValidSubjectSpecialityNoSubject,
   createChat,
+  convertTaughtInToQuery,
   convertTimeRangeToQuery,
   convertspecialityArrToQuery,
   convertOrderByToQuery,

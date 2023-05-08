@@ -106,6 +106,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, escapeStrArr(reqObj.specialities))
   orderByQueryString = utils.convertOrderByToQuery(reqObj.orderBy)
   timeRangeQueryString = utils.convertTimeRangeToQuery(reqObj.availableTimes)
+  taughtInToQuery = util.convertTaughtInToQuery(reqObj.taughtIn)
   amount = (reqObj.amount) ? (reqObj.amount) : 10;
   searchByKeywordQueryString = utils.convertSearchByKeywordToQuery(reqObj.searchby)
   pagePlace = Number(reqObj.pagePlace) ? Number(reqObj.pagePlace) * 10 : 0;
@@ -123,6 +124,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   if (searchByKeywordQueryString) { queryString += searchByKeywordQueryString }
   if (timeRangeQueryString) { queryString += "  " + timeRangeQueryString }
   if (orderByQueryString) { queryString += orderByQueryString }
+  if (taughtInToQuery) {queryString += taughtInToQuery}
   queryString += `  LIMIT ${amount} ;` //OFFSET ${pagePlace};
   try {
     //result = await db.query(queryString);

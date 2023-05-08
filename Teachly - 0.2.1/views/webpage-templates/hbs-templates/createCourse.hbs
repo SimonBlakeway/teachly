@@ -1,3 +1,9 @@
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"
+  integrity="sha512-qoCTmFwBtCPvFhA+WAqatSOrghwpDhFHxwAGh+cppWonXbHA09nG1z5zi4/NGnp8dUhXiVrzA6EnKgJA+fyrpw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
 <style>
   #create-course {
     /* fallback for old browsers */
@@ -367,6 +373,7 @@
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   var specialitiesObj = {};
   var subjectObj = [];
+  var imageStr = ""
 
   function setSubject(subject) {
     document.getElementById("subject").innerText = subject
@@ -512,6 +519,15 @@
   function sub(obj) {
     clearCoursePopups()
     var file = obj.value;
+    reader = new FileReader();
+    reader.onloadend = () => {
+      base64Image = reader.result.split(';base64,').pop();
+      imageStr = LZString.compressToUTF16(base64Image)
+    }
+    reader.readAsDataURL($('#upfile').prop('files')[0])
+
+
+
     var fileName = file.split("\\");
     if (fileName[fileName.length - 1] == "") {
       document.getElementById("course-image").innerHTML = "{{context.bodyContext.clickUploadImageRatio}}"
@@ -577,31 +593,28 @@
 
 
     try {
-      reader = new FileReader();
-      reader.onloadend = () => {
-        courseData = {
-          subject: $("#subject").text(),
-          specialities: $("#specialities").text().split(", "),
-          description: $("#description").val(),
-          courseImg: reader.result,
-          taughtIn: $("#taughtIn").text().split(", "),
-          pricePerLesson: $("#price").val(),
-          availableTimes: $(".active-time-slot-div").map(function () { return this.id }).get()
-        }
-        if (!basicCourseObjCheck(courseData)) {
-          return
-        }
-        sendReq(courseData)
-      };
-      reader.readAsDataURL($('#upfile').prop('files')[0])
+      courseData = {
+        subject: $("#subject").text(),
+        specialities: $("#specialities").text().split(", "),
+        description: $("#description").val(),
+        courseImg: imageStr,
+        taughtIn: $("#taughtIn").text().split(", "),
+        pricePerLesson: $("#price").val(),
+        availableTimes: $(".active-time-slot-div").map(function () { return this.id }).get()
+      }
+      if (!basicCourseObjCheck(courseData)) {
+        return
+      }
+      sendReq(courseData)
+
 
     }
     catch (err) {
       console.log(err)
 
     }
-  }
 
+  }
 
   window.addEventListener('load', async function () {
 
