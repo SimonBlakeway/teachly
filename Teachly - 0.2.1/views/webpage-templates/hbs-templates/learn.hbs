@@ -249,7 +249,6 @@
             margin-right: 0px !important;
             margin-left: 0px !important;
         }
-
     }
 
     @media only screen and (max-width: 770px) {
@@ -278,6 +277,13 @@
 
     }
 
+    @media only screen and (max-width: 812) {
+
+        .en-100-366px {
+            width: 100%;
+        }
+    }
+
 
     .fa-circle {
         color: black;
@@ -291,6 +297,14 @@
         text-align: center;
     }
 
+    .align {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .read-more-button {}
+
     .pagination a {
         color: black;
         float: left;
@@ -303,6 +317,16 @@
 
     .pagination a:hover:not(.active) {
         background-color: #ddd;
+    }
+
+    .course-img {
+        object-fit: cover;
+        width: 100%;
+        max-height: 500px;
+    }
+
+    .align-items-center {
+        align-items: center;
     }
 </style>
 
@@ -483,6 +507,7 @@
 
 
 <script>
+
     const subject = "{{context.settings.subject}}"
     const speciality = "{{context.settings.speciality}}"
 
@@ -877,11 +902,10 @@
 </script>
 
 
+<main onclick="clearSearchBarPopups()">
 
-<main onclick="clearSearchBarPopups()" style="width: 100vw;">
 
-
-    <section class="py-5 text-center container" style="height: 75vh; width: 100%;">
+    <section class="py-5 text-center container" style="height: 50vh; width: 100%;">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto mt-5">
                 <br>
@@ -894,156 +918,122 @@
     </section>
 
 
-    <div class="py-5 bg-light mx-0 px-0 d-flex flex-row-reverse">
-        <div class="bg-light mx-0 px-0">
-            <div class="row">
-                <div id="courses" class="my-5 p-0" style="background-color:beige;">
+    <div class="py-5 mx-0 px-0 ">
+        <div class="mx-0 px-0">
+            <div class="row p-0 m-0">
+                <div id="courses">
+                    <div id="course-cards" class="m-0 py-5 p-0 my-5 p-0 d-flex flex-column justify-content-center align"
+                        style="background-color:beige;">
 
-                    <div class="row g-0 m-5 custom-rounded custom-shadow d-flex justify-content-center" style="background-color:rgb(255, 255, 255);">
-                        <div class="col-md-5 p-3">
-                            <img src="/images/img-1.jpg" class="img-fluid rounded-start" alt="...">
-                        </div>
-                        <div class="col-md-7" style="padding: 20px;">
-                            <div class="card-body">
-                                <h5 class="card-title fs-1">becca</h5>
-                                <h5 class="card-text text-muted fs-4">english</h5>
-                                <div class="row d-flex justify-content-around mb-3"
-                                    style="height: 20px; text-align: left;">
-                                    <span style="width: auto; padding: 3px;">
-                                        <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i> 5 active
-                                        students
-                                    </span>
-                                    <span style="width: auto; padding: 3px;">
-                                        <i class="fa fa-circle" aria-hidden="true"></i> 23 lessons
-                                    </span>
-                                </div>
-                                <p class="card-text" style="margin-bottom: 0px !important;">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-                                    imperdiet, nulla et dictum interdum, nisi lorem egestas vitae scel
-                                    <span id="teacherId-dots">...</span>
-                                <div id="teacherId-more-course-description" class="more-course-description">
-                                    erisque enim ligula venenatis dolor. Maecenasnisl est, ultrices nec
-                                    congue eget, auctor vitae massa. Fusce luctus vestibulum augue ut aliquet.
-                                    Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. In at libero
-                                    sed nunc venenatis imperdiet
+                        <div class="row mx-0 p-0 my-05 custom-rounded custom-shadow align-items-center en-100-366px"
+                            style="background-color:rgb(255, 255, 255); min-width: 300px; max-width: 1000px; width: 90%;">
+                            <div class="col p-3 m-0" style="min-width: 300px !important;">
+                                <img src="/images/img-2.jpg" class="course-img rounded-start" width="1000" height="800"
+                                    alt="...">
+                            </div>
+                            <div class="col p-0 m-0" style="min-width: 300px !important;">
+                                <div class="card-body p-4 m-0">
+                                    <h5 class="card-title fs-1">becca</h5>
+                                    <h5 class="card-text text-muted fs-4">english</h5>
+                                    <div class="row d-flex justify-content-around mb-3"
+                                        style="height: 20px; text-align: left;">
+                                        <span style="width: auto; padding: 3px;">
+                                            <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i> 5
+                                            active
+                                            students
+                                        </span>
+                                        <span style="width: auto; padding: 3px;">
+                                            <i class="fa fa-circle" aria-hidden="true"></i> 23 lessons
+                                        </span>
+                                    </div>
+                                    <p class="card-text mb-0">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
+                                        imperdiet, nulla et dictum interdum, nisi lorem egestas vitae scel
+                                        <span id="teacherId-dots">...</span>
+                                    <div id="teacherId-more-course-description" class="more-course-description">
+                                        erisque enim ligula venenatis dolor. Maecenasnisl est, ultrices nec
+                                        congue eget, auctor vitae massa. Fusce luctus vestibulum augue ut aliquet.
+                                        Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. In at libero
+                                        sed nunc venenatis imperdiet
 
-                                    <p> sed ornare turpis. Donec vitae dui eget tellus</p>
-                                    gravid venenatis. Integer fringilla congue eros non fermentum. Sed dapibus
-                                    pulvinar nibh tempor porta.
-                                </div>
-                                </p>
-                                <button
-                                    onclick='readMoreDescToggle("teacherId-dots", "teacherId-more-course-description", "teacherId-more-course-myBtn")'
-                                    id="teacherId-more-course-myBtn" class="mb-4">Read more</button>
-                                <div class="row g-0" style="height: auto;">
-                                    <div class="col-6 col-md-6 container d-flex justify-content-center">
-                                        <div class="row d-flex justify-content-center" style="width: 100% !important;">
-                                            <div class="col-5 d-flex justify-content-center"
-                                                style="width: 100px !important" ;>
-                                                <div style="width: 100px !important;">
+                                        <p> sed ornare turpis. Donec vitae dui eget tellus</p>
+                                        gravid venenatis. Integer fringilla congue eros non fermentum. Sed dapibus
+                                        pulvinar nibh tempor porta.
+                                    </div>
+                                    </p>
+                                    <button
+                                        onclick='readMoreDescToggle("teacherId-dots", "teacherId-more-course-description", "teacherId-more-course-myBtn")'
+                                        id="teacherId-more-course-myBtn" class="mb-4 read-more-button">Read
+                                        more</button>
+                                    <div class="row" style="height: auto;">
+                                        <div class="col container d-flex justify-content-center mb-4">
+                                            <div class="row d-flex justify-content-center"
+                                                style="width: 100% !important;">
+                                                <div class="col d-flex justify-content-center"
+                                                    style="width: 120px !important" ;>
+                                                    <div style="width: 100px !important;">
+                                                        <div style="width: 100% !important;"
+                                                            class="d-flex justify-content-center">
+                                                            <i style="font-size: 15px !important; color:gold;"
+                                                                class="fa fa-star" aria-hidden="true"></i>
+                                                            <span>5.5</span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-center">5 reviews</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col" style="width: 130px !important; min-width: 150px;"
+                                                    class="d-flex justify-content-center">
                                                     <div style="width: 100% !important;"
                                                         class="d-flex justify-content-center">
-                                                        <i style="font-size: 15px !important; color:gold;"
-                                                            class="fa fa-star" aria-hidden="true"></i>
-                                                        <span>5.5</span>
+                                                        <span class="currency">
+                                                            <span id="max-price-shown"
+                                                                style="display: none;">50.000</span>
+                                                            <span></span>
+                                                        </span>
                                                     </div>
-                                                    <div class="d-flex justify-content-center">5 reviews</div>
+                                                    <div class="d-flex justify-content-center"
+                                                        style="width: 100% !important;">60 minute lesson</div>
                                                 </div>
                                             </div>
-                                            <div class="col-7" style="width: 130px !important; min-width: 150px;"
-                                                class="d-flex justify-content-center">
-                                                <div style="width: 100% !important;"
-                                                    class="d-flex justify-content-center">
-                                                    <span class="currency">
-                                                        <span id="max-price-shown" style="display: none;">50.000</span>
-                                                        <span></span>
-                                                    </span>
+                                        </div>
+
+                                        <div class="col container d-flex justify-content-center mb-4">
+                                            <div class="row d-flex justify-content-center"
+                                                style="width: 100% !important; min-width: 150px;">
+                                                <div class="col d-flex justify-content-center m-1"
+                                                    style="width: 130px !important;">
+                                                    <button class="btn btn-md btn-outline-secondary text-capitalize"
+                                                        style="min-width: 130px !important; height: 50px;">
+                                                        book lesson
+                                                    </button>
                                                 </div>
-                                                <div class="d-flex justify-content-center"
-                                                    style="width: 100% !important;">5 minute lesson</div>
+                                                <div class="col d-flex justify-content-center m-1"
+                                                    style="width: 130px !important;">
+                                                    <button class="btn btn-md btn-outline-secondary text-capitalize"
+                                                        style="min-width: 130px !important; height: 50px;">
+                                                        message
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-6 col-md-6 container d-flex justify-content-center mb-4">
-                                        <div class="row d-flex justify-content-around" style="width: 100% !important;">
-                                            <div class="col-6 col-md-6 d-flex justify-content-center"
-                                                style="width: 130px !important;">
-                                                <button class="btn btn-md btn-outline-secondary text-capitalize"
-                                                    style="min-width: 130px !important; height: 50px;">
-                                                    book lesson
-                                                </button>
-                                            </div>
-                                            <div class="col-6 col-md-6 d-flex justify-content-center"
-                                                style="width: 130px !important;">
-                                                <button class="btn btn-md btn-outline-secondary text-capitalize"
-                                                    style="min-width: 130px !important; height: 50px;">
-                                                    message
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
                                     <div class="card-footer bg-transparent border-success">Footer</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
-
-
-                    <div class="card m-5" style="width: 100%;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="/images/img-1.jpg" class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a
-                                        natural
-                                        lead-in to additional content. This content is a little bit longer.</p>
-                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card mb-3" style="width: 100%;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="/images/img-1.jpg" class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a
-                                        natural
-                                        lead-in to additional content. This content is a little bit longer.</p>
-                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card mb-3" style="width: 100%;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="/images/img-1.jpg" class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">This is a wider card with supporting text below as a
-                                        natural
-                                        lead-in to additional content. This content is a little bit longer.</p>
-                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small>
-                                    </p>
-                                </div>
+                    <div id="course-pagination">
+                        <div class="center">
+                            <div class="pagination" id="pagination-buttons">
+                                <button onclick="searchCourses(1)">1</button>
+                                <button href="#">&raquo;</button>
+                                <button href="#">&raquo;</button>
+                                <button href="#">&raquo;</button>
+                                <button href="#">&raquo;</button>
+                                <button href="#">&raquo;</button>
+                                <button href="#">&raquo;</button>
+                                <button href="#">&raquo;</button>
                             </div>
                         </div>
                     </div>
@@ -1063,21 +1053,6 @@
                         server error
                     </div>
 
-                </div>
-
-                <div id="course-pagination">
-                    <div class="center">
-                        <div class="pagination" id="pagination-buttons">
-                            <button onclick="searchCourses(1)">1</button>
-                            <button href="#">&raquo;</button>
-                            <button href="#">&raquo;</button>
-                            <button href="#">&raquo;</button>
-                            <button href="#">&raquo;</button>
-                            <button href="#">&raquo;</button>
-                            <button href="#">&raquo;</button>
-                            <button href="#">&raquo;</button>
-                        </div>
-                    </div>
                 </div>
 
             </div>

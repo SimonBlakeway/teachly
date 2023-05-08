@@ -8,11 +8,6 @@ const { compile } = require('html-to-text');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
-function courseImagePrep(imgStr) {
-  base64Image = imgStr.split(';base64,').pop();
-  comp = utils.LZCompress(base64Image)
-  return comp
-}
 
 
 router.use(require('../middleware/auth.js').ensureUser)
@@ -59,7 +54,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
     res.send({ "result": true })
     courseData = req.body
 
-    courseData.image = await courseImagePrep(courseData.courseImg)
+    courseData.image = courseData.courseImg
     courseData.description = compiledConvert(courseData.description)
     courseObj = {
       description: courseData.description,

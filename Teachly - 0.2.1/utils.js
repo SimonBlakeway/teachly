@@ -583,11 +583,7 @@ function convertOrderByToQuery(str) {
     "Number of reviews": `  ORDER BY numberOfReviews ASC`,
     "Best rating": `  ORDER BY rating ASC`,
   }
-
-
-
   return orderByValidTypes[str] + "\r\n"
-
 }
 
 function convertSearchByKeywordToQuery(str) {

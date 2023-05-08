@@ -1,12 +1,21 @@
 <link rel="stylesheet" href="/css/chat.css">
 
+<script>
+  function sendMessage() {
 
-<section style="background-color: #eee; height: 100vh; margin-top: -30px;">
-  <div class="container py-5">
+  }
+  changeChat() {
 
-    <div class="row">
+  }
+</script>
 
-      <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
+
+<section style="background-color: #eee; margin-top: -30px; height: auto;">
+  <div class="p-3">
+
+    <div class="row d-flex justify-content-around">
+
+      <div class="col m-1" id="rooms">
 
         <div class="card">
           <div class="card-body">
@@ -126,9 +135,12 @@
 
       </div>
 
-      <div class="col-md-6 col-lg-7 col-xl-8">
+      <div class="col m-1" id="chat-col">
+        <div id="chat-profile">
+          zxzx
+        </div>
 
-        <ul class="list-unstyled">
+        <ul id="chat" class="list-unstyled">
           <li class="d-flex justify-content-between mb-4">
             <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
               class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
@@ -196,6 +208,5 @@
 
 
 <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
-    integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
-    crossorigin="anonymous"></script>
+  integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
 <script src="/js/chat.js"></script>
