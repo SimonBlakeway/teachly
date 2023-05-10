@@ -36,9 +36,9 @@
 }
 
 #chat {
+  height: 69vh;
+  width: 100%;
   border-radius: 5px;
-  height: 89vh;
-  min-width: 300px;
   overflow: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -53,17 +53,47 @@
 
 #chat-profile {
   background-color: #212529;
+  color: aliceblue;
+  height: 5vh;
+}
+
+#send-message-box {
+  height: 8vh !important;
+  width: 100%;
+  background-color: #212529;
+}
+
+#send-message-textarea {
+
+  min-height: 40px;
+  max-height: 50px;
+  padding: 10px;
+  font-size: 16px;
+  resize: none; /* disable resizing */
+}
+
+#send-message-button {
+  height: 100%;
+}
+
+.message-box {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
 }
 
 #chat-col {
-
+  height: 89vh;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-style: solid;
   border-width: 0px;
   border-bottom-width: 20px;
-  border-top-width: 20px;
   border-color: #212529;
+}
 
+#chat-col::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
 }
 
 #rooms {
@@ -87,11 +117,6 @@
   user-select: none;
   max-width: 500px;
 
-}
-
-#chat::-webkit-scrollbar {
-  display: none;
-  /* Safari and Chrome */
 }
 
 #rooms::-webkit-scrollbar {

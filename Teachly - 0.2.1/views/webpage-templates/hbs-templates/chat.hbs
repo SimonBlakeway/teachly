@@ -135,13 +135,14 @@
 
       </div>
 
-      <div class="col m-1" id="chat-col">
-        <div id="chat-profile">
+      <div class="col m-1 p-0" id="chat-col">
+
+        <div id="chat-profile" class="m-0 p-4">
           zxzx
         </div>
 
-        <ul id="chat" class="list-unstyled">
-          <li class="d-flex justify-content-between mb-4">
+        <ol id="chat" class="list-unstyled" style="margin: 0px !important;">
+          <li class="message-box">
             <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
               class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
             <div class="card">
@@ -157,7 +158,7 @@
               </div>
             </div>
           </li>
-          <li class="d-flex justify-content-between mb-4">
+          <li class="message-box">
             <div class="card w-100">
               <div class="card-header d-flex justify-content-between p-3">
                 <p class="fw-bold mb-0">Lara Croft</p>
@@ -173,7 +174,7 @@
             <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp" alt="avatar"
               class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
           </li>
-          <li class="d-flex justify-content-between mb-4">
+          <li class="message-box">
             <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
               class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
             <div class="card">
@@ -189,14 +190,19 @@
               </div>
             </div>
           </li>
-          <li class="bg-white mb-3">
-            <div class="form-outline">
-              <textarea class="form-control" id="textAreaExample2" rows="4"></textarea>
-              <label class="form-label" for="textAreaExample2">Message</label>
+        </ol>
+        <div id="send-message-box" class=" p-0 m-0">
+
+          <div class="p-0" style="display: inline-flex !important; width: 80% !important; margin-top: 0px !important;">
+            <div style="margin-top:  0px !important;">
+              <textarea class="" id="send-message-textarea"></textarea>
             </div>
-          </li>
-          <button type="button" class="btn btn-info btn-rounded float-end">Send</button>
-        </ul>
+          </div>
+          <div class="m-0 p-0" style="width: 20% !important; display: inline-flex; height: 100%;">
+            <button type="button" id="send-message-buttons" class="btn btn-info btn-rounded float-end">Send</button>
+          </div>
+
+        </div>
 
       </div>
 
