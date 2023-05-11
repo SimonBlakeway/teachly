@@ -191,15 +191,17 @@
             </div>
           </li>
         </ol>
-        <div id="send-message-box" class=" p-0 m-0">
+        <div id="send-message-box" class=" p-0 m-0 row">
 
           <div class="p-0" style="display: inline-flex !important; width: 80% !important; margin-top: 0px !important;">
-            <div style="margin-top:  0px !important;">
-              <textarea class="" id="send-message-textarea"></textarea>
+            <div class="w-100" style="margin-top:  1px !important; margin-left: 1px;">
+              <label class="input-sizer stacked">
+                <textarea oninput="this.parentNode.dataset.value = this.value" rows="1"></textarea>
+              </label>
             </div>
           </div>
-          <div class="m-0 p-0" style="width: 20% !important; display: inline-flex; height: 100%;">
-            <button type="button" id="send-message-buttons" class="btn btn-info btn-rounded float-end">Send</button>
+          <div class="m-0 p-0" style="width: 19% !important; display: inline-flex; height: 100%;">
+            <button type="button" id="send-message-buttons" class="btn btn-info btn-rounded">Send</button>
           </div>
 
         </div>
