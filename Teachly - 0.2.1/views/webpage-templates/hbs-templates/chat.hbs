@@ -4,18 +4,106 @@
   function sendMessage() {
 
   }
-  changeChat() {
+  function changeChat() {
 
   }
+
+  function movetoRooms() {
+
+  }
+
+  function moveToChat(id) {
+
+  }
+
+  window.addEventListener('load', async function () {
+
+    async function populateSubjects() {
+      try {
+        res = await axios.get('/get/validSubject')
+        let arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+        subjectArr = arr
+        for (let i = 0; i < arr.length; i++) {
+          node = document.createElement("li");
+          node.innerHTML = `<div class="subject-li" onclick='setSubject("${arr[i]}")''>${arr[i]}</div>`;
+          document.getElementById("subject-box").appendChild(node);
+        }
+        return arr
+      }
+      catch (err) {
+      }
+    }
+
+    async function populateSpecialities(subjects) {
+      async function appendSpec(subject) {
+        res = await axios.get(`/get/validSpecialities/${subject}`)
+        specArr = [];
+        if (res.data) {
+          specArr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+        }
+        else {
+          specArr = ""
+        }
+        specialitiesObj[`${subject}`] = specArr
+      }
+      try {
+        for (i = 0; i < subjects.length; i++) {
+          appendSpec(subjects[i])
+        }
+      }
+      catch (err) {
+      }
+
+    }
+    subjects = await populateSubjects()
+    populateSpecialities(subjects)
+
+    //populate taughtin
+    arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
+    for (let i = 0; i < arr.length; i++) {
+      langPair = arr[i].split(",")
+      node = document.createElement("div");
+      node.innerHTML = `
+                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[0]}" name="${langPair[0]}" onclick='setTaughtIn()'></input>
+                    <label class="form-check-label text-dark" for=${langPair[0]}>${langPair[0]}</label><br>`;
+      document.getElementById("taughtIn-list").appendChild(node);
+    }
+
+
+    //populate chats
+    timeRange = document.getElementById("timeRange-popup-rows")
+    for (let i = 0; i <= 6; i++) {
+      outerDiv = document.createElement("div");
+      outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3";
+      dayVal = document.createElement("div");
+      dayVal.className = "day-div px-0"
+      dayVal.innerHTML = `${days[i]}`;
+      outerDiv.appendChild(dayVal);
+      for (let j = 0; j <= 23; j++) {
+        innerDiv = document.createElement("div");
+        innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
+        innerDiv.innerHTML = `${j} - ${j + 1}`;
+        innerDiv.id = `${j}-${j + 1}_${days[i]}`;
+        innerDiv.onclick = function () { setTimeRange(`${j}-${j + 1}_${days[i]}`) }
+        outerDiv.appendChild(innerDiv);
+      }
+      timeRange.appendChild(outerDiv);
+    }
+
+
+  })
+
+
+
 </script>
 
 
-<section style="background-color: #eee; margin-top: -30px; height: auto;">
-  <div class="p-3">
+<section style="background-color: #eee; margin-top: -30px;  ">
+  <div class="pt-3 px-3">
 
     <div class="row d-flex justify-content-around">
 
-      <div class="col m-1" id="rooms">
+      <div class="col m-1 dispr-mx-442p" id="rooms">
 
         <div class="card">
           <div class="card-body">
@@ -137,71 +225,85 @@
 
       <div class="col m-1 p-0" id="chat-col">
 
-        <div id="chat-profile" class="m-0 p-4">
-          zxzx
-        </div>
+        <div style="height:  87vh;">
 
-        <ol id="chat" class="list-unstyled" style="margin: 0px !important;">
-          <li class="message-box">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
-              class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
-            <div class="card">
-              <div class="card-header d-flex justify-content-between p-3">
-                <p class="fw-bold mb-0">Brad Pitt</p>
-                <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
-              </div>
-              <div class="card-body">
-                <p class="mb-0">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                  labore et dolore magna aliqua.
-                </p>
-              </div>
-            </div>
-          </li>
-          <li class="message-box">
-            <div class="card w-100">
-              <div class="card-header d-flex justify-content-between p-3">
-                <p class="fw-bold mb-0">Lara Croft</p>
-                <p class="text-muted small mb-0"><i class="far fa-clock"></i> 13 mins ago</p>
-              </div>
-              <div class="card-body">
-                <p class="mb-0">
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-                  laudantium.
-                </p>
-              </div>
-            </div>
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp" alt="avatar"
-              class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
-          </li>
-          <li class="message-box">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
-              class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
-            <div class="card">
-              <div class="card-header d-flex justify-content-between p-3">
-                <p class="fw-bold mb-0">Brad Pitt</p>
-                <p class="text-muted small mb-0"><i class="far fa-clock"></i> 10 mins ago</p>
-              </div>
-              <div class="card-body">
-                <p class="mb-0">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                  labore et dolore magna aliqua.
-                </p>
-              </div>
-            </div>
-          </li>
-        </ol>
-        <div id="send-message-box" class=" p-0 m-0 row">
 
-          <div class="p-0" style="display: inline-flex !important; width: 80% !important; margin-top: 0px !important;">
-            <div class="w-100" style="margin-top:  1px !important; margin-left: 1px;">
-              <label class="input-sizer stacked">
-                <textarea oninput="this.parentNode.dataset.value = this.value" rows="1"></textarea>
-              </label>
+          <div id="chat-profile" class="m-0 p-4 row">
+            <div class="col">
+              <div class="apr-mx-442p" onclick="movetoRooms()">back</div>
+            </div>
+            <div class="col">
+              <a href="/profile/1212">
+                <div>Brad Pit</div>
+              </a>
             </div>
           </div>
-          <div class="m-0 p-0" style="width: 19% !important; display: inline-flex; height: 100%;">
-            <button type="button" id="send-message-buttons" class="btn btn-info btn-rounded">Send</button>
+
+          <ol id="chat" class="list-unstyled m-0">
+            <li class="message-box">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
+                class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">Brad Pitt</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua.
+                  </p>
+                </div>
+              </div>
+            </li>
+            <li class="message-box">
+              <div class="card w-100">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">Lara Croft</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 13 mins ago</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
+                    laudantium.
+                  </p>
+                </div>
+              </div>
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp" alt="avatar"
+                class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
+            </li>
+            <li class="message-box">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
+                class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">Brad Pitt</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 10 mins ago</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua.
+                  </p>
+                </div>
+              </div>
+            </li>
+          </ol>
+          <div id="send-message-box" class="p-0 m-0 row" style="margin-top: 2px !important;">
+
+            <div class="p-0"
+              style="display: inline-flex !important; width: 80% !important; margin-top: 0px !important;">
+              <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+                <label class="input-sizer stacked w-100 h-100 ">
+                  <textarea oninput="this.parentNode.dataset.value = this.value" rows="1"></textarea>
+                </label>
+              </div>
+            </div>
+            <div class="m-0"
+              style="width: 40px !important; display: inline-flex; padding: 0.5em; margin-top: 5px !important;">
+              <button type="button" id="send-message-buttons" class="btn btn-info btn-rounded">Send</button>
+            </div>
+
           </div>
 
         </div>

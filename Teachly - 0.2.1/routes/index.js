@@ -73,7 +73,7 @@ router.get('/chat/:chatroomId', async (req, res) => {
 router.get('/chat/', async (req, res) => {
   res.render('chat', {
     layout: "main",
-    context: contextSetup(req.settings, ["navbar", "footer"], "chat"),
+    context: contextSetup(req.settings, ["navbar"], "chat"),
   })
 })
 
