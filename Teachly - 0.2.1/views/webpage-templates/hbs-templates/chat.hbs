@@ -1,9 +1,17 @@
 <link rel="stylesheet" href="/css/chat.css">
 
 <script>
+
+  const scrollToBottom = (id) => {
+    const element = document.getElementById(id);
+    element.scrollTop = element.scrollHeight;
+  }
+
+  scrollToBottom("chat-id")
   function sendMessage() {
 
   }
+
   function changeChat() {
 
   }
@@ -225,52 +233,54 @@
 
       <div class="col m-1 p-0" id="chat-col">
 
-        <div style="height:  87vh;">
+        <div style="height: 87vh;">
+          <div class="chat-profile" class="m-0 p-4 ">
+            <div class="p-0 w-100" style="display: inline-flex !important; height: 40px;" href="/profile/1212">
 
+              <div class="apr-mx-442p p-0 d-flex align-items-center mx-3" onclick="movetoRooms()" class="apr-mx-442p p-0" onclick="movetoRooms()"
+                style="display: inline-flex !important; width: 50px; height: 40px;">back
+              </div>
 
-          <div id="chat-profile" class="m-0 p-4 row">
-            <div class="col">
-              <div class="apr-mx-442p" onclick="movetoRooms()">back</div>
-            </div>
-            <div class="col">
-              <a href="/profile/1212">
-                <div>Brad Pit</div>
-              </a>
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
+                class="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
+                style="display: inline-flex !important; height: 40px;" width="35">
+
+              <div class="profile-name  p-1 pl-3 d-flex align-items-center" id="profile-name-id">Brad Pit</div>
+
+              <div class="contact-options" id="contact-options-id">
+                <div class="vert-ilip">⋮</div>
+              </div>
+
             </div>
           </div>
 
-          <ol id="chat" class="list-unstyled m-0">
-            <li class="message-box">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
-                class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+          <ol id="chat-id" class="list-unstyled m-0 chat p-2 py-2">
+
+            <li class="message-box userMessage">
               <div class="card">
-                <div class="card-header d-flex justify-content-between p-3">
-                  <p class="fw-bold mb-0">Brad Pitt</p>
+                <div class="card-body p-1">
+                  <p class="mb-0">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua.
+                  </p>
+                </div>
+                <div class="card-header d-flex justify-content-between px-3 py-0">
                   <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
                 </div>
+              </div>
+            </li>
+            <li class="message-box contact-message">
+              <div class="card">
                 <div class="card-body">
                   <p class="mb-0">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                     labore et dolore magna aliqua.
                   </p>
                 </div>
-              </div>
-            </li>
-            <li class="message-box">
-              <div class="card w-100">
-                <div class="card-header d-flex justify-content-between p-3">
-                  <p class="fw-bold mb-0">Lara Croft</p>
-                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 13 mins ago</p>
-                </div>
-                <div class="card-body">
-                  <p class="mb-0">
-                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-                    laudantium.
-                  </p>
+                <div class="card-header d-flex justify-content-between px-3 py-0">
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
                 </div>
               </div>
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp" alt="avatar"
-                class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
             </li>
             <li class="message-box">
               <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
@@ -288,30 +298,21 @@
                 </div>
               </div>
             </li>
+
           </ol>
-          <div id="send-message-box" class="p-0 m-0 row" style="margin-top: 2px !important;">
 
-            <div class="p-0"
-              style="display: inline-flex !important; width: 80% !important; margin-top: 0px !important;">
-              <div class="w-100 h-100 d-flex align-items-center justify-content-center">
-                <label class="input-sizer stacked w-100 h-100 ">
-                  <textarea oninput="this.parentNode.dataset.value = this.value" rows="1"></textarea>
-                </label>
-              </div>
+          <div class="p-2 m-0 send-message-box row">
+            <div class="p-0 m-0"
+              style="display: inline-flex !important; width: calc(100% - 80px) !important; margin-top: 0px !important;">
+              <textarea class="send-message-button" maxlength="1024" style="" rows="2"></textarea>
             </div>
-            <div class="m-0"
-              style="width: 40px !important; display: inline-flex; padding: 0.5em; margin-top: 5px !important;">
-              <button type="button" id="send-message-buttons" class="btn btn-info btn-rounded">Send</button>
+            <div class="m-0 p-0" style="width: 70px; display:inline-flex; margin-left: 10px !important;">
+              <button type="button" class="send-message-button">Send</button>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
 </section>
 
