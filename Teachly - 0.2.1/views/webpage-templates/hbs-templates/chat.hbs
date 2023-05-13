@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="/css/chat.css">
 
 <script>
+  activeChat = ""
 
   const scrollToBottom = (id) => {
     const element = document.getElementById(id);
@@ -9,7 +10,14 @@
 
   scrollToBottom("chat-id")
   function sendMessage() {
+    roomsCol = document.getElementById("rooms")
+    chatCol = document.getElementById("chat-col")
 
+    roomsCol.style.display = ""
+    roomsCol.style.visability = ""
+
+    chatCol.style.display = ""
+    chatCol.style.visability = ""
   }
 
   function changeChat() {
@@ -18,9 +26,30 @@
 
   function movetoRooms() {
 
+    roomsCol = document.getElementById("rooms")
+    chatCol = document.getElementById("chat-col")
+
+    roomsCol.style.display = ""
+    roomsCol.style.visability = ""
+
+    chatCol.style.display = ""
+    chatCol.style.visability = ""
+
   }
 
   function moveToChat(id) {
+    chatDivs = document.getElementsByClassName("chat")
+
+    for (let i = 0; i < chatDivs.length; i++) {
+      if (chatDivs[i].id == id) {
+        roomsCol.style.display = ""
+        roomsCol.style.visability = ""
+      }
+      else {
+        roomsCol.style.display = ""
+        roomsCol.style.visability = ""
+      }
+    }
 
   }
 
@@ -237,14 +266,15 @@
           <div class="chat-profile" class="m-0 p-4 ">
             <div class="p-0 w-100" style="display: inline-flex !important; height: 40px;" href="/profile/1212">
 
-              <div class="apr-mx-442p p-0 d-flex align-items-center mx-3" onclick="movetoRooms()" class="apr-mx-442p p-0" onclick="movetoRooms()"
-                style="display: inline-flex !important; width: 50px; height: 40px;">back
+              <div class="apr-mx-442p p-0 d-flex align-items-center mx-3" onclick="movetoRooms()"
+                class="apr-mx-442p p-0" onclick="movetoRooms()"
+                style="display: inline-flex !important; width: 50px; height: 40px; font-size: 18px;">back
               </div>
 
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
-                class="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
-                style="display: inline-flex !important; height: 40px;" width="35">
-
+              <div style="height: 40px;" class="d-flex align-items-center">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
+                  class="rounded-circle  ml-0 shadow-1-strong" style="display: inline-flex !important;" width="35">
+              </div>
               <div class="profile-name  p-1 pl-3 d-flex align-items-center" id="profile-name-id">Brad Pit</div>
 
               <div class="contact-options" id="contact-options-id">
@@ -304,10 +334,10 @@
           <div class="p-2 m-0 send-message-box row">
             <div class="p-0 m-0"
               style="display: inline-flex !important; width: calc(100% - 80px) !important; margin-top: 0px !important;">
-              <textarea class="send-message-button" maxlength="1024" style="" rows="2"></textarea>
+              <textarea class="message-textarea" maxlength="1024" style="" rows="2"></textarea>
             </div>
             <div class="m-0 p-0" style="width: 70px; display:inline-flex; margin-left: 10px !important;">
-              <button type="button" class="send-message-button">Send</button>
+              <button type="button" class="btn btn-light send-message-button">Send</button>
             </div>
           </div>
         </div>
