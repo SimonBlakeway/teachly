@@ -60,6 +60,7 @@ router.get('/user/:id', async (req, res) => {
 // @desc    view user profile
 // @route   GET /user/id
 router.get('/chat/:chatroomId', async (req, res) => {
+  console.log("reee")
   userId = req.params.chatroomId
   res.render('chat', {
     layout: "main",

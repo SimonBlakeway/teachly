@@ -1,138 +1,6 @@
 <link rel="stylesheet" href="/css/chat.css">
 
-<script>
-  activeChat = ""
 
-  const scrollToBottom = (id) => {
-    const element = document.getElementById(id);
-    element.scrollTop = element.scrollHeight;
-  }
-
-  scrollToBottom("chat-id")
-  function sendMessage() {
-    roomsCol = document.getElementById("rooms")
-    chatCol = document.getElementById("chat-col")
-
-    roomsCol.style.display = ""
-    roomsCol.style.visability = ""
-
-    chatCol.style.display = ""
-    chatCol.style.visability = ""
-  }
-
-  function changeChat() {
-
-  }
-
-  function movetoRooms() {
-
-    roomsCol = document.getElementById("rooms")
-    chatCol = document.getElementById("chat-col")
-
-    roomsCol.style.display = ""
-    roomsCol.style.visability = ""
-
-    chatCol.style.display = ""
-    chatCol.style.visability = ""
-
-  }
-
-  function moveToChat(id) {
-    chatDivs = document.getElementsByClassName("chat")
-
-    for (let i = 0; i < chatDivs.length; i++) {
-      if (chatDivs[i].id == id) {
-        roomsCol.style.display = ""
-        roomsCol.style.visability = ""
-      }
-      else {
-        roomsCol.style.display = ""
-        roomsCol.style.visability = ""
-      }
-    }
-
-  }
-
-  window.addEventListener('load', async function () {
-
-    async function populateSubjects() {
-      try {
-        res = await axios.get('/get/validSubject')
-        let arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-        subjectArr = arr
-        for (let i = 0; i < arr.length; i++) {
-          node = document.createElement("li");
-          node.innerHTML = `<div class="subject-li" onclick='setSubject("${arr[i]}")''>${arr[i]}</div>`;
-          document.getElementById("subject-box").appendChild(node);
-        }
-        return arr
-      }
-      catch (err) {
-      }
-    }
-
-    async function populateSpecialities(subjects) {
-      async function appendSpec(subject) {
-        res = await axios.get(`/get/validSpecialities/${subject}`)
-        specArr = [];
-        if (res.data) {
-          specArr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-        }
-        else {
-          specArr = ""
-        }
-        specialitiesObj[`${subject}`] = specArr
-      }
-      try {
-        for (i = 0; i < subjects.length; i++) {
-          appendSpec(subjects[i])
-        }
-      }
-      catch (err) {
-      }
-
-    }
-    subjects = await populateSubjects()
-    populateSpecialities(subjects)
-
-    //populate taughtin
-    arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
-    for (let i = 0; i < arr.length; i++) {
-      langPair = arr[i].split(",")
-      node = document.createElement("div");
-      node.innerHTML = `
-                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[0]}" name="${langPair[0]}" onclick='setTaughtIn()'></input>
-                    <label class="form-check-label text-dark" for=${langPair[0]}>${langPair[0]}</label><br>`;
-      document.getElementById("taughtIn-list").appendChild(node);
-    }
-
-
-    //populate chats
-    timeRange = document.getElementById("timeRange-popup-rows")
-    for (let i = 0; i <= 6; i++) {
-      outerDiv = document.createElement("div");
-      outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3";
-      dayVal = document.createElement("div");
-      dayVal.className = "day-div px-0"
-      dayVal.innerHTML = `${days[i]}`;
-      outerDiv.appendChild(dayVal);
-      for (let j = 0; j <= 23; j++) {
-        innerDiv = document.createElement("div");
-        innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
-        innerDiv.innerHTML = `${j} - ${j + 1}`;
-        innerDiv.id = `${j}-${j + 1}_${days[i]}`;
-        innerDiv.onclick = function () { setTimeRange(`${j}-${j + 1}_${days[i]}`) }
-        outerDiv.appendChild(innerDiv);
-      }
-      timeRange.appendChild(outerDiv);
-    }
-
-
-  })
-
-
-
-</script>
 
 
 <section style="background-color: #eee; margin-top: -30px;  ">
@@ -286,7 +154,7 @@
 
           <ol id="chat-id" class="list-unstyled m-0 chat p-2 py-2">
 
-            <li class="message-box userMessage">
+            <li class="message-box user-message">
               <div class="card">
                 <div class="card-body p-1">
                   <p class="mb-0">
@@ -312,19 +180,55 @@
                 </div>
               </div>
             </li>
-            <li class="message-box">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
-                class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+            <li class="message-box contact-message">
               <div class="card">
-                <div class="card-header d-flex justify-content-between p-3">
-                  <p class="fw-bold mb-0">Brad Pitt</p>
-                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 10 mins ago</p>
-                </div>
                 <div class="card-body">
                   <p class="mb-0">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                     labore et dolore magna aliqua.
                   </p>
+                </div>
+                <div class="card-header d-flex justify-content-between px-3 py-0">
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
+                </div>
+              </div>
+            </li>
+            <li class="message-box user-message">
+              <div class="card">
+                <div class="card-body">
+                  <p class="mb-0">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua.
+                  </p>
+                </div>
+                <div class="card-header d-flex justify-content-between px-3 py-0">
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
+                </div>
+              </div>
+            </li>
+            <li class="message-box user-message">
+              <div class="card">
+                <div class="card-body">
+                  <p class="mb-0">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua.
+                  </p>
+                </div>
+                <div class="card-header d-flex justify-content-between px-3 py-0">
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
+                </div>
+              </div>
+            </li>
+            <li class="message-box contact-message">
+              <div class="card">
+                <div class="card-body">
+                  <p class="mb-0">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua.
+                  </p>
+                </div>
+                <div class="card-header d-flex justify-content-between px-3 py-0">
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
                 </div>
               </div>
             </li>
@@ -334,10 +238,10 @@
           <div class="p-2 m-0 send-message-box row">
             <div class="p-0 m-0"
               style="display: inline-flex !important; width: calc(100% - 80px) !important; margin-top: 0px !important;">
-              <textarea class="message-textarea" maxlength="1024" style="" rows="2"></textarea>
+              <textarea class="message-textarea" id="id-textarea" maxlength="1024" style="" rows="2"></textarea>
             </div>
             <div class="m-0 p-0" style="width: 70px; display:inline-flex; margin-left: 10px !important;">
-              <button type="button" class="btn btn-light send-message-button">Send</button>
+              <button type="button" onclick="sendMessage()" class="btn btn-light send-message-button">Send</button>
             </div>
           </div>
         </div>
@@ -351,3 +255,100 @@
 <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
   integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
 <script src="/js/chat.js"></script>
+
+
+<script>
+  activeChat = ""
+
+  const scrollToBottom = (id) => {
+    element = document.getElementById(id);
+    console.log(element.scrollHeight)
+    element.scrollTop = 1000 // element.scrollHeight;
+  }
+
+  function sendMessage() {
+    text = document.getElementById("id-textarea").value
+    socket.emit('send message', notId);
+    console.log(text.value)
+  }
+
+  function changeChat() {
+
+  }
+
+  function movetoRooms() {
+
+    roomsCol = document.getElementById("rooms")
+    chatCol = document.getElementById("chat-col")
+
+    roomsCol.style.display = ""
+    roomsCol.style.visability = ""
+
+    chatCol.style.display = ""
+    chatCol.style.visability = ""
+
+  }
+
+  function moveToChat(id) {
+    chatDivs = document.getElementsByClassName("chat")
+
+    for (let i = 0; i < chatDivs.length; i++) {
+      if (chatDivs[i].id == id) {
+        roomsCol.style.display = ""
+        roomsCol.style.visability = ""
+      }
+      else {
+        roomsCol.style.display = ""
+        roomsCol.style.visability = ""
+      }
+    }
+
+  }
+
+  window.addEventListener('load', async function () {
+
+    async function populateSubjects() {
+      try {
+        res = await axios.get('/get/validSubject')
+        let arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+        subjectArr = arr
+        for (let i = 0; i < arr.length; i++) {
+          node = document.createElement("li");
+          node.innerHTML = `<div class="subject-li" onclick='setSubject("${arr[i]}")''>${arr[i]}</div>`;
+          document.getElementById("subject-box").appendChild(node);
+        }
+        return arr
+      }
+      catch (err) {
+      }
+    }
+
+    async function populateSpecialities(subjects) {
+      async function appendSpec(subject) {
+        res = await axios.get(`/get/validSpecialities/${subject}`)
+        specArr = [];
+        if (res.data) {
+          specArr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
+        }
+        else {
+          specArr = ""
+        }
+        specialitiesObj[`${subject}`] = specArr
+      }
+      try {
+        for (i = 0; i < subjects.length; i++) {
+          appendSpec(subjects[i])
+        }
+      }
+      catch (err) {
+      }
+
+    }
+    //subjects = await populateSubjects()
+    //populateSpecialities(subjects)
+
+  })
+
+
+
+</script>

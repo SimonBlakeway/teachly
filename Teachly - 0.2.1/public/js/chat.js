@@ -1,40 +1,10 @@
-const origin = window.location.origin;
-const socket = io.connect(origin);
 
-function switchSignaler(id, turnOn = false) {
-    signaler = document.getElementById(`${id}-signaler`)
-    if (turnOn) {
-        signaler.style.display = "block"
-        return
-    }
-    if (signaler.style.display == "block") {
-        signaler.style.display = "none"
-    }
-    else {
-        signaler.style.display = "block"
-    }
-}
-function deleteNotification(notId) {
-    removeElement(`${notId}-notification`)
-    socket.emit('delete notification', notId);
-
-}
-function redirectByUrl(url, notId) {
-    notification = document.getElementById(`${id}-notification`)
-    socket.emit('delete notification', notId);
-    if (url[0] == "/") { //in house redirect
-        window.location.href = origin + url;
-    }
-    else { //out house redirect
-        window.location.href = url;
-    }
-}
 
 socket.on("connect", () => {
-    console.log("socket connected");
+    console.log("eerer");
 });
 
-socket.on("old notifications", (data) => {
+socket.on("recieve message", (data) => {
     switchSignaler("notification", turnOn = true)
     notOuter = document.getElementById("notifications-list")
     notOuter.innerHTML = '';
@@ -59,38 +29,6 @@ socket.on("old notifications", (data) => {
               `
         notOuter.appendChild(box)
     }
-});
-
-socket.on("old messages", (data) => {
-    console.log("old messages");
-    console.log(data)
-});
-
-socket.on("notification", (data) => {
-    switchSignaler("notification", turnOn = true)
-    console.log("notifications");
-    console.log(data)
-
-    notOuter = document.getElementById("notifications-list")
-    console.log([data.length], "free")
-
-    for (let i = 0; i < data.length; i++) {
-
-        box = createElement("li")
-        box.innerHTML = `
-              <div>${data[i].text}</div>
-              <div>${data[i].created_at}</div>
-              `
-        notOuter.appendChild(box)
-    }
-});
-
-socket.on("message", (data) => {
-    switchSignaler("message", turnOn = true)
-
-    //fill messages
-    console.log("old messages");
-    console.log(data)
 });
 
 socket.on("disconnect", () => {
