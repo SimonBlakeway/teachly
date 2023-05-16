@@ -15,7 +15,7 @@
 
             <ul class="list-unstyled mb-0">
               <li class="p-2 border-bottom" style="background-color: #eee;">
-                <a href="#!" class="d-flex justify-content-between">
+                <a href="#!" class="d-flex justify-content-between" onclick="changeChat(1212)">
                   <div class="d-flex flex-row">
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp" alt="avatar"
                       class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
@@ -130,12 +130,12 @@
 
       <div class="col m-1 p-0" id="chat-col">
 
-        <div style="height: 87vh;">
+        <div id="chat-box" class="disappear" style="height: 87vh;">
           <div class="chat-profile" class="m-0 p-4 ">
             <div class="p-0 w-100" style="display: inline-flex !important; height: 40px;" href="/profile/1212">
 
-              <div class="apr-mx-442p p-0 d-flex align-items-center mx-3" onclick="movetoRooms()"
-                class="apr-mx-442p p-0" onclick="movetoRooms()"
+              <div class="apr-mx-442p p-0 d-flex align-items-center mx-3" class="apr-mx-442p p-0"
+                onclick="movetoRooms()"
                 style="display: inline-flex !important; width: 50px; height: 40px; font-size: 18px;">back
               </div>
 
@@ -233,7 +233,9 @@
               </div>
             </li>
 
+
           </ol>
+
 
           <div class="p-2 m-0 send-message-box row">
             <div class="p-0 m-0"
@@ -245,6 +247,19 @@
             </div>
           </div>
         </div>
+
+
+        <div id="no-chat-active" class="d-flex align-items-center justify-content-center">
+          <div>
+            <div>
+              ewe
+            </div>
+            <div>
+              reer
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -258,7 +273,8 @@
 
 
 <script>
-  activeChat = ""
+  //int val from the portgres bd, if err default to no active chat
+  activeChat = "" // window.location.search for chat
 
   const scrollToBottom = (id) => {
     element = document.getElementById(id);
@@ -268,48 +284,69 @@
 
   function sendMessage() {
     text = document.getElementById("id-textarea").value
-    socket.emit('send message', notId);
+    socket.emit('send message', { text: text, chatId: "" });
     console.log(text.value)
   }
 
-  function changeChat() {
+  function changeChat(chatId) {
+    if (chatId == activeChat) {
+      return
+    }
+    else {
+      console.log("reee")
 
-  }
-
-  function movetoRooms() {
-
-    roomsCol = document.getElementById("rooms")
-    chatCol = document.getElementById("chat-col")
-
-    roomsCol.style.display = ""
-    roomsCol.style.visability = ""
-
-    chatCol.style.display = ""
-    chatCol.style.visability = ""
-
-  }
-
-  function moveToChat(id) {
-    chatDivs = document.getElementsByClassName("chat")
-
-    for (let i = 0; i < chatDivs.length; i++) {
-      if (chatDivs[i].id == id) {
-        roomsCol.style.display = ""
-        roomsCol.style.visability = ""
-      }
-      else {
-        roomsCol.style.display = ""
-        roomsCol.style.visability = ""
-      }
     }
 
   }
 
+  function movetoRooms() {
+    roomsCol = document.getElementById("rooms")
+    chatCol = document.getElementById("chat-col")
+    chatCol.classList.toggle("disappear");
+    roomsCol.classList.toggle("appear");
+  }
+
+  function moveToChat(id) {
+    activeChatElm = document.getElementById(`${activeChat}-chat`)
+    activeChatElm.classList.toggle("appear");
+
+    activeChat = id
+
+    activeChatElm = document.getElementById(`${activeChat}-chat`)
+    activeChatElm.classList.toggle("appear");
+  }
+
   window.addEventListener('load', async function () {
 
-    async function populateSubjects() {
+    chat = window.location.search.substring(1, window.location.search.length).split("=")
+
+    if (chat[0] != "chat") {
+      activeChat = ""
+    }
+    else if (chat.length != 2) {
+      activeChat = ""
+    }
+    else {
+      activeChat = parseInt(chat[1])
+    }
+
+    console.log(activeChat)
+
+
+
+
+    if (window.location.search == "") {
+      activeChat = ""
+    }
+    else {
+      activeChat = "" // not sure how to get chat from search
+    }
+
+
+
+    async function populateRooms() {
       try {
-        res = await axios.get('/get/validSubject')
+        res = await axios.get('/my/rooms')
         let arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
         subjectArr = arr
         for (let i = 0; i < arr.length; i++) {
@@ -323,7 +360,7 @@
       }
     }
 
-    async function populateSpecialities(subjects) {
+    async function populateChats(subjects) {
       async function appendSpec(subject) {
         res = await axios.get(`/get/validSpecialities/${subject}`)
         specArr = [];
@@ -344,8 +381,10 @@
       }
 
     }
-    //subjects = await populateSubjects()
-    //populateSpecialities(subjects)
+    subjects = await populateSubjects()
+    await populateSpecialities(subjects)
+
+
 
   })
 

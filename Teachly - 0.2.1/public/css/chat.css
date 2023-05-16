@@ -1,3 +1,13 @@
+.appear {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.disappear {
+  display: none !important;
+  visibility: hidden !important;
+}
+
 .vert-ilip {
   font-size: 25px;
   font-weight: 405px !important;
@@ -44,6 +54,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  display: none;
 }
 
 .send-message-box {
@@ -71,7 +82,7 @@
 #chat-col {
   height: 88vh !important;
   min-width: 300px;
-  max-width: 600px;
+  max-width: 800px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -147,7 +158,7 @@
 .message-textarea::-webkit-scrollbar {
   display: none;
 }
- 
+
 .message-textarea:focus {
   box-shadow: 0 0 5px rgba(81, 203, 238, 1);
   border: 1px solid rgba(81, 203, 238, 1);
@@ -160,13 +171,18 @@
 .contact-message {
   width: 90%;
   margin-left: 10% !important;
+}
+
+#no-chat-active {
+  height: calc(100% - 100px);
+  width: 100%;
 
 }
 
 @media only screen and (max-width: 640px) {
   .dispr-mx-442p {
-    visibility: hidden !important;
-    display: none !important;
+    visibility: hidden;
+    display: none;
   }
 
   .apr-mx-442p {

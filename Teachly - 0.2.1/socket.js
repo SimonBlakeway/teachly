@@ -86,10 +86,9 @@ module.exports = {
 
         socket.on("send message", async function (data) {
           try {
-            result = await db.query(`DELETE FROM notifications WHERE notification_id = $1 AND user_id = $2 AND is_global = $3;`, [data, cookies.user_refresh_token.id, false]);
+            //sendMessage(id = cookies.user_refresh_token.id, data.text, data.chatId)
 
 
-            result = await db.query(`UPDATE notifications SET deleted_by = array_append( deleted_by, $1) WHERE notification_id = $2  AND is_global = $3)`, [cookies.user_refresh_token.id, data, false]);
           } catch (error) {
             console.log(error)
           }
