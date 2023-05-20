@@ -29,25 +29,7 @@ async function sendNotifications(id) {
   } catch (error) {
     console.log(error)
   }
-}
 
-async function sendMessagesNotifications(id) {
-  try {
-    result = await db.query(`
-    SELECT 
-      messages.text, 
-      messages.created_at, 
-      messages.chat_id,
-      user_info.name 
-    FROM messages
-    JOIN user_info ON messages.user_id = user_info.id
-    WHERE messages.user_id = $1`, [id])
-    if (result.rowCount != 0) {
-      io.to(`${id}-user`).emit("old messages", result.rows); // WHERE 'messages.userId' = $1`, [id])
-    }
-  } catch (error) {
-    console.log(error)
-  }
 }
 
 //socketio.js
@@ -58,21 +40,15 @@ module.exports = {
       console.log("user connected")
       let cookies = {}
       try {
+
         cookies = cookiePrep(socket.handshake.headers.cookie)
         if (Object.keys(cookies.user_refresh_token) == 0) {
           socket.disconnect()
           return
         }
         id = cookies.user_refresh_token.id
-        rooms = cookies.userCookie.chatIds
-
         socket.join(`${id}-user`)
-        for (let i = 0; i < rooms.length; i++) {
-          socket.join(`${rooms[i]}-chat`)
-        }
-        sendMessagesNotifications(id)
         sendNotifications(id)
-
 
 
         socket.on("get messages", () => {

@@ -723,6 +723,30 @@ async function sendMessage(id, text, chatId) {
   }
 }
 
+//ned wrk
+async function sendMessageNotification(id, text, chatId) {
+  text = compiledConvert(text)
+  messagesObj = {
+    text: text,
+    created_at: Math.floor(Date.now() / 1000),
+    userId: id,
+    chatId: chatId
+  }
+  //send message to user
+  io.to(`${chatId}-chat`).emit("recieve message", notObj);
+  try {
+    db.query(`INSERT INTO message VALUES ($1) WHERE chatId = $2 AND (teacherId = $3 OR studentId = $3)`, [messagesObj, chatId, id], (err, result) => {
+      if (err) {
+        console.log(err)
+      }
+    })
+
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
 //sendMessage("")
 
 

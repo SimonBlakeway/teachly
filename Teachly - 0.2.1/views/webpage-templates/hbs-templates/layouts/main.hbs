@@ -21,13 +21,21 @@
   updateCurrencyInterval(userCur)
 
   function prettyifyDate(date) { // it comes in as seconds from epoch
-    var secs =  Math.floor(Date.now() / 1000) - date 
+    var secs = Math.floor(Date.now() / 1000) - date
     if (secs < 60) return "{{context.layoutContext.secsAgoPrier}}" + secs + "{{context.layoutContext.secsAgoPost}}";
     if (secs < 3600) return "{{context.layoutContext.minAgoPrier}}" + Math.floor(secs / 60) + "{{context.layoutContext.minAgoPost}}";
     if (secs < 86400) return "{{context.layoutContext.hourAgoPrier}}" + Math.floor(secs / 3600) + "{{context.layoutContext.hourAgoPost}}";
     if (secs < 604800) return "{{context.layoutContext.daysAgoPrier}}" + Math.floor(secs / 86400) + "{{context.layoutContext.daysAgoPost}}";
     return date.toDateString();
-}
+  }
+
+  function updateDates(date) { // it comes in as seconds from epoch
+    dates = document.getElementsByClassName("data")
+    for (let i = 0; i < dates.length; i++) {
+      num = date[i][0].innerHtml
+      dates[i][1].innerHtml = prettyifyDate(num)
+    }
+  }
 </script>
 
 <body style="height: 100vh;">
@@ -47,4 +55,5 @@
   {{>_cookiesPopup cookiesText = context.cookiesPopup}}
   {{/if}}
 </body>
+
 </html>

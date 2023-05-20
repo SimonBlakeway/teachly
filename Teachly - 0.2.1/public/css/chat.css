@@ -1,3 +1,35 @@
+.h-40p {
+  height: 40px !important;
+}
+
+.h-60p {
+  height: 60px !important;
+}
+
+.w-50p {
+  width: 50px !important;
+}
+
+.fs-18p {
+  font-size: 18px !important;
+}
+
+.w-70p {
+  width: 70px;
+}
+
+.h-87vh {
+  height: 87vh;
+}
+
+.w-100-80p {
+  height: calc(100% - 80px);
+}
+
+.ml-10p {
+  margin-left: 10px !important;
+}
+
 .appear {
   display: block !important;
   visibility: visible !important;
@@ -177,6 +209,13 @@
   height: calc(100% - 100px);
   width: 100%;
 
+}
+
+.profile-placeholder {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  background-color: #0e3256;
 }
 
 @media only screen and (max-width: 640px) {
