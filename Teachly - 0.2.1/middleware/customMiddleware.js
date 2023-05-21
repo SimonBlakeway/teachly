@@ -1,6 +1,7 @@
-const jwt = require("jwt-simple");
 const db = require('../config/db');
 const utils = require('../utils');
+const jwt = require("jwt-simple")
+
 
 function parseJwt(token) {
   return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
@@ -15,25 +16,34 @@ function cookieSettings(req, res, next) {
       try {
         userToken = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
         userCookie = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
+
+        if (typeof userToken.user_refresh_string == "undefined") {
+          throw new Error("undefined cookie refresh token")
+        }
+        if (typeof userToken.created_at == "undefined") {
+          throw new Error("undefined cookie created_at")
+        }
         if (userToken.id != userCookie.id) {
-          console.log("the ids aren't the same, logging out")
-          res.clearCookie('userCookie');
-          res.clearCookie('user_refresh_token');
-          res.redirect("/")
+          throw new Error("user token and cookie have different ids")
         }
         settings = userCookie
         settings.hasCookie = true
         settings.isUser = true
         settings.accountNumber = userToken.accountNumber
-        settings.refreshString = userToken.userRefreshToken
-        settings.tokenCreatedAt = userToken.createdAt
+        settings.user_refresh_string = userToken.user_refresh_string
+        settings.token_created_at = userToken.created_at
 
         req.settings = settings
         return next()
       }
       catch (err) {
-        console.log(err)
-        console.log("custom middleware 36")
+        try {
+          if (userToken) {
+            db.query(`UPDATE user_info SET user_refresh_token [ ${userToken.accountNumber} ] = $1 WHERE id = $2;`, [{}, id]);
+          }
+        } catch (error) {
+
+        }
         res.clearCookie('userCookie');
         res.clearCookie('user_refresh_token');
         res.redirect("/")
@@ -44,12 +54,13 @@ function cookieSettings(req, res, next) {
       settings = userCookie
       settings.hasCookie = true
       settings.isUser = false
-       
+
       req.settings = settings
       return next()
     }
     catch (err) {
       console.log(err)
+      console.log("sgewhgbwehqeihghbhifbqihegbqhbg")
       malUserCookie = parseJwt(req.cookies.userCookie)
       res.clearCookie('userCookie');
       db.query('DELETE FROM user_refresh_token WHERE id = $1', [malUserCookie.id], (err, result) => {
@@ -75,25 +86,28 @@ function cookieSettings(req, res, next) {
 }
 
 async function refreshToken(req, res, next) {
-  if (req.settings.isUser) {
-    if ((Math.floor(Date.now() / 1000) - req.settings.tokenCreatedAt) >= 900) { //15 min 900
-      userToken = await utils.refreshUserToken(req.settings.id, req.settings.refreshString, req.settings.accountNumber, req.settings.tokenCreatedAt)
-      if (userToken == false) {
-        console.log("sfnwjvnjvnjwnvjvnjwnvjwnvjwvnwjvn")
-        res.clearCookie('userCookie');
-        res.clearCookie('user_refresh_token');
-        res.redirect("/")
+  try {
+    if (req.settings.isUser) {
+      if ((Math.floor(Date.now() / 1000) - req.settings.token_created_at) >= 30) { //15 min 900
+        try {
+          userToken = await utils.refreshUserToken(req.settings.id, req.settings.user_refresh_string, req.settings.accountNumber, req.settings.token_created_at)
+          res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+          return next()
+        } catch (error) {
+          console.log("sfnwjvnjvnjwnvjvnjwnvjwnvjwvnwjvn")
+          res.clearCookie('userCookie');
+          res.clearCookie('user_refresh_token');
+          res.redirect("/")
+        }
       }
       else {
-      res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-      return next()
+        return next()
       }
     }
     else {
       return next()
     }
-  }
-  else {
+  } catch (error) {
     return next()
   }
 }

@@ -3,6 +3,19 @@ const router = express.Router()
 const { contextSetup } = require(process.cwd() + '/utils.js');
 const db = require('../config/db');
 
+async function foo() {
+  try {
+    result = await db.query(`SELECT user_refresh_token [14] FROM user_info`);
+    console.log(result.rows[0].user_refresh_token)
+  } catch (error) {
+    console.log(error)
+
+  }
+}
+
+
+
+
 
 // @desc    Landing page
 // @route   GET / 
@@ -62,9 +75,14 @@ router.get('/user/:id', async (req, res) => {
 // @desc    view user profile
 // @route   GET /user/id
 router.get('/chat/', async (req, res) => {
+  settings = {}
+  settings = req.settings
+  settings.messages = 
+  settings.messages = {"foo": "erer"}
+  console.log(settings)
   res.render('chat', {
     layout: "main",
-    context: contextSetup(req.settings, ["navbar"], "chat"),
+    context: contextSetup(settings, ["navbar"], "chat"),
   })
 })
 

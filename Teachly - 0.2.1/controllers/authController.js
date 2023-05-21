@@ -221,13 +221,9 @@ exports.facebookLogin = async function (req, res) {
 exports.logout = async function (req, res) {
 
   try {
-    let result = await db.query('select "user_refresh_token" FROM user_info WHERE id = $1', [req.settings.id]);
-
-
-    newRefreshTokens = result.rows[0].user_refresh_token
-    newRefreshTokens[req.settings.accountNumber] = {}
-    db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2`, [newRefreshTokens, req.settings.id]);
-
+    console.log(req.settings.accountNumber, "acount number")
+    accountNumber = req.settings.accountNumber
+    db.query(`UPDATE user_info SET user_refresh_token [${accountNumber}] = $1 WHERE id = $2;`, [{}, req.settings.id]);
     res.clearCookie('userCookie');
     res.clearCookie('user_refresh_token');
     res.redirect("/")

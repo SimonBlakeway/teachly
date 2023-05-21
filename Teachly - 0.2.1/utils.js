@@ -7,6 +7,7 @@ const db = require('./config/db');
 const jwt = require("jwt-simple");
 const { compile } = require('html-to-text');
 const { errorMonitor } = require('events');
+const { token } = require('morgan');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
@@ -359,18 +360,13 @@ async function cleanUserData(user) {
 function genUserCookie(userInfo) {
 
   try {
-    // the idea behind this is that it takes the data from a PG row and return the user cookie
-    chatIds = []
-    for (i = 0; i < userInfo.length; i++) {
-      chatIds.push(userInfo[i].chat_id);
-    }
+    //the idea is it take a pg row and make the user cookie
     payload = {
       name: userInfo[0].name.trim(),
       lang: userInfo[0].lang.trim(),
       cur: userInfo[0].cur,
       id: userInfo[0].id,
       created_at: Math.floor(Date.now() / 1000),
-      chatIds: chatIds
     }
     encodedCookie = jwt.encode(payload, process.env.JWT_SECRET)
     return encodedCookie
@@ -382,12 +378,11 @@ function genUserCookie(userInfo) {
 }
 
 async function genUserRefreshToken(id) {
-  user_refresh_token = genSafeRandomStr(20)
-
-
   try {
     let result = await db.query(`SELECT user_refresh_token FROM user_info WHERE id = $1`, [id]);
     accountNumber = ""
+
+    //get corect account number
     let arr = result.rows[0].user_refresh_token
     let index = arr.findIndex(obj => Object.keys(obj).length === 0);
     if (index != -1) {
@@ -397,83 +392,84 @@ async function genUserRefreshToken(id) {
       accountNumber = result.rows[0].user_refresh_token.length + 1
     }
 
+    //create db and client token pair
     date = Math.floor(Date.now() / 1000)
-    token = {
-      user_refresh_token: user_refresh_token,
+    user_refresh_string = genSafeRandomStr(20)
+    client_token = {
+      user_refresh_string: user_refresh_string,
       id: id,
       accountNumber: accountNumber,
       created_at: date
     }
-    console.log(accountNumber)
-
-
     db_token = {
-      user_refresh_token: user_refresh_token,
+      user_refresh_string: user_refresh_string,
       accountNumber: accountNumber,
       created_at: date
     }
 
-    encodedToken = jwt.encode(token, process.env.JWT_SECRET)
+    encodedToken = jwt.encode(client_token, process.env.JWT_SECRET)
     try {
-      // db.query(`UPDATE user_info SET user_refresh_token [${accountNumber}] = $1 WHERE id = $2;`, [db_token, id]);
+      db.query(`UPDATE user_info SET user_refresh_token [${accountNumber}] = $1 WHERE id = $2;`, [db_token, id]);
       return encodedToken
     } catch (error) {
       console.log(error)
+      throw error
     }
   } catch (error) {
     console.log(error)
+    throw error
   }
 }
 
 async function refreshUserToken(id, refreshString, accountNumber, created_at) {
   try {
-    let result = await db.query('select "user_refresh_token" FROM user_info WHERE id = $1', [id]);
+    let result = await db.query(`select user_refresh_token [ ${accountNumber} ] FROM user_info WHERE id = $1`, [id]);
+
     if (result.rowCount == 0) {
       throw new Error('row count is 0');
     }
-    if (result.rows[0].user_refresh_token[accountNumber].user_refresh_token != refreshString) {
-      console.log("osaindoinsncao")
-      newRefreshTokens = result.rows[0].user_refresh_token
-      newRefreshTokens[accountNumber] = {}
-      db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2`, [newRefreshTokens, id]);
-      throw new Error('user refresh tokens are not the same');
+    db_user_refresh_token = result.rows[0].user_refresh_token
+
+
+    //check if tokens don't match
+    if (db_user_refresh_token.user_refresh_string != refreshString) {
+      db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
+      throw new Error('client/db refresh strings are not the same');
     }
-    if (result.rows[0].user_refresh_token[accountNumber].created_at != created_at) {
-      console.log("alsmasjcfn")
-      newRefreshTokens = result.rows[0].user_refresh_token
-      newRefreshTokens[accountNumber] = {}
-      db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2`, [newRefreshTokens, id]);
-      return false
+    if (db_user_refresh_token.created_at != created_at) {
+      db.query(`UPDATE user_info SET SET user_refresh_token [ ${accountNumber} ] = $2`, [{}, id]);
+      throw new Error('client/db refresh token created at are not the same');
     }
 
-    user_refresh_token = genSafeRandomStr(20)
-    date = Math.floor(Date.now() / 1000)
+    //create new token pair
+    user_refresh_string = genSafeRandomStr(20);
+    date = Math.floor(Date.now() / 1000);
 
-    token = {
-      user_refresh_token: user_refresh_token,
+    client_token = {
+      user_refresh_string: user_refresh_string,
       id: id,
       accountNumber: accountNumber,
       created_at: date
-    }
+    };
 
-    user_refresh_token = result.rows[0].user_refresh_token
-    user_refresh_token[accountNumber] = {
-      user_refresh_token: user_refresh_token,
+    db_token = {
+      user_refresh_string: user_refresh_string,
       accountNumber: accountNumber,
       created_at: date
-    }
+    };
 
-    try {
-      console.log(typeof user_refresh_token)
-      await db.query(`UPDATE user_info SET "user_refresh_token" = $1 WHERE id = $2;`, [user_refresh_token, id]);
-      encodedToken = jwt.encode(token, process.env.JWT_SECRET)
-      return encodedToken
-    } catch (error) {
-      console.log(error)
-      console.log("error")
-    }
+    //store db token and return client token
+    await db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2;`, [db_token, id]);
+
+    encoded_client_token = jwt.encode(client_token, process.env.JWT_SECRET)
+    console.log("all is good in refresh")
+    console.log(encoded_client_token)
+    console.log("all is good in refresh")
+    return encoded_client_token
   } catch (error) {
     console.log(error)
+    console.log("error refresh token")
+    throw error
   }
 }
 

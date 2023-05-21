@@ -55,7 +55,7 @@ router.get('/img', async (req, res) => {
 router.get('/rooms', async (req, res) => {
   try {
     result = await db.query(`
-       SELECT t1.chat_id, t2.name, t2.id
+       SELECT t1.chat_id, t2.name AS teacher_name, t2.id AS teacher_id
        from chat t1
          inner join user_info t2 on t2.id = t1.teacher_id
          inner join teacher_course t3 on t3.teacher_id  = t1.teacher_id
@@ -69,15 +69,15 @@ router.get('/rooms', async (req, res) => {
       //send chat profile info
 
       falseData = [
-        { "chat_id": "1222", "name": "brad Pit", "id": "1111111" },
-        { "chat_id": "1412", "name": "Makaio Zorica Asenov", "id": "1111112" },
-        { "chat_id": "1612", "name": "Sans Sanna Cabello", "id": "1111113" },
-        { "chat_id": "12122", "name": "Tijana Dorji Martín", "id": "1111114" },
-        { "chat_id": "121232", "name": "dfdfdf Pit", "id": "1111115" },
-        { "chat_id": "121352", "name": "barwgv Pit", "id": "1111116" },
-        { "chat_id": "121232", "name": "ynrebw Pit", "id": "1111117" },
-        { "chat_id": "1215532", "name": "eyehew Pit", "id": "1111118" },
-        { "chat_id": "1214362", "name": "bvbtee Pit", "id": "1111119" },
+        { "chat_id": "1222", "teacher_name": "brad Pit", "teacher_id": "1111111" },
+        { "chat_id": "1412", "teacher_name": "Makaio Zorica Asenov", "teacher_id": "1111112" },
+        { "chat_id": "1612", "teacher_name": "Sans Sanna Cabello", "teacher_id": "1111113" },
+        { "chat_id": "12122", "teacher_name": "Tijana Dorji Martín", "teacher_id": "1111114" },
+        { "chat_id": "121232", "teacher_name": "dfdfdf Pit", "teacher_id": "1111115" },
+        { "chat_id": "121352", "teacher_name": "barwgv Pit", "teacher_id": "1111116" },
+        { "chat_id": "121232", "teacher_name": "ynrebw Pit", "teacher_id": "1111117" },
+        { "chat_id": "1215532", "teacher_name": "eyehew Pit", "teacher_id": "1111118" },
+        { "chat_id": "1214362", "teacher_name": "bvbtee Pit", "teacher_id": "1111119" },
       ]
 
       res.send(falseData)
@@ -108,7 +108,7 @@ router.get('/old-messages', async (req, res) => {
         {
           "text": "character(1024) ",
           "created_at": 1212121,
-          "sender_id": 1212,
+          "sender_id": 196,
           "receiver_id": 1212,
           "chat_id": 1222,
         },

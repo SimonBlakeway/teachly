@@ -6,7 +6,7 @@
 <section style="background-color: #eee; margin-top: -30px;  ">
   <div class="pt-3 px-3">
 
-    <div class="row d-flex justify-content-around">
+    <div class="row d-flex justify-content-around h-90vh overflow-y-hidden">
 
       <div class="col m-1 dispr-mx-442p pt-2 pb-2" id="rooms">
 
@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="col m-1 p-0" id="chat-col">
-        <div id="chat-boxes" class="disappear">
+        <div id="chat-boxes" class="">
           <div id="chat-box" style="height: 87vh;" class="disappear">
             <div class="chat-profile" class="m-0 p-4 ">
               <div class="p-0 w-100" style="display: inline-flex !important; height: 40px;" href="/profile/1212">
@@ -211,6 +211,12 @@
 
 <script>
   const userId = {{ context.settings.id }}
+
+   const messages = {{ context.settings.messages }}
+
+   console.log(messages)
+
+  console.log(userId)
   var activeChat = ""
 
   function updateChatboxText(messageData, chatId) {
@@ -224,18 +230,19 @@
 
     if (userId == messageData.sender_id) {
       li.className = "message-box user-message"
+      console.log("ererererer")
     }
     else {
-      li.className = "message-box user-message"
+      li.className = "message-box contact-message"
     }
 
     li.innerHTML = `
-                <div class="card">
-                  <div class="card-body p-1">
+                <div class="card w-100">
+                  <div class="card-body p-1 w-100">
                     <p class="mb-0">${messageData.text}</p>
                   </div>
-                  <div class="card-header d-flex justify-content-between px-3 py-0">
-                    <p class="text-muted small mb-0"><i class="far fa-clock"></i>${messageData.created_at}</p>
+                  <div class="card-header d-flex justify-content-between px-3 py-0 w-100">
+                    <p class="text-muted small mb-0 float-right"><i class="far fa-clock"></i>${messageData.created_at}</p>
                   </div>
                 </div>`
     return li
@@ -307,16 +314,22 @@
 
         function generateRoom(roomData, chatData) {
           //this function exists to simplify the logic present below
+          roomClass = "p-2 border-bottom"
+          if (activeChat == roomData.chat_id) { 
+            
+            document.getElementById("no-chat-active").classList.toggle("disappear")
 
+            roomClass = "p-2 border-bottom active-room" 
+            }
           li = document.createElement('li');
-          li.id = `${roomData.chat_id}-chat`
-          li.className = "p-2 border-bottom"
+          li.id = `${roomData.chat_id}-room`
+          li.className = roomClass
           li.innerHTML = `
       <div href = "#!" class="d-flex justify-content-between" onclick='changeChat("${roomData.chat_id}")' >
               <div class="d-flex flex-row">
                 <img src="/user-image/${roomData.teacher_id}" alt="avatar" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong h-60p" width="60"></img>
                   <div class="pt-1">
-                    <p class="fw-bold mb-0">${roomData.name}</p>
+                    <p class="fw-bold mb-0">${roomData.teacher_name}</p>
                     <p class="small text-muted" id="${roomData.chat_id}-latest-text">${chatData.text}</p>
                   </div>
                 </div>
@@ -332,12 +345,14 @@
         }
 
         function generateChat(roomData, chatData) {
-          //this function exists to simplify the logic present below
+          chatClass = "chat-box disappear h-87vh"
+          if (activeChat == roomData.chat_id) { chatClass = "chat-box h-87vh active-chat" }
 
           div = document.createElement('div');
-          div.className = "chat-box disappear h-87vh"
+          div.className = chatClass;
+          div.id = `${roomData.chat_id}-chat`
           div.innerHTML = `
-      < div class="m-0 p-4 chat-profile">
+      <div class="m-0 p-0 chat-profile">
         <div class="p-0 w-100 h-40p d-inline-flex" href="/profile/${roomData.teacher_id}">
           <div class="apr-mx-442p p-0 d-flex align-items-center mx-3 h-40p w-50p d-inline-flex fs-18p"
             onclick="movetoRooms()">←</div>
@@ -350,12 +365,13 @@
             <div class="vert-ilip">⋮</div>
           </div>
         </div>
-          </div >
-      <ol id="chat-id" class="list-unstyled m-0 chat p-2 py-2">
+          </div>
+      <ol id="messages-${roomData.teacher_id}" class="list-unstyled m-0 chat p-2 py-2">
+
       </ol>
         </div >
-      <div class="p-2 m-0 send-message-box row disappear">
-        <div class="p-0 m-0 mt-0 w-100-80p">
+      <div class="p-2 m-0 send-message-box row">
+        <div class="p-0 m-0 mt-0 w-100-80p text-center">
           <textarea class="message-textarea" id="id-textarea" maxlength="1024" style="" rows="2"></textarea>
         </div>
         <div class="m-0 p-0 w-70p ml-10p">
@@ -386,7 +402,6 @@
           //storing chats in an obj simplifies the logic 
           chatObj = {}
           roomBox = document.createElement("div")
-          activedChats = []
 
           for (let i = 0; i < chatRes.length; i++) {
             mesChatId = chatRes[i].chat_id
@@ -395,21 +410,20 @@
             }
             else {
               roomIndex = getRoomIndex(roomRes, mesChatId)
-              activedChats.push(roomIndex)
               chatObj[chatRes[i].chat_id] = generateChat(roomRes[roomIndex], chatRes[i])
               chatObj[chatRes[i].chat_id].children[1].appendChild(createMessage(chatRes[i]))
               roomBox.appendChild(generateRoom(roomRes[roomIndex], chatRes[i]))
+              delete roomRes[roomIndex]
             }
           }
 
           chatArr = Object.values(chatObj);
           chatbox = document.createElement("div")
 
-          for (let i = 0; i < chatArr.length; i++) {
-            chatbox.appendChild(chatArr[i])
-          }
+          chatbox.append(...chatArr)
+
           for (let i = 0; i < roomRes.length; i++) {
-            if (activedChats.includes(i) == false) {
+            if (typeof roomRes[i] != "undefined") {
               emptyChat = {
                 text: "",
                 created_at: ""
@@ -420,24 +434,9 @@
           }
           document.getElementById("chat-rooms-ul").innerHTML = roomBox.innerHTML;
           document.getElementById("chat-boxes").innerHTML = chatbox.innerHTML;
-          console.log(activeChat)
-
-          console.log(document.getElementById(`${activeChat}-chat`))
-
-          //setTimeout(() => {
-          //  console.log(document.getElementById(`${activeChat}-chat`))
-          //}, 2000)
-
         });
       }
       await generateChatsAndRooms()
-
-
-
-
-
-      //move to chat
-      //if (activeChat != "") { document.getElementById(`${activeChat}-chat`).classList.toggle("appear")}
     }
     catch (err) {
       console.log(err)

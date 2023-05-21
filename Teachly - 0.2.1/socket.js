@@ -36,6 +36,15 @@ async function sendNotifications(id) {
 module.exports = {
   setIo: (server) => {
     const io = new Server(server);
+
+
+    io.engine.use((req, res, next) => {
+      // do something
+    
+      next();
+    });
+
+
     io.on("connection", function (socket) {
       console.log("user connected")
       let cookies = {}
