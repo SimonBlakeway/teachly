@@ -436,14 +436,37 @@ async function refreshUserToken(id, user_refresh_string, accountNumber, created_
     }
     db_token = result.rows[0].user_refresh_token
 
-    console.log(db_token)
-    console.log(client_token)
-
-
     //check if tokens don't match
     if (db_token.created_at != client_token.created_at) {
-      db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
-      throw new Error('client/db created_at are not the same');
+      if ((Math.floor(Date.now() / 1000) - req.settings.token_created_at) >= 30) { //15 min 900
+        db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
+        throw new Error('client/db created_at are not the same');
+      }
+      else {
+        console.log("ojfnwijvnqjvnqjvnjvnjnvjenvjwnvjwnv")
+        throw new Error('client/db created_at are not the same but time is less the 30 secs');
+      }
+      /*
+so the current imp has a problem
+when a user needs to refresh his token and 
+he make two requests to the server in a small amount of time
+one is proccesed befor the other is, which updates the database 
+with a new token and sends the client token to the client
+but the slower of the two request still has the old token and
+needs to reset the refresh token, to it triggers this func as well,
+but because the database has been updated the user trigger an error and 
+is logged out
+
+the current best idea is to add a conditional to the code in created_at
+checker of the refreshUserToken func, to allow the user to remain logged in for another
+minute or so, which would allow the request to complete and return to the browser, 
+where the new token has been sent, and in that case to new token is will be 
+sent on future requests
+
+this nested conditional is the current best solution i've thought of
+
+*/
+
     }
     if (db_token.user_refresh_string != client_token.user_refresh_string) {
       db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
@@ -453,6 +476,8 @@ async function refreshUserToken(id, user_refresh_string, accountNumber, created_
       db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
       throw new Error('client/db accountNumbers are not the same');
     }
+
+    console.log("all checks done")
 
     //create new token pair
     user_refresh_string = genSafeRandomStr(20);

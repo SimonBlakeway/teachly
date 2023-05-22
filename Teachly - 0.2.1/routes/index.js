@@ -5,6 +5,7 @@ const db = require('../config/db');
 
 
 
+
 async function foo() {
 
 
@@ -13,12 +14,12 @@ async function foo() {
     lang: 'en',
     cur: 'USD',
     id: 196,
-    created_at: 1684749970,
-    hasCookie: true,
+    created_at: 1684778100,
+    hasCookie: true,       
     isUser: true,
-    accountNumber: 24,
-    user_refresh_string: '79a2d063d30c526276d7',
-    token_created_at: 1684750092
+    accountNumber: 24,     
+    user_refresh_string: 'ad8457e6b3122874ca13',
+    token_created_at: 1684778825
   }
 
 
@@ -32,18 +33,13 @@ async function foo() {
   }
 }
 
-foo()
-
-
-
-
-
 
 // @desc    Landing page
 // @route   GET / 
 router.get('/', async (req, res) => {
   //res.clearCookie('user_refresh_token')
   //res.clearCookie('userCookie')
+  console.log(req.settings)
   res.render('landingPage', {
     layout: 'main',
     context: contextSetup(req.settings, ["navbar", "footer"], "landingPage"),
@@ -99,8 +95,7 @@ router.get('/user/:id', async (req, res) => {
 router.get('/chat/', async (req, res) => {
   settings = {}
   settings = req.settings
-  settings.messages =
-    settings.messages = { "foo": "erer" }
+  settings.messages = { "foo": "erer" }
   console.log(settings)
   res.render('chat', {
     layout: "main",

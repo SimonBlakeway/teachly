@@ -70,31 +70,27 @@ function cookieSettings(req, res, next) {
 
 async function refreshToken(req, res, next) {
   try {
-    console.log(req.settings)
     if (req.settings.isUser) {
-      if ((Math.floor(Date.now() / 1000) - req.settings.token_created_at) >= 30) { //15 min 900
-        try {
-          
-          userToken = await utils.refreshUserToken(req.settings.id, req.settings.user_refresh_string, req.settings.accountNumber, req.settings.token_created_at)
-          res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-          return next()
-        } catch (error) {
-          console.log("sfnwjvnjvnjwnvjvnjwnvjwnvjwvnwjvn")
-          await db.query(`UPDATE user_info SET user_refresh_token [ ${req.settings.accountNumber} ] = $1 WHERE id = $2;`, [{}, req.settings.id]);
-          res.clearCookie('userCookie');
-          res.clearCookie('user_refresh_token');
-          res.redirect("/")
-        }
-      }
-      else {
+      if ((Math.floor(Date.now() / 1000) - req.settings.token_created_at) >= 900) { //15 min 900
+        userToken = await utils.refreshUserToken(req.settings.id, req.settings.user_refresh_string, req.settings.accountNumber, req.settings.token_created_at)
+        res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
         return next()
       }
-    }
-    else {
       return next()
     }
-  } catch (error) {
     return next()
+  } catch (error) {
+    if (error.message == 'client/db created_at are not the same but time is less the 30 secs') {
+      console.log("success!!!!!!!")
+      return next()
+    }
+    else {
+      await db.query(`UPDATE user_info SET user_refresh_token [ ${req.settings.accountNumber} ] = $1 WHERE id = $2;`, [{}, req.settings.id]);
+      res.clearCookie('userCookie');
+      res.clearCookie('user_refresh_token');
+      res.redirect("/")
+      return next()
+    }
   }
 }
 
@@ -102,12 +98,8 @@ function redirectUnmatched(req, res) {
   res.redirect("/");
 }
 
-
 module.exports = {
   cookieSettings,
   refreshToken,
   redirectUnmatched
 }
-
-
-
