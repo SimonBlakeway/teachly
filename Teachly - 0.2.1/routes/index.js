@@ -3,15 +3,37 @@ const router = express.Router()
 const { contextSetup } = require(process.cwd() + '/utils.js');
 const db = require('../config/db');
 
+
+
 async function foo() {
+
+
+  clientToken = {
+    name: '12345',
+    lang: 'en',
+    cur: 'USD',
+    id: 196,
+    created_at: 1684749970,
+    hasCookie: true,
+    isUser: true,
+    accountNumber: 24,
+    user_refresh_string: '79a2d063d30c526276d7',
+    token_created_at: 1684750092
+  }
+
+
   try {
-    result = await db.query(`SELECT user_refresh_token [14] FROM user_info`);
-    console.log(result.rows[0].user_refresh_token)
+    result = await db.query(`SELECT user_refresh_token [ 24 ] FROM user_info`);
+    db_token = result.rows[0].user_refresh_token
+    console.log(db_token)
   } catch (error) {
     console.log(error)
 
   }
 }
+
+foo()
+
 
 
 
@@ -77,8 +99,8 @@ router.get('/user/:id', async (req, res) => {
 router.get('/chat/', async (req, res) => {
   settings = {}
   settings = req.settings
-  settings.messages = 
-  settings.messages = {"foo": "erer"}
+  settings.messages =
+    settings.messages = { "foo": "erer" }
   console.log(settings)
   res.render('chat', {
     layout: "main",
@@ -89,7 +111,7 @@ router.get('/chat/', async (req, res) => {
 // @desc    view user profile
 // @route   GET /user/id
 router.get('/user-image/:userId', async (req, res) => {
-  userId = req.params.chatroomId 
+  userId = req.params.chatroomId
   res.set("Cache-Control", "private, max-age=80000");
 
 

@@ -421,24 +421,37 @@ async function genUserRefreshToken(id) {
   }
 }
 
-async function refreshUserToken(id, refreshString, accountNumber, created_at) {
+async function refreshUserToken(id, user_refresh_string, accountNumber, created_at) {
   try {
-    let result = await db.query(`select user_refresh_token [ ${accountNumber} ] FROM user_info WHERE id = $1`, [id]);
+    client_token = {
+      id: id,
+      user_refresh_string: user_refresh_string,
+      accountNumber: accountNumber,
+      created_at: created_at
+    }
+    let result = await db.query(`select user_refresh_token [ ${client_token.accountNumber} ] FROM user_info WHERE id = $1`, [id]);
 
     if (result.rowCount == 0) {
       throw new Error('row count is 0');
     }
-    db_user_refresh_token = result.rows[0].user_refresh_token
+    db_token = result.rows[0].user_refresh_token
+
+    console.log(db_token)
+    console.log(client_token)
 
 
     //check if tokens don't match
-    if (db_user_refresh_token.user_refresh_string != refreshString) {
+    if (db_token.created_at != client_token.created_at) {
       db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
-      throw new Error('client/db refresh strings are not the same');
+      throw new Error('client/db created_at are not the same');
     }
-    if (db_user_refresh_token.created_at != created_at) {
-      db.query(`UPDATE user_info SET SET user_refresh_token [ ${accountNumber} ] = $2`, [{}, id]);
-      throw new Error('client/db refresh token created at are not the same');
+    if (db_token.user_refresh_string != client_token.user_refresh_string) {
+      db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
+      throw new Error('client/db user_refresh_string are not the same');
+    }
+    if (db_token.accountNumber != client_token.accountNumber) {
+      db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
+      throw new Error('client/db accountNumbers are not the same');
     }
 
     //create new token pair
@@ -462,9 +475,6 @@ async function refreshUserToken(id, refreshString, accountNumber, created_at) {
     await db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2;`, [db_token, id]);
 
     encoded_client_token = jwt.encode(client_token, process.env.JWT_SECRET)
-    console.log("all is good in refresh")
-    console.log(encoded_client_token)
-    console.log("all is good in refresh")
     return encoded_client_token
   } catch (error) {
     console.log(error)
