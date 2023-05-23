@@ -211,12 +211,6 @@
 
 <script>
   const userId = {{ context.settings.id }}
-
-   const messages = "{{ context.settings.messages }}"
-
-   console.log(messages)
-
-  console.log(userId)
   var activeChat = ""
 
   function updateChatboxText(messageData, chatId) {
@@ -254,39 +248,40 @@
     element.scrollTop = 1000 // element.scrollHeight;
   }
 
-  function sendMessage() {
-    text = document.getElementById("id-textarea").value
-    socket.emit('send message', { text: text, chatId: "" });
+  function sendMessage(id) {
+    text = document.getElementById(`${id}-chat-textarea`).value
+    socket.emit('send message', { text: text, chatId: "", chat_id: id });
     console.log(text.value)
   }
 
   function changeChat(chatId) {
-    if (chatId == activeChat) {
-      return
+    try {
+      if (chatId == activeChat) {
+        return
+        //maybe show no active chat?
+      }
+      else {
+        document.getElementById(`${activeChat}-chat`).classList.toggle("active-chat");
+        document.getElementById(`${activeChat}-room`).classList.toggle("active-room");
+        activeChat = chatId
+        document.getElementById(`${activeChat}-chat`).classList.toggle("active-chat");
+        document.getElementById(`${activeChat}-room`).classList.toggle("active-room");
+      }
     }
-    else {
-      document.getElementById(`${activeChat}-chat`).classList.toggle("appear");
-      activeChat = chatId
-      document.getElementById(`${activeChat}-chat`).classList.toggle("appear");
+    catch (err) {
+
     }
 
   }
 
   function movetoRooms() {
-    roomsCol = document.getElementById("rooms")
-    chatCol = document.getElementById("chat-col")
-    chatCol.classList.toggle("disappear");
-    roomsCol.classList.toggle("appear");
+    document.getElementById(`${activeChat}-chat`).classList.toggle("appear");
+    document.getElementById(`${activeChat}-room`).classList.toggle("disapear");
   }
 
   function moveToChat(id) {
-    activeChatElm = document.getElementById(`${activeChat}-chat`)
-    activeChatElm.classList.toggle("appear");
-
-    activeChat = id
-
-    activeChatElm = document.getElementById(`${activeChat}-chat`)
-    activeChatElm.classList.toggle("appear");
+    document.getElementById(`${activeChat}-chat`).classList.toggle("disapear");
+    document.getElementById(`${activeChat}-room`).classList.toggle("appear");
   }
 
   window.addEventListener('load', async function () {
@@ -315,14 +310,15 @@
         function generateRoom(roomData, chatData) {
           //this function exists to simplify the logic present below
           roomClass = "p-2 border-bottom"
-          if (activeChat == roomData.chat_id) { 
-            
+          if (activeChat == roomData.chat_id) {
+
             document.getElementById("no-chat-active").classList.toggle("disappear")
 
-            roomClass = "p-2 border-bottom active-room" 
-            }
+            roomClass = "p-2 border-bottom active-room"
+          }
           li = document.createElement('li');
           li.id = `${roomData.chat_id}-room`
+          li.onclick = function () { changeChat(`${roomData.chat_id}`) }
           li.className = roomClass
           li.innerHTML = `
       <div href = "#!" class="d-flex justify-content-between" onclick='changeChat("${roomData.chat_id}")' >

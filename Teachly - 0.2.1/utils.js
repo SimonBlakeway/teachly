@@ -8,6 +8,7 @@ const jwt = require("jwt-simple");
 const { compile } = require('html-to-text');
 const { errorMonitor } = require('events');
 const { token } = require('morgan');
+const { error } = require('console');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
@@ -438,7 +439,7 @@ async function refreshUserToken(id, user_refresh_string, accountNumber, created_
 
     //check if tokens don't match
     if (db_token.created_at != client_token.created_at) {
-      if ((Math.floor(Date.now() / 1000) - req.settings.token_created_at) >= 30) { //15 min 900
+      if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 30) { //15 min 900
         db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
         throw new Error('client/db created_at are not the same');
       }
@@ -674,112 +675,88 @@ function sendNotificationGlobal(id, text) {
     console.log(err)
   }
 }
-
 //ned wrk
-async function createChat(studintId, courseId) {
+async function sendMessage(chat_id, text, sender_id) {
+
+  text = compiledConvert(text)
+  created_at = Math.floor(Date.now() / 1000)
+  sender_id = sender_id
 
 
   try {
+
+    /*
+    so the reason that the messages implementation is because
+    allowing a user to 
+
+    */
+
+
     result = await db.query(`
-    SELECT *
-    FROM teacher_course 
-    FULL OUTER  JOIN  user_info  
+    INSERT INTO messages (text, created_at, sender_id, chatId) 
+    VALUES ($1, $2, $3, $4) 
+    WHERE chat_id = $2 AND (teacher_id = $3 OR student_id = $3);
+
+    SELECT t2.id
+    FROM chat t1 
+    INNER JOIN user_info t2
+      ON ((t2.id = t1.teacher_id AND t2.id !=  $3) OR (t2.id = t1.student_id AND t2.id !=  $3)  )
+    WHERE t1.chat_id = $4;
+    `, [text, created_at, sender_id, chat_id])
+
+    reciever_id = result.rows[0].id
+
+
+    //send add message to db to user
+    result = await db.query(`
+    INSERT INTO messages (text, created_at, sender_id, chatId) 
+    VALUES ($1, $2, $3, $4) 
+    WHERE chat_id = $2 AND (teacher_id = $3 OR student_id = $3);
+     `, [])
+
+    //send message to user
+    io.to(`${reciever_id}-user`).emit("recieve message", notObj);
+
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+//SELECT teacher_id, student_id FROM teacher_course WHERE teacher_course.course_id = `
+async function createChat(studintId, courseId) {
+
+  result = await db.query(`
+    SELECT user_info.banned_users
+    FROM teacher_course t1 
+    FULL OUTER  JOIN  user_info t2
       ON teacher_course.teacherId = user_info.id
     WHERE  teacher_course.courseId = $1;`, [courseId]);
 
 
-    if (result.rowCount != 1) { //if there isn't a course, return
-      return
-    }
-    if (result.rows[0].user_info == undefined) {
-      //if the user doesn't exist, return 
-      return
-    }
-    if (result.rows[0].teacher_course == undefined) {
-      //if the course doesn't exist, return 
-      return
-    }
-    if (result.rows[0].user_info.banned_users.inludes()) {
-      //if the user is banned by the teacher, return
-      return
-    }
-
-
-    try {
-      db.query(`INSERT INTO chat (student_id, teacher_id, "created_at") 
-                VALUES ($1, $2, $3) 
-                RETURNING *`, [id, user_refresh_token, accountNumber]);
-    } catch (error) {
-      console.log(error)
-    }
-    try {
-      db.query(`UPDATE user_info 
-                SET chatIds  = array_append(chatIds , $1); 
-                WHERE id = $2`, [result.rows[0].chatIds, id]);
-    } catch (error) {
-      console.log(error)
-    }
-    try {
-      db.query(`UPDATE user_info 
-                SET chatIds  = array_append(chatIds , $1);
-                WHERE id = $2`, [result.rows[0].chatIds, id]);
-    } catch (error) {
-      console.log(error)
-    }
-  } catch (error) {
-    console.log(error)
+  if (result.rowCount != 1) {
+    //if there isn't any rows, throw
+    throw new Error("I'm Evil")
   }
+  if (result.rows[0].user_info == undefined) {
+    //if the user doesn't exist, throw 
+    throw new Error("I'm Evil")
+  }
+  if (result.rows[0].teacher_course == undefined) {
+    //if the course doesn't exist, throw 
+    throw new Error("I'm Evil")
+  }
+  if (result.rows[0].user_info.banned_users.inludes(studintId)) {
+    //if the user is banned by the teacher, throw
+    throw new Error("I'm Evil")
+  }
+
+  //all checks complete, creating chat
+  db.query(`INSERT INTO chat (student_id, teacher_id, created_at, course_id) 
+                VALUES ($1, $2, $3, $4)`, [id, user_refresh_token, accountNumber]);
+
+  return true
+
 }
-//ned wrk
-async function sendMessage(id, text, chatId) {
-  text = compiledConvert(text)
-  messagesObj = {
-    text: text,
-    created_at: Math.floor(Date.now() / 1000),
-    userId: id,
-    chatId: chatId
-  }
-  //send message to user
-  io.to(`${chatId}-chat`).emit("recieve message", notObj);
-  try {
-    db.query(`INSERT INTO message VALUES ($1) WHERE chatId = $2 AND (teacherId = $3 OR studentId = $3)`, [messagesObj, chatId, id], (err, result) => {
-      if (err) {
-        console.log(err)
-      }
-    })
-
-  }
-  catch (err) {
-    console.log(err)
-  }
-}
-
-//ned wrk
-async function sendMessageNotification(id, text, chatId) {
-  text = compiledConvert(text)
-  messagesObj = {
-    text: text,
-    created_at: Math.floor(Date.now() / 1000),
-    userId: id,
-    chatId: chatId
-  }
-  //send message to user
-  io.to(`${chatId}-chat`).emit("recieve message", notObj);
-  try {
-    db.query(`INSERT INTO message VALUES ($1) WHERE chatId = $2 AND (teacherId = $3 OR studentId = $3)`, [messagesObj, chatId, id], (err, result) => {
-      if (err) {
-        console.log(err)
-      }
-    })
-
-  }
-  catch (err) {
-    console.log(err)
-  }
-}
-
-//sendMessage("")
-
 
 
 

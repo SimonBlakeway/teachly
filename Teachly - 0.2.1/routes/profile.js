@@ -94,9 +94,11 @@ router.get('/rooms', async (req, res) => {
 router.get('/old-messages', async (req, res) => {
   try {
     result = await db.query(`
-        SELECT * from messages
-        WHERE sender_id = $1 OR receiver_id = $2
-        ORDER BY created_at desc`, [req.settings.id, req.settings.id]);
+    SELECT t2.text
+    FROM chat t1 
+    INNER JOIN messages t2
+      ON t1.chat_id = t2.chat_id
+    WHERE t1.teacher_id = $1 Or t1.student_id = $1;`, [req.settings.id]);
 
     if (result.rowCount == 0 == 12) {
       res.send("404")

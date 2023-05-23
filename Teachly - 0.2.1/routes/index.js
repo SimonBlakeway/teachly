@@ -15,18 +15,26 @@ async function foo() {
     cur: 'USD',
     id: 196,
     created_at: 1684778100,
-    hasCookie: true,       
+    hasCookie: true,
     isUser: true,
-    accountNumber: 24,     
+    accountNumber: 24,
     user_refresh_string: 'ad8457e6b3122874ca13',
     token_created_at: 1684778825
   }
 
+  sender_id = 1212
+  chat_id = 1212
+
 
   try {
-    result = await db.query(`SELECT user_refresh_token [ 24 ] FROM user_info`);
-    db_token = result.rows[0].user_refresh_token
-    console.log(db_token)
+    result = await db.query(`   
+    SELECT t2.id
+    FROM chat t1 
+    INNER JOIN user_info t2
+      ON ((t2.id = t1.teacher_id AND t2.id !=  $1) OR (t2.id = t1.student_id AND t2.id !=  $1)  )
+    WHERE t1.chat_id = $2;`, [sender_id, chat_id]);
+    //db_token = result.rows[0].user_refresh_token
+    console.log(result)
   } catch (error) {
     console.log(error)
 
@@ -34,12 +42,12 @@ async function foo() {
 }
 
 
+
 // @desc    Landing page
 // @route   GET / 
 router.get('/', async (req, res) => {
   //res.clearCookie('user_refresh_token')
   //res.clearCookie('userCookie')
-  console.log(req.settings)
   res.render('landingPage', {
     layout: 'main',
     context: contextSetup(req.settings, ["navbar", "footer"], "landingPage"),
@@ -93,13 +101,9 @@ router.get('/user/:id', async (req, res) => {
 // @desc    view user profile
 // @route   GET /user/id
 router.get('/chat/', async (req, res) => {
-  settings = {}
-  settings = req.settings
-  settings.messages = { "foo": "erer" }
-  console.log(settings)
   res.render('chat', {
     layout: "main",
-    context: contextSetup(settings, ["navbar"], "chat"),
+    context: contextSetup(req.settings, ["navbar"], "chat"),
   })
 })
 
