@@ -3,54 +3,7 @@ const db = require('./config/db');
 const { CurrencyAPISetup } = require('./util-APIs/currency-conversion-util')
 const { jsonToString } = require(process.cwd() + '/utils.js');
 
-
-
-
 global.timerObj = {}
-
-
-function createAssetTimer(fileName, time) {
-  var filePath = "./private_resources/userImagesForProccesing/"
-  //just file name, no pathing
-  //time in milliseconds
-  global.timerObj[`${fileName}`] = setTimeout(async (fileName) => {
-    try {
-      await fs.promises.unlink(filePath + yourPath)
-      delete global.timerObj[`${fileName}`]
-    } catch (error) {
-      console.log(error)
-      console.log("eeeeeeeegggggegeg")
-    }
-  }, time);
-
-}
-
-function resetAssetTimer(fileName, time) {
-  var filePath = "./private_resources/userImagesForProccesing/"
-  global.timerObj[`${fileName}`] = setTimeout(async (fileName) => {
-    try {
-      await fs.promises.unlink(filePath + yourPath)
-      delete global.timerObj[`${fileName}`]
-    } catch (error) {
-      console.log(error)
-      console.log("eeeesdvdbwrqbqbqbgeg")
-    }
-  }, time);
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  *   ./private_resources/userImagesForProccesing/
@@ -89,21 +42,32 @@ function resetAssetTimer(fileName, time) {
  *   if it is not, 
  *     then the server gets the asset from the database and converts it to a file,
  *     sends the file to the client, and set up a deletion timer in the timer obj
- *     
- *   
  * 
- * 
- * 
+ *   this has better loading time, and better proccessing power usage as well.
+ *   which makes sense because it's what a lot of big companies do for stuff like this,
+ *   it's basically the "hot" data concept from google
  * 
  */
 
 
+async function assetTimer(fileName) {
+  filePath = "./private_resources/userImagesForProccesing/"
+  try {
+    await fs.promises.unlink(filePath + fileName)
+    delete global.timerObj[`${fileName}`]
+  } catch (error) {
+    console.log(error)
+  }
 
+}
 
-
-
-
-
+function createAssetTimer(fileName, time) {
+  if (global.timerObj[`${fileName}`]) {
+    //overwrites timer, used for resettings older timer
+    clearTimeout(global.timerObj[`${fileName}`])
+  }
+  global.timerObj[`${fileName}`] = setTimeout(() => { assetTimer(fileName) }, time);
+}
 
 
 
@@ -119,7 +83,6 @@ function activateThenInterval(func, time) {
     }
   }, time)
 }
-
 
 function generateValidLanguagesStaticFile() {
   validLanguagesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validLanguages.json`))
@@ -171,8 +134,7 @@ async function cleanDB() {
   }
 }
 
-
-exports.timerSetup = function () {
+function timerSetup() {
   halfAnHour = 1800000;
   sixHours = 21600000;
 
@@ -184,4 +146,10 @@ exports.timerSetup = function () {
 
   activateThenInterval(cleanDB, sixHours)
 
+}
+
+
+module.exports = {
+  timerSetup,
+  createAssetTimer,
 }
