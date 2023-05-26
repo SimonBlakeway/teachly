@@ -4,6 +4,109 @@ const { CurrencyAPISetup } = require('./util-APIs/currency-conversion-util')
 const { jsonToString } = require(process.cwd() + '/utils.js');
 
 
+
+
+global.timerObj = {}
+
+
+function createAssetTimer(fileName, time) {
+  var filePath = "./private_resources/userImagesForProccesing/"
+  //just file name, no pathing
+  //time in milliseconds
+  global.timerObj[`${fileName}`] = setTimeout(async (fileName) => {
+    try {
+      await fs.promises.unlink(filePath + yourPath)
+      delete global.timerObj[`${fileName}`]
+    } catch (error) {
+      console.log(error)
+      console.log("eeeeeeeegggggegeg")
+    }
+  }, time);
+
+}
+
+function resetAssetTimer(fileName, time) {
+  var filePath = "./private_resources/userImagesForProccesing/"
+  global.timerObj[`${fileName}`] = setTimeout(async (fileName) => {
+    try {
+      await fs.promises.unlink(filePath + yourPath)
+      delete global.timerObj[`${fileName}`]
+    } catch (error) {
+      console.log(error)
+      console.log("eeeesdvdbwrqbqbqbgeg")
+    }
+  }, time);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ *   ./private_resources/userImagesForProccesing/
+ *   
+ *   so, to work with a large amount of requests for user assets
+ *   such as images, videos, audios and possibly others,
+ *   the server takes a request from the clients, parses it to
+ *   check for any problems like authentication and invalid requests
+ *   then it queries the database for the asset, converts the compressed base 64
+ *   string into an image/video/audio, then sends it to the client and deletes the
+ *   asset. This does work, bu the problem is that it's inefficient, it makes more reqests
+ *   then is strictly necessary, and the conversion to file isn't free, and will add up
+ *   if the server is ever employed on a large enought scale, somewhere around 1000 clients
+ *   the overhead would be noticable and it would just get worse from there.
+ *   
+ *  
+ *   the possible new implementaion is designed around timers and the flow is something
+ *   like this:  
+ * 
+ *   the server has a global object that stores a timers delete the asset in an arbatrary
+ *   amount of time, probably 15 minutes or something like that. the object exists for two 
+ *   reasons, the first one it to let the sever check if the asset is in the file system and 
+ *   update the timers as needed, its basically for timer storage 
+ *   
+ *   the timers are setTimouts, they delete the file and remove the timer from the object,
+ *   which keeps the object clean.
+ * 
+ *   now that the components are explained, the request will go something like this:
+ * 
+ *   the client requests an asset from the server
+ * 
+ *   the server checks the times object to see if the asset is in the filesystem already,
+ *   if it is, 
+ *     then the server resets the timer and sends the client the asset in that order,
+ * 
+ *   if it is not, 
+ *     then the server gets the asset from the database and converts it to a file,
+ *     sends the file to the client, and set up a deletion timer in the timer obj
+ *     
+ *   
+ * 
+ * 
+ * 
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
 function activateThenInterval(func, time) {
 
   func()
@@ -25,7 +128,7 @@ function generateValidLanguagesStaticFile() {
     validLanguagesArr[i] = [validLanguagesObj.fullName[i], validLanguagesObj.code[i]];
   }
   //const content = "langugeArr = " + validLanguagesArr
-  const content = "languageArr = " +  " [ '" + validLanguagesArr.join("','") + "' ] ";
+  const content = "languageArr = " + " [ '" + validLanguagesArr.join("','") + "' ] ";
   fs.writeFile('./public/js/validLanguages.js', content, err => {
     if (err) {
       console.error(err);
@@ -39,10 +142,10 @@ function generateValidCurrenciesStaticFile() {
   currenciesArr = global.currencyObj.conversion_rates
   if (currenciesArr === undefined) { return }
   currenciesArr = Object.keys(currenciesArr)
-  const content = "currenciesArr = " +  " [ '" + currenciesArr.join("','") + "' ] ";
+  const content = "currenciesArr = " + " [ '" + currenciesArr.join("','") + "' ] ";
   fs.writeFile('./public/js/validCurrencies.js', content, err => {
-    if (err) {console.error(err)}
-    else {}
+    if (err) { console.error(err) }
+    else { }
   });
 }
 
@@ -77,8 +180,8 @@ exports.timerSetup = function () {
 
   activateThenInterval(generateValidLanguagesStaticFile, sixHours)
 
-  activateThenInterval(generateValidCurrenciesStaticFile, sixHours) 
+  activateThenInterval(generateValidCurrenciesStaticFile, sixHours)
 
-  activateThenInterval(cleanDB, sixHours) 
+  activateThenInterval(cleanDB, sixHours)
 
 }

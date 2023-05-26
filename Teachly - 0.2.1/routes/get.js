@@ -37,11 +37,25 @@ router.get('/images/profile/:id', (req, res) => {
     res.send(404)
     return
   }
-  db.query(`SELECT profileImg FROM user_info WHERE id = $1`, [req.params.id], (err, result) => {
+  db.query(`SELECT profile_img FROM user_info WHERE id = $1`, [req.params.id], (err, result) => {
     if (result.rowCount == 0) {
       res.send("404")
       return
     }
+
+    /*
+     
+     I have an idea, and it goes something like this
+
+     so when a client make a request to the server, for assets that are loaded from
+     the postgresql database, often there is already the asset loaded and stored as 
+     a file in the directory, this is especially true for assets that are requested 
+     for very often, the way it is done currently is bad, since it adds a random number 
+     at the end to stop collisions with the other asset loaded from the database.
+     which is both inefficient and janky
+
+     */
+
     directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing
     img = LZDecompress(result.rows[0].profileImg.trim())
     fs.writeFileSync(directoryPath + `${req.params.id}.png`, img, { encoding: 'base64' });

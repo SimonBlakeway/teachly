@@ -36,7 +36,7 @@
 }
 
 .active-room {
-  background-color: blue !important;
+  background-color: rgba(119, 136, 153, 0.500) !important;
 }
 
 .active-chat {
@@ -53,7 +53,9 @@
   visibility: visible !important;
 }
 
-
+.float-right {
+  float: right !important;
+}
 
 .disappear {
   display: none !important;
@@ -129,9 +131,12 @@
 }
 
 .message-box {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
+  float: right !important;
+  margin-bottom: 20px;
+}
+
+.light-grey {
+  background-color: rgb(222, 227, 232) !important;
 }
 
 #chat-col {
@@ -219,13 +224,15 @@
   border: 1px solid rgba(81, 203, 238, 1);
 }
 
-.user-message {
-  width: auto;
+.width-auto {
+  width: auto !important;
+}
+
+.float-left {
   float: left !important;
 }
 
-.contact-message {
-  width: auto;
+.float-right {
   float: right !important;
 }
 

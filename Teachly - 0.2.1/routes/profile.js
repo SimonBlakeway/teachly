@@ -75,7 +75,7 @@ router.get('/rooms', async (req, res) => {
         { "chat_id": "12122", "teacher_name": "Tijana Dorji Martín", "teacher_id": "1111114" },
         { "chat_id": "121232", "teacher_name": "dfdfdf Pit", "teacher_id": "1111115" },
         { "chat_id": "121352", "teacher_name": "barwgv Pit", "teacher_id": "1111116" },
-        { "chat_id": "121232", "teacher_name": "ynrebw Pit", "teacher_id": "1111117" },
+        { "chat_id": "121262", "teacher_name": "ynrebw Pit", "teacher_id": "1111117" },
         { "chat_id": "1215532", "teacher_name": "eyehew Pit", "teacher_id": "1111118" },
         { "chat_id": "1214362", "teacher_name": "bvbtee Pit", "teacher_id": "1111119" },
       ]

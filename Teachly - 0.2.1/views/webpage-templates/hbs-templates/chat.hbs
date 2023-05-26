@@ -12,7 +12,7 @@
 
         <div class="card">
           <div class="card-body">
-            <ul class="list-unstyled mb-0" id="chat-rooms-ul">
+            <ul class="list-unstyled mb-0" id="chat-rooms">
               <li class="p-2 border-bottom">
                 <div href="#!" class="d-flex justify-content-between">
                   <div class="d-flex flex-row">
@@ -213,30 +213,38 @@
   const userId = {{ context.settings.id }}
   var activeChat = ""
 
-  function updateChatboxText(messageData, chatId) {
-    chat = document.getElementById(`${activeChat}-chat`)
+  function updateChatboxText(messageData) {
+    //update room
+    document.getElementById(`${messageData.chat_id}-latest-message-created-hidden`).innerHTML = messageData.created_at
+    document.getElementById(`${messageData.chat_id}-latest-message-created`).innerHTML = prettyifyDate(messageData.created_at)
+    document.getElementById(`${messageData.chat_id}-latest-message-text`).innerHTML = messageData.text
 
-
+    //move room to the top
+    room = document.getElementById(`${messageData.chat_id}-room`)
+    document.getElementById(`${messageData.chat_id}-room`).remove()
+    document.getElementById(`chat-rooms`).prepend(room)
   }
 
   function createMessage(messageData) {
     li = document.createElement("li")
+    floatDirection = ""
 
     if (userId == messageData.sender_id) {
-      li.className = "message-box user-message"
-      console.log("ererererer")
+      floatDirection = "float-left"
     }
     else {
-      li.className = "message-box contact-message"
+      floatDirection = "float-right"
     }
 
+    li.className = "message-box w-100"
     li.innerHTML = `
-                <div class="card w-100">
-                  <div class="card-body p-1 w-100">
+                <div class="${floatDirection} light-grey rounded">
+                  <div class="p-1 px-2">
                     <p class="mb-0">${messageData.text}</p>
                   </div>
-                  <div class="card-header d-flex justify-content-between px-3 py-0 w-100">
-                    <p class="text-muted small mb-0 float-right"><i class="far fa-clock"></i>${messageData.created_at}</p>
+                  <div class="px-3 py-0 my-0 date">
+                    <span class="disappear">${messageData.created_at}</span>
+                    <p class="text-muted small mb-0 ${floatDirection}">${prettyifyDate(messageData.created_at)}</p>
                   </div>
                 </div>`
     return li
@@ -244,14 +252,27 @@
 
   const scrollToBottom = (id) => {
     element = document.getElementById(id);
-    console.log(element.scrollHeight)
     element.scrollTop = 1000 // element.scrollHeight;
   }
 
-  function sendMessage(id) {
-    text = document.getElementById(`${id}-chat-textarea`).value
-    socket.emit('send message', { text: text, chatId: "", chat_id: id });
-    console.log(text.value)
+  function sendMessage(chatId) {
+    textArea = document.getElementById(`${chatId}-chat-textarea`)
+    text = textArea.value
+    textArea.value = ""
+
+    mesObj = {
+      created_at: Math.floor(Date.now() / 1000),
+      text: text,
+      chat_id: activeChat,
+      sender_id: userId
+    }
+    socket.emit('send message', mesObj);
+
+    updateChatboxText(mesObj)
+
+    document.getElementById(`${mesObj.chat_id}-messages`).appendChild(createMessage(mesObj))
+    scrollToBottom(`${chatId}-messages`)
+
   }
 
   function changeChat(chatId) {
@@ -261,17 +282,18 @@
         //maybe show no active chat?
       }
       else {
-        document.getElementById(`${activeChat}-chat`).classList.toggle("active-chat");
-        document.getElementById(`${activeChat}-room`).classList.toggle("active-room");
+        if (activeChat != "") {
+          document.getElementById(`${activeChat}-chat`).classList.toggle("disappear")
+          document.getElementById(`${activeChat}-room`).classList.toggle("active-room")
+        }
+        document.getElementById(`${chatId}-chat`).classList.toggle("disappear")
+        document.getElementById(`${chatId}-room`).classList.toggle("active-room")
         activeChat = chatId
-        document.getElementById(`${activeChat}-chat`).classList.toggle("active-chat");
-        document.getElementById(`${activeChat}-room`).classList.toggle("active-room");
       }
     }
     catch (err) {
-
+      console.log(err)
     }
-
   }
 
   function movetoRooms() {
@@ -282,6 +304,25 @@
   function moveToChat(id) {
     document.getElementById(`${activeChat}-chat`).classList.toggle("disapear");
     document.getElementById(`${activeChat}-room`).classList.toggle("appear");
+  }
+
+  function setupScreenWidthChanges() {
+    //this function sets the screen to change on resize,
+    // it's here to deal with screens that are too small for both cols to show
+    // this would normally be solved with a css conditional but
+    // the interactions are too complex for that
+
+    if (window.screen.width < 400) {
+
+    }
+
+
+
+    window.addEventListener('resize', function (event) {
+      if (window.screen.width < 400) {
+
+      }
+    }, true);
   }
 
   window.addEventListener('load', async function () {
@@ -326,13 +367,13 @@
                 <img src="/user-image/${roomData.teacher_id}" alt="avatar" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong h-60p" width="60"></img>
                   <div class="pt-1">
                     <p class="fw-bold mb-0">${roomData.teacher_name}</p>
-                    <p class="small text-muted" id="${roomData.chat_id}-latest-text">${chatData.text}</p>
+                    <p class="small text-muted" id="${roomData.chat_id}-latest-message-text">${chatData.text}</p>
                   </div>
                 </div>
                 <div class="pt-1">
                   <p class="small text-muted mb-1 date">
-                    <span class="disappear">${chatData.created_at}</span>
-                    <span>${chatData.created_at}</span>
+                    <span id="${roomData.chat_id}-latest-message-created-hidden" class="disappear">${chatData.created_at}</span>
+                    <span id="${roomData.chat_id}-latest-message-created">${prettyifyDate(chatData.created_at)}</span>
                     </p>
                 </div>
             </div > `
@@ -362,16 +403,16 @@
           </div>
         </div>
           </div>
-      <ol id="messages-${roomData.teacher_id}" class="list-unstyled m-0 chat p-2 py-2">
+      <ol id="${roomData.chat_id}-messages" class="list-unstyled m-0 chat p-2 py-2">
 
       </ol>
         </div >
       <div class="p-2 m-0 send-message-box row">
         <div class="p-0 m-0 mt-0 w-100-80p text-center">
-          <textarea class="message-textarea" id="id-textarea" maxlength="1024" style="" rows="2"></textarea>
+          <textarea class="message-textarea" id="${roomData.chat_id}-chat-textarea" maxlength="1024" style="" rows="2"></textarea>
         </div>
         <div class="m-0 p-0 w-70p ml-10p">
-          <button type="button" onclick="sendMessage()" class="btn btn-light send-message-button">Send</button>
+          <button type="button" onclick="sendMessage(${roomData.chat_id})" class="btn btn-light send-message-button">Send</button>
         </div>
         `
           return div;
@@ -428,7 +469,7 @@
               roomBox.appendChild(generateRoom(roomRes[i], emptyChat))
             }
           }
-          document.getElementById("chat-rooms-ul").innerHTML = roomBox.innerHTML;
+          document.getElementById("chat-rooms").innerHTML = roomBox.innerHTML;
           document.getElementById("chat-boxes").innerHTML = chatbox.innerHTML;
         });
       }

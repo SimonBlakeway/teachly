@@ -10,8 +10,8 @@ function updateCurrencyInterval() {
     setInterval(async function () {
         try {
             res = await axios({ method: 'get', url: `/get/curConversionRatio/${userCur}` })
-            if (res.data.ratio != undefined) { 
-                updateCurrency(res.data.ratio) 
+            if (res.data.ratio != undefined) {
+                updateCurrency(res.data.ratio)
                 curConversionRatio = res.data.ratio
             }
         }
@@ -19,6 +19,19 @@ function updateCurrencyInterval() {
         }
     }, 300000);
     window.addEventListener('load', function () { updateCurrency(curConversionRatio) }, false);
+}
+
+function updateDatesInterval() {
+    setInterval(function () {
+        try {
+            updateDates()
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }, 5000);
+    window.addEventListener('load', function () { updateCurrency(curConversionRatio) }, false);
+
 }
 
 function removeElement(id) {

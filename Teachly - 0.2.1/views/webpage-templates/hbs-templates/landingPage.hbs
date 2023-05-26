@@ -14,6 +14,9 @@
     background-image: url('images/img-4.png')
   }
 
+  .text-shadow {
+    text-shadow: 2px 0px 1px rgb(255, 255, 255);
+  }
 
   .underline-none {
     text-decoration-line: none;
@@ -71,7 +74,7 @@
   <div class="row content px-1 my-5" style="height: 80vh;">
     <div class="col">
       <div class="bg-image d-flex align-items-center justify-content-center">
-        <div style="width: 50%; min-width: 280px;"  >
+        <div class="text-shadow fs-4" style="width: 50%; min-width: 280px;">
           <h1>{{context.bodyContext.companyPromise.header}}</h1>
           <p>{{context.bodyContext.companyPromise.paragraph}}</p>
         </div>

@@ -20,25 +20,39 @@
   var curConversionRatio = "{{context.settings.curRatio}}"
   updateCurrencyInterval(userCur)
 
+  updateDatesInterval()
+
   function prettyifyDate(date) { // it comes in as seconds from epoch
     try {
+
+      if (typeof date != "number") return date
+      // I made this with no internet, pls ignore horrible conditional
+      if (`${date}` == "NaN") return ""
+
       var secs = Math.floor(Date.now() / 1000) - date
-      if (secs < 60) return "{{context.layoutContext.secsAgoPrier}}" + secs + "{{context.layoutContext.secsAgoPost}}";
+      if (secs <= 1) return "1 second ago" 
+      if (secs < 60) return "{{context.layoutContext.secsAgoPrier}}" + secs + " seconds ago" //"{{context.layoutContext.secsAgoPost}}";
       if (secs < 3600) return "{{context.layoutContext.minAgoPrier}}" + Math.floor(secs / 60) + "{{context.layoutContext.minAgoPost}}";
       if (secs < 86400) return "{{context.layoutContext.hourAgoPrier}}" + Math.floor(secs / 3600) + "{{context.layoutContext.hourAgoPost}}";
       if (secs < 604800) return "{{context.layoutContext.daysAgoPrier}}" + Math.floor(secs / 86400) + "{{context.layoutContext.daysAgoPost}}";
-      return date.toDateString();
+      return new Date(secs * 1000).toLocaleDateString();
     }
     catch (err) {
+      console.log(err)
       return ""
     }
   }
 
-  function updateDates(date) { // it comes in as seconds from epoch
-    dates = document.getElementsByClassName("data")
+  function updateDates() {
+    dates = document.getElementsByClassName("date")
     for (let i = 0; i < dates.length; i++) {
-      num = date[i][0].innerHtml
-      dates[i][1].innerHtml = prettyifyDate(num)
+      try { // the try is here because I don't want an error to break the loop
+        num = parseInt(dates[i].children[0].innerHTML)
+        dates[i].children[1].innerHTML = prettyifyDate(num)
+      }
+      catch (err) {
+        console.log(err)
+      }
     }
   }
 </script>

@@ -71,6 +71,8 @@ module.exports = {
 
         socket.on("send message", async function (data) {
           try {
+            console.log("success")
+            console.log(data)
             //sendMessage(id = cookies.user_refresh_token.id, data.text, data.chatId)
 
 
