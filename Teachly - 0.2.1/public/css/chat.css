@@ -250,12 +250,7 @@
 }
 
 @media only screen and (max-width: 640px) {
-  .dispr-mx-442p {
-    visibility: hidden;
-    display: none;
-  }
-
-  .apr-mx-442p {
+  .apr-mx-640p {
     visibility: visible !important;
     display: block !important;
   }

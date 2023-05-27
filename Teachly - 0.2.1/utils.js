@@ -440,6 +440,7 @@ async function refreshUserToken(id, user_refresh_string, accountNumber, created_
     //check if tokens don't match
     if (db_token.created_at != client_token.created_at) {
       if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 30) { //15 min 900
+        console.log("diff is " + (Math.floor(Date.now() / 1000) - db_token.created_at))
         db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
         throw new Error('client/db created_at are not the same');
       }

@@ -76,15 +76,20 @@ async function refreshToken(req, res, next) {
         res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
         return next()
       }
+      else {
+        return next()
+      }
+    }
+    else {
       return next()
     }
-    return next()
   } catch (error) {
     if (error.message == 'client/db created_at are not the same but time is less the 30 secs') {
       console.log("success!!!!!!!")
       return next()
     }
     else {
+      console.log("bad!!!!!!!!")
       await db.query(`UPDATE user_info SET user_refresh_token [ ${req.settings.accountNumber} ] = $1 WHERE id = $2;`, [{}, req.settings.id]);
       res.clearCookie('userCookie');
       res.clearCookie('user_refresh_token');

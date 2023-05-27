@@ -3,10 +3,10 @@
 
 
 
-<section style="background-color: #eee; margin-top: -30px;  ">
+<section style="background-color: #eee; margin-top: -30px;">
   <div class="pt-3 px-3">
 
-    <div class="row d-flex justify-content-around h-90vh overflow-y-hidden">
+    <div class="row d-flex justify-content-around h-90vh overflow-y-hidden p-0 m-0">
 
       <div class="col m-1 dispr-mx-442p pt-2 pb-2" id="rooms">
 
@@ -78,116 +78,7 @@
         </div>
       </div>
       <div class="col m-1 p-0" id="chat-col">
-        <div id="chat-boxes" class="">
-          <div id="chat-box" style="height: 87vh;" class="disappear">
-            <div class="chat-profile" class="m-0 p-4 ">
-              <div class="p-0 w-100" style="display: inline-flex !important; height: 40px;" href="/profile/1212">
-                <div class="apr-mx-442p p-0 d-flex align-items-center mx-3" class="apr-mx-442p p-0"
-                  onclick="movetoRooms()"
-                  style="display: inline-flex !important; width: 50px; height: 40px; font-size: 18px;">
-                  <i class="fa-solid fa-arrow-left"></i>
-                </div>
-                <div style="height: 40px;" class="d-flex align-items-center">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp" alt="avatar"
-                    class="rounded-circle  ml-0 shadow-1-strong" style="display: inline-flex !important;" width="35">
-                </div>
-                <div class="profile-name  p-1 pl-3 d-flex align-items-center" id="profile-name-id">Brad Pit</div>
-                <div class="contact-options" id="contact-options-id">
-                  <div class="vert-ilip">⋮</div>
-                </div>
-              </div>
-            </div>
-            <ol id="chat-id" class="list-unstyled m-0 chat p-2 py-2">
-
-              <li class="message-box user-message">
-                <div class="card">
-                  <div class="card-body p-1">
-                    <p class="mb-0">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.
-                    </p>
-                  </div>
-                  <div class="card-header d-flex justify-content-between px-3 py-0">
-                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
-                  </div>
-                </div>
-              </li>
-              <li class="message-box contact-message">
-                <div class="card">
-                  <div class="card-body">
-                    <p class="mb-0">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.
-                    </p>
-                  </div>
-                  <div class="card-header d-flex justify-content-between px-3 py-0">
-                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
-                  </div>
-                </div>
-              </li>
-              <li class="message-box contact-message">
-                <div class="card">
-                  <div class="card-body">
-                    <p class="mb-0">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.
-                    </p>
-                  </div>
-                  <div class="card-header d-flex justify-content-between px-3 py-0">
-                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
-                  </div>
-                </div>
-              </li>
-              <li class="message-box user-message">
-                <div class="card">
-                  <div class="card-body">
-                    <p class="mb-0">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.
-                    </p>
-                  </div>
-                  <div class="card-header d-flex justify-content-between px-3 py-0">
-                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
-                  </div>
-                </div>
-              </li>
-              <li class="message-box user-message">
-                <div class="card">
-                  <div class="card-body">
-                    <p class="mb-0">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.
-                    </p>
-                  </div>
-                  <div class="card-header d-flex justify-content-between px-3 py-0">
-                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
-                  </div>
-                </div>
-              </li>
-              <li class="message-box contact-message">
-                <div class="card">
-                  <div class="card-body">
-                    <p class="mb-0">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.
-                    </p>
-                  </div>
-                  <div class="card-header d-flex justify-content-between px-3 py-0">
-                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> 12 mins ago</p>
-                  </div>
-                </div>
-              </li>
-            </ol>
-          </div>
-          <div class="p-2 m-0 send-message-box row disappear">
-            <div class="p-0 m-0" style="width: calc(100% - 80px) !important; margin-top: 0px !important;">
-              <textarea class="message-textarea" id="id-textarea" maxlength="1024" style="" rows="2"></textarea>
-            </div>
-            <div class="m-0 p-0" style="width: 70px; margin-left: 10px !important;">
-              <button type="button" onclick="sendMessage()" class="btn btn-light send-message-button">Send</button>
-            </div>
-          </div>
-        </div>
+        <div id="chat-boxes" class=""></div>
         <div id="no-chat-active" class="d-flex align-items-center justify-content-center">
           <div>
             <div>
@@ -212,6 +103,7 @@
 <script>
   const userId = {{ context.settings.id }}
   var activeChat = ""
+  var smallScreen;
 
   function updateChatboxText(messageData) {
     //update room
@@ -288,7 +180,14 @@
         }
         document.getElementById(`${chatId}-chat`).classList.toggle("disappear")
         document.getElementById(`${chatId}-room`).classList.toggle("active-room")
+
+        document.getElementById(`no-chat-active`).classList.add("disappear")
+
         activeChat = chatId
+
+        if (smallScreen) {
+          document.getElementById(`rooms`).classList.add("disappear");
+        }
       }
     }
     catch (err) {
@@ -296,33 +195,48 @@
     }
   }
 
-  function movetoRooms() {
-    document.getElementById(`${activeChat}-chat`).classList.toggle("appear");
-    document.getElementById(`${activeChat}-room`).classList.toggle("disapear");
+  function exitChat() {
+    document.getElementById(`${activeChat}-chat`).classList.toggle("disappear");
+    document.getElementById(`rooms`).classList.remove("disappear");
+    document.getElementById(`${activeChat}-room`).classList.toggle("active-room")
+    activeChat = ""
   }
 
-  function moveToChat(id) {
-    document.getElementById(`${activeChat}-chat`).classList.toggle("disapear");
-    document.getElementById(`${activeChat}-room`).classList.toggle("appear");
-  }
 
   function setupScreenWidthChanges() {
     //this function sets the screen to change on resize,
     // it's here to deal with screens that are too small for both cols to show
     // this would normally be solved with a css conditional but
     // the interactions are too complex for that
+    function resize() {
 
-    if (window.screen.width < 400) {
+      smallScreen = (window.innerWidth < 600)
 
-    }
-
-
-
-    window.addEventListener('resize', function (event) {
-      if (window.screen.width < 400) {
-
+      if (smallScreen && activeChat == "") {
+        document.getElementById("rooms").classList.remove("disappear")
+        document.getElementById(`no-chat-active`).classList.add("disappear")
       }
-    }, true);
+
+      else if (smallScreen && activeChat != "") {
+        document.getElementById("rooms").classList.add("disappear")
+        document.getElementById(`no-chat-active`).classList.add("disappear")
+        document.getElementById(`${activeChat}-chat`).classList.remove("disappear")
+      }
+
+      else if (!smallScreen && activeChat == "") {
+        document.getElementById("rooms").classList.remove("disappear")
+        document.getElementById(`no-chat-active`).classList.remove("disappear")
+      }
+
+      else if (!smallScreen && activeChat != "") {
+        document.getElementById("rooms").classList.remove("disappear")
+        document.getElementById(`no-chat-active`).classList.add("disappear")
+        document.getElementById(`${activeChat}-chat`).classList.remove("disappear")
+      }
+    }
+    resize()
+
+    window.onresize = resize
   }
 
   window.addEventListener('load', async function () {
@@ -344,24 +258,20 @@
     }
     activeChat = setupActiveChat()
 
-    try {
+    async function generateChatsAndRooms(data) {
 
-      async function generateChatsAndRooms(data) {
-
-        function generateRoom(roomData, chatData) {
-          //this function exists to simplify the logic present below
-          roomClass = "p-2 border-bottom"
-          if (activeChat == roomData.chat_id) {
-
-            document.getElementById("no-chat-active").classList.toggle("disappear")
-
-            roomClass = "p-2 border-bottom active-room"
-          }
-          li = document.createElement('li');
-          li.id = `${roomData.chat_id}-room`
-          li.onclick = function () { changeChat(`${roomData.chat_id}`) }
-          li.className = roomClass
-          li.innerHTML = `
+      function generateRoom(roomData, chatData) {
+        //this function exists to simplify the logic present below
+        roomClass = "p-2 border-bottom"
+        if (activeChat == roomData.chat_id) {
+          document.getElementById("no-chat-active").classList.toggle("disappear")
+          roomClass = "p-2 border-bottom active-room"
+        }
+        li = document.createElement('li');
+        li.id = `${roomData.chat_id}-room`
+        li.onclick = function () { changeChat(`${roomData.chat_id}`) }
+        li.className = roomClass
+        li.innerHTML = `
       <div href = "#!" class="d-flex justify-content-between" onclick='changeChat("${roomData.chat_id}")' >
               <div class="d-flex flex-row">
                 <img src="/user-image/${roomData.teacher_id}" alt="avatar" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong h-60p" width="60"></img>
@@ -378,21 +288,21 @@
                 </div>
             </div > `
 
-          return li
-        }
+        return li
+      }
 
-        function generateChat(roomData, chatData) {
-          chatClass = "chat-box disappear h-87vh"
-          if (activeChat == roomData.chat_id) { chatClass = "chat-box h-87vh active-chat" }
+      function generateChat(roomData, chatData) {
+        chatClass = "chat-box disappear h-87vh"
+        if (activeChat == roomData.chat_id) { chatClass = "chat-box h-87vh active-chat" }
 
-          div = document.createElement('div');
-          div.className = chatClass;
-          div.id = `${roomData.chat_id}-chat`
-          div.innerHTML = `
+        div = document.createElement('div');
+        div.className = chatClass;
+        div.id = `${roomData.chat_id}-chat`
+        div.innerHTML = `
       <div class="m-0 p-0 chat-profile">
         <div class="p-0 w-100 h-40p d-inline-flex" href="/profile/${roomData.teacher_id}">
-          <div class="apr-mx-442p p-0 d-flex align-items-center mx-3 h-40p w-50p d-inline-flex fs-18p"
-            onclick="movetoRooms()">←</div>
+          <div class="apr-mx-640p p-0 d-flex align-items-center mx-3 h-40p w-50p d-inline-flex fs-18p"
+            onclick="exitChat()">←</div>
           <div class="d-flex align-items-center h-40p">
             <img src="/user-image/${roomData.teacher_id}" alt="avatar"
               class="rounded-circle ml-0 shadow-1-strong d-inline-flex" width="35">
@@ -415,69 +325,67 @@
           <button type="button" onclick="sendMessage(${roomData.chat_id})" class="btn btn-light send-message-button">Send</button>
         </div>
         `
-          return div;
+        return div;
 
-        }
-
-        function getRoomIndex(roomData, chat_id) {
-          //there wasn't a good way to get index by built in functions
-          for (i = 0; i < roomData.length; i++) {
-            if (roomData[i].chat_id == chat_id) {
-              return i
-            }
-          }
-          throw new Error("chat room id not found")
-        }
-
-        chatRes = axios.get('/profile/old-messages')
-        roomRes = axios.get('/profile/rooms')
-
-        Promise.all([chatRes, roomRes]).then((data) => {
-          chatRes = data[0].data
-          roomRes = data[1].data
-
-          //storing chats in an obj simplifies the logic 
-          chatObj = {}
-          roomBox = document.createElement("div")
-
-          for (let i = 0; i < chatRes.length; i++) {
-            mesChatId = chatRes[i].chat_id
-            if (chatObj[mesChatId] != undefined) {
-              chatObj[chatRes[i].chat_id].children[1].appendChild(createMessage(chatRes[i]))
-            }
-            else {
-              roomIndex = getRoomIndex(roomRes, mesChatId)
-              chatObj[chatRes[i].chat_id] = generateChat(roomRes[roomIndex], chatRes[i])
-              chatObj[chatRes[i].chat_id].children[1].appendChild(createMessage(chatRes[i]))
-              roomBox.appendChild(generateRoom(roomRes[roomIndex], chatRes[i]))
-              delete roomRes[roomIndex]
-            }
-          }
-
-          chatArr = Object.values(chatObj);
-          chatbox = document.createElement("div")
-
-          chatbox.append(...chatArr)
-
-          for (let i = 0; i < roomRes.length; i++) {
-            if (typeof roomRes[i] != "undefined") {
-              emptyChat = {
-                text: "",
-                created_at: ""
-              }
-              chatbox.appendChild(generateChat(roomRes[i], emptyChat))
-              roomBox.appendChild(generateRoom(roomRes[i], emptyChat))
-            }
-          }
-          document.getElementById("chat-rooms").innerHTML = roomBox.innerHTML;
-          document.getElementById("chat-boxes").innerHTML = chatbox.innerHTML;
-        });
       }
-      await generateChatsAndRooms()
+
+      function getRoomIndex(roomData, chat_id) {
+        //there wasn't a good way to get index by built in functions
+        for (i = 0; i < roomData.length; i++) {
+          if (roomData[i].chat_id == chat_id) {
+            return i
+          }
+        }
+        throw new Error("chat room id not found")
+      }
+
+      chatRes = axios.get('/profile/old-messages')
+      roomRes = axios.get('/profile/rooms')
+
+      Promise.all([chatRes, roomRes]).then((data) => {
+        chatRes = data[0].data
+        roomRes = data[1].data
+
+        //storing chats in an obj simplifies the logic 
+        chatObj = {}
+        roomBox = document.createElement("div")
+
+        for (let i = 0; i < chatRes.length; i++) {
+          mesChatId = chatRes[i].chat_id
+          if (chatObj[mesChatId] != undefined) {
+            chatObj[chatRes[i].chat_id].children[1].appendChild(createMessage(chatRes[i]))
+          }
+          else {
+            roomIndex = getRoomIndex(roomRes, mesChatId)
+            chatObj[chatRes[i].chat_id] = generateChat(roomRes[roomIndex], chatRes[i])
+            chatObj[chatRes[i].chat_id].children[1].appendChild(createMessage(chatRes[i]))
+            roomBox.appendChild(generateRoom(roomRes[roomIndex], chatRes[i]))
+            delete roomRes[roomIndex]
+          }
+        }
+
+        chatArr = Object.values(chatObj);
+        chatbox = document.createElement("div")
+
+        chatbox.append(...chatArr)
+
+        for (let i = 0; i < roomRes.length; i++) {
+          if (typeof roomRes[i] != "undefined") {
+            emptyChat = {
+              text: "",
+              created_at: ""
+            }
+            chatbox.appendChild(generateChat(roomRes[i], emptyChat))
+            roomBox.appendChild(generateRoom(roomRes[i], emptyChat))
+          }
+        }
+        document.getElementById("chat-rooms").innerHTML = roomBox.innerHTML;
+        document.getElementById("chat-boxes").innerHTML = chatbox.innerHTML;
+      });
     }
-    catch (err) {
-      console.log(err)
-    }
+    await generateChatsAndRooms()
+
+    setupScreenWidthChanges()
   })
 
 </script>

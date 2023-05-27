@@ -100,15 +100,6 @@ router.get('/user/:id', async (req, res) => {
 
 // @desc    view user profile
 // @route   GET /user/id
-router.get('/chat/', async (req, res) => {
-  res.render('chat', {
-    layout: "main",
-    context: contextSetup(req.settings, ["navbar"], "chat"),
-  })
-})
-
-// @desc    view user profile
-// @route   GET /user/id
 router.get('/user-image/:userId', async (req, res) => {
   userId = req.params.chatroomId
   res.set("Cache-Control", "private, max-age=80000");
