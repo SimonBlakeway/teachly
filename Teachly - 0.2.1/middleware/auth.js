@@ -43,17 +43,20 @@ module.exports = {
     return next();
   },
   ensureSafe: function (req, res, next) {
-    try {
-      if (req.hostname != process.env.DOMAIN) { //if the request comes from a different domain it might be CSRF
-        res.send("403 Forbidden")
-      }
-      else {
+    //on ngrok the req.hostname changes which make this function send ngrok users 403 forbidden error
+    //try {
+      //if (req.hostname != process.env.DOMAIN) {
+      //  console.log("sofqij") //if the request comes from a different domain it might be CSRF
+      //  res.send("403 Forbidden")
+     // }
+      //else {
+       // console.log(req.hostname)
         return next();
-      }
-    }
-    catch {
-      res.send("400 Bad Request")
-    }
+     // }
+   // }
+   // catch {
+   //   res.send("400 Bad Request")
+ //   }
 
   }, // I might need more auth functions
 }

@@ -6,38 +6,21 @@ list of tasks
 
   >in the auth route, there isn't a lot of protection for bad input, what happens when a logged in user GETS emailValidation?
 
-  >changing the html tags dimensions to auto might be a good idea, it could add a lot of resizing power
-
   >reviews for students as well as tutors
-
-  >make it so that the css is sent seperately, so that the loading time is better, also js
-
-  >change all packages to the better import solution 
-
-  >make more custom images
-
-  >protect the db from malicious data
-
-  >all requests are exploitable, add protection
-
-  >make is so that redirects are hidden, such as included in the js, not the url
-
-  >add error handling
-
-  > express.js has an advanced page, it contains stuff like optimizations and caching
-
-
-  >the db schema needs works, for instance the "user settings" is praciticly empty
-
-  >using local storage to store images and css
 
   >I gotta fix the non user navbar
 
-  >change the en-us to en in everything
+  >the google/facebook/custom signup/login is not completely setup
 
-  >searchbar https://www.youtube.com/watch?v=szfUbzsKvtE
+  >the websites css and apearance is lackluster
 
-  >json can be store and cached in a .js file
+  >json support to express.hbs
+    https://stackoverflow.com/questions/10232574/need-handlebars-js-to-render-object-data-instead-of-object-object#:~:text=Or%2C%20you%20can%20use%2Fdefine%20a%20helper%20to%20format,note%20triple%20brackets%20to%20disable%20HTML%20encoding%20%7D%29%3B
+
+  >rust addons to increase speed
+
+
+
 
 
 This app uses Node.js/Express/MongoDB with Google OAuth for authentication

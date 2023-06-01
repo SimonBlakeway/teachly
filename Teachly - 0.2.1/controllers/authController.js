@@ -243,12 +243,26 @@ exports.settings = function (req, res) {
 
   validSettings = ["lang", "cur"]
 
+  settings = {}
+  encodedUserCookie = false
+  encodedUserToken = false
+
+  try {
+    encodedUserCookie = req.cookies.userCookie
+  } 
+  catch {}
+
+  try {
+    encodedUserToken = req.cookies.userToken
+  } 
+  catch {}
+
   try {
     change = req.body
 
-    if ((req.cookies.userCookie)) {
+    if (encodedUserCookie) {
       if (validSettings.includes(change.settingName) && (Object.keys(change).length != 0)) {
-        if (req.cookies.req.user_refresh_token) {
+        if (encodedUserToken) {
    
           userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
           userToken[`${change.settingName}`] = change.change

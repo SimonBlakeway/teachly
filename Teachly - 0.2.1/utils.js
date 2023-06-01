@@ -368,6 +368,7 @@ function genUserCookie(userInfo) {
       cur: userInfo[0].cur,
       id: userInfo[0].id,
       created_at: Math.floor(Date.now() / 1000),
+      email: userInfo.email,
     }
     encodedCookie = jwt.encode(payload, process.env.JWT_SECRET)
     return encodedCookie
@@ -655,7 +656,6 @@ function sendNotification(text, id) {
   }
 }
 
-
 function sendNotificationGlobal(id, text) {
   try {
     notObj = {
@@ -676,6 +676,13 @@ function sendNotificationGlobal(id, text) {
     console.log(err)
   }
 }
+
+function currencyFloatToInt(num) {
+  return num
+
+}
+
+
 //ned wrk
 async function sendMessage(chat_id, text, sender_id) {
 
@@ -723,7 +730,7 @@ async function sendMessage(chat_id, text, sender_id) {
     console.log(err)
   }
 }
-//SELECT teacher_id, student_id FROM teacher_course WHERE teacher_course.course_id = `
+
 async function createChat(studintId, courseId) {
 
   result = await db.query(`
@@ -798,6 +805,7 @@ module.exports = {
   sendNotificationGlobal,
   escapeStr,
   unEscapeStr,
+  currencyFloatToInt,
 }
 
 

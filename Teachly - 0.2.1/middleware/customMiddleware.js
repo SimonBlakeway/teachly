@@ -9,11 +9,23 @@ function parseJwt(token) {
 
 function cookieSettings(req, res, next) {
 
-  try {
-    settings = {}
+  settings = {}
+  encodedUserCookie = false
+  encodedUserToken = false
 
-    if (req.cookies.userCookie) {
-      if (req.cookies.user_refresh_token) {
+  try {
+    encodedUserCookie = req.cookies.userCookie
+  } 
+  catch {}
+
+  try {
+    encodedUserToken = req.cookies.userToken
+  } 
+  catch {}
+  try {
+
+    if (encodedUserCookie) {
+      if (encodedUserToken) {
         userToken = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
         userCookie = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
 

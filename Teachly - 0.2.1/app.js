@@ -7,9 +7,12 @@ const exphbs = require('express-handlebars');
 const app = express()
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-//cors = require('cors'); // useful, but a security risk
+cors = require('cors'); // useful, but a security risk
 const db = require('./config/db');
 const customTimers = require('./customTimers');
+
+app.use(cors())
+
 
 //setting up procces.env
 dotenv.config(dotenv.config({ path: './config/config.env' }));
@@ -84,6 +87,9 @@ app.use('/auth', require('./routes/auth'))
 
 // user profile routes
 app.use('/profile', require('./routes/profile'))
+
+// stripe payment Routes
+app.use('/gateway/stripe', require('./routes/stripe'))
 
 
 // if the url is unmatched, redirect to homepage

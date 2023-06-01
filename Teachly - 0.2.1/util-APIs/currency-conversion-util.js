@@ -1,5 +1,5 @@
 dotenv = require('dotenv')
-dotenv.config({ path: './config/config.env' }) // to get api key
+dotenv.config({ path: './config/config.env' }) 
 const axios = require('axios');
 
 //url for the currency api
