@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 5
 //app.use(bodyParser.json({ limit: "10mb" }))
 app.use(cookieParser());
 
-app.use(require('./middleware/auth.js').ensureSafe)
+//app.use(require('./middleware/auth.js').ensureSafe) //breaks with ngrok
 app.use(require('./middleware/customMiddleware.js').cookieSettings)
 app.use(require('./middleware/customMiddleware.js').refreshToken)
 

@@ -48,7 +48,7 @@ async function foo() {
 router.get('/', async (req, res) => {
   //res.clearCookie('user_refresh_token')
   //res.clearCookie('userCookie')
-  console.log(req)
+  console.log(req.cookies)
   res.render('landingPage', {
     layout: 'main',
     context: contextSetup(req.settings, ["navbar", "footer"], "landingPage"),

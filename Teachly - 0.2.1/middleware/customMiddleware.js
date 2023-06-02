@@ -19,7 +19,7 @@ function cookieSettings(req, res, next) {
   catch {}
 
   try {
-    encodedUserToken = req.cookies.userToken
+    encodedUserToken = req.cookies.user_refresh_token
   } 
   catch {}
   try {
