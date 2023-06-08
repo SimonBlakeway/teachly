@@ -5,29 +5,7 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
-d = `  
-    SELECT created_at  FROM teacher_course
-      WHERE taught_in = 'en'
-      AND subject =  'english'
-      AND price_per_lesson > 1
-      AND price_per_lesson < 50
-        ORDER BY number_of_active_students ASC
-      LIMIT 10 ;`
 
-async function what() {
-  try {
-    result = await db.query(`  
-    SELECT taught_in FROM teacher_course
-    
-      `)
-    console.log(result)
-  }
-  catch (err) {
-    console.log(err)
-  }
-}
-
-//what()
 
 function escapeStrArr(arr) {
   try {
@@ -113,8 +91,12 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   if (((pricePerLessonRange[0] > 50) || (pricePerLessonRange[0] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
   if (((pricePerLessonRange[1] > 50) || (pricePerLessonRange[1] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
   if (!utils.isValidSubject(lang, subject)) { res.json({ "err": "invalid subject" }) }
+
+  //COUNT(course_id)  returns the amount of vals that pass the query, might break with LIMIT clause
+  //maybe break query into two queries?
+  // solution https://9to5answer.com/equivalent-of-found_rows-function-in-postgresql
   queryString = `
-  SELECT created_at  FROM teacher_course
+  SELECT created_at, COUNT(course_id)   FROM teacher_course
   WHERE taught_in = '${lang}'
   AND subject =  '${subject}' 
   AND price_per_lesson > ${pricePerLessonRange[0]}  
