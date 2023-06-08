@@ -6,9 +6,6 @@ const LZString = require('lz-string');
 const db = require('./config/db');
 const jwt = require("jwt-simple");
 const { compile } = require('html-to-text');
-const { errorMonitor } = require('events');
-const { token } = require('morgan');
-const { error } = require('console');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 

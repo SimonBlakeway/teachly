@@ -124,6 +124,9 @@
       height: 47px !important;
       border-radius: 50% !important;
     }
+    .button-outline {
+      border: 3px solid rgb(48, 47, 53) !important;
+    }
 
     #notifications-popup {
       height: 360px;

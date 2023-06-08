@@ -277,10 +277,11 @@
             <div class="row d-flex align-items-center justify-content-center m-0 p-2 mb-3 bg-dkr-lght-color mn-w-270p"
               style="height: 104.5px;">
               <div class="h-200p">
-                <div class="my-2 bg-dkr-lght-color">{{context.bodyContext.courseImg}}</div>
+                <div class="my-2 mx-3">{{context.bodyContext.courseImg}}</div>
                 <div class="d-flex align-items-center justify-content-center">
-                  <div id="course-image" class="border rounded border-primary bg-dkr-lght-color" onclick="getFile()"
-                    style="padding-top: 10px; height: 44px; width:240px !important; overflow:hidden;">
+                  <div id="course-image" class="border rounded border-primary bg-dkr-lght-color overflow-hidden"
+                    onclick="getFile()"
+                    style="padding-top: 10px; height: 40px; width:240px !important; overflow:hidden !important; margin-bottom: 1px !important;">
                     {{context.bodyContext.clickUploadImageRatio}}</div>
                   <div class=""
                     style='height: 0px;width: 0px; overflow:hidden; position: absolute; margin-right: 320px; margin-bottom: 20px;'>
@@ -605,19 +606,17 @@
       if (!basicCourseObjCheck(courseData)) {
         return
       }
-      sendReq(courseData)
 
-
+      // lzstring returns a promise, so must make sure is complete
+      Promise.resolve(courseData.courseImg).then(function (value) {
+        sendReq(courseData)
+      })
     }
     catch (err) {
       console.log(err)
-
     }
-
   }
-
   window.addEventListener('load', async function () {
-
     async function populateSubjects() {
       try {
         res = await axios.get('/get/validSubject')
@@ -653,7 +652,6 @@
       }
       catch (err) {
       }
-
     }
     subjects = await populateSubjects()
     populateSpecialities(subjects)

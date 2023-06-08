@@ -221,7 +221,6 @@ exports.facebookLogin = async function (req, res) {
 exports.logout = async function (req, res) {
 
   try {
-    console.log(req.settings.accountNumber, "acount number")
     accountNumber = req.settings.accountNumber
     db.query(`UPDATE user_info SET user_refresh_token [${accountNumber}] = $1 WHERE id = $2;`, [{}, req.settings.id]);
     res.clearCookie('userCookie');

@@ -1,15 +1,33 @@
 const jwt = require("jwt-simple")
+const axios = require('axios');
 const baseZoomUrl = "https://api.zoom.us/v2"
-email = procces.env.ZOOM_EMAIL
-//Use the zoom ApiKey and APISecret from config.js
-const payload = {
-    iss: process.env.ZOOM_KEY,
-    exp: ((new Date()).getTime() + 5000)
-};
-const token = jwt.sign(payload, process.env.ZOOM_SECRET);
+email = process.env.ZOOM_EMAIL
+var access_token = "";
+
+async function setToken() {
+    try {
+        url = `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${process.env.ZOOM_ACCOUNT_ID}`
+        result = await axios.post(url, {}, {
+            auth: {
+                username: process.env.ZOOM_CLIENT_ID,
+                password: process.env.ZOOM_SECRET_KEY
+            }
+        })
+        access_token =  result.data.access_token
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+setInterval(async () => {
+    //refresh access token every 50 min
+    setToken(access_token)
+}, 1000 * 60 * 50);
 
 
-//meetingId is supposed to be meetingUUID in some places, nopt sure of difference
+
+
+
 async function createMeeting(topic, duration) {
     //now
     start_time = new Date().toISOString().substring(0, 18) //format 2023-06-03T12:56:03
@@ -41,14 +59,21 @@ async function createMeeting(topic, duration) {
             }
         }, {
             headers: {
-                'Authorization': 'Bearer ' + token,
-                'User-Agent': 'Zoom-api-Jwt-Request',
+                'Authorization': 'Bearer ' + access_token,
+                'User-Agent': 'Zoom-api-Jwt-Request', //pos remove
                 'content-type': 'application/json'
             }
         });
-        console.log(result)
-        //return meeting id, result.body.id
-        //return url to redirect user, result.body.join_url
+        retObj = {
+            id: result.data.id,
+            uuid: result.data.uuid,
+            start_url: result.data.start_url,
+            duration: result.data.duration,
+            password: result.data.password,
+            start_time: result.data.start_time
+
+        }
+        return retObj
     } catch (error) {
         console.log(error);
     }
@@ -165,4 +190,5 @@ module.exports = {
     getMeetingDetails,
     getMeetingRecording,
     deleteMeetingRecordings,
+    setToken,
 }

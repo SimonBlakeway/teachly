@@ -64,9 +64,9 @@ app.use(function (req, res, next) {
 
 
 app.use('/', express.static(path.join(__dirname, 'public'), {
- // setHeaders: function (res, path) {
- //   res.set("Cache-Control", "private, max-age=0");
- // }
+  // setHeaders: function (res, path) {
+  //   res.set("Cache-Control", "private, max-age=0");
+  // }
 }));
 
 
@@ -96,6 +96,10 @@ app.use('/gateway/stripe', require('./routes/stripe'))
 app.use(require('./middleware/customMiddleware.js').redirectUnmatched)
 
 
+const zoomApi = require('./util-APIs/zoom-api')
+
+//zoomApi.createMeeting("topic", 20)
+
 
 
 const http = require('http');
@@ -107,6 +111,19 @@ const io = socketio.setIo(server);
 // Static files
 app.use(express.static("public"));
 
-server.listen(3001, () => {
-    console.log('server listening on port 3001');
-})
+//promises
+//zoomApi.setToken()
+
+
+//the server makes calls to varying apis to get tokens/info
+//and this is a way to make sure that the calls will be completed
+Promise.all([() => {}]).then(() => {
+   //zoomApi.createMeeting("topic", 20)
+
+  port = Number(process.env.PORT)
+  server.listen(port, () => {
+    console.log(`server listening on port ${port}`);
+  })
+
+});
+
