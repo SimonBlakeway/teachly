@@ -5,6 +5,35 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
+async function joke() {
+
+  str = `
+  SELECT COUNT ( * )  FROM teacher_course 
+  WHERE subject =  'english'
+  AND price_per_lesson > 1
+  AND price_per_lesson < 50
+  AND ( ( 'en' = ANY (taught_in) ) )
+
+
+
+`
+
+  try {
+    result = await db.query(str)
+
+    console.log(result)
+
+  }
+
+  catch (err) {
+    console.log(err)
+
+  }
+}
+
+joke()
+
+
 
 
 function escapeStrArr(arr) {
@@ -79,45 +108,59 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   reqObj = req.body
   lang = req.settings.lang
 
+
   pricePerLessonRange = reqObj.pricePerLessonRange ? (reqObj.pricePerLessonRange) : [1, 50];
   subject = reqObj.subject ? (reqObj.subject) : "english";
   specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, escapeStrArr(reqObj.specialities))
   orderByQueryString = utils.convertOrderByToQuery(reqObj.orderBy)
   timeRangeQueryString = utils.convertTimeRangeToQuery(reqObj.availableTimes)
   taughtInToQuery = utils.convertTaughtInToQuery(reqObj.taughtIn)
-  amount = (reqObj.amount) ? (reqObj.amount) : 10;
   searchByKeywordQueryString = utils.convertSearchByKeywordToQuery(reqObj.searchby)
   pagePlace = Number(reqObj.pagePlace) ? Number(reqObj.pagePlace) * 10 : 0;
   if (((pricePerLessonRange[0] > 50) || (pricePerLessonRange[0] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
   if (((pricePerLessonRange[1] > 50) || (pricePerLessonRange[1] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
   if (!utils.isValidSubject(lang, subject)) { res.json({ "err": "invalid subject" }) }
 
-  //COUNT(course_id)  returns the amount of vals that pass the query, might break with LIMIT clause
-  //maybe break query into two queries?
-  // solution https://9to5answer.com/equivalent-of-found_rows-function-in-postgresql
   queryString = `
-  SELECT created_at, COUNT(course_id)   FROM teacher_course
-  WHERE taught_in = '${lang}'
-  AND subject =  '${subject}' 
+  SELECT created_at FROM teacher_course
+  WHERE subject =  '${subject}'
   AND price_per_lesson > ${pricePerLessonRange[0]}  
   AND price_per_lesson < ${pricePerLessonRange[1]}  
+  ${specialityQueryString}
+  ${searchByKeywordQueryString}
+  ${timeRangeQueryString}
+  ${taughtInToQuery}
+  ${specialityQueryString}
+  ${specialityQueryString}
+  ${orderByQueryString}
+  LIMIT ${10} OFFSET ${pagePlace - 1};
   `
-  if (specialityQueryString) { queryString += "" + specialityQueryString }
-  if (searchByKeywordQueryString) { queryString += searchByKeywordQueryString }
-  if (timeRangeQueryString) { queryString += "  " + timeRangeQueryString }
-  if (orderByQueryString) { queryString += orderByQueryString }
-  if (taughtInToQuery) {queryString += taughtInToQuery}
-  queryString += `  LIMIT ${amount} ;` //OFFSET ${pagePlace};
+  /*
+   * maybe cache countResult on the server?
+   * say if their is 1000s of requests for the courses,
+   * there's gonna be overlap, right? and by storing the 
+   * count on the server it could result in overall less db requests
+   * since the result can just be handed to the user,
+   */
   try {
-    //result = await db.query(queryString);
-    console.log(queryString)
-    //console.log(result.rows)
-    if (false) { //result.rows.length  != 0) {
-      //  res.json({ "result": result.rows })
-    }
-    else {
-      res.json({ "err": 404 })
-    }
+    countQuery = `SELECT COUNT ( * )  FROM teacher_course \n  ` + "WHERE" + queryString.split("WHERE")[1].split("ORDER BY")[0]
+    countResult = (reqObj.pageAmount == -1) ? db.query(countQuery) : reqObj.pageAmount
+    courseResult = db.query(queryString);
+
+    Promise.all([courseResult, countResult]).then((vals) => {
+      console.log(Number(vals[1].rows[0].count))
+
+      if (typeof vals[1] != "object") {
+        res.json({ "courses": vals[0].rows, "countResult": reqObj.pageAmount })
+      }
+      else {
+        res.json({ "courses": vals[0].rows, "countResult": Number(vals[1].rows[0].count) })
+      }
+    }).catch(err => {
+      console.log(countQuery)
+      console.log(err)
+      res.json({ "err": "bad query" })
+    })
   } catch (error) {
     console.log(error)
     res.json({ "err": "server error" })

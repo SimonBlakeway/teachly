@@ -323,7 +323,19 @@
         align-items: center;
     }
 
-    .read-more-button {}
+    .read-more-button {
+        border: none;
+        background: rgba(0, 0, 0, 0);
+        font-size: 19px;
+        border-radius: 5%;
+    }
+
+    .read-more-button:hover {
+        background: rgba(0, 0, 0, 0.05);
+        transition: 0.2s;
+        transform: scale(1.1)
+    }
+
 
     .course-img {
         object-fit: cover;
@@ -517,6 +529,8 @@
 </div>
 
 <script>
+
+    localStorage.clear();
     const subject = "{{context.settings.subject}}"
     const speciality = "{{context.settings.speciality}}"
 
@@ -526,11 +540,11 @@
             "specialities": [],
             "priceRange": [10, 60],
             "searchby": "",
-            "taughtIn": [],
+            "taughtIn": [userLang],
             "orderBy": "Popularity",
             "availableTimes": [],
             "pagePlace": 1,
-            "offset": 1
+            "pageNum": 1
 
         }
         teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
@@ -552,8 +566,6 @@
         for (i = 0; i < teachlyFormData.specialities.length; i++) {
             document.getElementById(teachlyFormData.specialities[i].replaceAll("'", "&apos").replaceAll(" ", "-")).checked = true;
         }
-        if (teachlyFormData.taughtIn.length == 0) { document.getElementById(userLang).checked = true }
-
 
         range1Shown = document.getElementById('min-price-shown');
         range2Shown = document.getElementById('max-price-shown');
@@ -599,7 +611,9 @@
         document.getElementById(teachlyFormData.orderBy.replaceAll(" ", "-")).checked = true;
         document.getElementById('orderBy-button').innerHTML = teachlyFormData.orderBy;
 
-        for (i = 0; i < teachlyFormData.taughtIn.length; i++) { document.getElementById(teachlyFormData.taughtIn[i]).checked = true; }
+        for (i = 0; i < teachlyFormData.taughtIn.length; i++) {
+            document.getElementById(teachlyFormData.taughtIn[i]).checked = true;
+        }
         for (i = 0; i < teachlyFormData.availableTimes.length; i++) {
             document.getElementById(teachlyFormData.availableTimes[i]).classList.add("active-time-slot-div");
         }
@@ -818,10 +832,18 @@
     }
 
     async function searchCourses(offset) {
+
+
         try {
             teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
 
             if (teachlyFormData.offset == offset) { return }
+
+
+            if (typeof window.pageAmount == "undefined") {
+                window.pageAmount = -1
+            }
+            teachlyFormData.pageAmount = window.pageAmount
 
             res = await axios({
                 method: 'post',
@@ -958,18 +980,15 @@
     }
 
     function readMoreDescToggle(dotsId, MoreId, btnId) {
-        var dots = document.getElementById(dotsId);
-        var moreText = document.getElementById(MoreId);
-        var btnText = document.getElementById(btnId);
-
+        let dots = document.getElementById(dotsId);
         if (dots.style.display === "none") {
             dots.style.display = "inline";
-            btnText.innerHTML = "Read more";
-            moreText.style.display = "none";
+            document.getElementById(btnId).innerHTML = "Read more";
+            document.getElementById(MoreId).style.display = "none";
         } else {
             dots.style.display = "none";
-            btnText.innerHTML = "Read less";
-            moreText.style.display = "inline";
+            document.getElementById(btnId).innerHTML = "Read less";
+            document.getElementById(MoreId).style.display = "inline";
         }
     }
 
@@ -1095,12 +1114,12 @@
                     </div>
                 </div>
                 <div id="no-courses" class="center-inner fs-1 hidden">
-                    <div>
+                    <div class="center-inner">
                         no courses
                     </div>
                 </div>
                 <div id="server-error" class="center-inner fs-1 hidden">
-                    <div>
+                    <div class="center-inner">
                         server error
                     </div>
                 </div>

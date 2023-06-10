@@ -46,7 +46,6 @@ module.exports = {
 
 
     io.on("connection", function (socket) {
-      console.log("user connected")
       let cookies = {}
       try {
 

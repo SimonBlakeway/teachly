@@ -436,7 +436,7 @@
     chosenSpec = []
     for (i = 0; i < innerDivs.length; i++) {
       if (innerDivs[i].children[0].checked) {
-        chosenSpec.push(innerDivs[i].children[1].innerText)
+         chosenSpec.push(innerDivs[i].children[1].id.split("-")[0])
       }
     }
     if (chosenSpec.length != 0) {
@@ -607,9 +607,11 @@
         return
       }
 
+      console.log(courseData)
+
       // lzstring returns a promise, so must make sure is complete
       Promise.resolve(courseData.courseImg).then(function (value) {
-        sendReq(courseData)
+        //sendReq(courseData)
       })
     }
     catch (err) {
@@ -663,7 +665,7 @@
       node = document.createElement("div");
       node.innerHTML = `
                     <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[0]}" name="${langPair[0]}" onclick='setTaughtIn()'></input>
-                    <label class="form-check-label text-dark" for=${langPair[0]}>${langPair[0]}</label><br>`;
+                    <label class="form-check-label text-dark" id="${langPair[1]}-label" for=${langPair[0]}>${langPair[0]}</label><br>`;
       document.getElementById("taughtIn-list").appendChild(node);
     }
 

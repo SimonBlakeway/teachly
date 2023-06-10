@@ -444,6 +444,8 @@ async function refreshUserToken(id, user_refresh_string, accountNumber, created_
       }
       else {
         console.log("ojfnwijvnqjvnqjvnjvnjnvjenvjwnvjwnv")
+        console.log(db_token, "db_token")
+        console.log(client_token, "client_token")
         throw new Error('client/db created_at are not the same but time is less the 30 secs');
       }
       /*
@@ -526,6 +528,7 @@ function langugeToLanguageCode(lang) {
 //a// query functions convert data from a client into valid postgresql code
 
 function convertTaughtInToQuery(languages) {
+//  console.log(languages, "retsaccacas")
   try {
     if (languages == []) { return "" }
     var queryString = `AND (`
@@ -540,8 +543,8 @@ function convertTaughtInToQuery(languages) {
         else { str = ` OR ( '${languages[i]}' = ANY (taught_in) )` }
         queryString += str
       }
-      if (queryString == "AND (") { return false }
-      return queryString + ` \r\n`
+      if (queryString == "AND (") { return "" }
+      return queryString + `) \r\n`
 
 
     }
@@ -553,7 +556,7 @@ function convertTaughtInToQuery(languages) {
       queryString += ` '${languages}' = ANY (taught_in) )`
 
       if (queryString == "AND (") { return false }
-      return queryString + ` \r\n`
+      return queryString + `) \r\n`
 
     }
 
@@ -577,11 +580,11 @@ function convertTimeRangeToQuery(arr) {
     }
     queryString += ` )`
 
-    if (queryString == "AND ( )") { return false }
+    if (queryString == "AND ( )") { return "" }
     return queryString + `\r\n`
   } catch (error) {
     console.log(error)
-    return false
+    return ""
   }
 }
 
@@ -590,18 +593,18 @@ function convertspecialityArrToQuery(lang, subjectName, specialities) {
   var queryString = `AND (`
   try {
     for (i = 0; i < specialities.length; i++) {
-      if (!(isValidSubjectSpeciality(lang, subjectName, specialities[i]))) { return false }
+      if (!(isValidSubjectSpeciality(lang, subjectName, specialities[i]))) { return "" }
       str = "";
       if (i == 0) { str = ` ( '${specialities[i]}' = ANY (specialities) )` }
       else { str = ` OR ( '${specialities[i]}' = ANY (specialities) )` }
       queryString += str
     }
-    if (queryString == "AND (") { return false }
+    if (queryString == "AND (") { return "" }
     return queryString + ` ) \r\n`
   }
   catch (err) {
     console.log(err)
-    return false
+    return ""
 
   }
 }
@@ -614,21 +617,24 @@ function convertOrderByToQuery(str) {
     "Number of reviews": `  ORDER BY numberOfReviews ASC`,
     "Best rating": `  ORDER BY rating ASC`,
   }
-  return orderByValidTypes[str] + "\r\n"
+  if (typeof orderByValidTypes[str] != "undefined") {
+    return orderByValidTypes[str] + "\r\n"
+  }
+  return ""
 }
 
 function convertSearchByKeywordToQuery(str) {
   try {
     if (str) {
-      queryString = `AND tsvector @@ to_tsquery('${str}') \n`
+      queryString = `AND ts_vector @@ to_tsquery('${str}') \n`
       return queryString
     }
     else {
-      return false
+      return ""
     }
   }
   catch (err) {
-    throw err
+    return ""
   }
 }
 
