@@ -3,24 +3,24 @@
 <script src="/js/validLanguages.js"></script>
 <div class="navbar text-light" onclick="clearNavPopups()">
     <div style="float: left; padding-left: 10px;">
-        <h2>Teachly</h2>
+        <a href="/" class="light-blue-text-shadow normal-text fs-2 blue-hover">Teachly</a>
     </div>
     <div class="float-right">
         <div id="profile-buttons" class="d-flex align-items-center justify-content-center"
             onclick="event.stopPropagation();">
-            <div style="width: 40px;" class="m-0 ">
+            <div style="width: 40px;" class="m-0 blue-text-shadow">
                 <i onclick="toggleNavPopup('navlist-popup')" class="fa fa-bars"
-                    style="height: 30px; width: 30px; font-size: 30px;"></i>
+                    style="height: 30px; width: 30px; font-size: 30px; padding-top: 5px;"></i>
             </div>
             <div id="settings-buttons-list" class="dispr-mx-442p p-1" onclick="event.stopPropagation();">
                 <div class="d-flex align-items-center justify-content-center">
                     <div class="m-2">
                         <button onclick="toggleNavPopup('language-popup')" type="button"
-                            class="btn btn-primary text-uppercase button-outline">{{settings.lang}}</button>
+                            class="btn btn-outline-primary">{{settings.lang}}</button>
                     </div>
                     <div>
                         <button onclick="toggleNavPopup('currency-popup')" type="button"
-                            class="btn btn-primary button-outline">{{settings.cur}}</button>
+                            class="btn btn-outline-primary">{{settings.cur}}</button>
                     </div>
                 </div>
             </div>

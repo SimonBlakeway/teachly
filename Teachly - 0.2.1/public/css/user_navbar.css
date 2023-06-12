@@ -125,8 +125,13 @@
       height: 47px !important;
       border-radius: 50% !important;
     }
-    .button-outline {
-      border: 3px solid rgb(48, 47, 53) !important;
+
+    .light-blue-text-shadow {
+      text-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
+    }
+
+    .blue-text-shadow {
+      text-shadow: 1.5px 1.5px 0px #0f3778, -1.5px -1.5px 0px #103777, 1.5px -1.5px 0px #0e3574, -1.5px 1.5px 0px #0c3c89;
     }
 
     #notifications-popup {
@@ -134,6 +139,16 @@
       width: 280px;
       border-width: 5px;
       border-bottom-width: 20px;
+    }
+
+    .normal-text {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .blue-hover:hover {
+      transition-duration: 100;
+      color: #0f3778;
     }
 
     @media only screen and (max-width: 460px) {

@@ -4,6 +4,8 @@
 
 
 
+
+
 <style>
   #create-course {
     /* fallback for old browsers */
@@ -371,10 +373,19 @@
 </div>
 
 <script>
+  const imageWorker = new Worker('/js/imageWorker.js');
+  imageWorker.onmessage = function (e) {
+    console.log(e.data);
+  };
+
+  str= `To solve the "Uncaught SyntaxError: Unexpected token" error, make sure: You don't have a <script /> tag that points to an HTML file, instead of a JS file. You aren't requesting an HTML file from a server, instead of request`
+
+  imageWorker.postMessage("base64Image");
+
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   var specialitiesObj = {};
-  var subjectObj = [];
-  var imageStr = ""
+  var imageStr = false
+  var taughtInArr = []
 
   function setSubject(subject) {
     document.getElementById("subject").innerText = subject
@@ -434,9 +445,11 @@
   function setTaughtIn() {
     innerDivs = document.getElementById("taughtIn-list").children
     chosenSpec = []
+    taughtInArr = []
     for (i = 0; i < innerDivs.length; i++) {
       if (innerDivs[i].children[0].checked) {
-         chosenSpec.push(innerDivs[i].children[1].id.split("-")[0])
+        chosenSpec.push(innerDivs[i].children[1].innerHTML)
+        taughtInArr.push(innerDivs[i].children[1].id.split("-")[0])
       }
     }
     if (chosenSpec.length != 0) {
@@ -523,11 +536,10 @@
     reader = new FileReader();
     reader.onloadend = () => {
       base64Image = reader.result.split(';base64,').pop();
-      imageStr = LZString.compressToUTF16(base64Image)
+      imageStr = false;
+     // imageWorker.postMessage(base64Image);
     }
     reader.readAsDataURL($('#upfile').prop('files')[0])
-
-
 
     var fileName = file.split("\\");
     if (fileName[fileName.length - 1] == "") {
@@ -590,28 +602,22 @@
         console.log(err)
       }
     }
-
-
-
     try {
       courseData = {
         subject: $("#subject").text(),
         specialities: $("#specialities").text().split(", "),
         description: $("#description").val(),
         courseImg: imageStr,
-        taughtIn: $("#taughtIn").text().split(", "),
+        taughtIn: taughtInArr,
         pricePerLesson: $("#price").val(),
         availableTimes: $(".active-time-slot-div").map(function () { return this.id }).get()
       }
       if (!basicCourseObjCheck(courseData)) {
         return
       }
-
-      console.log(courseData)
-
       // lzstring returns a promise, so must make sure is complete
       Promise.resolve(courseData.courseImg).then(function (value) {
-        //sendReq(courseData)
+        sendReq(courseData)
       })
     }
     catch (err) {

@@ -5,34 +5,6 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
-async function joke() {
-
-  str = `
-  SELECT COUNT ( * )  FROM teacher_course 
-  WHERE subject =  'english'
-  AND price_per_lesson > 1
-  AND price_per_lesson < 50
-  AND ( ( 'en' = ANY (taught_in) ) )
-
-
-
-`
-
-  try {
-    result = await db.query(str)
-
-    console.log(result)
-
-  }
-
-  catch (err) {
-    console.log(err)
-
-  }
-}
-
-joke()
-
 
 
 

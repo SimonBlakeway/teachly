@@ -289,28 +289,27 @@
         margin: 2.5px;
         width: 35px;
         height: 35px;
-        border: 1px solid rgb(0, 0, 0);
         font-size: 20px;
-        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border: none;
         border-radius: 1%;
-
+        box-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
     }
 
     .pagination-button:hover {
-        background-color: yellow;
+        background-color: rgb(238, 243, 248);
         transition: 0.4s;
-        transform: scale(1.1)
+        transform: scale(1.1);
+        color: #123f88;
     }
 
     .active-pagination-button {
         margin: 2.5px;
         width: 35px;
         height: 35px;
-        border: 1px solid rgb(0, 0, 0);
+        border: none;
         font-size: 20px;
-        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
         background-color: #00000045;
+        box-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
     }
 
     .center {
@@ -336,7 +335,6 @@
         transform: scale(1.1)
     }
 
-
     .course-img {
         object-fit: cover;
         width: 100%;
@@ -353,6 +351,7 @@
         display: none !important;
     }
 </style>
+
 
 <div style="margin-top: 100px;">
     <div id="toggel-search-bar-button">
@@ -530,7 +529,6 @@
 
 <script>
 
-    localStorage.clear();
     const subject = "{{context.settings.subject}}"
     const speciality = "{{context.settings.speciality}}"
 
@@ -710,9 +708,7 @@
             teachlyFormData["orderBy"] = val.replaceAll("-", " ")
         }
         else if (type == "availableTimes") {
-
             index = teachlyFormData.availableTimes.indexOf(val)
-
             if (index != -1) {
                 teachlyFormData.availableTimes.splice(index, 1);
                 document.getElementById(val).classList.remove("active-time-slot-div");
@@ -721,9 +717,16 @@
                 teachlyFormData.availableTimes.push(val)
                 document.getElementById(val).classList.add("active-time-slot-div");
             }
-
         }
-
+        else if (type == "pageNum") {
+            if (teachlyFormData.pageNum == val) {
+                return
+            }
+            else {
+                teachlyFormData.pageNum = val
+                searchCourses()
+            }
+        }
         localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
     }
 
@@ -831,14 +834,11 @@
         }
     }
 
-    async function searchCourses(offset) {
+    async function searchCourses() {
 
 
         try {
             teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
-
-            if (teachlyFormData.offset == offset) { return }
-
 
             if (typeof window.pageAmount == "undefined") {
                 window.pageAmount = -1
@@ -898,6 +898,113 @@
             document.getElementById("server-error").style.display = "block"
         }
     }
+
+    function createCourse(obj) {
+        //read more cutoff should be longer
+
+        box = document.createElement("div")
+
+        box.innerHTML = `            
+                           <div class="row mx-0 p-0 my-05 custom-rounded custom-shadow align-items-center en-100-366px"
+                            style="background-color:rgb(255, 255, 255); min-width: 300px; max-width: 1000px; width: 90%;">
+                            <div class="col p-3 m-0" style="min-width: 300px !important;">
+                                <img src="/images/img-2.jpg" class="course-img rounded-start" width="1000" height="800"
+                                    alt="...">
+                            </div>
+                            <div class="col p-0 m-0" style="min-width: 300px !important;">
+                                <div class="card-body p-4 m-0">
+                                    <h5 class="card-title fs-1">becca</h5>
+                                    <h5 class="card-text text-muted fs-4">english</h5>
+                                    <div class="row d-flex justify-content-around mb-3"
+                                        style="height: 20px; text-align: left;">
+                                        <span style="width: auto; padding: 3px;">
+                                            <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i> 5
+                                            active
+                                            students
+                                        </span>
+                                        <span style="width: auto; padding: 3px;">
+                                            <i class="fa fa-circle" aria-hidden="true"></i> 23 lessons
+                                        </span>
+                                    </div>
+                                    <p class="card-text mb-0">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
+                                        imperdiet, nulla et dictum interdum, nisi lorem egestas vitae scel
+                                        <span id="teacherId-dots">...</span>
+                                    <div id="teacherId-more-course-description" class="more-course-description">
+                                        erisque enim ligula venenatis dolor. Maecenasnisl est, ultrices nec
+                                        congue eget, auctor vitae massa. Fusce luctus vestibulum augue ut aliquet.
+                                        Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. In at libero
+                                        sed nunc venenatis imperdiet
+
+                                        <p> sed ornare turpis. Donec vitae dui eget tellus</p>
+                                        gravid venenatis. Integer fringilla congue eros non fermentum. Sed dapibus
+                                        pulvinar nibh tempor porta.
+                                    </div>
+                                    </p>
+                                    <button
+                                        onclick='readMoreDescToggle("teacherId-dots", "teacherId-more-course-description", "teacherId-more-course-myBtn")'
+                                        id="teacherId-more-course-myBtn" class="mb-4 read-more-button">Read
+                                        more</button>
+                                    <div class="row mt-5" style="height: auto;">
+                                        <div class="col container d-flex justify-content-center mb-4">
+                                            <div class="row d-flex justify-content-center"
+                                                style="width: 100% !important;">
+                                                <div class="col d-flex justify-content-center"
+                                                    style="width: 120px !important" ;>
+                                                    <div style="width: 100px !important;">
+                                                        <div style="width: 100% !important;"
+                                                            class="d-flex justify-content-center">
+                                                            <i style="font-size: 15px !important; color:gold;"
+                                                                class="fa fa-star" aria-hidden="true"></i>
+                                                            <span>5.5</span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-center">5 reviews</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col" style="width: 130px !important; min-width: 150px;"
+                                                    class="d-flex justify-content-center">
+                                                    <div style="width: 100% !important;"
+                                                        class="d-flex justify-content-center">
+                                                        <span class="currency">
+                                                            <span id="max-price-shown"
+                                                                style="display: none;">50.000</span>
+                                                            <span></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center"
+                                                        style="width: 100% !important;">60 minute lesson</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col container d-flex justify-content-center mb-4">
+                                            <div class="row d-flex justify-content-center"
+                                                style="width: 100% !important; min-width: 150px;">
+                                                <div class="col d-flex justify-content-center m-1"
+                                                    style="width: 130px !important;">
+                                                    <button class="btn btn-md btn-outline-secondary text-capitalize"
+                                                        style="min-width: 130px !important; height: 50px;">
+                                                        book lesson
+                                                    </button>
+                                                </div>
+                                                <div class="col d-flex justify-content-center m-1"
+                                                    style="width: 130px !important;">
+                                                    <button class="btn btn-md btn-outline-secondary text-capitalize"
+                                                        style="min-width: 130px !important; height: 50px;">
+                                                        message
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        `
+
+    }
+
 
     function generatePagination(cols, offset) { //offset is current page
         pageNum = Math.ceil(cols / 10) //limited to 10 cols per page
@@ -1053,7 +1160,7 @@
                                         onclick='readMoreDescToggle("teacherId-dots", "teacherId-more-course-description", "teacherId-more-course-myBtn")'
                                         id="teacherId-more-course-myBtn" class="mb-4 read-more-button">Read
                                         more</button>
-                                    <div class="row" style="height: auto;">
+                                    <div class="row mt-5" style="height: auto;">
                                         <div class="col container d-flex justify-content-center mb-4">
                                             <div class="row d-flex justify-content-center"
                                                 style="width: 100% !important;">
@@ -1105,7 +1212,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card-footer bg-transparent border-success">Footer</div>
                                 </div>
                             </div>
                         </div>
