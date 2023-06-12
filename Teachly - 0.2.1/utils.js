@@ -163,7 +163,6 @@ async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 
       .jpeg({ mozjpeg: true, quality: imageQualityRatio, }) //,  quality: imageQualityRatio, })
       .toFile(directoryPath + alteredFileName);
     data = Buffer.from(fs.readFileSync(directoryPath + alteredFileName)).toString('base64');
-    console.log(Date.now(), "in util 3")
     fs.unlink(directoryPath + fileName, err => {
       if (err) {
         throw err
@@ -437,7 +436,7 @@ async function refreshUserToken(id, user_refresh_string, accountNumber, created_
 
     //check if tokens don't match
     if (db_token.created_at != client_token.created_at) {
-      if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 30) { //15 min 900
+      if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 900) { //15 min 900
         console.log("diff is " + (Math.floor(Date.now() / 1000) - db_token.created_at))
         db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
         throw new Error('client/db created_at are not the same');

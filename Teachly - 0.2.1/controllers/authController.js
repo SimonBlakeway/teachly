@@ -24,14 +24,13 @@ const { get } = require('axios');
 
 
 async function skree() {
-  result = await db.query(`SELECT id FROM user_info`, );
+  result = await db.query(`SELECT 
 
-console.log(result.rows)    
+  
+  FROM user_info`,);
+
+  console.log(result.rows)
 }
-
-
-
-
 
 
 
@@ -40,13 +39,7 @@ console.log(result.rows)
 exports.login = async function (req, res) {
   user = req.body
   if (req.settings.isUser == true) { res.redirect("/") }
-
   user.name = user.name.trim()
-
-
-
-
-
   try {
     result = await db.query(`
     SELECT 
@@ -55,13 +48,9 @@ exports.login = async function (req, res) {
       user_info.lang,
       user_info.cur, 
       user_info.id, 
-      user_info.pass_hash,
-      chat.chat_id
+      user_info.pass_hash
     FROM user_info
-    JOIN chat ON (user_info.id = chat.teacher_id OR user_info.id = chat.student_id)
-    WHERE name = $1`, [user.name]);
-
-
+    WHERE user_info.name = $1`, [user.name]);
     if (result.rowCount == 0) {
       res.json({ "err": "invalid name" })
       return
@@ -142,24 +131,26 @@ exports.emailValidation = async function (req, res) {
       user_info.lang,
       user_info.cur, 
       user_info.id, 
-      user_info.pass_hash,
-      chat.chat_id
-    LEFT JOIN chat ON (user_info.id = chat.teacher_id OR user_info.id = chat.student_id)
+      user_info.pass_hash
     FROM user_info WHERE email = $1`, [userEmail]);
     if (result.rowCount == 0) {
+      console.log("validation result is empty")
       res.redirect("/") //if the user with email address doesn't exist, redirect, only applicable to mal requests
       return
     }
     if (result.rows[0].email_code.trim() == "true") {
+      console.log("validation email_code is true")
+
       res.redirect("/") //if the email address already exists, redirect, only applicable to mal requests
       return
     }
     if (parseInt(result.rows[0].email_code) > 9999999) {
-
+      console.log("validation email_code has been stried 9 times, redirect")
       res.redirect("/") //if the user has tried to log in 9 times redirect
       return
     }
     if (result.rows[0].email_code.substring(2, 7) != email_code.toString()) {
+      console.log("wrong email code")
       email_code = "0" + (parseInt(result.rows[0].email_code[1] + 1)) + result.rows[0].email_code.substring(2, 7);
 
       db.query(`UPDATE user_info email SET "email_code" = $1, WHERE WHERE email = $2;`, [email_code, userEmail])
@@ -178,8 +169,6 @@ exports.emailValidation = async function (req, res) {
     console.log(error)
   }
 }
-
-
 
 //this is for google
 exports.getUrlGauth = async function (req, res) {
@@ -217,7 +206,6 @@ exports.facebookLogin = async function (req, res) {
 }
 
 
-
 exports.logout = async function (req, res) {
 
   try {
@@ -248,13 +236,13 @@ exports.settings = function (req, res) {
 
   try {
     encodedUserCookie = req.cookies.userCookie
-  } 
-  catch {}
+  }
+  catch { }
 
   try {
     encodedUserToken = req.cookies.userToken
-  } 
-  catch {}
+  }
+  catch { }
 
   try {
     change = req.body
@@ -262,7 +250,7 @@ exports.settings = function (req, res) {
     if (encodedUserCookie) {
       if (validSettings.includes(change.settingName) && (Object.keys(change).length != 0)) {
         if (encodedUserToken) {
-   
+
           userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
           userToken[`${change.settingName}`] = change.change
           user_refresh_token = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)

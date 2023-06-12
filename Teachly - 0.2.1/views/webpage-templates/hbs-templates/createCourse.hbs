@@ -375,7 +375,7 @@
 <script>
   const imageWorker = new Worker('/js/imageWorker.js');
   imageWorker.onmessage = function (e) {
-    console.log(e.data);
+    imageStr = e.data;
   };
 
   str= `To solve the "Uncaught SyntaxError: Unexpected token" error, make sure: You don't have a <script /> tag that points to an HTML file, instead of a JS file. You aren't requesting an HTML file from a server, instead of request`
@@ -537,7 +537,7 @@
     reader.onloadend = () => {
       base64Image = reader.result.split(';base64,').pop();
       imageStr = false;
-     // imageWorker.postMessage(base64Image);
+      imageWorker.postMessage(base64Image);
     }
     reader.readAsDataURL($('#upfile').prop('files')[0])
 

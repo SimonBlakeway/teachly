@@ -3,6 +3,8 @@
 <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
 <meta name="theme-color" content="#7952b3">
 
+<link rel="stylesheet" href="/css/utils.css">
+
 <script src="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.js"></script>
 <script src="https://unpkg.com/wnumb@1.1.0"></script>
 <link rel="stylesheet" href="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.css">
@@ -175,51 +177,6 @@
 
     }
 
-    .w-20p {
-        width: 20px !important;
-    }
-
-    .h-40p {
-        height: 40px;
-    }
-
-    .mr-5p {
-        margin-right: 5px;
-    }
-
-    .pl-5p {
-        padding-left: 5px;
-    }
-
-    .mn-w-152p {
-        min-width: 152px;
-    }
-
-    .mn-h-46p {
-        min-height: 48px;
-    }
-
-    .fs-12p {
-        font-size: 12px !important;
-    }
-
-    .text-hover:hover {
-        transition: all 100ms linear;
-        opacity: 0.6;
-        font-size: 1.3rem;
-    }
-
-    .w-255p {
-        width: 255px;
-    }
-
-    .custom-rounded {
-        border-radius: 1px;
-    }
-
-    .custom-shadow {
-        box-shadow: 0px 0px 10px #0000005e;
-    }
 
     @media only screen and (max-width: 366px) {
         #taughtIn-popup {
@@ -312,16 +269,6 @@
         box-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
     }
 
-    .center {
-        text-align: center;
-    }
-
-    .align {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
     .read-more-button {
         border: none;
         background: rgba(0, 0, 0, 0);
@@ -341,15 +288,6 @@
         max-height: 500px;
     }
 
-    .center-inner {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .hidden {
-        display: none !important;
-    }
 </style>
 
 
@@ -899,24 +837,23 @@
         }
     }
 
-    function createCourse(obj) {
+    function generateCourse(obj) {
         //read more cutoff should be longer
 
         box = document.createElement("div")
 
         box.innerHTML = `            
-                           <div class="row mx-0 p-0 my-05 custom-rounded custom-shadow align-items-center en-100-366px"
-                            style="background-color:rgb(255, 255, 255); min-width: 300px; max-width: 1000px; width: 90%;">
-                            <div class="col p-3 m-0" style="min-width: 300px !important;">
+                           <div class="row mx-0 p-0 my-05 custom-rounded custom-shadow align-items-center en-100-366px bg-wht mn-w-300p mx-w-1000p w-90">
+                            <div class="col p-3 m-0 mn-w-300p">
                                 <img src="/images/img-2.jpg" class="course-img rounded-start" width="1000" height="800"
                                     alt="...">
                             </div>
-                            <div class="col p-0 m-0" style="min-width: 300px !important;">
+                            <div class="col p-0 m-0 mn-w-300p">
                                 <div class="card-body p-4 m-0">
                                     <h5 class="card-title fs-1">becca</h5>
                                     <h5 class="card-text text-muted fs-4">english</h5>
-                                    <div class="row d-flex justify-content-around mb-3"
-                                        style="height: 20px; text-align: left;">
+                                    <div class="row d-flex justify-content-around mb-3 h-20p"
+                                        style="text-align: left;">
                                         <span style="width: auto; padding: 3px;">
                                             <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i> 5
                                             active
@@ -1008,12 +945,10 @@
 
     function generatePagination(cols, offset) { //offset is current page
         pageNum = Math.ceil(cols / 10) //limited to 10 cols per page
-
         function genPagButton(active = false, text, offset) {
             classPair = {
                 false: "pagination-button",
                 true: "active-pagination-button"
-
             }
             button = document.createElement("button")
             button.className = classPair[`${active}`]
@@ -1025,49 +960,34 @@
         buttonBox = document.createElement("div")
         buttonBox.className = "pagination d-flex align-items-center justify-content-center"
         buttonBox.id = "pagination-buttons"
-
         if (offset > 3) {
             buttonBox.appendChild(genPagButton(false, "&laquo;", 0))
         }
-
         startIndex = offset - 3
-
-
         if ((pageNum - startIndex) < 4) {
             startIndex--
         }
-
         startIndex = (((offset - 3) <= 0) ? 1 : (offset - 3));
-
         for (let i = startIndex; i < offset; i++) {
             buttonBox.appendChild(genPagButton(false, i, i))
         }
-
         buttonBox.appendChild(genPagButton(true, offset, offset))
-
         if ((offset + 3) < pageNum) {
             endIndex = (offset + 2)
-
-
             if (((buttonBox.childElementCount) < 4) && ((pageNum - offset) > 1)) {
                 endIndex++
             }
-
             for (let i = (offset + 1); i < endIndex; i++) {
                 buttonBox.appendChild(genPagButton(false, i))
             }
-
             buttonBox.appendChild(genPagButton(false, "&raquo"))
         }
-
         else {
             for (let i = (offset + 1); i <= pageNum; i++) {
                 buttonBox.appendChild(genPagButton(false, i, pageNum))
             }
         }
-
         document.getElementById("course-pagination").appendChild(buttonBox)
-
     }
 
     function taughtInToggle(dotsId, MoreId, btnId) {
@@ -1131,7 +1051,7 @@
                                     <h5 class="card-title fs-1">becca</h5>
                                     <h5 class="card-text text-muted fs-4">english</h5>
                                     <div class="row d-flex justify-content-around mb-3"
-                                        style="height: 20px; text-align: left;">
+                                        style="height: 20px;">
                                         <span style="width: auto; padding: 3px;">
                                             <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i> 5
                                             active
