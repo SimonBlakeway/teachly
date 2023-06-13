@@ -287,7 +287,6 @@
         width: 100%;
         max-height: 500px;
     }
-
 </style>
 
 
@@ -466,7 +465,6 @@
 </div>
 
 <script>
-
     const subject = "{{context.settings.subject}}"
     const speciality = "{{context.settings.speciality}}"
 
@@ -774,6 +772,114 @@
 
     async function searchCourses() {
 
+        courseJson = JSON.parse(`{{json context.bodyContext.courseContext }}`.replaceAll('&quot;', `"`))
+
+
+        function generateCourse(courseObj) {
+
+            //read more cutoff should be longer
+
+            description = ""
+
+            if (232)
+
+            if ()
+
+            box = document.createElement("div")
+
+            box.innerHTML = `            
+                           <div class="row mx-0 p-0 my-05 custom-rounded custom-shadow align-items-center en-100-366px bg-wht mn-w-300p mx-w-1000p w-90">
+                            <div class="col p-3 m-0 mn-w-300p">
+                                <img src="/images/profile/${courseObj.id}" class="course-img rounded-start" width="1000" height="800"
+                                    alt="${courseJson.imageAlt.pre}${courseObj.name}${courseJson.imageAlt.post}">
+                            </div>
+                            <div class="col p-0 m-0 mn-w-300p">
+                                <div class="card-body p-4 m-0">
+                                    <h5 class="card-title fs-1">${courseObj.name}</h5>
+                                    <h5 class="card-text text-muted fs-4">${courseObj.name}</h5>
+                                    <div class="row d-flex justify-content-around mb-3 h-20p text-left p-3p w-auto">
+                                        <span>
+                                            <i class="fa fa-users fs-15p" aria-hidden="true"></i>
+                                            ${courseJson.activeStudents.pre}
+                                            ${toLocalNum(courseObj.active_students)}
+                                            ${courseJson.activeStudents.post}
+                                        </span>
+                                        <span class="p-3p w-auto">
+                                            <i class="fa fa-circle" aria-hidden="true"></i> 
+                                            ${courseJson.totalLessons.pre}
+                                            ${toLocalNum(courseObj.total_lessons)}
+                                            ${courseJson.totalLessons.post}
+                                        </span>
+                                    </div>
+                                    <p class="card-text mb-0">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
+                                        imperdiet, nulla et dictum interdum, nisi lorem egestas vitae scel
+                                        <span id="teacherId-dots">...</span>
+                                    <div id="teacherId-more-course-description" class="more-course-description">
+                                        erisque enim ligula venenatis dolor. Maecenasnisl est, ultrices nec
+                                        congue eget, auctor vitae massa. Fusce luctus vestibulum augue ut aliquet.
+                                        Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. In at libero
+                                        sed nunc venenatis imperdiet
+
+                                        <p> sed ornare turpis. Donec vitae dui eget tellus</p>
+                                        gravid venenatis. Integer fringilla congue eros non fermentum. Sed dapibus
+                                        pulvinar nibh tempor porta.
+                                    </div>
+                                    </p>
+                                    <button
+                                        onclick='readMoreDescToggle("teacherId-dots", "teacherId-more-course-description", "teacherId-more-course-myBtn")'
+                                        id="teacherId-more-course-myBtn" class="mb-4 read-more-button">Read
+                                        more</button>
+                                    <div class="row mt-5 h-auto">
+                                        <div class="col container d-flex justify-content-center mb-4">
+                                            <div class="row d-flex justify-content-center h-100">
+                                                <div class="col d-flex justify-content-center w-100p">
+                                                    <div class="w-100p">
+                                                        <div class="d-flex justify-content-center w-100">
+                                                            <i style="color:gold;"
+                                                                class="fa fa-star fs-15p" aria-hidden="true"></i>
+                                                            <span>5.5</span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-center">5 reviews</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col w-130p"
+                                                    class="d-flex justify-content-center">
+                                                    <div class="d-flex justify-content-center w-100">
+                                                        <span class="currency">
+                                                            <span id="max-price-shown"
+                                                                style="display: none;">50.000</span>
+                                                            <span>50.000</span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center w-100">60 minute lesson</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col container d-flex justify-content-center mb-4">
+                                            <div class="row d-flex justify-content-center mn-w-150p w-100">
+                                                <div class="col d-flex justify-content-center m-1 w-130p">
+                                                    <button class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p">
+                                                        book lesson
+                                                    </button>
+                                                </div>
+                                                <div class="col d-flex justify-content-center m-1 mn-w-130p-i">
+                                                    <button class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p">
+                                                        message
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `
+
+        }
+
+
+
 
         try {
             teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
@@ -835,111 +941,6 @@
             document.getElementById("no-courses").style.display = "none"
             document.getElementById("server-error").style.display = "block"
         }
-    }
-
-    function generateCourse(obj) {
-        //read more cutoff should be longer
-
-        box = document.createElement("div")
-
-        box.innerHTML = `            
-                           <div class="row mx-0 p-0 my-05 custom-rounded custom-shadow align-items-center en-100-366px bg-wht mn-w-300p mx-w-1000p w-90">
-                            <div class="col p-3 m-0 mn-w-300p">
-                                <img src="/images/img-2.jpg" class="course-img rounded-start" width="1000" height="800"
-                                    alt="...">
-                            </div>
-                            <div class="col p-0 m-0 mn-w-300p">
-                                <div class="card-body p-4 m-0">
-                                    <h5 class="card-title fs-1">becca</h5>
-                                    <h5 class="card-text text-muted fs-4">english</h5>
-                                    <div class="row d-flex justify-content-around mb-3 h-20p"
-                                        style="text-align: left;">
-                                        <span style="width: auto; padding: 3px;">
-                                            <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i> 5
-                                            active
-                                            students
-                                        </span>
-                                        <span style="width: auto; padding: 3px;">
-                                            <i class="fa fa-circle" aria-hidden="true"></i> 23 lessons
-                                        </span>
-                                    </div>
-                                    <p class="card-text mb-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-                                        imperdiet, nulla et dictum interdum, nisi lorem egestas vitae scel
-                                        <span id="teacherId-dots">...</span>
-                                    <div id="teacherId-more-course-description" class="more-course-description">
-                                        erisque enim ligula venenatis dolor. Maecenasnisl est, ultrices nec
-                                        congue eget, auctor vitae massa. Fusce luctus vestibulum augue ut aliquet.
-                                        Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. In at libero
-                                        sed nunc venenatis imperdiet
-
-                                        <p> sed ornare turpis. Donec vitae dui eget tellus</p>
-                                        gravid venenatis. Integer fringilla congue eros non fermentum. Sed dapibus
-                                        pulvinar nibh tempor porta.
-                                    </div>
-                                    </p>
-                                    <button
-                                        onclick='readMoreDescToggle("teacherId-dots", "teacherId-more-course-description", "teacherId-more-course-myBtn")'
-                                        id="teacherId-more-course-myBtn" class="mb-4 read-more-button">Read
-                                        more</button>
-                                    <div class="row mt-5" style="height: auto;">
-                                        <div class="col container d-flex justify-content-center mb-4">
-                                            <div class="row d-flex justify-content-center"
-                                                style="width: 100% !important;">
-                                                <div class="col d-flex justify-content-center"
-                                                    style="width: 120px !important" ;>
-                                                    <div style="width: 100px !important;">
-                                                        <div style="width: 100% !important;"
-                                                            class="d-flex justify-content-center">
-                                                            <i style="font-size: 15px !important; color:gold;"
-                                                                class="fa fa-star" aria-hidden="true"></i>
-                                                            <span>5.5</span>
-                                                        </div>
-                                                        <div class="d-flex justify-content-center">5 reviews</div>
-                                                    </div>
-                                                </div>
-                                                <div class="col" style="width: 130px !important; min-width: 150px;"
-                                                    class="d-flex justify-content-center">
-                                                    <div style="width: 100% !important;"
-                                                        class="d-flex justify-content-center">
-                                                        <span class="currency">
-                                                            <span id="max-price-shown"
-                                                                style="display: none;">50.000</span>
-                                                            <span></span>
-                                                        </span>
-                                                    </div>
-                                                    <div class="d-flex justify-content-center"
-                                                        style="width: 100% !important;">60 minute lesson</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col container d-flex justify-content-center mb-4">
-                                            <div class="row d-flex justify-content-center"
-                                                style="width: 100% !important; min-width: 150px;">
-                                                <div class="col d-flex justify-content-center m-1"
-                                                    style="width: 130px !important;">
-                                                    <button class="btn btn-md btn-outline-secondary text-capitalize"
-                                                        style="min-width: 130px !important; height: 50px;">
-                                                        book lesson
-                                                    </button>
-                                                </div>
-                                                <div class="col d-flex justify-content-center m-1"
-                                                    style="width: 130px !important;">
-                                                    <button class="btn btn-md btn-outline-secondary text-capitalize"
-                                                        style="min-width: 130px !important; height: 50px;">
-                                                        message
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        `
-
     }
 
 
@@ -1050,8 +1051,7 @@
                                 <div class="card-body p-4 m-0">
                                     <h5 class="card-title fs-1">becca</h5>
                                     <h5 class="card-text text-muted fs-4">english</h5>
-                                    <div class="row d-flex justify-content-around mb-3"
-                                        style="height: 20px;">
+                                    <div class="row d-flex justify-content-around mb-3" style="height: 20px;">
                                         <span style="width: auto; padding: 3px;">
                                             <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i> 5
                                             active
@@ -1096,7 +1096,7 @@
                                                         <div class="d-flex justify-content-center">5 reviews</div>
                                                     </div>
                                                 </div>
-                                                <div class="col" style="width: 130px !important; min-width: 150px;"
+                                                <div class="col" style="width: 130px !important;"
                                                     class="d-flex justify-content-center">
                                                     <div style="width: 100% !important;"
                                                         class="d-flex justify-content-center">

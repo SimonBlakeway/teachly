@@ -37,6 +37,7 @@ router.get('/:str', async (req, res) => {
   try {
     str = req.params['str'].replaceAll("-", " ");
     if (utils.isValidSubject(req.settings.lang, str)) {
+      settings.title = str
       setting = req.settings
       setting.subject
       setting.speciality

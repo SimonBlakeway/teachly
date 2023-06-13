@@ -38,3 +38,7 @@ function removeElement(id) {
     node = document.getElementById(id)
     node.parentNode.removeChild(node);
 }
+
+function toLocalNum(num) {
+    return num.toLocaleString(userLang);
+}

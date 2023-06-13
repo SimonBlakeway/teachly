@@ -4,16 +4,22 @@ module.exports = {
   formatDate: function (date, format) {
     return moment(date).utc().format(format)
   },
-  currency: function(lang, num, conversionRatio) {
+  currency: function (lang, num, conversionRatio) {
     num = num * conversionRatio;
     cur = new Intl.NumberFormat(`fr-FR`, {
-        currency: `EUR`,
-        style: 'currency',
+      currency: `EUR`,
+      style: 'currency',
     }).format(num);
-  return cur
+    return cur
   },
-  linkSetup: function(string) {
-  link = process.env.WEBSITE_NAME + "/" + string
-  return link
-  },  
+  json: function (obj) {
+    try {
+      return JSON.stringify(obj);
+    }
+    catch (err) {
+      return "bad json"
+
+    }
+  },
+
 }

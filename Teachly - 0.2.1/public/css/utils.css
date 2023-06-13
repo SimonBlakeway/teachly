@@ -6,8 +6,39 @@
     width: 20px !important;
 }
 
+.w-100p {
+    width: 100px;
+}
+
+.w-auto {
+    width: auto;
+}
+
+.w-130p {
+    width: 130px;
+}
+
+.mn-w-130p-i {
+    min-width: 130px;
+}
+
+.mn-w-150p {
+    width: 150px;
+}
+
+.p-3p {
+    padding: 3px;
+}
+
 .h-40p {
     height: 40px;
+}
+.h-50p {
+    height:  50px ;
+}
+
+.h-auto {
+    height: auto;
 }
 
 .mr-5p {
@@ -28,6 +59,10 @@
 
 .fs-12p {
     font-size: 12px !important;
+}
+
+.fs-15p {
+    font-size: 15px !important;
 }
 
 .text-hover:hover {

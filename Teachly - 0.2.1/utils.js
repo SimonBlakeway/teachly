@@ -59,9 +59,6 @@ function unEscapeStr(str) {
   return unsafe.replaceAll('&quot;', '"').replaceAll("&#039;", "'");
 }
 
-
-
-
 function getCurrencyFromLanguageCode(code) {
   try {
     cur = countryCodeToCurrency[code]
@@ -119,9 +116,6 @@ function contextSetup(settings, partials = [], pageName, layout = "main") {
     return contextSetup({ cur: "USD", lang: "en" }, partials, pageName)
   }
 }
-
-
-
 
 async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 }, maxSize = 2073600) {
   try {

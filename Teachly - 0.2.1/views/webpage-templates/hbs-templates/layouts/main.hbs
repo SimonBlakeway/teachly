@@ -10,7 +10,12 @@
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico.png">
   <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
   <link rel="stylesheet" href="/css/main.css">
+
+  {{#if context.bodyContext.title}}
   <title>{{context.bodyContext.title}}</title>
+  {{else}}
+  <title>{{context.bodyContext.titleUpdate.pre}}{{context.settings.title}}{{context.bodyContext.titleUpdate.post}}</title>
+  {{/if}}
 </head>
 
 <script src="/js/mainLayout.js"></script>
@@ -30,7 +35,7 @@
       if (`${date}` == "NaN") return ""
 
       var secs = Math.floor(Date.now() / 1000) - date
-      if (secs <= 1) return "1 second ago" 
+      if (secs <= 1) return "1 second ago"
       if (secs < 60) return "{{context.layoutContext.secsAgoPrier}}" + secs + " seconds ago" //"{{context.layoutContext.secsAgoPost}}";
       if (secs < 3600) return "{{context.layoutContext.minAgoPrier}}" + Math.floor(secs / 60) + "{{context.layoutContext.minAgoPost}}";
       if (secs < 86400) return "{{context.layoutContext.hourAgoPrier}}" + Math.floor(secs / 3600) + "{{context.layoutContext.hourAgoPost}}";

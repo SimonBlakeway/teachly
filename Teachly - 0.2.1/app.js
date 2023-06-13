@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'development') {
 // Handlebars Helpers
 const {
   formatDate,
-  linkSetup,
+  json,
   currency,
 } = require('./helpers/hbs');
 
@@ -46,7 +46,7 @@ const {
 app.engine('.hbs', exphbs.engine({
   helpers: { //the list of helpers I want to be able to use in .hbs files
     formatDate,
-    linkSetup,
+    json,
     currency,
   },
   defaultLayout: 'main',
