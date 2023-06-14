@@ -124,10 +124,10 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
       console.log(Number(vals[1].rows[0].count))
 
       if (typeof vals[1] != "object") {
-        res.json({ "courses": vals[0].rows, "countResult": reqObj.pageAmount })
+        res.json({ "courses": vals[0].rows, "count": reqObj.pageAmount })
       }
       else {
-        res.json({ "courses": vals[0].rows, "countResult": Number(vals[1].rows[0].count) })
+        res.json({ "courses": vals[0].rows, "count": Number(vals[1].rows[0].count) })
       }
     }).catch(err => {
       console.log(countQuery)

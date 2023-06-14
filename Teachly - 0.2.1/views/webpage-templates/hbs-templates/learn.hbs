@@ -701,6 +701,9 @@
     }
 
     window.addEventListener('load', function () {
+
+        searchCourses()
+
         formSetupRes = formSetup()
         //populate subject
         validSubject = axios.get('/get/validSubject').then(res => {
@@ -772,19 +775,45 @@
 
     async function searchCourses() {
 
-        courseJson = JSON.parse(`{{json context.bodyContext.courseContext }}`.replaceAll('&quot;', `"`))
+        var courseJson = JSON.parse(`{{json context.bodyContext.courseContext }}`.replaceAll('&quot;', `"`))
 
 
         function generateCourse(courseObj) {
+            courseId = courseObj.course_id
+
 
             //read more cutoff should be longer
 
             description = ""
 
-            if (232)
+            if (courseObj.description.length > 232) {
+                description = courseObj.description
+                courseId = courseObj.course_id
+                cutoff = description.substring(0, 232).lastIndexOf(" ")
 
-            if ()
+                shortenedDesc = description.substring(0, cutoff)
+                moreDesc = description.substring(cutoff, description.length)
 
+                description = `                                   
+                 <p class="card-text mb-0" id="${courseObj.name.replaceAll(" ", "-")}-course">
+                   ${shortenedDesc}
+                    <span id="${courseId}-ellipses">...</span>
+                    <div id="${courseId}-more-course-description" class="more-course-description">
+                    ${moreDesc}
+                    </div>
+                </p>
+                <button onclick='readMoreDescToggle("${courseId}-ellipses", "${courseId}-more-course-description", "${courseId}-more-course-btn")' id="${courseId}-more-course-btn" class="mb-4 read-more-button">
+                    ${courseJson.readMore}
+                </button>` 
+
+
+            }
+            else {
+                description = `
+                    <p class="card-text mb-0" id="${courseObj.name.replaceAll(" ", "-")}-course">
+                        ${courseObj.description}
+                    </p>`
+            }
             box = document.createElement("div")
 
             box.innerHTML = `            
@@ -811,25 +840,9 @@
                                             ${courseJson.totalLessons.post}
                                         </span>
                                     </div>
-                                    <p class="card-text mb-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-                                        imperdiet, nulla et dictum interdum, nisi lorem egestas vitae scel
-                                        <span id="teacherId-dots">...</span>
-                                    <div id="teacherId-more-course-description" class="more-course-description">
-                                        erisque enim ligula venenatis dolor. Maecenasnisl est, ultrices nec
-                                        congue eget, auctor vitae massa. Fusce luctus vestibulum augue ut aliquet.
-                                        Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. In at libero
-                                        sed nunc venenatis imperdiet
-
-                                        <p> sed ornare turpis. Donec vitae dui eget tellus</p>
-                                        gravid venenatis. Integer fringilla congue eros non fermentum. Sed dapibus
-                                        pulvinar nibh tempor porta.
-                                    </div>
+                                    <p class="card-text mb-0" id="${courseObj.name.replaceAll(" ", "-")}-course">
+                                        ${description}
                                     </p>
-                                    <button
-                                        onclick='readMoreDescToggle("teacherId-dots", "teacherId-more-course-description", "teacherId-more-course-myBtn")'
-                                        id="teacherId-more-course-myBtn" class="mb-4 read-more-button">Read
-                                        more</button>
                                     <div class="row mt-5 h-auto">
                                         <div class="col container d-flex justify-content-center mb-4">
                                             <div class="row d-flex justify-content-center h-100">
@@ -878,6 +891,52 @@
 
         }
 
+        function generatePagination(cols, offset) { //offset is current page
+            pageNum = Math.ceil(cols / 10) //limited to 10 cols per page
+            function genPagButton(active = false, text, offset) {
+                classPair = {
+                    false: "pagination-button",
+                    true: "active-pagination-button"
+                }
+                button = document.createElement("button")
+                button.className = classPair[`${active}`]
+                button.innerHTML = text
+                button.onclick = () => { searchCourses(offset) }
+                button.type = "button"
+                return button
+            }
+            buttonBox = document.createElement("div")
+            buttonBox.className = "pagination d-flex align-items-center justify-content-center"
+            buttonBox.id = "pagination-buttons"
+            if (offset > 3) {
+                buttonBox.appendChild(genPagButton(false, "&laquo;", 0))
+            }
+            startIndex = offset - 3
+            if ((pageNum - startIndex) < 4) {
+                startIndex--
+            }
+            startIndex = (((offset - 3) <= 0) ? 1 : (offset - 3));
+            for (let i = startIndex; i < offset; i++) {
+                buttonBox.appendChild(genPagButton(false, i, i))
+            }
+            buttonBox.appendChild(genPagButton(true, offset, offset))
+            if ((offset + 3) < pageNum) {
+                endIndex = (offset + 2)
+                if (((buttonBox.childElementCount) < 4) && ((pageNum - offset) > 1)) {
+                    endIndex++
+                }
+                for (let i = (offset + 1); i < endIndex; i++) {
+                    buttonBox.appendChild(genPagButton(false, i))
+                }
+                buttonBox.appendChild(genPagButton(false, "&raquo"))
+            }
+            else {
+                for (let i = (offset + 1); i <= pageNum; i++) {
+                    buttonBox.appendChild(genPagButton(false, i, pageNum))
+                }
+            }
+            document.getElementById("course-pagination").appendChild(buttonBox)
+        }
 
 
 
@@ -897,7 +956,6 @@
                     'Content-Type': 'application/json',
                 },
             })
-
             if (res.data.err) {
                 if (res.data.err == 404) {
                     document.getElementById("courses").style.display = "none"
@@ -910,28 +968,21 @@
                     document.getElementById("server-error").style.display = "block"
                 }
             }
-
             else {
+                courseBox = document.createElement("div")
 
                 //generate course displays
-                courseArr = res.data
-                for (let i = 0; i < courseArr.length; i++) {
-
-                    colDiv = document.createElement("div");
-                    colDiv.className = "col"
-
-                    shadowDiv = document.createElement("div");
-                    shadowDiv.className = "card shadow-sm"
-
-
-
-
-                    document.getElementById("courses").style.display = "block"
-                    document.getElementById("no-courses").style.display = "none"
-                    document.getElementById("server-error").style.display = "none"
+                courseArr = res.data.
+                    for(let i = 0; i < courseArr.length; i++) {
+                    courseBox.appendChild(generateCourse(courseArr.courses[i]))
                 }
 
+                document.getElementById("courses").style.display = "block"
+                document.getElementById("no-courses").style.display = "none"
+                document.getElementById("server-error").style.display = "none"
+
                 //update pagination
+                generatePagination(courseArr.length, result.count)
 
             }
 
@@ -941,54 +992,8 @@
             document.getElementById("no-courses").style.display = "none"
             document.getElementById("server-error").style.display = "block"
         }
-    }
 
 
-    function generatePagination(cols, offset) { //offset is current page
-        pageNum = Math.ceil(cols / 10) //limited to 10 cols per page
-        function genPagButton(active = false, text, offset) {
-            classPair = {
-                false: "pagination-button",
-                true: "active-pagination-button"
-            }
-            button = document.createElement("button")
-            button.className = classPair[`${active}`]
-            button.innerHTML = text
-            button.onclick = () => { searchCourses(offset) }
-            button.type = "button"
-            return button
-        }
-        buttonBox = document.createElement("div")
-        buttonBox.className = "pagination d-flex align-items-center justify-content-center"
-        buttonBox.id = "pagination-buttons"
-        if (offset > 3) {
-            buttonBox.appendChild(genPagButton(false, "&laquo;", 0))
-        }
-        startIndex = offset - 3
-        if ((pageNum - startIndex) < 4) {
-            startIndex--
-        }
-        startIndex = (((offset - 3) <= 0) ? 1 : (offset - 3));
-        for (let i = startIndex; i < offset; i++) {
-            buttonBox.appendChild(genPagButton(false, i, i))
-        }
-        buttonBox.appendChild(genPagButton(true, offset, offset))
-        if ((offset + 3) < pageNum) {
-            endIndex = (offset + 2)
-            if (((buttonBox.childElementCount) < 4) && ((pageNum - offset) > 1)) {
-                endIndex++
-            }
-            for (let i = (offset + 1); i < endIndex; i++) {
-                buttonBox.appendChild(genPagButton(false, i))
-            }
-            buttonBox.appendChild(genPagButton(false, "&raquo"))
-        }
-        else {
-            for (let i = (offset + 1); i <= pageNum; i++) {
-                buttonBox.appendChild(genPagButton(false, i, pageNum))
-            }
-        }
-        document.getElementById("course-pagination").appendChild(buttonBox)
     }
 
     function taughtInToggle(dotsId, MoreId, btnId) {
