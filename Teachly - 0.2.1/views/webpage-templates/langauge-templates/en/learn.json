@@ -1,5 +1,5 @@
 {
-    "titleUpdate":{
+    "titleUpdate": {
         "pre": "learn ",
         "post": " with teachly"
     },
@@ -16,6 +16,14 @@
         "totalLessons": {
             "pre": " ",
             "post": " lessons"
+        },
+        "reviews": {
+            "pre": " ",
+            "post": " reviews"
+        },
+        "lessonTime": {
+            "pre": "",
+            "post": " minute lesson"
         }
     }
 }

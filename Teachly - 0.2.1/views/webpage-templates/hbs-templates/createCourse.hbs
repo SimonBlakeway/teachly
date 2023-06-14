@@ -356,6 +356,30 @@
             </div>
           </div>
         </div>
+
+
+
+        <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
+          onclick="event.stopPropagation();">
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p">
+            <div onclick="clearCoursePopups()">
+              <div class="my-2">{{context.bodyContext.priceIn}} {{context.settings.cur}}</div>
+              <div class="d-flex align-items-center justify-content-center">
+                <label for="customRange3" class="form-label">Example range</label>
+                <input type="range" class="form-range" min="0" max="5" step="0.5" id="customRange3">
+              </div>
+            </div>
+          </div>
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
+            onclick='toggleCoursePopup("timeRange-popup")'>
+
+          </div>
+        </div>
+
+
+
+
+
         <div class="row pt-5">
           <div class="col-md-12 mb-4">
             <div class="d-flex justify-content-center">
@@ -377,8 +401,6 @@
   imageWorker.onmessage = function (e) {
     imageStr = e.data;
   };
-
-  str= `To solve the "Uncaught SyntaxError: Unexpected token" error, make sure: You don't have a <script /> tag that points to an HTML file, instead of a JS file. You aren't requesting an HTML file from a server, instead of request`
 
   imageWorker.postMessage("base64Image");
 
