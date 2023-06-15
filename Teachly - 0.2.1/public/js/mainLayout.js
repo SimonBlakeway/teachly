@@ -42,3 +42,7 @@ function removeElement(id) {
 function toLocalNum(num) {
     return num.toLocaleString(userLang);
 }
+
+
+
+
