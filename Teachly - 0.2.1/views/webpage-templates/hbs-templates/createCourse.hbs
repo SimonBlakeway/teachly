@@ -3,6 +3,11 @@
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
+<script src="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.js"></script>
+<script src="https://unpkg.com/wnumb@1.1.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.css">
+
+
 
 
 
@@ -356,30 +361,22 @@
             </div>
           </div>
         </div>
-
-
-
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
           onclick="event.stopPropagation();">
-          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p">
-            <div onclick="clearCoursePopups()">
-              <div class="my-2">{{context.bodyContext.priceIn}} {{context.settings.cur}}</div>
-              <div class="d-flex align-items-center justify-content-center">
-                <label for="customRange3" class="form-label">Example range</label>
-                <input type="range" class="form-range" min="0" max="5" step="0.5" id="customRange3">
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
+            style="height: 107px !important;">
+            <div onclick="clearCoursePopups()" style="height: 107px !important;">
+              <div class="my-2">time in minutes: <span id="time-shown"></span></div>
+              <div class="d-flex align-items-center justify-content-center mt-4 w-100 w-240p">
+                <div style="width: 200px !important;" class="regular-slider"></div>
               </div>
             </div>
           </div>
-          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
+          <div class="col p-2 m-2 d-flex align-items-center justify-content-center mn-w-270p"
             onclick='toggleCoursePopup("timeRange-popup")'>
 
           </div>
         </div>
-
-
-
-
-
         <div class="row pt-5">
           <div class="col-md-12 mb-4">
             <div class="d-flex justify-content-center">
@@ -574,6 +571,8 @@
 
   async function sendCourseData() {
 
+    if (imageStr == false) return
+
     function convertTimeRange(arr) {
       obj = {}
       for (i = 0; i < arr.length; i++) {
@@ -632,21 +631,34 @@
         courseImg: imageStr,
         taughtIn: taughtInArr,
         pricePerLesson: $("#price").val(),
-        availableTimes: $(".active-time-slot-div").map(function () { return this.id }).get()
+        availableTimes: $(".active-time-slot-div").map(function () { return this.id }).get(),
+        lesson_time: document.getElementById("lesson_time").innerHTML,
       }
       if (!basicCourseObjCheck(courseData)) {
         return
       }
-      // lzstring returns a promise, so must make sure is complete
-      Promise.resolve(courseData.courseImg).then(function (value) {
         sendReq(courseData)
-      })
     }
     catch (err) {
       console.log(err)
     }
   }
+ 
   window.addEventListener('load', async function () {
+
+    regularSlider = document.querySelector('.regular-slider')
+    slider = noUiSlider.create(regularSlider, {
+      start: 20,
+      connect: false,
+      step: 5,
+      margin: 5,
+      range: { min: 10, max: 60 },
+    })
+    regularSlider.noUiSlider.on('update', function (values, handle) {
+      document.getElementById("time-shown").innerHTML = Math.trunc(values[handle])
+    });
+
+
     async function populateSubjects() {
       try {
         res = await axios.get('/get/validSubject')

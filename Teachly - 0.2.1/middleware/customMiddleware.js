@@ -12,7 +12,7 @@ function cookieSettings(req, res, next) {
   settings = {}
   encodedUserCookie = req.cookies.userCookie
   encodedUserToken = req.cookies.user_refresh_token
-  
+
   try {
 
     if (encodedUserCookie) {
@@ -87,8 +87,12 @@ async function refreshToken(req, res, next) {
       return next()
     }
   } catch (error) {
+    console.log(error.message)
+
     if (error.message == 'client/db created_at are not the same but time is less the 30 secs') {
-      console.log("success!!!!!!!")
+      return next()
+    }
+    else if (error.message == 'db token was updated recently') {
       return next()
     }
     else {
@@ -97,7 +101,7 @@ async function refreshToken(req, res, next) {
       res.clearCookie('userCookie');
       res.clearCookie('user_refresh_token');
       res.redirect("/")
-      return next()
+      //return next()
     }
   }
 }

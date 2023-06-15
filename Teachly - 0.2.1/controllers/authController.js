@@ -296,3 +296,82 @@ exports.settings = function (req, res) {
     return
   }
 }
+
+
+exports.refreshToken = function (req, res) {
+
+  /**
+   * this route is for relatively unimportant changes, like languge, name,
+   *  font-size, profile image etc... 
+   * 
+   * no security changes
+   */
+
+  validSettings = ["lang", "cur"]
+
+  settings = {}
+  encodedUserCookie = false
+  encodedUserToken = false
+
+  try {
+    encodedUserCookie = req.cookies.userCookie
+  }
+  catch { }
+
+  try {
+    encodedUserToken = req.cookies.userToken
+  }
+  catch { }
+
+  try {
+    change = req.body
+
+    if (encodedUserCookie) {
+      if (validSettings.includes(change.settingName) && (Object.keys(change).length != 0)) {
+        if (encodedUserToken) {
+
+          userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
+          userToken[`${change.settingName}`] = change.change
+          user_refresh_token = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
+
+          db.query(`UPDATE user_info SET ${change.settingName} = $1 WHERE id = $2;`, [change.change, req.settings.id])
+          res.cookie('userCookie', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+          res.cookie('user_refresh_token', user_refresh_token, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+        }
+        else {
+          userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
+
+          userToken[`${change.settingName}`] = change.change
+          settings = jwt.encode(userToken, process.env.JWT_SECRET)
+          console.log(userToken)
+
+
+          res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+        }
+      }
+      else {
+        res.sendStatus(400)
+        return
+      }
+
+    }
+
+    else {
+      settings = {
+        lang: req.settings.lang,
+        cur: req.settings.cur
+      }
+      settings = jwt.encode(settings, process.env.JWT_SECRET)
+      res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: utils.isTrue(process.env.SECURE), expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+    }
+
+
+
+    res.sendStatus(200)
+
+  } catch (error) {
+    console.log(error)
+    res.sendStatus(500)
+    return
+  }
+}

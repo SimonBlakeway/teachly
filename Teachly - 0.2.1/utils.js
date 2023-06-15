@@ -9,9 +9,24 @@ const { compile } = require('html-to-text');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
+id = 196
 
+async function joke() {
+  result = await db.query(`select  * FROM user_info WHERE 
+ CAST ( user_refresh_token [27] ->> 'accountNumber'  AS INTEGER) = 27
+  AND id = $1 `, 
+  [id])
+  console.log(result.rows[0])
 
+}
 
+async function ad() {
+  result = await db.query(`select id FROM user_info`);
+  console.log(result)
+}
+joke()
+
+//ad()
 
 companyEmailAddress = process.env.COMPANY_EMAIL_ADDRESS
 companyLocation = process.env.COMPANY_LOCATION
@@ -414,7 +429,6 @@ async function genUserRefreshToken(id) {
 }
 
 async function refreshUserToken(id, user_refresh_string, accountNumber, created_at) {
-  try {
     client_token = {
       id: id,
       user_refresh_string: user_refresh_string,
@@ -428,6 +442,17 @@ async function refreshUserToken(id, user_refresh_string, accountNumber, created_
     }
     db_token = result.rows[0].user_refresh_token
 
+
+    ////if cookie was changes recently, return
+    if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 10) {
+      throw new Error('db token was updated recently');
+    }
+
+
+
+
+
+
     //check if tokens don't match
     if (db_token.created_at != client_token.created_at) {
       if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 900) { //15 min 900
@@ -436,9 +461,6 @@ async function refreshUserToken(id, user_refresh_string, accountNumber, created_
         throw new Error('client/db created_at are not the same');
       }
       else {
-        console.log("ojfnwijvnqjvnqjvnjvnjnvjenvjwnvjwnv")
-        console.log(db_token, "db_token")
-        console.log(client_token, "client_token")
         throw new Error('client/db created_at are not the same but time is less the 30 secs');
       }
       /*
@@ -492,15 +514,11 @@ this nested conditional is the current best solution i've thought of
     };
 
     //store db token and return client token
-    await db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2;`, [db_token, id]);
-
+    await db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1
+     WHERE id = $2
+     AND CAST ( user_refresh_token [ ${accountNumber} ] ->> 'created_at'  AS INTEGER) = ;`, [db_token, id]);
     encoded_client_token = jwt.encode(client_token, process.env.JWT_SECRET)
     return encoded_client_token
-  } catch (error) {
-    console.log(error)
-    console.log("error refresh token")
-    throw error
-  }
 }
 
 function langugeToLanguageCode(lang) {
@@ -521,7 +539,7 @@ function langugeToLanguageCode(lang) {
 //a// query functions convert data from a client into valid postgresql code
 
 function convertTaughtInToQuery(languages) {
-//  console.log(languages, "retsaccacas")
+  //  console.log(languages, "retsaccacas")
   try {
     if (languages == []) { return "" }
     var queryString = `AND (`
@@ -581,6 +599,19 @@ function convertTimeRangeToQuery(arr) {
   }
 }
 
+function convertMinuteTimeRangeToQuery(arr) {
+  if (arr.constructor !== Array || arr.length != 2) return ""
+  try {
+    lowNum = arr[0]
+    highNum = arr[1]
+    queryString = `AND ((lesson_time  > ${lowNum}) AND (lesson_time  < ${highNum})) \n`
+    return queryString
+  }
+  catch (err) {
+    return ""
+  }
+}
+
 function convertspecialityArrToQuery(lang, subjectName, specialities) {
   if (specialities == []) { return "" }
   var queryString = `AND (`
@@ -630,6 +661,7 @@ function convertSearchByKeywordToQuery(str) {
     return ""
   }
 }
+
 
 function sendNotification(text, id) {
   try {
@@ -793,6 +825,7 @@ module.exports = {
   convertspecialityArrToQuery,
   convertOrderByToQuery,
   convertSearchByKeywordToQuery,
+  convertMinuteTimeRangeToQuery,
   isTrue,
   isInt,
   langugeToLanguageCode,
@@ -803,5 +836,6 @@ module.exports = {
   unEscapeStr,
   currencyFloatToInt,
 }
+
 
 

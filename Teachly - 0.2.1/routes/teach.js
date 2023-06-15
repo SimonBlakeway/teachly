@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
   try {
     res.render('teachLandingPage', {
       layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "teachLandingPage"), 
+      context: contextSetup(req.settings, ["navbar", "footer"], "teachLandingPage"),
     })
   }
   catch (err) {
@@ -51,8 +51,31 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
   try {
 
 
-    res.send({ "result": true })
+
+    function checkData(courseData) {
+      if (courseData.lesson_time > 60) return false
+      if (courseData.lesson_time < 20) return false
+
+      if (courseData.price > 60)  return false 
+      if (courseData.price < 1)  return false 
+
+
+      return true
+
+    }
+
     courseData = req.body
+
+    if (checkData(courseData) == false) {
+      res.send({ "result": false })
+      return
+
+    }
+
+    res.send({ "result": true })
+
+
+
 
     courseData.image = courseData.courseImg
     courseData.description = compiledConvert(courseData.description)
@@ -68,7 +91,6 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       courseImg: courseData.courseImg
     }
 
-    console.log(courseObj.taughtIn)
 
     try {
       result = await db.query(`
@@ -82,7 +104,8 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
             time_schedule,
             teacher_id,
             teacher_name,
-            ts_vector
+            ts_vector,
+            lesson_time
               ) 
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ) )`,
         [courseObj.description,
@@ -94,11 +117,12 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
         courseObj.availableTimes,
         req.settings.id,
         req.settings.name,
-        [req.settings.name, courseObj.description].join(" ")
+        [req.settings.name, courseObj.description].join(" "),
+        courseObj.lesson_time
         ]);
     } catch (error) {
       console.log(error)
-      //res.send({ "err": err }) //maybe send error nitification to user?
+      //res.send({ "err": err }) //maybe send error notification to user?
     }
 
   } catch (err) {
