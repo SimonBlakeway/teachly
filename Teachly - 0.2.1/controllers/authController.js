@@ -23,15 +23,6 @@ const db = require('../config/db');
 const { get } = require('axios');
 
 
-async function skree() {
-  result = await db.query(`SELECT 
-
-  
-  FROM user_info`,);
-
-  console.log(result.rows)
-}
-
 
 
 //this group is for manual login/signin, 
@@ -264,7 +255,6 @@ exports.settings = function (req, res) {
 
           userToken[`${change.settingName}`] = change.change
           settings = jwt.encode(userToken, process.env.JWT_SECRET)
-          console.log(userToken)
 
 
           res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
@@ -298,80 +288,75 @@ exports.settings = function (req, res) {
 }
 
 
-exports.refreshToken = function (req, res) {
-
-  /**
-   * this route is for relatively unimportant changes, like languge, name,
-   *  font-size, profile image etc... 
-   * 
-   * no security changes
-   */
-
-  validSettings = ["lang", "cur"]
-
-  settings = {}
-  encodedUserCookie = false
-  encodedUserToken = false
-
+exports.refreshToken = async function (req, res) {
   try {
-    encodedUserCookie = req.cookies.userCookie
-  }
-  catch { }
+    accountNumber = req.settings.accountNumber
+    id = req.settings.id
+    client_refresh_string = req.settings.user_refresh_string
+    client_token_create_at = req.settings.token_created_at
 
-  try {
-    encodedUserToken = req.cookies.userToken
-  }
-  catch { }
+    let result = await db.query(`select user_refresh_token [ ${accountNumber} ] FROM user_info WHERE id = $1`, [id]);
 
-  try {
-    change = req.body
+    if (result.rowCount == 0) {
 
-    if (encodedUserCookie) {
-      if (validSettings.includes(change.settingName) && (Object.keys(change).length != 0)) {
-        if (encodedUserToken) {
-
-          userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
-          userToken[`${change.settingName}`] = change.change
-          user_refresh_token = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
-
-          db.query(`UPDATE user_info SET ${change.settingName} = $1 WHERE id = $2;`, [change.change, req.settings.id])
-          res.cookie('userCookie', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-          res.cookie('user_refresh_token', user_refresh_token, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-        }
-        else {
-          userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
-
-          userToken[`${change.settingName}`] = change.change
-          settings = jwt.encode(userToken, process.env.JWT_SECRET)
-          console.log(userToken)
+    }
+    db_token = result.rows[0].user_refresh_token
 
 
-          res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-        }
+
+
+    //check if tokens don't match
+    if (db_token.created_at != client_token_create_at) {
+      if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 900) { //15 min 900
+        console.log("diff is " + (Math.floor(Date.now() / 1000) - db_token.created_at))
+        db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
+        throw new Error('client/db created_at are not the same');
       }
       else {
-        res.sendStatus(400)
-        return
+        throw new Error('client/db created_at are not the same but time is less the 30 secs');
       }
 
     }
-
-    else {
-      settings = {
-        lang: req.settings.lang,
-        cur: req.settings.cur
-      }
-      settings = jwt.encode(settings, process.env.JWT_SECRET)
-      res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: utils.isTrue(process.env.SECURE), expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+    if (db_token.user_refresh_string != client_refresh_string) {
+      db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
+      throw new Error('client/db user_refresh_string are not the same');
+    }
+    if (db_token.accountNumber != accountNumber) {
+      db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
+      throw new Error('client/db accountNumbers are not the same');
     }
 
 
+    //create new token pair
+    user_refresh_string = genSafeRandomStr(20);
+    date = Math.floor(Date.now() / 1000);
 
-    res.sendStatus(200)
+    client_token = {
+      user_refresh_string: user_refresh_string,
+      id: id,
+      accountNumber: accountNumber,
+      created_at: date
+    };
+
+    db_token = {
+      user_refresh_string: user_refresh_string,
+      accountNumber: accountNumber,
+      created_at: date
+    };
+
+    //store db token and return client token
+    await db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [db_token, id]);
+
+    encoded_client_token = jwt.encode(client_token, process.env.JWT_SECRET)
+
+    res.cookie('user_refresh_token', client_token, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+
+
 
   } catch (error) {
-    console.log(error)
-    res.sendStatus(500)
-    return
+    conbsole.log(error)
+
   }
+
+
 }

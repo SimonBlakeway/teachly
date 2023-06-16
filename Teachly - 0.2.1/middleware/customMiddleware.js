@@ -23,6 +23,9 @@ function cookieSettings(req, res, next) {
         if (userToken.id != userCookie.id) {
           throw new Error("user token and cookie have different ids")
         }
+        //if last refresh was more that 10 minutes ago
+        settings.lastRefresh = userToken.created_at
+        
         settings = userCookie
         settings.hasCookie = true
         settings.isUser = true
@@ -71,39 +74,8 @@ function cookieSettings(req, res, next) {
   }
 }
 
-async function refreshToken(req, res, next) {
-  try {
-    if (req.settings.isUser) {
-      if ((Math.floor(Date.now() / 1000) - req.settings.token_created_at) >= 900) { //15 min 900
-        userToken = await utils.refreshUserToken(req.settings.id, req.settings.user_refresh_string, req.settings.accountNumber, req.settings.token_created_at)
-        res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-        return next()
-      }
-      else {
-        return next()
-      }
-    }
-    else {
-      return next()
-    }
-  } catch (error) {
-    console.log(error.message)
-
-    if (error.message == 'client/db created_at are not the same but time is less the 30 secs') {
-      return next()
-    }
-    else if (error.message == 'db token was updated recently') {
-      return next()
-    }
-    else {
-      console.log("bad!!!!!!!!")
-      await db.query(`UPDATE user_info SET user_refresh_token [ ${req.settings.accountNumber} ] = $1 WHERE id = $2;`, [{}, req.settings.id]);
-      res.clearCookie('userCookie');
-      res.clearCookie('user_refresh_token');
-      res.redirect("/")
-      //return next()
-    }
-  }
+async function mustHaveValidToken(req, res, next) {
+  return next()
 }
 
 function redirectUnmatched(req, res) {
@@ -112,6 +84,6 @@ function redirectUnmatched(req, res) {
 
 module.exports = {
   cookieSettings,
-  refreshToken,
+  mustHaveValidToken,
   redirectUnmatched
 }

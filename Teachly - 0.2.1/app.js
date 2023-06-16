@@ -28,7 +28,6 @@ app.use(cookieParser());
 
 //app.use(require('./middleware/auth.js').ensureSafe) //breaks with ngrok
 app.use(require('./middleware/customMiddleware.js').cookieSettings)
-app.use(require('./middleware/customMiddleware.js').refreshToken)
 
 // Logging
 if (process.env.NODE_ENV === 'development') {

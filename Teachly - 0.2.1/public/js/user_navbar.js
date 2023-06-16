@@ -1,6 +1,3 @@
-const origin = window.location.origin;
-const socket = io.connect(origin);
-
 function switchSignaler(id, turnOn = false) {
     signaler = document.getElementById(`${id}-signaler`)
     if (turnOn) {

@@ -32,12 +32,17 @@ async function sendNotifications(id) {
 
 }
 
+
+
+
+
 //socketio.js
 module.exports = {
   setIo: (server) => {
     const io = new Server(server);
 
 
+    //create custom cookie auth for sockets
     io.engine.use((req, res, next) => {
       // do something
     

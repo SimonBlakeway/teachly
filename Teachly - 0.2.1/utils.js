@@ -9,24 +9,7 @@ const { compile } = require('html-to-text');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
-id = 196
 
-async function joke() {
-  result = await db.query(`select  * FROM user_info WHERE 
- CAST ( user_refresh_token [27] ->> 'accountNumber'  AS INTEGER) = 27
-  AND id = $1 `, 
-  [id])
-  console.log(result.rows[0])
-
-}
-
-async function ad() {
-  result = await db.query(`select id FROM user_info`);
-  console.log(result)
-}
-joke()
-
-//ad()
 
 companyEmailAddress = process.env.COMPANY_EMAIL_ADDRESS
 companyLocation = process.env.COMPANY_LOCATION

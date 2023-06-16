@@ -18,11 +18,27 @@
   {{/if}}
 </head>
 
+  {{#if context.isUser}}
+  <script src="/js/user.js"></script>
+  {{else}}
+  <script src="/js/anonymousUser.js"></script>
+  {{/if}}
+
 <script src="/js/mainLayout.js"></script>
 <script>
   const userLang = "{{context.settings.lang}}"
   const userCur = "{{context.settings.cur}}"
   var curConversionRatio = "{{context.settings.curRatio}}"
+
+
+  {{#if context.isUser}}
+  var lastRefresh = {{context.settings.lastRefresh}}
+  {{/if}}
+
+
+
+
+  var lastRefresh = {{context.settings.lastRefresh}}
   updateCurrencyInterval(userCur)
 
   updateDatesInterval()
