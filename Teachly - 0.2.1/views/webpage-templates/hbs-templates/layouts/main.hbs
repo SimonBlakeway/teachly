@@ -18,11 +18,9 @@
   {{/if}}
 </head>
 
-  {{#if context.isUser}}
-  <script src="/js/user.js"></script>
-  {{else}}
-  <script src="/js/anonymousUser.js"></script>
-  {{/if}}
+
+
+
 
 <script src="/js/mainLayout.js"></script>
 <script>
@@ -31,7 +29,7 @@
   var curConversionRatio = "{{context.settings.curRatio}}"
 
 
-  {{#if context.isUser}}
+  {{#if context.settings.isUser}}
   var lastRefresh = {{context.settings.lastRefresh}}
   {{/if}}
 
@@ -77,6 +75,12 @@
     }
   }
 </script>
+
+  {{#if context.settings.isUser}}
+  <script src="/js/user.js"></script>
+  {{else}}
+  <script src="/js/anonymousUser.js"></script>
+  {{/if}}
 
 <body>
   {{#if context.navbar}}

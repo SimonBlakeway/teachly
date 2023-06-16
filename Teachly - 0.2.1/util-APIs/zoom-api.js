@@ -18,13 +18,15 @@ async function setToken() {
         console.log(error)
     }
 }
+async function zoomSetup() {
+    setToken()
 
 setInterval(async () => {
     //refresh access token every 50 min
     setToken(access_token)
 }, 1000 * 60 * 50);
 
-
+}
 
 
 
@@ -190,5 +192,5 @@ module.exports = {
     getMeetingDetails,
     getMeetingRecording,
     deleteMeetingRecordings,
-    setToken,
+    zoomSetup,
 }

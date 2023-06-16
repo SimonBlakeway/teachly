@@ -1,37 +1,27 @@
-const origin = window.location.origin;
-const socket = io.connect(origin);
-
-
-
-
-refresh = () => axios({ method: 'get', url: `/auth/refresh-token` })
+refresh = () => axios({ method: 'post', url: `/auth/refresh-token` })
 now = () => Math.floor(Date.now() / 1000)
-interval = 0
-lastRefresh = 0
-if (needRefresh) refresh(); lastRefresh = now();
-
-window.addEventListener('online', function (event) {
-
-
-    if ((now() - lastRefresh) > 60 * 10) {
+var refreshInterval = 0;
+setRefreshInterval = () => {
+    refreshInterval = setInterval(() => {
+        console.log("refresh!")
         refresh()
         lastRefresh = now()
-    }
+    }, (1000 * 60 * 10))
+}
+console.log(lastRefresh)
 
+if ((now() - lastRefresh) > 60 * 10) {
+    refresh();
+    lastRefresh = now();
+} //10 minutes ago
 
-
-
-    setRefreshInterval = () => {
-        interval = setInterval(() => {
-            refresh()
-            lastRefresh = now()
-        }, (1000 * 60 * 10))
-    }
-
-    setTimeout(() => { setRefreshInterval(), (now() - lastRefresh) * 1000 })
+//setTimeout(() => { setInterval(), (now() - lastRefresh) * 1000 })
+window.addEventListener('online', function (event) {
+    if ((now() - lastRefresh) > 60 * 10) refresh(); lastRefresh = now();
+    setRefreshInterval()
 });
 window.addEventListener('offline', function (event) {
-    clearInterval(interval)
+    clearInterval(refreshInterval)
 
 });
 

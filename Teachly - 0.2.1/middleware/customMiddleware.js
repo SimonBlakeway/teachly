@@ -23,7 +23,6 @@ function cookieSettings(req, res, next) {
         if (userToken.id != userCookie.id) {
           throw new Error("user token and cookie have different ids")
         }
-        //if last refresh was more that 10 minutes ago
         settings.lastRefresh = userToken.created_at
         
         settings = userCookie
@@ -59,6 +58,7 @@ function cookieSettings(req, res, next) {
     }
 
   } catch (error) {
+    console.log(error)
     try {
       malUserCookie = parseJwt(req.cookies.userCookie)
       res.clearCookie('userCookie');

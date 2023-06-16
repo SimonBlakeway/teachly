@@ -22,6 +22,23 @@ const utils = require('../utils')
 const db = require('../config/db');
 const { get } = require('axios');
 
+//AND  CAST ( user_refresh_token [ ${28} ] ->> 'created_at' AS INTEGER) = 1686916916
+
+async function joke() {
+  try {
+    result = await db.query(`SELECT user_refresh_token [ ${28} ]  FROM user_info
+      WHERE id = 196
+      AND  CAST ( user_refresh_token [ ${28} ] ->> 'created_at' AS INTEGER) = $1
+     
+  `, [1686908962]);
+    console.log(result.rows[0])
+  } catch (error) {
+    console.log(error)
+
+  }
+}
+
+
 
 
 
@@ -298,14 +315,14 @@ exports.refreshToken = async function (req, res) {
     let result = await db.query(`select user_refresh_token [ ${accountNumber} ] FROM user_info WHERE id = $1`, [id]);
 
     if (result.rowCount == 0) {
-
+      throw new Error('no token found');
     }
     db_token = result.rows[0].user_refresh_token
 
-
-
-
-    //check if tokens don't match
+    if ((Math.floor(Date.now() / 1000) - db_token.created_at) < 60 * 5) {
+      //last refresh was less than 5 minutes ago 
+      throw new Error('last update was less than 30 secs ago');
+    }
     if (db_token.created_at != client_token_create_at) {
       if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 900) { //15 min 900
         console.log("diff is " + (Math.floor(Date.now() / 1000) - db_token.created_at))
@@ -313,7 +330,9 @@ exports.refreshToken = async function (req, res) {
         throw new Error('client/db created_at are not the same');
       }
       else {
-        throw new Error('client/db created_at are not the same but time is less the 30 secs');
+        // client/db created_at are not the same but time is less the 30 secs')
+        res.sendStatus(304)
+        return
       }
 
     }
@@ -328,7 +347,7 @@ exports.refreshToken = async function (req, res) {
 
 
     //create new token pair
-    user_refresh_string = genSafeRandomStr(20);
+    user_refresh_string = utils.genSafeRandomStr(20);
     date = Math.floor(Date.now() / 1000);
 
     client_token = {
@@ -344,19 +363,52 @@ exports.refreshToken = async function (req, res) {
       created_at: date
     };
 
-    //store db token and return client token
-    await db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [db_token, id]);
 
-    encoded_client_token = jwt.encode(client_token, process.env.JWT_SECRET)
-
-    res.cookie('user_refresh_token', client_token, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+    allowedInterval = 60 * 5 //this limits the amount of updates to once every 5 min ago
+    now = Math.floor(Date.now() / 1000)
 
 
+    //wont update if last update was less than
+    await db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE
+     id = $2
+     AND  CAST ( user_refresh_token [ ${28} ] ->> 'created_at' AS INTEGER) > $3
+     returning user_refresh_token [ ${accountNumber} ]
+     `, [db_token, id, now - allowedInterval]);
+
+
+    if (result.rowCount == 1) { //successful update
+      console.log(result.rows[0])
+      encoded_client_token = jwt.encode(client_token, process.env.JWT_SECRET)
+      res.cookie('user_refresh_token', encoded_client_token, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.sendStatus(200)
+    }
+    else {
+      //if the update was unsuccesful due to the time limitation then
+      // this is probably a concurrent refresh from the same user
+      // so just ignore it
+      res.sendStatus(304)
+    }
 
   } catch (error) {
-    conbsole.log(error)
+    accountNumber = req.settings.accountNumber
+    id = req.settings.id
+
+    logout = () => {
+      db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
+      res.clearCookie('user_refresh_token');
+      res.clearCookie('userCookie');
+      res.sendStatus(404)
+    }
+
+    console.log(error)
+
+    if (error.message == "client/db created_at are not the same but time is less the 30 secs") { res.sendStatus(409) }
+    else if (error.message == 'client/db created_at are not the same') logout()
+    else if (error.message == 'client/db user_refresh_string are not the same') logout()
+    else if (error.message == 'client/db accountNumbers are not the same') logout()
+    else if (error.message == 'last update was less than 30 secs ago') { res.sendStatus(409) }
+    else if (error.message == 'no token found') logout()
+    else { res.sendStatus(403) }
 
   }
-
-
 }

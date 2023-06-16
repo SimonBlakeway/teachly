@@ -111,7 +111,7 @@ const io = socketio.setIo(server);
 app.use(express.static("public"));
 
 //promises
-//zoomApi.setToken()
+//zoomApi.zoomSetup()
 
 
 //the server makes calls to varying apis to get tokens/info

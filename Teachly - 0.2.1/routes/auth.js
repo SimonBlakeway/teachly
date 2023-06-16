@@ -35,7 +35,7 @@ router.get('/emailValidation', authController.emailValidation)
 
 // @desc    this route gets the email and email verificatiob code then validates the email address then logs the user in
 // @route   GET /
-router.get('/refresh-token', authController.refreshToken)
+router.post('/refresh-token', authController.refreshToken)
 
 
 module.exports = router
