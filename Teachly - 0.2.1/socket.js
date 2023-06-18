@@ -1,8 +1,13 @@
 const jwt = require('jwt-simple');
 const { Server } = require('socket.io');
 const db = require('./config/db');
+const cookieParser = require('cookie-parser');
+const { token } = require('morgan');
+
 
 function cookiePrep(str) {
+
+  /*
   arr = str.split("; ").map(x => {
     return x.split("=")
   })
@@ -17,6 +22,22 @@ function cookiePrep(str) {
     }
   }
   return obj
+
+  */
+
+
+  arr = str.split("; ").map(x => {
+    return x.split("=")
+  }).flat()
+
+  obj = {}
+
+  obj.user_refresh_token = jwt.decode(arr[((arr.indexOf("user_refresh_token")) + 1)], process.env.JWT_SECRET)
+  obj.userCookie = jwt.decode(arr[arr.indexOf("userCookie") + 1], process.env.JWT_SECRET)
+
+  return obj
+
+
 }
 //result = await db.query(`select * FROM notifications WHERE user_id = $1 OR is_global = $2`, [id, true]);
 
@@ -42,23 +63,43 @@ module.exports = {
     const io = new Server(server);
 
 
-    //create custom cookie auth for sockets
+
+
+    io.engine.use(cookieParser())
     io.engine.use((req, res, next) => {
-      // do something
-    
-      next();
+      try {
+        now = Math.floor(Date.now() / 1000)
+        userToken = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
+        userCookie = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
+
+        if (userToken.id != userCookie.id) { throw new Error("user token and cookie have different ids") }
+        else if (((now - userToken.created_at) > (60 * 15))) {
+          return
+        } //if expired just ignore
+        else { next() }
+
+      } catch (error) {
+        console.log(error)
+        try {
+          res.clearCookie('userCookie');
+        } catch (error) {
+        }
+        try {
+          malUserToken = req.cookies.user_refresh_token
+          res.clearCookie('user_refresh_token');
+          parseJwt(req.cookies.user_refresh_token)
+          db.query(`UPDATE user_info SET user_refresh_token [ ${malUserToken.accountNumber} ] = $1 WHERE id = $2;`, [{}, malUserToken.userId]);
+
+        } catch (error) {
+        }
+      }
     });
 
 
     io.on("connection", function (socket) {
-      let cookies = {}
+      
       try {
-
         cookies = cookiePrep(socket.handshake.headers.cookie)
-        if (Object.keys(cookies.user_refresh_token) == 0) {
-          socket.disconnect()
-          return
-        }
         id = cookies.user_refresh_token.id
         socket.join(`${id}-user`)
         sendNotifications(id)
@@ -102,6 +143,7 @@ module.exports = {
 
       }
       catch (err) {
+        console.log(err)
         socket.disconnect()
         return
       }

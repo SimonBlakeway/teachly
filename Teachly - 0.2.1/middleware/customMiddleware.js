@@ -23,8 +23,7 @@ function cookieSettings(req, res, next) {
         if (userToken.id != userCookie.id) {
           throw new Error("user token and cookie have different ids")
         }
-        settings.lastRefresh = userToken.created_at
-        
+
         settings = userCookie
         settings.hasCookie = true
         settings.isUser = true
@@ -60,13 +59,13 @@ function cookieSettings(req, res, next) {
   } catch (error) {
     console.log(error)
     try {
-      malUserCookie = parseJwt(req.cookies.userCookie)
       res.clearCookie('userCookie');
     } catch (error) {
     }
     try {
-      malUserToken = parseJwt(req.cookies.user_refresh_token)
+      malUserToken = req.cookies.user_refresh_token
       res.clearCookie('user_refresh_token');
+      parseJwt(req.cookies.user_refresh_token)
       db.query(`UPDATE user_info SET user_refresh_token [ ${malUserToken.accountNumber} ] = $1 WHERE id = $2;`, [{}, malUserToken.userId]);
 
     } catch (error) {

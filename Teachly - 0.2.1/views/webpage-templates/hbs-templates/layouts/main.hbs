@@ -30,13 +30,10 @@
 
 
   {{#if context.settings.isUser}}
-  var lastRefresh = {{context.settings.lastRefresh}}
+  var lastRefresh = {{context.settings.token_created_at}}
   {{/if}}
 
 
-
-
-  var lastRefresh = {{context.settings.lastRefresh}}
   updateCurrencyInterval(userCur)
 
   updateDatesInterval()
