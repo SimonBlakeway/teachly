@@ -147,8 +147,13 @@
     }
 
     .blue-hover:hover {
-      transition-duration: 100;
-      color: #0f3778;
+      transition-duration: 500ms;
+      color: #acbecc;
+    }
+
+    .enlarge-hover {
+      transition-duration: 300ms;
+      transform: scale(1.2)
     }
 
     @media only screen and (max-width: 460px) {

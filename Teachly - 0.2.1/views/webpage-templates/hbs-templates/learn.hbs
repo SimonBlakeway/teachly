@@ -32,7 +32,14 @@
         width: 100%;
         margin-bottom: 50px;
 
+
+
+
         display: flex;
+        flex-wrap: wrap;
+        /* for horizontal aligning of child divs */
+
+        /* for vertical aligning */
         align-items: center;
     }
 
@@ -48,7 +55,7 @@
         padding-top: 20px;
         padding-bottom: 20px;
         margin: 0px !important;
-        margin-top: -50px !important;
+        margin-top: 0px !important;
         margin-bottom: 50px;
         height: auto !important;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -168,13 +175,11 @@
         user-select: none;
     }
 
-    #toggel-search-bar-button {
+    #toggle-search-bar-button {
         font-size: 30px;
         position: relative;
-        padding: 10px;
         z-index: 30;
-        margin-bottom: 40px !important;
-
+        margin: 0px !important;
     }
 
 
@@ -211,7 +216,7 @@
             font-size: 3.5rem;
         }
 
-        #toggel-search-bar-button {
+        #toggle-search-bar-button {
             display: block;
             visibility: visible;
         }
@@ -291,6 +296,10 @@
         height: 40px;
     }
 
+    .h-40pi {
+        height: 40px !important;
+    }
+
     .fs-20p {
         font-size: 20px;
     }
@@ -314,29 +323,45 @@
     .w-auto {
         width: auto !important;
     }
+
+    .float-right {
+        float: right;
+    }
+
+    .sans-serif {
+        font-family: sans-serif;
+    }
+
+        .light-blue-text-shadow {
+      text-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
+    }
 </style>
 
 
 <div style="margin-top: 100px;">
 
-    <div class="search-bar-buttons">
 
-        <div style="float: left; padding-left: 15px;">filters</div>
+    <div id="search-bar-buttons">
+        <div class="fs-30p sans-serif light-blue-text-shadow" style="float: left; padding-left: 15px;">Filters</div>
+
+        <div style="float: right !important; width:calc(100% - 100px) !important">
+
+            <button onclick="togglesearchBar()" class="bg-black h-40pi fs-20p float-right m-0 p-0 btn btn-outline-primary" style="margin-left: 10px  !important;"
+                id="toggle-search-bar-button">
+                <span class="fa-stack h-40p" style="vertical-align: top;">
+                    <i id="toggle-search-bar-button-symbol"
+                        class="fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadow"
+                        style="height: 40px !important; margin-top: -10px;"></i>
+                </span>
+            </button>
 
 
-        <button onclick="togglesearchBar()" class="bg-black h-40p fs-20p float-left float-right">
-            <span class="fa-stack h-40p" style="vertical-align: top;">
-                <i class="fas fa-circle fa-stack-1x h-40p"></i>
-                <i id="toggel-search-bar-button-symbol"
-                    class="fa fa-bars fa-stack-1x fa-inverse h-40p fs-30p clr-wht"></i>
-            </span>
-        </button>
+            <button onclick="toggleAdvancedsearchBar()" id="advanced-filters-buttons"
+                class="bg-black h-40p fs-20p float-right m-0 p-1 btn btn-outline-primary">
+                advanced settings
+            </button>
 
-
-        <button onclick="toggleAdvancedsearchBar()" id="advanced-filters-buttons"
-            class="bg-black h-40p fs-20p float-left">
-            advanced settings
-        </button>
+        </div>
 
 
     </div>
@@ -728,9 +753,9 @@
             timeRange.appendChild(outerDiv);
         }
 
-        button = document.getElementById("toggel-search-bar-button")
+        button = document.getElementById("toggle-search-bar-button")
         bar = document.getElementById("product-search-bar")
-        symbol = document.getElementById("toggel-search-bar-button-symbol")
+        symbol = document.getElementById("toggle-search-bar-button-symbol")
         if (window.innerWidth > 770) {
             button.style.visibility = "hidden";
             button.style.display = "none";
@@ -739,15 +764,15 @@
         }
         else {
             button.style.visibility = "visible";
-            button.style.display = "block";
+            button.style.display = "inline";
             bar.style.visibility = "hidden";
             bar.style.display = "none";
             symbol.className = "fa fa-bars fa-stack-1x fa-inverse"
         }
         function searchBarResizeHandler() {
-            button = document.getElementById("toggel-search-bar-button")
+            button = document.getElementById("toggle-search-bar-button")
             bar = document.getElementById("product-search-bar")
-            symbol = document.getElementById("toggel-search-bar-button-symbol")
+            symbol = document.getElementById("toggle-search-bar-button-symbol")
             if (window.innerWidth > 770) {
                 button.style.visibility = "hidden";
                 button.style.display = "none";
@@ -756,7 +781,7 @@
             }
             else {
                 button.style.visibility = "visible";
-                button.style.display = "block";
+                button.style.display = "inline";
                 bar.style.visibility = "hidden";
                 bar.style.display = "none";
                 symbol.className = "fa fa-bars fa-stack-1x fa-inverse"
@@ -905,9 +930,9 @@
     })
 
     function togglesearchBar() {
-        button = document.getElementById("toggel-search-bar-button")
+        button = document.getElementById("toggle-search-bar-button")
         bar = document.getElementById("product-search-bar")
-        symbol = document.getElementById("toggel-search-bar-button-symbol")
+        symbol = document.getElementById("toggle-search-bar-button-symbol")
         if (bar.style.display === "none" || bar.style.display === "") {
             bar.style.visibility = "visible";
             bar.style.display = "block";
