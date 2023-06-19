@@ -405,20 +405,13 @@ exports.refreshToken = async function (req, res) {
       res.sendStatus(404)
     }
 
-   if (error.message =! 'last update was less than 30 secs ago') {
-    console.log(error)
-   }
-   else {
-    console.log("last update was less than 30 secs ago")
-   }
-
     if (error.message == "client/db created_at are not the same but time is less the 30 secs") { res.sendStatus(200) }
     else if (error.message == 'client/db created_at are not the same') logout()
     else if (error.message == 'client/db user_refresh_string are not the same') logout()
     else if (error.message == 'client/db accountNumbers are not the same') logout()
     else if (error.message == 'last update was less than 30 secs ago') { res.sendStatus(200) }
     else if (error.message == 'no token found') logout()
-    else { res.sendStatus(403) }
+    else { res.sendStatus(200) }
 
   }
 }

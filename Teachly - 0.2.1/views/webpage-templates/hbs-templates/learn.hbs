@@ -43,6 +43,10 @@
         align-items: center;
     }
 
+    .active-advanced-search-button {
+        background-color: #123f88 !important;
+    }
+
     .subject-link-li {
         text-decoration: none;
     }
@@ -58,6 +62,7 @@
         margin-top: 0px !important;
         margin-bottom: 50px;
         height: auto !important;
+        display: none;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
 
@@ -95,6 +100,14 @@
     }
 
     #pricePerLesson-popup {
+        width: 300px;
+        height: 200px;
+        margin-top: 320px;
+        margin-left: 150px;
+        border-width: 10px;
+    }
+
+    #course-time-popup {
         width: 300px;
         height: 200px;
         margin-top: 320px;
@@ -223,12 +236,7 @@
 
     }
 
-    @media only screen and (min-width: 770px) {
-        #product-search-bar {
-            display: block;
-            visibility: visible;
-        }
-    }
+
 
     @media only screen and (max-width: 812) {
 
@@ -332,47 +340,36 @@
         font-family: sans-serif;
     }
 
-        .light-blue-text-shadow {
-      text-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
+    .light-blue-text-shadow {
+        text-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
     }
 </style>
 
 
 <div style="margin-top: 100px;">
-
-
     <div id="search-bar-buttons">
         <div class="fs-30p sans-serif light-blue-text-shadow" style="float: left; padding-left: 15px;">Filters</div>
-
         <div style="float: right !important; width:calc(100% - 100px) !important">
-
-            <button onclick="togglesearchBar()" class="bg-black h-40pi fs-20p float-right m-0 p-0 btn btn-outline-primary" style="margin-left: 10px  !important;"
-                id="toggle-search-bar-button">
+            <button onclick="togglesearchBar()"
+                class="bg-black h-40pi fs-20p float-right m-0 p-0 btn btn-outline-primary"
+                style="margin-left: 10px  !important;" id="toggle-search-bar-button">
                 <span class="fa-stack h-40p" style="vertical-align: top;">
                     <i id="toggle-search-bar-button-symbol"
                         class="fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadow"
                         style="height: 40px !important; margin-top: -10px;"></i>
                 </span>
             </button>
-
-
-            <button onclick="toggleAdvancedsearchBar()" id="advanced-filters-buttons"
-                class="bg-black h-40p fs-20p float-right m-0 p-1 btn btn-outline-primary">
+            <button onclick="toggleAdvancedsearchBar()" id="advanced-search-button"
+                class="bg-black h-40p fs-20p float-right m-0 p-1 btn btn-outline-primary hidden">
                 advanced settings
             </button>
-
         </div>
-
-
     </div>
 </div>
 
-
-
-
-
-
 <div id="product-search-bar">
+
+
     <div class="row w-100 d-flex align-items-center justify-content-center m-0 p-0">
         <div class="col">
             <div class="row">
@@ -428,6 +425,57 @@
             </div>
         </div>
     </div>
+
+
+
+
+    <div class="row w-100 d-flex align-items-center justify-content-center m-0 p-0 pt-3" id="advanced-search-bar"
+        style="display:none  !important;">
+        <div class="col">
+            <div class="row">
+                <div class="col container d-flex align-items-center justify-content-center">
+                    <div onclick='toggleSearchBarPopup("course-time-popup")'>
+                        <div class="my-3">lesson time</div>
+                        <button
+                            class="btn btn-md btn-outline-secondary container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
+                            <span id="min-course-time"></span>
+                            <span style="margin-left: 5px; margin-right: 5px;">-</span>
+                            <span id="max-course-time"></span>
+                        </button>
+                    </div>
+                    <div class="popup container d-flex align-items-center justify-content-center"
+                        id="course-time-popup">
+                        <div class="container text-center">
+                            <div class="container d-flex align-items-center justify-content-center text-dark">
+                            </div>
+                            <div style="margin: 4em w-100" class="time-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="col">
+                    <div class="row">
+                        <div class="col container d-flex align-items-center justify-content-center">
+                            <div onclick='toggleSearchBarPopup("timeRange-popup")'>
+
+                            </div>
+                            <div class="col container d-flex align-items-center justify-content-center">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 
     <div class="row w-100 d-flex align-items-center justify-content-center m-0 p-0 pt-3">
         <div class="col">
@@ -530,113 +578,6 @@
     </div>
 
 
-
-    <div class="row w-100 d-flex align-items-center justify-content-center m-0 p-0 pt-3" id="advanced-filters"
-        style="display: none !important;">
-        <div class="col">
-            <div class="row">
-                <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("pricePerLesson-popup")'>
-                        <div class="my-3">price Per Lesson</div>
-                        <button
-                            class="btn btn-md btn-outline-secondary container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
-                            <span class="currency">
-                                <span id="min-price-shown" style="display: none;">50.000</span>
-                                <span></span>
-                            </span>
-
-                            <span style="margin-left: 5px; margin-right: 5px;">-</span>
-
-                            <span class="currency">
-                                <span id="max-price-shown" style="display: none;">50.000</span>
-                                <span></span>
-                            </span>
-                            <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div class="popup container d-flex align-items-center justify-content-center"
-                        id="pricePerLesson-popup">
-                        <div class="container text-center">
-                            <div class="container d-flex align-items-center justify-content-center text-dark">
-                            </div>
-                            <div style="margin: 4em w-100" class="regular-slider"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("orderBy-popup")'>
-                        <div class="my-3">order By</div>
-                        <button id="orderBy-button"
-                            class="d-flex align-items-center justify-content-center btn btn-md btn-outline-secondary text-capitalize mn-w-152p mn-h-46p">
-                            <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
-                                aria-hidden="true"></i></button>
-                    </div>
-                    <div class="popup" id="orderBy-popup">
-                        <form action="#" class="p-2 ">
-                            <input required class="form-check-input" onclick='updateformData("orderBy", "Popularity")'
-                                type="radio" value="Popularity" name="Order-By" id="Popularity">
-                            <label class="form-check-label text-dark" for="Popularity">Popularity</label>
-
-                            <br>
-                            <input required class="form-check-input"
-                                onclick='updateformData("orderBy", "Price:-highest-first")' type="radio"
-                                value="Price:-highest-first" name="Order-By" id="Price:-highest-first">
-                            <label class="form-check-label text-dark" for="Price:-highest-first">Price: highest
-                                first</label>
-
-                            <br>
-                            <input class="form-check-input" onclick='updateformData("orderBy", "Price:-lowest-first")'
-                                type="radio" value="Price:-lowest-first" name="Order-By" id="Price:-lowest-first">
-                            <label class="form-check-label text-dark" for="Price:-lowest-first">Price:
-                                lowest-first</label>
-                            <br>
-                            <input class="form-check-input" onclick='updateformData("orderBy", "Number-of-reviews")'
-                                type="radio" value="Number-of-reviews" name="Order-By" id="Number-of-reviews">
-                            <label class="form-check-label text-dark" for="Number-of-reviews">Number of
-                                reviews</label>
-                            <br>
-                            <input class="form-check-input" onclick='updateformData("orderBy", "Best-rating")'
-                                type="radio" value="Best-rating" name="Order-By" id="Best-rating">
-                            <label class="form-check-label text-dark" for="Best-rating">Best rating</label>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="row">
-                <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("timeRange-popup")'>
-                        <div class="my-3">‎ </div>
-                        <button
-                            class="d-flex align-items-center justify-content-center btn btn-md btn-outline-secondary text-capitalize mn-w-152p mn-h-46p">timeRange
-                            <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
-                                aria-hidden="true"></i></button>
-                    </div>
-                    <div class="popup" id="timeRange-popup">
-                        <div id="timeRange-popup-rows" class="text-center w-100 p-0">
-                        </div>
-                    </div>
-                </div>
-                <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick="clearSearchBarPopups()">
-                        <div class="my-3">‎ </div>
-                        <div>
-                            <button onclick="searchCourses()"
-                                class="btn btn-md btn-outline-secondary text-capitalize mn-w-152p mn-h-46p">search
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-</div>
 </div>
 
 <script>
@@ -652,8 +593,8 @@
             "taughtIn": [userLang],
             "orderBy": "Popularity",
             "availableTimes": [],
-            "pagePlace": 1,
-            "pageNum": 1
+            "courseTime": [20, 60],
+            "activePage": 1,
 
         }
         teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
@@ -698,6 +639,26 @@
         slider.on('update', function (values) {
             updateformData("priceRange", values)
         })
+
+
+
+        timeSlider = document.querySelector('.time-slider')
+        slider = noUiSlider.create(timeSlider, {
+            start: [teachlyFormData.courseTime[0], teachlyFormData.courseTime[1]],
+            connect: true,
+            margin: 5,
+            range: { min: 20, max: 60 },
+            pips: {
+                mode: 'steps',
+                density: 5,
+            },
+        })
+        slider.on('update', function (values) {
+            updateformData("courseTime", values)
+        })
+        document.getElementById("min-course-time").innerHTML = teachlyFormData.courseTime[0]
+        document.getElementById("max-course-time").innerHTML = teachlyFormData.courseTime[1]
+
         setInterval(async function () {
             try {
                 priceRange = JSON.parse(localStorage.getItem("TeachlyFormData")).priceRange
@@ -753,41 +714,6 @@
             timeRange.appendChild(outerDiv);
         }
 
-        button = document.getElementById("toggle-search-bar-button")
-        bar = document.getElementById("product-search-bar")
-        symbol = document.getElementById("toggle-search-bar-button-symbol")
-        if (window.innerWidth > 770) {
-            button.style.visibility = "hidden";
-            button.style.display = "none";
-            bar.style.visibility = "visible";
-            bar.style.display = "block";
-        }
-        else {
-            button.style.visibility = "visible";
-            button.style.display = "inline";
-            bar.style.visibility = "hidden";
-            bar.style.display = "none";
-            symbol.className = "fa fa-bars fa-stack-1x fa-inverse"
-        }
-        function searchBarResizeHandler() {
-            button = document.getElementById("toggle-search-bar-button")
-            bar = document.getElementById("product-search-bar")
-            symbol = document.getElementById("toggle-search-bar-button-symbol")
-            if (window.innerWidth > 770) {
-                button.style.visibility = "hidden";
-                button.style.display = "none";
-                bar.style.visibility = "visible";
-                bar.style.display = "block";
-            }
-            else {
-                button.style.visibility = "visible";
-                button.style.display = "inline";
-                bar.style.visibility = "hidden";
-                bar.style.display = "none";
-                symbol.className = "fa fa-bars fa-stack-1x fa-inverse"
-            }
-        }
-        window.addEventListener("resize", searchBarResizeHandler);
     }
 
     function updateformData(type, val) {
@@ -828,6 +754,13 @@
                 teachlyFormData.availableTimes.push(val)
                 document.getElementById(val).classList.add("active-time-slot-div");
             }
+        }
+        else if (type == "courseTime") {
+            min = val[0];
+            max = val[1];
+            document.getElementById('min-course-time').innerHTML = min
+            document.getElementById('max-course-time').innerHTML = max
+            teachlyFormData["priceRange"] = [min, max];
         }
         else if (type == "pageNum") {
             if (teachlyFormData.pageNum == val) {
@@ -937,28 +870,34 @@
             bar.style.visibility = "visible";
             bar.style.display = "block";
             symbol.className = "fa fa-times fa-stack-1x fa-inverse"
+            document.getElementById("advanced-search-button").setAttribute('style', 'display: inline !important;');
         }
         else {
             bar.style.visibility = "hidden";
             bar.style.display = "none";
             symbol.className = "fa fa-bars fa-stack-1x fa-inverse"
+            document.getElementById("advanced-search-button").setAttribute('style', 'display: none !important;');
+            document.getElementById("advanced-search-button").classList.remove("active-advanced-search-button")
+            document.getElementById("advanced-search-bar").setAttribute('style', 'display: none !important;');
         }
     }
 
     function toggleAdvancedsearchBar() {
-        box = document.getElementById("advanced-filters")
-        if (box.style.display === "none") {
-            box.style.visibility = "visible";
+        advancedBars = document.getElementById("advanced-search-bar")
+        if (advancedBars.style.display == "none") {
+            advancedBars.setAttribute('style', 'display: flex !important;');
+            document.getElementById("advanced-search-button").classList.add("active-advanced-search-button")
         }
         else {
-            bar.style.visibility = "hidden";
+            advancedBars.setAttribute('style', 'display: none !important;');
+            document.getElementById("advanced-search-bar").setAttribute('style', 'display: none !important;');
+            document.getElementById("advanced-search-button").classList.remove("active-advanced-search-button")
         }
     }
 
     async function searchCourses() {
 
         var courseJson = JSON.parse(`{{json context.bodyContext.courseContext }}`.replaceAll('&quot;', `"`))
-
 
         function generateCourse(courseObj) {
             courseId = courseObj.course_id
@@ -1073,7 +1012,7 @@
 
         }
 
-        function generatePagination(cols, offset) { //offset is current page
+        function generatePagination(cols, pageNum) {
             pageNum = Math.ceil(cols / 10) //limited to 10 cols per page
             function genPagButton(active = false, text, offset) {
                 classPair = {
@@ -1158,6 +1097,7 @@
                 for (let i = 0; i < courseArr.length; i++) {
                     courseBox.appendChild(generateCourse(courseArr.courses[i]))
                 }
+                document.getElementById("courses").append(courseBox.children)
 
                 document.getElementById("courses").style.display = "block"
                 document.getElementById("no-courses").style.display = "none"
@@ -1240,7 +1180,8 @@
                                     <h5 class="card-text text-muted fs-4">english</h5>
                                     <div class="row d-flex justify-content-around mb-3" style="height: 20px;">
                                         <span style="width: auto; padding: 3px;">
-                                            <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i> 5
+                                            <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i>
+                                            5
                                             active
                                             students
                                         </span>
