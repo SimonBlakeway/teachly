@@ -348,15 +348,15 @@
 
 <div style="margin-top: 100px;">
     <div id="search-bar-buttons">
-        <div class="fs-30p sans-serif light-blue-text-shadow" style="float: left; padding-left: 15px;">Filters</div>
-        <div style="float: right !important; width:calc(100% - 100px) !important">
+        <div class="fs-30p sans-serif light-blue-text-shadow" style="float: left; padding-left: 15px; padding-right: 15px;">Filters</div>
+        <div style="float: right !important; width:calc(100% - 120px) !important">
             <button onclick="togglesearchBar()"
                 class="bg-black h-40pi fs-20p float-right m-0 p-0 btn btn-outline-primary"
-                style="margin-left: 10px  !important;" id="toggle-search-bar-button">
+                style="margin-left: 10px  !important; width: 50px;" id="toggle-search-bar-button">
                 <span class="fa-stack h-40p" style="vertical-align: top;">
                     <i id="toggle-search-bar-button-symbol"
                         class="fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadow"
-                        style="height: 40px !important; margin-top: -10px;"></i>
+                        style="height: 40px !important; margin-top: -10px; width: 50px"></i>
                 </span>
             </button>
             <button onclick="toggleAdvancedsearchBar()" id="advanced-search-button"
@@ -441,6 +441,7 @@
                             <span id="min-course-time"></span>
                             <span style="margin-left: 5px; margin-right: 5px;">-</span>
                             <span id="max-course-time"></span>
+                            <span> minutes</span>
                         </button>
                     </div>
                     <div class="popup container d-flex align-items-center justify-content-center"
@@ -471,6 +472,24 @@
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="row">
+                <div class="col container d-flex align-items-center justify-content-center">
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col container d-flex align-items-center justify-content-center">
+                            <div class="col container d-flex align-items-center justify-content-center">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
     </div>
 
 
@@ -641,12 +660,12 @@
         })
 
 
-
         timeSlider = document.querySelector('.time-slider')
         slider = noUiSlider.create(timeSlider, {
             start: [teachlyFormData.courseTime[0], teachlyFormData.courseTime[1]],
             connect: true,
-            margin: 5,
+            step: 1,
+            margin: 1,
             range: { min: 20, max: 60 },
             pips: {
                 mode: 'steps',
@@ -909,7 +928,6 @@
 
             if (courseObj.description.length > 232) {
                 description = courseObj.description
-                courseId = courseObj.course_id
                 cutoff = description.substring(0, 232).lastIndexOf(" ")
 
                 shortenedDesc = description.substring(0, cutoff)
@@ -1090,6 +1108,7 @@
                 }
             }
             else {
+                
                 courseBox = document.createElement("div")
 
                 //generate course displays

@@ -5,7 +5,15 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
+async function joke() {
+  try {
 
+  }
+  catch (err) {
+    console.log(err)
+
+  }
+}
 
 
 function escapeStrArr(arr) {
@@ -34,6 +42,7 @@ router.get('/', async (req, res) => {
 // @desc    learn page  
 // @route   GET /subject or speciality
 router.get('/:str', async (req, res) => {
+  console.log(req.settings)
   try {
     str = req.params['str'].replaceAll("-", " ");
     if (utils.isValidSubject(req.settings.lang, str)) {
@@ -81,7 +90,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   reqObj = req.body
   lang = req.settings.lang
 
-
+  
   pricePerLessonRange = reqObj.pricePerLessonRange ? (reqObj.pricePerLessonRange) : [1, 50];
   subject = reqObj.subject ? (reqObj.subject) : "english";
   specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, escapeStrArr(reqObj.specialities))
@@ -95,7 +104,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   if (!utils.isValidSubject(lang, subject)) { res.json({ "err": "invalid subject" }) }
 
   queryString = `
-  SELECT created_at FROM teacher_course
+  SELECT  created_at, course_id, description, teacher_id, course_lessons, price_per_lesson, specialities, taught_in, time_schedule, rating  FROM teacher_course
   WHERE subject =  '${subject}'
   AND price_per_lesson > ${pricePerLessonRange[0]}  
   AND price_per_lesson < ${pricePerLessonRange[1]}  
@@ -106,7 +115,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   ${specialityQueryString}
   ${specialityQueryString}
   ${orderByQueryString}
-  LIMIT ${10} OFFSET ${pagePlace - 1};
+  LIMIT ${10} OFFSET ${pagePlace};
   `
   /*
    * maybe cache countResult on the server?
@@ -121,7 +130,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
     courseResult = db.query(queryString);
 
     Promise.all([courseResult, countResult]).then((vals) => {
-      console.log(Number(vals[1].rows[0].count))
+      console.log(vals[0].rows )
 
       if (typeof vals[1] != "object") {
         res.json({ "courses": vals[0].rows, "count": reqObj.pageAmount })

@@ -76,24 +76,24 @@
         <h3 class="p-4">{{context.bodyContext.registrationForm}}</h3>
         <form onsubmit="return false" class="registration-form-color">
           <div class="row">
-            <div class="col">
+            <div class="col my-2">
               <label class="form-label text" for="firstName">{{context.bodyContext.fullName}}</label>
               <input required type="text" id="username"
                 class="form-control form-control-md border border-info rounded profile-input" />
             </div>
-            <div class="col">
+            <div class="col my-2">
               <label class="form-label text" for="email">{{context.bodyContext.email}}</label>
               <input required type="email" id="email"
                 class="form-control form-control-md border border-info rounded profile-input" />
             </div>
           </div>
           <div class="row">
-            <div class="col">
+            <div class="col my-2">
               <label class="form-label text">{{context.bodyContext.password}}</label>
               <input required minlength="5" maxlength="256" type="password" id="password"
                 class="form-control form-control-md border border-info rounded profile-input" />
             </div>
-            <div class="col">
+            <div class="col my-2">
               <label class="form-label text">{{context.bodyContext.profileImage}}</label>
               <div id="profile-image"
                 class="form-control form-control-md border border-info rounded profile-input d-flex align-items-center justify-content-center"
