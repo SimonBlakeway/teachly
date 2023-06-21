@@ -37,12 +37,12 @@
                         class='fas fa-comments' aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
             </div>
             <div>
-                <div class="icon-signaler" id="profile-signaler"></div>
-                <button onclick="toggleNavPopup('profile-popup')" type="button" class="profile-img"
-                    style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; width: 47px !important;"
-                    style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; margin-left: 10px; margin-right: 10px;">
+                <div class="icon-signaler p-0 m-0" id="profile-signaler"></div>
+                <button onclick="toggleNavPopup('profile-popup')" class="profile-img mx-2" type="button">
 
-
+                    <div class="profile-img m-0 p-0"
+                        style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; margin-top: -2px !important; margin-left: -2px !important;">
+                    </div>
 
 
                 </button>
@@ -71,17 +71,22 @@
             <div class="popup-link row d-flex justify-content-center align-items-center">
                 <div class="col d-flex justify-content-center align-items-center">
                     <div class="profile-img"
-                        style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; width: 47px !important;">
+                        style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; width: 60px !important; height: 60px !important">
                     </div>
                 </div>
                 <div class="col d-flex justify-content-center align-items-center">{{settings.name}}</div>
             </div>
             <ul class="navlist-list">
-                <li class="mx-0"><a class="float-righti px-4" href="\profile\settings" >{{navbarContext.profilePopup.settings}}</a></li>
-                <li class="mx-0"><a class="float-righti px-4" href="\help" class="float-righti">{{navbarContext.profilePopup.help}}</a></li>
-                <li class="mx-0"><a class="float-righti px-4" href="\profile\display">{{navbarContext.profilePopup.display}}</a></li>
-                <li class="mx-0"><a class="float-righti px-4" href="\feedback">{{navbarContext.profilePopup.feedback}}</a></li>
-                <li class="mx-0"><a class="float-righti px-4" href="\auth\logout">{{navbarContext.profilePopup.logout}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4"
+                        href="\profile\settings">{{navbarContext.profilePopup.settings}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4" href="\help"
+                        class="float-righti">{{navbarContext.profilePopup.help}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4"
+                        href="\profile\display">{{navbarContext.profilePopup.display}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4"
+                        href="\feedback">{{navbarContext.profilePopup.feedback}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4"
+                        href="\auth\logout">{{navbarContext.profilePopup.logout}}</a></li>
             </ul>
         </div>
         <div class="nav-popup" id="messages-popup">

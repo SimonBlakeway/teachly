@@ -124,6 +124,8 @@
       width: 47px !important;
       height: 47px !important;
       border-radius: 50% !important;
+      margin: 0px !important;
+      padding:  0px !important;
     }
 
     .light-blue-text-shadow {
