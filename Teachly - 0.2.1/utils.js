@@ -116,7 +116,6 @@ function contextSetup(settings, partials = [], pageName, layout = "main") {
 }
 
 async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 }, maxSize = 2073600) {
-  try {
     /*
       this function prepares the image to 
       be added into the database as a string,
@@ -169,10 +168,6 @@ async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 
     comp = LZCompress(data) //compress image for storage
     return comp //compress image for storage
 
-  } catch (error) {
-    throw new error("errer: image prep")
-
-  }
 }
 
 function isValidLanguage(str, fullName = false) {
@@ -818,6 +813,7 @@ module.exports = {
   escapeStr,
   unEscapeStr,
   currencyFloatToInt,
+  compiledConvert
 }
 
 

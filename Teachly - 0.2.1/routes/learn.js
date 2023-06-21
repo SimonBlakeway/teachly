@@ -5,15 +5,8 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
-async function joke() {
-  try {
 
-  }
-  catch (err) {
-    console.log(err)
 
-  }
-}
 
 
 function escapeStrArr(arr) {

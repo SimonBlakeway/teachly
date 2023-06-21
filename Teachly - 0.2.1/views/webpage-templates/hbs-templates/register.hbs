@@ -53,6 +53,13 @@
     margin-bottom: 20px;
   }
 
+  #email-popup {
+    max-width: 300px !important;
+    -webkit-box-shadow: 0px 7px 49px 0px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 7px 49px 0px rgba(0, 0, 0, 1);
+    box-shadow: 0px 7px 49px 0px rgba(0, 0, 0, 1);
+  }
+
   @media screen and (max-width: 48px) {
     .popup {
       width: 80%;
@@ -78,7 +85,7 @@
           <div class="row">
             <div class="col my-2">
               <label class="form-label text" for="firstName">{{context.bodyContext.fullName}}</label>
-              <input required type="text" id="username"
+              <input required type="text" id="username" minlength="5" maxlength="256"
                 class="form-control form-control-md border border-info rounded profile-input" />
             </div>
             <div class="col my-2">
@@ -104,15 +111,15 @@
           </div>
           <div class="row">
             <div class="col-12 p-4">
-              <div class="form-check d-flex justify-content-center align-items-center mb-4" style="padding: 0% !important;">
+              <div class="form-check d-flex justify-content-center align-items-center mb-4"
+                style="padding: 0% !important;">
                 <label class="form-check-label" style="text-align: center;">
                   {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
                     class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
                 </label>
               </div>
               <div class="d-flex justify-content-center">
-                <button type='submit' onclick="sendSigninReq()"
-                  class="btn btn-outline-primary btn-lg">
+                <button type='submit' onclick="sendSigninReq()" class="btn btn-outline-primary btn-lg">
                   {{context.bodyContext.REGISTER}}</button>
               </div>
               <p class="text-center text-muted mt-5 mb-0 fw-bold text-body">
@@ -127,9 +134,9 @@
   </div>
 </section>
 
-    
-    
-    
+
+
+
 <div id="email-popup" class="popup p-5 bg-light shadow-lg">
   <form onsubmit="return false" id="email-input-form" class="d-flex flex-column">
     <label id="email-label" class="text text-center" for="email-input"
@@ -175,10 +182,25 @@
     }
   }
   sendSigninReq = async function () {
+
+    function validateEmail(email) {
+      const res = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+      return res.test(String(email).toLowerCase());
+    }
+
     try {
       reader = new FileReader();
       reader.onloadend = () => {
-        sendReq([$("#username").val(), reader.result, $("#password").val(), $("#email").val()])
+        name = $("#username").val()
+        pass = $("#password").val()
+        email = $("#email").val()
+
+        if (pass.name < 5) { return }
+        if (pass.length < 5) { return }
+        if (reader.result.substring(0, 10) != "data:image") { return }
+        if (validateEmail(email) == false) { return }
+
+        sendReq([name, reader.result, pass, email])
       };
       reader.readAsDataURL($('#upfile').prop('files')[0])
       sendReq = async function (arr) {
@@ -217,7 +239,7 @@
           }
           else {
             document.getElementById("email-popup").style.display = "grid";
-            document.getElementById("form-section").style.visibility = "hidden";
+            document.getElementById("register").style.visibility = "hidden";
           }
         }
         catch (err) {

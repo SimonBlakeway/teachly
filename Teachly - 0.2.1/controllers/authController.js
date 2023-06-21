@@ -22,36 +22,13 @@ const utils = require('../utils')
 const db = require('../config/db');
 const { get } = require('axios');
 
-//AND  CAST ( user_refresh_token [ ${accountNumber} ] ->> 'created_at' AS INTEGER) < $1
-//id = 196
-async function joke() {
-  allowedInterval =  1686999687
-  token_created_at = 1686998457
-
-  accountNumber = 29
-  try {
-    result = await db.query(`SELECT user_refresh_token [ ${accountNumber} ]  FROM user_info
-      WHERE   CAST ( user_refresh_token [ ${accountNumber} ] ->> 'created_at' AS INTEGER) < $1
-      
-     
-  `, [allowedInterval]);
-    console.log(result.rows[0])
-  } catch (error) {
-    console.log(error)
-
-  }
-}
-
-
-
-
 
 //this group is for manual login/signin, 
 
 exports.login = async function (req, res) {
   user = req.body
   if (req.settings.isUser == true) { res.redirect("/") }
-  user.name = user.name.trim()
+  user.name = utils.compiledConvert(user.name.trim())
   try {
     result = await db.query(`
     SELECT 
@@ -72,6 +49,11 @@ exports.login = async function (req, res) {
       res.json({ "err": "invalid password" })
       return
     }
+
+    if (result.rows[0].email_code.trim() != "true") {
+      res.json(404)
+      return
+    }
     try {
       userToken = await utils.genUserRefreshToken(result.rows[0].id)
       userCookie = await utils.genUserCookie(result.rows)
@@ -88,86 +70,59 @@ exports.login = async function (req, res) {
 };
 exports.register = async function (req, res) {
   try {
-    user = req.body
-
-
-    try {
-      result = await db.query(`SELECT email, name FROM user_info WHERE email = $1 OR name=$2`, [user.email, user.name]);
-      if (result.rowCount != 0) {
-        if (result.rows[0].name.trim() == user.name.trim()) {
-          res.json({ "err": "name taken" })
-          return
-        }
-        if (result.rows[0].email.trim() == user.email.trim()) {
-          res.json({ "err": "email taken" })
-          return
-        }
+    user = await utils.cleanUserData(req.body)
+    result = await db.query(`SELECT email, name FROM user_info WHERE email = $1 OR name=$2`, [user.email, user.name]);
+    if (result.rowCount != 0) {
+      if (result.rows[0].name == user.name) {
+        throw new Error("name taken")
       }
-      user = await utils.cleanUserData(user)
-      randInt = utils.genSafeRandomNum(100000, 1000000)
-      console.log(randInt, "randint")
-
-      try {
-        response = await db.query(`INSERT INTO user_info ("name", "email", "profile_img", "lang", "created_at", "pass_hash", "email_code", "cur", "login_type", "user_refresh_token" ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [user.name, user.email, user.profileImage, req.settings.lang, Math.floor(Date.now() / 1000), user.password, "00" + randInt, req.settings.cur, "custom", [{}]]);
-        //email.sendSignUpEmail(user.email, randInt, req.settings.lang)  
-        res.sendStatus(200)
-      } catch (error) {
-        console.log(error)
+      if (result.rows[0].email == user.email) {
+        throw new Error("email taken")
       }
-    } catch (error) {
-      console.log(error)
     }
+   
+    randInt = utils.genSafeRandomNum(100000, 1000000)
+    console.log(randInt, "randint")
+
+    response = await db.query(`INSERT INTO user_info ("name", "email", "profile_img", "lang", "created_at", "pass_hash", "email_code", "cur", "login_type", "user_refresh_token" ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [user.name, user.email, user.profileImage, req.settings.lang, Math.floor(Date.now() / 1000), user.password, "00" + randInt, req.settings.cur, "custom", [{}]]);
+    //email.sendSignUpEmail(user.email, randInt, req.settings.lang)  
+    res.sendStatus(200)
   } catch (err) {
+    res.json({ "err": err.message })
+    if (err.message == "name taken") { }
+    else if (err.message == "email taken") { }
     console.log(err)
   }
 };
 exports.emailValidation = async function (req, res) {
-  if (req.settings.id) {
-    res.redirect("/") //is user already has an account
-    return
-  }
-  if (!(req.query.email_code && req.query.email)) {
-    res.redirect("/") //make sure the right values are there
-    return
-  }
-  email_code = parseInt(req.query.email_code)
+  if (req.settings.id) throw new Error("user already has an account active")
+
+  if (!(req.query.emailCode && req.query.email)) throw new Error("missing values")
+  email_code = parseInt(req.query.emailCode)
   userEmail = decodeURI(req.query.email)
+
+  if ((isNaN(email_code)) || userEmail == "") throw new Error("invalid values")
 
 
 
   try {
     result = await db.query(`
-    SELECT
-      user_info.email, 
-      user_info.name,
-      user_info.lang,
-      user_info.cur, 
-      user_info.id, 
-      user_info.pass_hash
+    SELECT email, name, lang, cur, id, pass_hash, email_code
     FROM user_info WHERE email = $1`, [userEmail]);
+
     if (result.rowCount == 0) {
-      console.log("validation result is empty")
-      res.redirect("/") //if the user with email address doesn't exist, redirect, only applicable to mal requests
-      return
+      throw new Error("validation result is empty")
     }
     if (result.rows[0].email_code.trim() == "true") {
-      console.log("validation email_code is true")
-
-      res.redirect("/") //if the email address already exists, redirect, only applicable to mal requests
-      return
+      throw new Error("validation email_code is true")
     }
     if (parseInt(result.rows[0].email_code) > 9999999) {
-      console.log("validation email_code has been stried 9 times, redirect")
-      res.redirect("/") //if the user has tried to log in 9 times redirect
-      return
+      throw new Error("validation email_code has been tried 9 times")
     }
     if (result.rows[0].email_code.substring(2, 7) != email_code.toString()) {
-      console.log("wrong email code")
-      email_code = "0" + (parseInt(result.rows[0].email_code[1] + 1)) + result.rows[0].email_code.substring(2, 7);
-
-      db.query(`UPDATE user_info email SET "email_code" = $1, WHERE WHERE email = $2;`, [email_code, userEmail])
-      res.json({ "err": "wrong email_code" })
-      return
+      console.log(result.rows[0].email_code.substring(2, 7), "db email code")
+      console.log(email_code.toString(), "client email code")
+      throw new Error("wrong email_code")
     }
     userToken = await utils.genUserRefreshToken(result.rows[0].id)
     userCookie = await utils.genUserCookie(result.rows)
@@ -175,10 +130,21 @@ exports.emailValidation = async function (req, res) {
 
     res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
     res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+    console.log("all good")
     res.sendStatus(200)
 
   } catch (error) {
-    console.log(error)
+    console.log(error.message)
+
+    if (error.message == "validation result is empty") { }
+    else if (error.message == 'validation email_code is true') { }
+    else if (error.message == 'validation email_code has been tried 9 times') { }
+    else if (error.message == 'wrong email_code') {
+      email_code = ((parseInt(result.rows[0].email_code[1] + 1)) + result.rows[0].email_code.substring(2, 7)).padStart(8, "0")
+      db.query(`UPDATE user_info email SET email_code = $1 WHERE WHERE email = $2;`, [email_code, userEmail])
+      res.json({ "err": "wrong email_code" })
+    }
+    else { res.sendStatus(200) }
   }
 }
 
@@ -246,15 +212,6 @@ exports.settings = function (req, res) {
   encodedUserCookie = false
   encodedUserToken = false
 
-  try {
-    encodedUserCookie = req.cookies.userCookie
-  }
-  catch { }
-
-  try {
-    encodedUserToken = req.cookies.userToken
-  }
-  catch { }
 
   try {
     change = req.body
@@ -308,7 +265,6 @@ exports.settings = function (req, res) {
   }
 }
 
-
 exports.refreshToken = async function (req, res) {
   if (req.settings.isUser == false) { res.sendStatus(404); return; } //if not user return
 
@@ -332,7 +288,7 @@ exports.refreshToken = async function (req, res) {
     }
     db_token = result.rows[0].user_refresh_token
 
-    if ((Math.floor(Date.now() / 1000) - db_token.created_at) < 30 ) {
+    if ((Math.floor(Date.now() / 1000) - db_token.created_at) < 30) {
       console.log((Math.floor(Date.now() / 1000) - db_token.created_at))
       //last refresh was less than 5 minutes ago 
       throw new Error('last update was less than 30 secs ago');
@@ -368,7 +324,7 @@ exports.refreshToken = async function (req, res) {
       created_at: date
     };
 
-    allowedInterval = date -  60 * 5 //this limits the amount of updates to once every 5 min ago
+    allowedInterval = date - 60 * 5 //this limits the amount of updates to once every 5 min ago
 
 
     //won't update if last update was less than
