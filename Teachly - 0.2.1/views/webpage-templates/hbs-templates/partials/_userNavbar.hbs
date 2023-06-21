@@ -39,7 +39,12 @@
             <div>
                 <div class="icon-signaler" id="profile-signaler"></div>
                 <button onclick="toggleNavPopup('profile-popup')" type="button" class="profile-img"
+                    style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; width: 47px !important;"
                     style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; margin-left: 10px; margin-right: 10px;">
+
+
+
+
                 </button>
             </div>
         </div>
@@ -72,11 +77,11 @@
                 <div class="col d-flex justify-content-center align-items-center">{{settings.name}}</div>
             </div>
             <ul class="navlist-list">
-                <li><a href="\profile\settings">{{navbarContext.profilePopup.settings}}</a></li>
-                <li><a href="\help">{{navbarContext.profilePopup.help}}</a></li>
-                <li><a href="\profile\display">{{navbarContext.profilePopup.display}}</a></li>
-                <li><a href="\feedback">{{navbarContext.profilePopup.feedback}}</a></li>
-                <li><a href="\auth\logout">{{navbarContext.profilePopup.logout}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4" href="\profile\settings" >{{navbarContext.profilePopup.settings}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4" href="\help" class="float-righti">{{navbarContext.profilePopup.help}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4" href="\profile\display">{{navbarContext.profilePopup.display}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4" href="\feedback">{{navbarContext.profilePopup.feedback}}</a></li>
+                <li class="mx-0"><a class="float-righti px-4" href="\auth\logout">{{navbarContext.profilePopup.logout}}</a></li>
             </ul>
         </div>
         <div class="nav-popup" id="messages-popup">

@@ -5,10 +5,6 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
-
-
-
-
 function escapeStrArr(arr) {
   try {
     newArr = []
@@ -22,6 +18,8 @@ function escapeStrArr(arr) {
     throw new Error("error, bad time_Schedule arr")
   }
 }
+
+
 
 // @desc    learn landing page 
 // @route   GET /user/id
@@ -141,7 +139,6 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
     res.json({ "err": "server error" })
   }
 })
-
 
 
 module.exports = router

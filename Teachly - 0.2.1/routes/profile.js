@@ -31,6 +31,7 @@ router.get('/img', async (req, res) => {
   try {
     result = await db.query(`SELECT profile_img, id FROM user_info WHERE id = $1`, [req.settings.id]);
     if (result.rowCount == 0) {
+      console.log("not found image")
       res.send("404")
       return
     }
@@ -41,6 +42,7 @@ router.get('/img', async (req, res) => {
     fs.writeFileSync(directoryPath + imgName, img, { encoding: 'base64' });
     res.sendFile(imgName, { root: directoryPath }, () => {
       fs.unlink(directoryPath + imgName, err => {
+        if (err) console.log(err, "ererr")
       })
     })
   } catch (error) {

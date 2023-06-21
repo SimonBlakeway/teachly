@@ -119,3 +119,7 @@
 .h-20p {
     height: 20px;
 }
+
+.float-righti {
+    float: right !important;
+}

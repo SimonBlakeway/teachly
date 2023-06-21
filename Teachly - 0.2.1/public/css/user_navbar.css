@@ -208,3 +208,7 @@
     #profile-popup {
       height: 410px;
     }
+
+    .float-righti {
+      float: right !important;
+  }
