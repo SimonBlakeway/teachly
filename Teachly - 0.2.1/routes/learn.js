@@ -21,6 +21,8 @@ function escapeStrArr(arr) {
 
 
 
+
+
 // @desc    learn landing page 
 // @route   GET /user/id
 router.get('/', async (req, res) => {
@@ -121,7 +123,6 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
     courseResult = db.query(queryString);
 
     Promise.all([courseResult, countResult]).then((vals) => {
-      console.log(vals[0].rows )
 
       if (typeof vals[1] != "object") {
         res.json({ "courses": vals[0].rows, "count": reqObj.pageAmount })

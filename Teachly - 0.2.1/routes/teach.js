@@ -50,29 +50,20 @@ router.get('/create-course', async (req, res) => {
 router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res) => {
   try {
 
-
-
-    function checkData(courseData) {
-      if (courseData.lesson_time > 60) return false
-      if (courseData.lesson_time < 20) return false
-
-      if (courseData.price > 60)  return false 
-      if (courseData.price < 1)  return false 
-
-
-      return true
-
-    }
-
     courseData = req.body
 
-    if (checkData(courseData) == false) {
-      res.send({ "result": false })
-      return
 
-    }
+
+    if (courseData.lesson_time >= 60) throw new Error("lesson time too high")
+    if (courseData.lesson_time < 20) throw new Error("lesson time too low")
+    if (courseData.price >= 60) throw new Error("price too high")
+    if (courseData.price < 1) throw new Error("price too low")
+
+ 
+
 
     res.send({ "result": true })
+
 
 
 
@@ -88,7 +79,8 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       subject: courseData.subject,
       specialities: courseData.specialities,
       availableTimes: courseData.availableTimes,
-      courseImg: courseData.courseImg
+      courseImg: courseData.courseImg,
+      lesson_time: courseData.lesson_time
     }
 
 
@@ -107,7 +99,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
             ts_vector,
             lesson_time
               ) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ) )`,
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ), $11 )`,
         [courseObj.description,
         courseObj.createdAt,
         courseObj.taughtIn,
@@ -122,12 +114,13 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
         ]);
     } catch (error) {
       console.log(error)
-      //res.send({ "err": err }) //maybe send error notification to user?
     }
 
+
+
   } catch (err) {
-    console.log(err)
-    //res.send({ "err": err })
+    console.log(err.message)
+    res.send({ "err": err.message }) 
   }
 })
 

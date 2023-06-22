@@ -612,7 +612,7 @@
           },
         })
         if (res.data.err) {
-          //toggleErrPopup(res.data.err)
+          toggleErrPopup(res.data.err)
         }
         else {
           console.log("reee")
@@ -630,9 +630,9 @@
         description: $("#description").val(),
         courseImg: imageStr,
         taughtIn: taughtInArr,
-        pricePerLesson: $("#price").val(),
+        pricePerLesson: Number($("#price").val()),
         availableTimes: $(".active-time-slot-div").map(function () { return this.id }).get(),
-        lesson_time: document.getElementById("lesson_time").innerHTML,
+        lesson_time: Number( document.getElementById("time-shown").innerHTML ),
       }
       if (!basicCourseObjCheck(courseData)) {
         return

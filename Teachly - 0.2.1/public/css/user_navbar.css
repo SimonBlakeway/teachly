@@ -7,14 +7,13 @@
       visibility: hidden;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
       text-align: left;
-      overflow: auto;
-      -ms-overflow-style: none;
+
       /* Internet Explorer 10+ */
       scrollbar-width: none;
       /* Firefox */
       font-size: 20px;
       border-radius: 10px;
-      webkit-touch-callout: none;
+      -webkit-touch-callout: none;
       -webkit-user-select: none;
       -khtml-user-select: none;
       -moz-user-select: none;
@@ -23,6 +22,22 @@
       border-style: solid;
       border-color: white;
       border-width: 20px;
+    }
+
+    .scroll {
+      overflow: auto;
+      -ms-overflow-style: none;
+      /* Internet Explorer 10+ */
+      scrollbar-width: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .scroll::-webkit-scrollbar {
+      display: none;
     }
 
     .nav-popup::-webkit-scrollbar {
@@ -125,7 +140,7 @@
       height: 47px !important;
       border-radius: 50% !important;
       margin: 0px !important;
-      padding:  0px !important;
+      padding: 0px !important;
     }
 
     .light-blue-text-shadow {
@@ -213,4 +228,4 @@
 
     .float-righti {
       float: right !important;
-  }
+    }
