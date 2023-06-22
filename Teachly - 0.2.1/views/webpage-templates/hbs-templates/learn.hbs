@@ -919,7 +919,11 @@
         var courseJson = JSON.parse(`{{json context.bodyContext.courseContext }}`.replaceAll('&quot;', `"`))
 
         function generateCourse(courseObj) {
+
+            console.log(courseObj)
             courseId = courseObj.course_id
+            teacherId = courseObj.teacher_id
+            teacher_name = courseObj.teacher_name
 
 
             //read more cutoff should be longer
@@ -934,7 +938,7 @@
                 moreDesc = description.substring(cutoff, description.length)
 
                 description = `                                   
-                 <p class="card-text mb-0" id="${courseObj.name.replaceAll(" ", "-")}-course">
+                 <p class="card-text mb-0" id="${courseObj.teacher_name.replaceAll(" ", "-")}-course">
                    ${shortenedDesc}
                     <span id="${courseId}-ellipses">...</span>
                     <div id="${courseId}-more-course-description" class="more-course-description">
@@ -949,7 +953,7 @@
             }
             else {
                 description = `
-                    <p class="card-text mb-0" id="${courseObj.name.replaceAll(" ", "-")}-course">
+                    <p class="card-text mb-0" id="${teacher_name.replaceAll(" ", "-")}-course">
                         ${courseObj.description}
                     </p>`
             }
@@ -959,12 +963,12 @@
                            <div class="row mx-0 p-0 my-05 custom-rounded custom-shadow align-items-center en-100-366px bg-wht mn-w-300p mx-w-1000p w-90">
                             <div class="col p-3 m-0 mn-w-300p">
                                 <img src="/images/profile/${courseObj.id}" class="course-img rounded-start" width="1000" height="800"
-                                    alt="${courseJson.imageAlt.pre}${courseObj.name}${courseJson.imageAlt.post}">
+                                    alt="${courseJson.imageAlt.pre}${teacher_name}${courseJson.imageAlt.post}">
                             </div>
                             <div class="col p-0 m-0 mn-w-300p">
                                 <div class="card-body p-4 m-0">
-                                    <h5 class="card-title fs-1">${courseObj.name}</h5>
-                                    <h5 class="card-text text-muted fs-4">${courseObj.name}</h5>
+                                    <h5 class="card-title fs-1">${teacher_name}</h5>
+                                    <h5 class="card-text text-muted fs-4">${teacher_name}</h5>
                                     <div class="row d-flex justify-content-around mb-3 h-20p text-left p-3p w-auto">
                                         <span>
                                             <i class="fa fa-users fs-15p" aria-hidden="true"></i>
@@ -979,7 +983,7 @@
                                             ${courseJson.totalLessons.post}
                                         </span>
                                     </div>
-                                    <p class="card-text mb-0" id="${courseObj.name.replaceAll(" ", "-")}-course">
+                                    <p class="card-text mb-0" id="${teacher_name.replaceAll(" ", "-")}-course">
                                         ${description}
                                     </p>
                                     <div class="row mt-5 h-auto">
@@ -1004,7 +1008,7 @@
                                                             <span>${courseObj.price_per_lesson * userCur}</span>
                                                         </span>
                                                     </div>
-                                                    <div class="d-flex justify-content-center w-100">${courseJson.lessonTime.pre}${courseObj.ratings}${courseJson.ratings.lessonTime}</div>
+                                                    <div class="d-flex justify-content-center w-100">${courseJson.lesson_time.pre}${courseObj.lesson_time}${courseJson.ratings.lesson_time}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1030,8 +1034,9 @@
 
         }
 
-        function generatePagination(cols, pageNum) {
-            pageNum = Math.ceil(cols / 10) //limited to 10 cols per page
+        function generatePagination(rows, offset) {
+            offset++
+            pageNum = Math.ceil(rows / 10) //limited to 10 cols per page
             function genPagButton(active = false, text, offset) {
                 classPair = {
                     false: "pagination-button",
@@ -1095,6 +1100,8 @@
                     'Content-Type': 'application/json',
                 },
             })
+  
+
             if (res.data.err) {
                 if (res.data.err == 404) {
                     document.getElementById("courses").style.display = "none"
@@ -1112,9 +1119,9 @@
                 courseBox = document.createElement("div")
 
                 //generate course displays
-                courseArr = res.data
+                courseArr = res.data.courses
                 for (let i = 0; i < courseArr.length; i++) {
-                    courseBox.appendChild(generateCourse(courseArr.courses[i]))
+                    courseBox.appendChild(generateCourse(courseArr[i]), )
                 }
                 document.getElementById("courses").append(courseBox.children)
 
@@ -1123,12 +1130,13 @@
                 document.getElementById("server-error").style.display = "none"
 
                 //update pagination
-                generatePagination(courseArr.length, result.count)
+                generatePagination(res.data.count, teachlyFormData.activePage)
 
             }
 
         }
         catch (err) {
+            console.log(err)
             document.getElementById("courses").style.display = "none"
             document.getElementById("no-courses").style.display = "none"
             document.getElementById("server-error").style.display = "block"

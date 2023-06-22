@@ -128,7 +128,6 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
 // @route   GET /
 router.get('/course/:courseId/settings', async (req, res) => { //[req.params.courseId]
   try {
-    console.log(req.settings)
 
     res.render('createCourse', {
       layout: "main",

@@ -40,7 +40,13 @@ function removeElement(id) {
 }
 
 function toLocalNum(num) {
-    return num.toLocaleString(userLang);
+    try {
+        return num.toLocaleString(userLang);
+    }
+    catch (err) {
+        num = 0
+        return num.toLocaleString(userLang);
+    }
 }
 
 

@@ -35,7 +35,6 @@ router.get('/', async (req, res) => {
 // @desc    learn page  
 // @route   GET /subject or speciality
 router.get('/:str', async (req, res) => {
-  console.log(req.settings)
   try {
     str = req.params['str'].replaceAll("-", " ");
     if (utils.isValidSubject(req.settings.lang, str)) {
@@ -97,7 +96,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   if (!utils.isValidSubject(lang, subject)) { res.json({ "err": "invalid subject" }) }
 
   queryString = `
-  SELECT  created_at, course_id, description, teacher_id, course_lessons, price_per_lesson, specialities, taught_in, time_schedule, rating  FROM teacher_course
+  SELECT  created_at, course_id, description, teacher_id, course_lessons, price_per_lesson, specialities, taught_in, time_schedule, teacher_name, rating  FROM teacher_course
   WHERE subject =  '${subject}'
   AND price_per_lesson > ${pricePerLessonRange[0]}  
   AND price_per_lesson < ${pricePerLessonRange[1]}  
