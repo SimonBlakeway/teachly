@@ -624,11 +624,14 @@
       }
     }
     try {
-      courseData = {
+
+
         specialities = $("#specialities").text()
         if (specialities == "\n                  Choose") {specialities = []}
+
+      courseData = {
         subject: $("#subject").text(),
-        specialities: $("#specialities").text().split(", "),
+        specialities: specialities,
         description: $("#description").val(),
         courseImg: imageStr,
         taughtIn: taughtInArr,

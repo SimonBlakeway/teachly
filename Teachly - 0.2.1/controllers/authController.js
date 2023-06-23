@@ -70,17 +70,18 @@ exports.login = async function (req, res) {
 };
 exports.register = async function (req, res) {
   try {
-    user = await utils.cleanUserData(req.body)
+ 
     result = await db.query(`SELECT email, name FROM user_info WHERE email = $1 OR name=$2`, [user.email, user.name]);
     if (result.rowCount != 0) {
-      if (result.rows[0].name == user.name) {
+      if (result.rows[0].name == user.name.trim()) {
         throw new Error("name taken")
       }
-      if (result.rows[0].email == user.email) {
+      if (result.rows[0].email == user.email.trim()) {
         throw new Error("email taken")
       }
     }
-   
+    user = await utils.cleanUserData(req.body)
+
     randInt = utils.genSafeRandomNum(100000, 1000000)
     console.log(randInt, "randint")
 
@@ -95,56 +96,60 @@ exports.register = async function (req, res) {
   }
 };
 exports.emailValidation = async function (req, res) {
-  if (req.settings.id) throw new Error("user already has an account active")
-
-  if (!(req.query.emailCode && req.query.email)) throw new Error("missing values")
-  email_code = parseInt(req.query.emailCode)
-  userEmail = decodeURI(req.query.email)
-
-  if ((isNaN(email_code)) || userEmail == "") throw new Error("invalid values")
-
-
-
   try {
-    result = await db.query(`
-    SELECT email, name, lang, cur, id, pass_hash, email_code
-    FROM user_info WHERE email = $1`, [userEmail]);
+    if (req.settings.id) throw new Error("user already has an account active")
 
-    if (result.rowCount == 0) {
-      throw new Error("validation result is empty")
-    }
-    if (result.rows[0].email_code.trim() == "true") {
-      throw new Error("validation email_code is true")
-    }
-    if (parseInt(result.rows[0].email_code) > 9999999) {
-      throw new Error("validation email_code has been tried 9 times")
-    }
-    if (result.rows[0].email_code.substring(2, 7) != email_code.toString()) {
-      console.log(result.rows[0].email_code.substring(2, 7), "db email code")
-      console.log(email_code.toString(), "client email code")
-      throw new Error("wrong email_code")
-    }
-    userToken = await utils.genUserRefreshToken(result.rows[0].id)
-    userCookie = await utils.genUserCookie(result.rows)
-    db.query(`UPDATE user_info SET email_code = $1 WHERE email = $2;`, ["true", userEmail])
+    if (!(req.query.emailCode && req.query.email)) throw new Error("missing values")
+    email_code = parseInt(req.query.emailCode)
+    userEmail = decodeURI(req.query.email)
 
-    res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-    res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-    console.log("all good")
-    res.sendStatus(200)
+    if ((isNaN(email_code)) || userEmail == "") throw new Error("invalid values")
 
+
+
+    try {
+      result = await db.query(`
+      SELECT email, name, lang, cur, id, pass_hash, email_code
+      FROM user_info WHERE email = $1`, [userEmail]);
+
+      if (result.rowCount == 0) {
+        throw new Error("validation result is empty")
+      }
+      if (result.rows[0].email_code.trim() == "true") {
+        throw new Error("validation email_code is true")
+      }
+      if (parseInt(result.rows[0].email_code) > 9999999) {
+        throw new Error("validation email_code has been tried 9 times")
+      }
+      if (result.rows[0].email_code.substring(2, 7) != email_code.toString()) {
+        console.log(result.rows[0].email_code.substring(2, 7), "db email code")
+        console.log(email_code.toString(), "client email code")
+        throw new Error("wrong email_code")
+      }
+      userToken = await utils.genUserRefreshToken(result.rows[0].id)
+      userCookie = await utils.genUserCookie(result.rows)
+      db.query(`UPDATE user_info SET email_code = $1 WHERE email = $2;`, ["true", userEmail])
+
+      res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      console.log("all good")
+      res.sendStatus(200)
+
+    } catch (error) {
+      console.log(error.message)
+
+      if (error.message == "validation result is empty") { }
+      else if (error.message == 'validation email_code is true') { }
+      else if (error.message == 'validation email_code has been tried 9 times') { }
+      else if (error.message == 'wrong email_code') {
+        email_code = ((parseInt(result.rows[0].email_code[1] + 1)) + result.rows[0].email_code.substring(2, 7)).padStart(8, "0")
+        db.query(`UPDATE user_info email SET email_code = $1 WHERE WHERE email = $2;`, [email_code, userEmail])
+        res.json({ "err": "wrong email_code" })
+      }
+      else { res.sendStatus(200) }
+    }
   } catch (error) {
     console.log(error.message)
-
-    if (error.message == "validation result is empty") { }
-    else if (error.message == 'validation email_code is true') { }
-    else if (error.message == 'validation email_code has been tried 9 times') { }
-    else if (error.message == 'wrong email_code') {
-      email_code = ((parseInt(result.rows[0].email_code[1] + 1)) + result.rows[0].email_code.substring(2, 7)).padStart(8, "0")
-      db.query(`UPDATE user_info email SET email_code = $1 WHERE WHERE email = $2;`, [email_code, userEmail])
-      res.json({ "err": "wrong email_code" })
-    }
-    else { res.sendStatus(200) }
   }
 }
 

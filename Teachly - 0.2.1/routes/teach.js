@@ -59,7 +59,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
     if (courseData.price >= 60) throw new Error("price too high")
     if (courseData.price < 1) throw new Error("price too low")
 
- 
+
 
 
     res.send({ "result": true })
@@ -79,7 +79,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       subject: courseData.subject,
       specialities: courseData.specialities,
       availableTimes: courseData.availableTimes,
-      courseImg: courseData.courseImg,
+      courseImg: await utils.ImagePrep(utils.LZDecompress(courseData.courseImg), `${req.settings.name}-course-${courseData.subject}`, dimensions = [1440, 1440], maxSize = 2097152),
       lesson_time: courseData.lesson_time
     }
 
@@ -98,8 +98,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
             teacher_name,
             ts_vector,
             lesson_time
-              ) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ), $11 )`,
+              ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ), $11 )`,
         [courseObj.description,
         courseObj.createdAt,
         courseObj.taughtIn,
@@ -120,7 +119,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
 
   } catch (err) {
     console.log(err.message)
-    res.send({ "err": err.message }) 
+    res.send({ "err": err.message })
   }
 })
 

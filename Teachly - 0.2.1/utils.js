@@ -115,58 +115,81 @@ function contextSetup(settings, partials = [], pageName, layout = "main") {
   }
 }
 
-async function ImagePrep(imgStr, name, dimensions = { height: 1440, width: 1440 }, maxSize = 2073600) {
-    /*
-      this function prepares the image to 
-      be added into the database as a string,
-
-      the rough ouline is
-
-      1, convert the input string into an image file
-      1 alter the image based of it's data, since images come in a variety of sizes and shapes there's no one size fits all function 
-
-    */
-    name = name.replaceAll(" ", "-")
-    directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing
-    fileName = `${name}.jpeg`
-    alteredFileName = `${name}-altered.jpeg`
-    base64Image = imgStr.split(';base64,').pop(); //the "cap" needs to be removed before it can be converted into an image
-    //imageQualityRatio = ((414330 / (base64Image.length *  0.75)) * 100) > 100 ? 100 : Math.round( (414330 / (base64Image.length *  0.75)) * 100) // this is the quality percentage, so if an image has a very high quality this line will find the perfect percentage to get it into the tight range, if not it sets the quality percentate to max
-    var val = maxSize
-    qal = Math.round((maxSize / (base64Image.length * 0.75)) / 8)
-    org = Math.round((maxSize / (base64Image.length * 0.75)) * 100)
 
 
 
-    imageQualityRatio = org > 100 ? qal : org
-    imageQualityRatio = imageQualityRatio > 100 ? 100 : imageQualityRatio
-    imageQualityRatio = 100 // remove if image too big
+async function ImagePrep(imgStr, name, dimensions = [1440, 1440], maxSize = 1048576) {
+  //image stored as string, name to use as image name, dimension the the image will sit in [width, height], maxsize in bytes of image
 
-    fs.writeFileSync(directoryPath + fileName, base64Image, { encoding: 'base64' }); //converts string to images
+  /*
+    this function prepares the image to 
+    be added into the database as a string,
 
-    imgMetadata = await sharp(directoryPath + fileName).metadata(); // I need the metadata to get the heigth and width
-    ratio = imgMetadata.height >= imgMetadata.width ? dimensions.height / imgMetadata.height : dimensions.width / imgMetadata.width
-    await sharp(directoryPath + fileName)
-      .resize({
-        width: Math.round(imgMetadata.width * ratio),
-        height: Math.round(imgMetadata.height * ratio)
-      })
-      .jpeg({ mozjpeg: true, quality: imageQualityRatio, }) //,  quality: imageQualityRatio, })
-      .toFile(directoryPath + alteredFileName);
-    data = Buffer.from(fs.readFileSync(directoryPath + alteredFileName)).toString('base64');
-    fs.unlink(directoryPath + fileName, err => {
-      if (err) {
-        throw err
-      }
+    the rough ouline is
+
+    1, convert the input string into an image file
+    2, alter the image based of it's data, since images come in a variety of sizes and shapes there's no one size fits all function 
+
+  */
+  name = name.replaceAll(" ", "-")
+  directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing
+  fileName = `${name}.jpeg`
+  alteredFileName = `${name}-altered.jpeg`
+  base64Image = imgStr.split(';base64,').pop(); //the "cap" needs to be removed before it can be converted into an image
+
+
+  imageQualityRatio =  Math.round(( maxSize  / (base64Image.length * 0.75) ) * 100)
+
+
+
+  if (imageQualityRatio >= 1) {
+    imageQualityRatio = 100
+  }
+  else {
+    imageQualityRatio = imageQualityRatio * 100
+  }
+
+  fs.writeFileSync(directoryPath + fileName, base64Image, { encoding: 'base64' }); //converts string to image
+
+  imgMetadata = await sharp(directoryPath + fileName).metadata(); // I need the metadata to get the heigth and width
+
+  imageDimensions = [imgMetadata.width, dimensions.height]
+  index = imageDimensions.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+  console.log(`leading side is ${index}`)
+  ratio = dimensions[index] / imageDimensions[index]
+
+
+  // ratio = imgMetadata.height >= imgMetadata.width ? dimensions.height / imgMetadata.height : dimensions.width / imgMetadata.width
+
+
+
+
+
+  await sharp(directoryPath + fileName)
+    .resize({
+      width: Math.round(imgMetadata.width * ratio),
+      height: Math.round(imgMetadata.height * ratio)
     })
-    fs.unlink(directoryPath + alteredFileName, err => {
-      if (err) {
-        console.log(err)
-        throw err
-      }
-    })
-    comp = LZCompress(data) //compress image for storage
-    return comp //compress image for storage
+    .jpeg({ mozjpeg: true, quality: imageQualityRatio, })
+    .toFile(directoryPath + alteredFileName);
+  data = Buffer.from(fs.readFileSync(directoryPath + alteredFileName)).toString('base64');
+
+
+  fs.unlink(directoryPath + fileName, err => {
+    if (err) {
+      throw err
+    }
+  })
+  fs.unlink(directoryPath + alteredFileName, err => {
+    if (err) {
+      console.log(err)
+      throw err
+    }
+  })
+
+
+  comp = LZCompress(data) //compress image for storage
+  return comp
 
 }
 
@@ -346,8 +369,8 @@ function genUserCookie(userInfo) {
   try {
     //the idea is it take a pg row and make the user cookie
     payload = {
-      name: userInfo[0].name.trim(),
-      lang: userInfo[0].lang.trim(),
+      name: userInfo[0].name,
+      lang: userInfo[0].lang,
       cur: userInfo[0].cur,
       id: userInfo[0].id,
       created_at: Math.floor(Date.now() / 1000),
@@ -404,99 +427,6 @@ async function genUserRefreshToken(id) {
     console.log(error)
     throw error
   }
-}
-
-async function refreshUserToken(id, user_refresh_string, accountNumber, created_at) {
-    client_token = {
-      id: id,
-      user_refresh_string: user_refresh_string,
-      accountNumber: accountNumber,
-      created_at: created_at
-    }
-    let result = await db.query(`select user_refresh_token [ ${client_token.accountNumber} ] FROM user_info WHERE id = $1`, [id]);
-
-    if (result.rowCount == 0) {
-      throw new Error('row count is 0');
-    }
-    db_token = result.rows[0].user_refresh_token
-
-
-    ////if cookie was changes recently, return
-    if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 10) {
-      throw new Error('db token was updated recently');
-    }
-
-
-
-
-
-
-    //check if tokens don't match
-    if (db_token.created_at != client_token.created_at) {
-      if ((Math.floor(Date.now() / 1000) - db_token.created_at) >= 900) { //15 min 900
-        console.log("diff is " + (Math.floor(Date.now() / 1000) - db_token.created_at))
-        db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
-        throw new Error('client/db created_at are not the same');
-      }
-      else {
-        throw new Error('client/db created_at are not the same but time is less the 30 secs');
-      }
-      /*
-so the current imp has a problem
-when a user needs to refresh his token and 
-he make two requests to the server in a small amount of time
-one is proccesed befor the other is, which updates the database 
-with a new token and sends the client token to the client
-but the slower of the two request still has the old token and
-needs to reset the refresh token, to it triggers this func as well,
-but because the database has been updated the user trigger an error and 
-is logged out
-
-the current best idea is to add a conditional to the code in created_at
-checker of the refreshUserToken func, to allow the user to remain logged in for another
-minute or so, which would allow the request to complete and return to the browser, 
-where the new token has been sent, and in that case to new token is will be 
-sent on future requests
-
-this nested conditional is the current best solution i've thought of
-
-*/
-
-    }
-    if (db_token.user_refresh_string != client_token.user_refresh_string) {
-      db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
-      throw new Error('client/db user_refresh_string are not the same');
-    }
-    if (db_token.accountNumber != client_token.accountNumber) {
-      db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1 WHERE id = $2`, [{}, id]);
-      throw new Error('client/db accountNumbers are not the same');
-    }
-
-    console.log("all checks done")
-
-    //create new token pair
-    user_refresh_string = genSafeRandomStr(20);
-    date = Math.floor(Date.now() / 1000);
-
-    client_token = {
-      user_refresh_string: user_refresh_string,
-      id: id,
-      accountNumber: accountNumber,
-      created_at: date
-    };
-
-    db_token = {
-      user_refresh_string: user_refresh_string,
-      accountNumber: accountNumber,
-      created_at: date
-    };
-
-    //store db token and return client token
-    await db.query(`UPDATE user_info SET user_refresh_token [ ${accountNumber} ] = $1
-     WHERE id = $2
-     AND CAST ( user_refresh_token [ ${accountNumber} ] ->> 'created_at'  AS INTEGER) = ;`, [db_token, id]);
-    encoded_client_token = jwt.encode(client_token, process.env.JWT_SECRET)
-    return encoded_client_token
 }
 
 function langugeToLanguageCode(lang) {
@@ -790,7 +720,6 @@ module.exports = {
   cleanUserData,
   genUserCookie,
   genUserRefreshToken,
-  refreshUserToken,
   encrypt,
   decrypt,
   sendMessage,

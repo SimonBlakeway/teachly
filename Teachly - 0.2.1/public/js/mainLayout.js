@@ -44,6 +44,9 @@ function toLocalNum(num) {
         return num.toLocaleString(userLang);
     }
     catch (err) {
+        console.log("toLocalNum")
+        console.log(num)
+        console.log(err)
         num = 0
         return num.toLocaleString(userLang);
     }

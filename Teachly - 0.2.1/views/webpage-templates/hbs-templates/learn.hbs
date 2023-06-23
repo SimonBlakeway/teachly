@@ -348,7 +348,8 @@
 
 <div style="margin-top: 100px;">
     <div id="search-bar-buttons">
-        <div class="fs-30p sans-serif light-blue-text-shadow" style="float: left; padding-left: 15px; padding-right: 15px;">Filters</div>
+        <div class="fs-30p sans-serif light-blue-text-shadow"
+            style="float: left; padding-left: 15px; padding-right: 15px;">Filters</div>
         <div style="float: right !important; width:calc(100% - 120px) !important">
             <button onclick="togglesearchBar()"
                 class="bg-black h-40pi fs-20p float-right m-0 p-0 btn btn-outline-primary"
@@ -919,17 +920,15 @@
         var courseJson = JSON.parse(`{{json context.bodyContext.courseContext }}`.replaceAll('&quot;', `"`))
 
         function generateCourse(courseObj) {
-
             console.log(courseObj)
             courseId = courseObj.course_id
             teacherId = courseObj.teacher_id
             teacher_name = courseObj.teacher_name
+            ratings = (typeof courseObj.ratings == "undefined") ? 0: courseObj.ratings;
 
-
-            //read more cutoff should be longer
+            ratings = (typeof courseObj.ratings == "undefined") ? 0 : courseObj.ratings;
 
             description = ""
-
             if (courseObj.description.length > 232) {
                 description = courseObj.description
                 cutoff = description.substring(0, 232).lastIndexOf(" ")
@@ -958,9 +957,8 @@
                     </p>`
             }
             box = document.createElement("div")
-
             box.innerHTML = `            
-                           <div class="row mx-0 p-0 my-05 custom-rounded custom-shadow align-items-center en-100-366px bg-wht mn-w-300p mx-w-1000p w-90">
+                           <div class="row mx-0 p-0 my-0  mt-5 custom-rounded custom-shadow align-items-center en-100-366px bg-wht mn-w-300p mx-w-1000p w-90">
                             <div class="col p-3 m-0 mn-w-300p">
                                 <img src="/images/profile/${courseObj.id}" class="course-img rounded-start" width="1000" height="800"
                                     alt="${courseJson.imageAlt.pre}${teacher_name}${courseJson.imageAlt.post}">
@@ -994,9 +992,9 @@
                                                         <div class="d-flex justify-content-center w-100">
                                                             <i style="color:gold;"
                                                                 class="fa fa-star fs-15p" aria-hidden="true"></i>
-                                                            <span>${courseObj.ratings}</span>
+                                                            <span>${ratings}</span>
                                                         </div>
-                                                        <div class="d-flex justify-content-center">${courseJson.ratings.pre}${courseObj.ratings}${courseJson.ratings.post}</div>
+                                                        <div class="d-flex justify-content-center">${courseJson.ratings.pre}${ratings}${courseJson.ratings.post}</div>
                                                     </div>
                                                 </div>
                                                 <div class="col w-130p"
@@ -1008,7 +1006,7 @@
                                                             <span>${courseObj.price_per_lesson * userCur}</span>
                                                         </span>
                                                     </div>
-                                                    <div class="d-flex justify-content-center w-100">${courseJson.lesson_time.pre}${courseObj.lesson_time}${courseJson.ratings.lesson_time}</div>
+                                                    <div class="d-flex justify-content-center w-100">${courseJson.lesson_time.pre}${courseObj.lesson_time}${courseJson.lesson_time.post}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1032,10 +1030,10 @@
                         </div>
                         `
 
+            return box.children[0]
         }
 
         function generatePagination(rows, offset) {
-            offset++
             pageNum = Math.ceil(rows / 10) //limited to 10 cols per page
             function genPagButton(active = false, text, offset) {
                 classPair = {
@@ -1100,7 +1098,7 @@
                     'Content-Type': 'application/json',
                 },
             })
-  
+
 
             if (res.data.err) {
                 if (res.data.err == 404) {
@@ -1115,21 +1113,18 @@
                 }
             }
             else {
-                
+
                 courseBox = document.createElement("div")
 
                 //generate course displays
                 courseArr = res.data.courses
                 for (let i = 0; i < courseArr.length; i++) {
-                    courseBox.appendChild(generateCourse(courseArr[i]), )
+                    courseBox.appendChild(generateCourse(courseArr[i]))
                 }
-                document.getElementById("courses").append(courseBox.children)
-
+                document.getElementById("course-cards").append(...courseBox.children)
                 document.getElementById("courses").style.display = "block"
                 document.getElementById("no-courses").style.display = "none"
                 document.getElementById("server-error").style.display = "none"
-
-                //update pagination
                 generatePagination(res.data.count, teachlyFormData.activePage)
 
             }

@@ -168,6 +168,7 @@
   }
   sendEmailCode = async function () {
     emailCode = $("#email-input").val();
+    if (emailCode == "") { return }
     email = $("#email").val();
     res = await axios.get('/auth/emailValidation', { params: { "emailCode": emailCode, "email": email } });
     if (res.data.err) {

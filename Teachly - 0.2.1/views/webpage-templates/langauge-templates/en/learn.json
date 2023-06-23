@@ -21,17 +21,13 @@
             "pre": " ",
             "post": " reviews"
         },
-        "lessonTime": {
-            "pre": "",
-            "post": " minute lesson"
-        },
         "ratings": {
             "pre": "",
             "post": " ratings"
         },
         "lesson_time": {
             "pre": "",
-            "post": " minute lesson"
+            "post": " minutes"
         }
     }
 }
