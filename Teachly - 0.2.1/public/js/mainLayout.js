@@ -1,9 +1,24 @@
+
+
+toLocalCurClass = new Intl.NumberFormat(userLang, { //method call
+    style: 'currency',
+    currency: userCur,
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
+
+function toLocalCur(num) {
+    return toLocalCurClass.format(num)
+}
+
+
+
 function updateCurrency(ratio) {
     curVals = document.getElementsByClassName("currency")
     for (let i = 0; i < curVals.length; i++) {
         convertedCur = Number(curVals[i].children[0].innerHTML) * Number(ratio)
-        convertedCur = convertedCur.toLocaleString(userLang, { style: 'currency', currency: userCur });
-        curVals[i].children[1].innerHTML = convertedCur
+        curVals[i].children[1].innerHTML = toLocalCur(convertedCur)
     }
 }
 function updateCurrencyInterval() {
@@ -44,13 +59,17 @@ function toLocalNum(num) {
         return num.toLocaleString(userLang);
     }
     catch (err) {
-        console.log("toLocalNum")
-        console.log(num)
-        console.log(err)
         num = 0
         return num.toLocaleString(userLang);
     }
 }
+
+
+updateCurrencyInterval(userCur)
+
+updateDatesInterval()
+
+
 
 
 

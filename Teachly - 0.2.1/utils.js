@@ -155,7 +155,6 @@ async function ImagePrep(imgStr, name, dimensions = [1440, 1440], maxSize = 1048
 
   imageDimensions = [imgMetadata.width, dimensions.height]
   index = imageDimensions.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-  console.log(`leading side is ${index}`)
   ratio = dimensions[index] / imageDimensions[index]
 
 

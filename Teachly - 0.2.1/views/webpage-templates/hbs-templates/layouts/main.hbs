@@ -22,7 +22,7 @@
 
 
 
-<script src="/js/mainLayout.js"></script>
+
 <script>
   const userLang = "{{context.settings.lang}}"
   const userCur = "{{context.settings.cur}}"
@@ -34,9 +34,7 @@
   {{/if}}
 
 
-  updateCurrencyInterval(userCur)
 
-  updateDatesInterval()
 
   function prettyifyDate(date) { // it comes in as seconds from epoch
     try {
@@ -72,12 +70,8 @@
     }
   }
 </script>
+<script src="/js/mainLayout.js"></script>
 
-  {{#if context.settings.isUser}}
-  <script src="/js/user.js"></script>
-  {{else}}
-  <script src="/js/anonymousUser.js"></script>
-  {{/if}}
 
 <body>
   {{#if context.navbar}}

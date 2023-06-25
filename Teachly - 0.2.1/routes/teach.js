@@ -52,20 +52,12 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
 
     courseData = req.body
 
-
-
     if (courseData.lesson_time >= 60) throw new Error("lesson time too high")
     if (courseData.lesson_time < 20) throw new Error("lesson time too low")
     if (courseData.price >= 60) throw new Error("price too high")
     if (courseData.price < 1) throw new Error("price too low")
 
-
-
-
     res.send({ "result": true })
-
-
-
 
 
     courseData.image = courseData.courseImg
@@ -97,8 +89,9 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
             teacher_id,
             teacher_name,
             ts_vector,
-            lesson_time
-              ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ), $11 )`,
+            lesson_time,
+            course_img
+              ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ), $11, $12 )`,
         [courseObj.description,
         courseObj.createdAt,
         courseObj.taughtIn,
@@ -109,7 +102,8 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
         req.settings.id,
         req.settings.name,
         [req.settings.name, courseObj.description].join(" "),
-        courseObj.lesson_time
+        courseObj.lesson_time,
+        courseObj.courseImg
         ]);
     } catch (error) {
       console.log(error)

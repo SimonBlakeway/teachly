@@ -229,3 +229,11 @@
     .float-righti {
       float: right !important;
     }
+
+    #navlist-popup  {
+      width:  200px !important;
+    }
+
+    .clr-blk {
+      color: #000 !important;
+    }

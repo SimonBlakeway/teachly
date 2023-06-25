@@ -628,6 +628,7 @@
 
         specialities = $("#specialities").text()
         if (specialities == "\n                  Choose") {specialities = []}
+        else {specialities = specialities.split(", ")}
 
       courseData = {
         subject: $("#subject").text(),

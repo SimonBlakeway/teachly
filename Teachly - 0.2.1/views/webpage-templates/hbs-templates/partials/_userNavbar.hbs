@@ -43,8 +43,6 @@
                     <div class="profile-img m-0 p-0"
                         style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; margin-top: -2px !important; margin-left: -2px !important;">
                     </div>
-
-
                 </button>
             </div>
         </div>
@@ -104,17 +102,17 @@
             <div id="settings-buttons-list" class="dispr-mn-442p p-1" onclick="event.stopPropagation();">
                 <div class="d-flex align-items-center justify-content-center">
                     <div class="m-2">
-                        <button onclick="toggleNavPopup('language-popup');" type="button"
-                            class="btn btn-primary text-uppercase">{{settings.lang}}</button>
+                        <button onclick="toggleNavPopup('language-popup')" type="button"
+                            class="btn btn-outline-primary">{{settings.lang}}</button>
                     </div>
                     <div>
                         <button onclick="toggleNavPopup('currency-popup')" type="button"
-                            class="btn btn-primary">{{settings.cur}}</button>
+                            class="btn btn-outline-primary">{{settings.cur}}</button>
                     </div>
                 </div>
             </div>
-            <a class="navbar-brand" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
-            <a class="navbar-brand" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
+            <a class="navbar-brand" style="margin-left: 60% !important;" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
+            <a class="navbar-brand" style="margin-left: 60% !important;" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
         </div>
         <div class="nav-popup d-flex flex-column" id="notifications-popup" onclick="event.stopPropagation();">
             <div class="popup-link pt-0 mr-0" style="padding: 15px;">

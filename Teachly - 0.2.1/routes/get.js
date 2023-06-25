@@ -34,38 +34,37 @@ router.get('/validSpecialities/:subject', (req, res) => {
 // @route   GET /
 router.get('/images/course/:courseId', async (req, res) => {
   directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing
-
   try {
     id = req.params.courseId
-    timerName = `${id}-course-image.jpeg`
+
+    fileName = `${id}-course-image.jpeg`
     if (id == null) {
       res.send(404)
     }
-    else if (global.timerObj[`${timerName}`]) {
+    else if (global.timerObj[`${fileName}`]) {
       console.log("image already exists, sending image to client and resetting timer")
-      createAssetTimer(`${timerName}`, 1000 * 10) //   1000 * 60 * 15     15 minutes
-      res.sendFile(`${timerName}`, { root: directoryPath })
+      createAssetTimer(`${fileName}`, 1000 * 10) //   1000 * 60 * 15     15 minutes
+      res.sendFile(`${fileName}`, { root: directoryPath })
 
 
     }
     else {
-      console.log("image does not exist, sending image to client and creating timer")
-      result = await db.query(`SELECT course_image FROM user_info WHERE course_id = $1`, [id])
+      result = await db.query(`SELECT course_img FROM teacher_course WHERE course_id = $1`, [id])
       if (result.rowCount == 0) {
-        res.send("404")
+        console.log(result.rows)
+        res.sendFile(`no-image-found.png`, { root: "`./public/images/`" })
         return
       }
 
       directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing
-      img = LZDecompress(result.rows[0].profile_img.trim())
-      createAssetTimer(`${req.params.id}-profile-image.jpeg`, 1000 * 60 * 15) //15 minutes
-      fs.writeFileSync(directoryPath + `${req.params.id}-profile-image.jpeg`, img, { encoding: 'base64' });
-      res.sendFile(`${req.params.id}-profile-image.jpeg`, { root: directoryPath })
+      img = LZDecompress(result.rows[0].course_img.trim())
+      createAssetTimer(`${fileName}`, 1000 * 60 * 15) //15 minutes
+      fs.writeFileSync(directoryPath + `${fileName}`, img, { encoding: 'base64' });
+      res.sendFile(`${fileName}`, { root: directoryPath })
 
     }
   } catch (error) {
-    console.log(error)
-    res.sendStatus(404)
+    res.sendFile(`no-image-found.png`, { root: `./public/images/` })
   }
 })
 
