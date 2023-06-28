@@ -26,11 +26,6 @@ const accountLink = await stripe.accountLinks.create({
 });
 
 
-
-
-
-
-
 async function payUser(userId, userStripeAcountId, amount, currency ) {
 
     const transfer = await stripe.transfers.create({
@@ -39,4 +34,10 @@ async function payUser(userId, userStripeAcountId, amount, currency ) {
         destination: userStripeAcountId,
     });
 
+}
+
+
+
+module.exports = {
+    payUser
 }

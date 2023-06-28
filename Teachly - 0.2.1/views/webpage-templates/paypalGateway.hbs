@@ -1,0 +1,114 @@
+<script rel="stylesheet" href="/js/stripe.js"></script>
+
+
+<style>
+  #register {
+    background: rgb(85, 138, 230);
+    background: -webkit-linear-gradient(to bottom right, rgba(3, 71, 117), rgba(85, 138, 230));
+    background: linear-gradient(to bottom right, rgb(3, 71, 117), rgb(85, 138, 230));
+    height: 80%;
+    width: 100%;
+    font-size: 18px;
+  }
+
+  .registration-form {
+    border-radius: 15px;
+    background-color: rgb(255, 255, 255) !important;
+    max-width: 800px;
+  }
+
+  .profile-input {
+    width: 100%;
+    padding: 0px;
+    text-align: center;
+    background-color: rgb(240, 245, 244) !important;
+    height: 40px !important;
+    min-width: 150px !important;
+  }
+
+  #profile-image {
+    font-size: 15px;
+    font-family: calibri;
+    width: 100%;
+    padding: 4px;
+    cursor: pointer;
+  }
+
+  .popup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 40%;
+    min-width: 300px;
+    height: fit-content;
+    padding: 20px;
+    border-radius: 20px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    border-width: 10px;
+  }
+
+  #email-popup-submit {
+    margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 48px) {
+    .popup {
+      width: 80%;
+      height: 45%;
+    }
+  }
+
+  @media screen and (max-width: 300px) {
+    .popup {
+      width: 80%;
+      height: 50%;
+      padding: 0px;
+    }
+
+  }
+</style>
+<section id="register" class="d-flex justify-content-center align-items-center">
+  <div class="py-5 row justify-content-center align-items-center h-100" style="width: 80% !important;">
+    <div class="col d-flex justify-content-center align-items-center">
+      <div class="registration-form p-4 p-md-5">
+        <h3 class="p-4">{{context.bodyContext.registrationForm}}</h3>
+        <form onsubmit="return false" class="registration-form-color">
+          <div class="row">
+
+            <div class="">
+              <button type='submit' id="checkout-test" class="btn btn-outline-primary btn-lg">
+                test checkout </button>
+              <button type='submit' onclick="()" class="btn btn-outline-primary btn-lg">
+                dud button </button>
+            </div>
+          </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  async function checkout(obj) {
+    body = obj
+    try {
+      res = await axios.post('/gateway/paypal/create-checkout-session', body,
+        {
+          headers: {
+            'content-type': 'application/json'
+          }
+        });
+      location.href = res.data //url
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  document.getElementById("checkout-test").onclick = () => { checkout() }
+</script>

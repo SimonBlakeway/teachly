@@ -18,7 +18,7 @@ async function setToken() {
         console.log(error)
     }
 }
-async function zoomSetup() {
+async function setup() {
     setToken()
 
 setInterval(async () => {
@@ -192,5 +192,5 @@ module.exports = {
     getMeetingDetails,
     getMeetingRecording,
     deleteMeetingRecordings,
-    zoomSetup,
+    setup,
 }

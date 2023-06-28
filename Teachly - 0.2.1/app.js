@@ -87,18 +87,15 @@ app.use('/auth', require('./routes/auth'))
 // user profile routes
 app.use('/profile', require('./routes/profile'))
 
-// stripe payment Routes
+// stripe payment and webhooks Routes
 app.use('/gateway/stripe', require('./routes/stripe'))
 
 
+// stripe payment and webhooks Routes
+//app.use('/gateway/paypal', require('./routes/paypal'))
+
 // if the url is unmatched, redirect to homepage
 app.use(require('./middleware/customMiddleware.js').redirectUnmatched)
-
-
-const zoomApi = require('./util-APIs/zoom-api')
-
-//zoomApi.createMeeting("topic", 20)
-
 
 
 const http = require('http');
@@ -110,14 +107,22 @@ const io = socketio.setIo(server);
 // Static files
 app.use(express.static("public"));
 
-//promises
-//zoomApi.zoomSetup()
+//const zoomApi = require('./util-APIs/zoom')
+const paypalApi = require('./util-APIs/paypal')
+
+asyncSetup = [
+ // zoomApi.setup(),
+  paypalApi.setup()
+]
 
 
 //the server makes calls to varying apis to get tokens/info
 //and this is a way to make sure that the calls will be completed
-Promise.all([() => {}]).then(() => {
-   //zoomApi.createMeeting("topic", 20)
+Promise.all(asyncSetup).then(() => {
+
+  
+
+
 
   port = Number(process.env.PORT)
   server.listen(port, () => {

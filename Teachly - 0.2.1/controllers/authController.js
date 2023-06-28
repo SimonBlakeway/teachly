@@ -15,9 +15,9 @@
 const jwt = require("jwt-simple");
 const dotenv = require('dotenv')
 dotenv.config({ path: './config/config.env' })
-const google = require('../util-APIs/google-util')
-const facebook = require('../util-APIs/facebook-util')
-const email = require('../util-APIs/email-util')
+const google = require('../util-APIs/google.js')
+const facebook = require('../util-APIs/facebook')
+const email = require('../util-APIs/email')
 const utils = require('../utils')
 const db = require('../config/db');
 const { get } = require('axios');
