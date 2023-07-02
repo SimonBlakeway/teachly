@@ -35,6 +35,11 @@
 
   }
 
+  .bg-image {
+    background-image: url("/images/blue-bg.jpg") !important;
+    background-repeat: no-repeat;
+  }
+
   .custom-rounded {
     border-radius: 3%;
   }
@@ -223,7 +228,7 @@
 </style>
 <section id="create-course" class="py-5 px-0 mx-0 mt-5 d-flex justify-content-center align-items-center w-100"
   onclick="clearCoursePopups()">
-  <div class="container bg-light shadow-md w-75 mn-w-270p custom-rounded">
+  <div class="container bg-light shadow-md w-75 mn-w-270p custom-rounded" id="create-course-details">
     <form onsubmit="return false" class="row d-flex justify-content-center align-items-center">
       <div class="col-12 p-1">
         <h3 class="m-4 fs-2">{{context.bodyContext.createCourseForm}}</h3>
@@ -626,9 +631,9 @@
     try {
 
 
-        specialities = $("#specialities").text()
-        if (specialities == "\n                  Choose") {specialities = []}
-        else {specialities = specialities.split(", ")}
+      specialities = $("#specialities").text()
+      if (specialities == "\n                  Choose") { specialities = [] }
+      else { specialities = specialities.split(", ") }
 
       courseData = {
         subject: $("#subject").text(),
@@ -638,18 +643,18 @@
         taughtIn: taughtInArr,
         pricePerLesson: Number($("#price").val()),
         availableTimes: $(".active-time-slot-div").map(function () { return this.id }).get(),
-        lesson_time: Number( document.getElementById("time-shown").innerHTML ),
+        lesson_time: Number(document.getElementById("time-shown").innerHTML),
       }
       if (!basicCourseObjCheck(courseData)) {
         return
       }
-        sendReq(courseData)
+      sendReq(courseData)
     }
     catch (err) {
       console.log(err)
     }
   }
- 
+
   window.addEventListener('load', async function () {
 
     regularSlider = document.querySelector('.regular-slider')
@@ -742,4 +747,54 @@
 
 
 </script>
+
+
+
+<style>
+  .h-100vh {
+    height: 90vh;
+  }
+</style>
+
+<section id="create-course-finance"
+  class="py-5 px-0 mx-0 mt-5 d-flex justify-content-center align-items-center w-100 h-100vh">
+  <div class="container bg-light shadow-md w-75 mn-w-270p custom-rounded">
+    <div class="col-12 p-1">
+      <h3 class="m-4 fs-2">zxzxzx{{context.bodyContext.createCourseForm}}</h3>
+    </div>
+
+
+    <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
+      onclick="event.stopPropagation();">
+      scascfs
+
+    </div>
+
+
+
+
+  </div>
+
 </section>
+
+
+<script>
+  function switchToFinanceLogin() {
+    document.getElementById("create-course").setAttribute('style', 'display: none !important');
+    document.getElementById("create-course-finance").setAttribute('style', 'display: flex !important');
+
+  }
+
+
+  function financeLoginPayPal() {
+    res = axios.get('/gateway/paypal/signin-with-paypal')
+  }
+
+
+  function financeLoginStripe() {
+    res = axios.get('/gateway/stripe/signin-with-stripe')
+
+  }
+
+  switchToFinanceLogin()
+</script>

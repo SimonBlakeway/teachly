@@ -10,84 +10,40 @@ subroute = `/gateway/paypal`
 
 
 
-//checkout success and payment success are different
+//webhook
 router.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
-  console.log("reee")
-  const sig = req.headers['stripe-signature'];
-
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-  } catch (err) {
-    response.status(400).send(`Webhook Error: ${err.message}`);
-    return;
-  }
-
-  // Handle the event
-  switch (event.type) {
-
-    //handling checkout events, async versions exist but not sure how to best imp
-    case 'checkout.session.completed':
-      const checkoutSucceeded = event.data.object;
-      console.log(checkoutSucceeded)
-      break;
-    case 'checkout.session.expired':
-      //const checkoutSucceeded = event.data.object;
-      break;
-
-    // ... handle payment intent events
-    case 'payment_intent.succeeded':
-      const paymentIntentSucceeded = event.data.object;
-      console.log(paymentIntentSucceeded)
-      break;
-    case 'payment_intent.canceled':
-      //const checkoutSucceeded = event.data.object;
-      break;
-
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
 
   // Return a 200 response to acknowledge receipt of the event
-  response.send();
+
+  res.sendStatus(200)
 });
 
+
+//checkout routes 
 router.post('/create-checkout-session', async (req, res) => {
   try {
 
+
     orderContext = {
       amount: 30,
-      currency: "USD",
-      description: "l",
-      lang: ""
+      currency: req.settings.cur,
+      description: "lol",
+      lang: req.settings.lang
     }
 
-    
-    order = paypal.createOrder(orderContext)
 
+    order = await paypal.createOrder(orderContext)
+    console.log(result.data.links[1].href)
 
+    //console.log(order)
+    res.send(result.data.links[1].href)
 
-
-
-    // unit amount should be an integer, so maybe create function that converts 
-    // a currency from float/decimal to integer?
-
-    //uniqe idenifiers to tie the completed to this?
-    console.log(session.id)
-    console.log(session.client_reference_id)
-    console.log(session.customer)
-
-
-    res.send(session.url)
 
   } catch (error) {
     console.log(error)
     res.redirect("/") // treats bad actor request same as an invalid request
   }
 });
-
-
 
 router.get('/success', async (req, res) => {
   res.render('landingPage', {
@@ -96,7 +52,6 @@ router.get('/success', async (req, res) => {
   })
 });
 
-
 router.get('/cancel', async (req, res) => {
   res.render('landingPage', {
     layout: 'main',
@@ -104,12 +59,43 @@ router.get('/cancel', async (req, res) => {
   })
 });
 
-//general stripe test
+
+
+//general paypal test
 router.get('/payplal-gateway', async (req, res) => {
-  res.render('stripeGateway', {
+  res.render('paypalGateway', {
     layout: 'main',
   })
 });
+
+
+
+
+//paypal oauth
+router.get("/signin-with-paypal", async (req, res) => {
+  url = paypal.getConnectionUrl()
+  res.redirect(url)
+})
+
+router.get("/oauth2/redirect/paypal", async (req, res) => {
+
+  res.render('landingPage', {
+    layout: 'main',
+    context: contextSetup(req.settings, ["navbar", "footer"], "landingPage"),
+  })
+
+
+  code = req.query.code
+  accessToken = paypal. getAcccesToken()
+  
+
+
+})
+
+
+
+
+
 
 
 

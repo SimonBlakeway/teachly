@@ -92,7 +92,7 @@ app.use('/gateway/stripe', require('./routes/stripe'))
 
 
 // stripe payment and webhooks Routes
-//app.use('/gateway/paypal', require('./routes/paypal'))
+app.use('/gateway/paypal', require('./routes/paypal'))
 
 // if the url is unmatched, redirect to homepage
 app.use(require('./middleware/customMiddleware.js').redirectUnmatched)
@@ -118,16 +118,14 @@ asyncSetup = [
 
 //the server makes calls to varying apis to get tokens/info
 //and this is a way to make sure that the calls will be completed
-Promise.all(asyncSetup).then(() => {
-
-  
-
-
+Promise.all(asyncSetup).then(() => { 
 
   port = Number(process.env.PORT)
   server.listen(port, () => {
     console.log(`server listening on port ${port}`);
   })
 
+}).catch(function(err) {
+  console.log(err.message); // some coding error in handling happened
 });
 

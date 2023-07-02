@@ -37,7 +37,8 @@ exports.login = async function (req, res) {
       user_info.lang,
       user_info.cur, 
       user_info.id, 
-      user_info.pass_hash
+      user_info.pass_hash,
+      user_info.email_code
     FROM user_info
     WHERE user_info.name = $1`, [user.name]);
     if (result.rowCount == 0) {
@@ -57,6 +58,7 @@ exports.login = async function (req, res) {
     try {
       userToken = await utils.genUserRefreshToken(result.rows[0].id)
       userCookie = await utils.genUserCookie(result.rows)
+      console.log("rrr")
       res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       res.sendStatus(200)

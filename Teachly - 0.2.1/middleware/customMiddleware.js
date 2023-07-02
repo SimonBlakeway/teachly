@@ -7,7 +7,7 @@ function parseJwt(token) {
   return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 }
 
-function cookieSettings(req, res, next) {
+async function cookieSettings(req, res, next) {
 
   settings = {}
   encodedUserCookie = req.cookies.userCookie
@@ -57,19 +57,26 @@ function cookieSettings(req, res, next) {
     }
 
   } catch (error) {
-    console.log(error)
     try {
       res.clearCookie('userCookie');
+      console.log("user kookie remoed")
     } catch (error) {
+      console.log(err)
     }
     try {
       malUserToken = req.cookies.user_refresh_token
       res.clearCookie('user_refresh_token');
       parseJwt(req.cookies.user_refresh_token)
-      db.query(`UPDATE user_info SET user_refresh_token [ ${malUserToken.accountNumber} ] = $1 WHERE id = $2;`, [{}, malUserToken.userId]);
+      try {
+       await db.query(`UPDATE user_info SET user_refresh_token [ ${malUserToken.accountNumber} ] = $1 WHERE id = $2;`, [{}, malUserToken.userId]);
 
+      } catch (error) {
+
+      }
     } catch (error) {
+      console.log(err)
     }
+    res.sendStatus(400)
   }
 }
 

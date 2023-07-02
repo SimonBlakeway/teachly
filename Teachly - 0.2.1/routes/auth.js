@@ -10,6 +10,7 @@ router.post("/register", bodyParser.json({ limit: "10mb" }), authController.regi
 
 router.get('/logout', authController.logout)
 
+
 router.get("/oauth2/redirect/google",  authController.getUserDetailsG);
 
 router.get("/signinWithGoogle",  authController.getUrlGauth);

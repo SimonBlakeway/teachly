@@ -55,14 +55,15 @@ router.post('/webhook', express.raw({ type: 'application/json' }), (req, res) =>
     case 'payment_intent.canceled':
       //const checkoutSucceeded = event.data.object;
       break;
-   
-      default:
+
+    default:
       console.log(`Unhandled event type ${event.type}`);
   }
 
   // Return a 200 response to acknowledge receipt of the event
   response.send();
 });
+
 
 router.post('/create-checkout-session', async (req, res) => {
   try {
@@ -114,15 +115,12 @@ router.post('/create-checkout-session', async (req, res) => {
   }
 });
 
-
-
 router.get('/success', async (req, res) => {
   res.render('landingPage', {
     layout: 'main',
     context: contextSetup(req.settings, ["navbar", "footer"], "landingPage"),
   })
 });
-
 
 router.get('/cancel', async (req, res) => {
   res.render('landingPage', {
@@ -137,6 +135,31 @@ router.get('/stripe-gateway', async (req, res) => {
     layout: 'main',
   })
 });
+
+
+
+//paypal oauth
+router.get("/signin-with-stripe", async (req, res) => {
+  url = paypal.getConnectionUrl()
+  res.redirect(url)
+})
+
+router.get("/oauth2/redirect/stripe", async (req, res) => {
+
+
+  res.render('landingPage', {
+    layout: 'main',
+    context: contextSetup(req.settings, ["navbar", "footer"], "landingPage"),
+  })
+
+  code = req.query.code
+  accessToken = stripe.getAcccesToken(code)
+
+
+  res.send(user_details)
+
+})
+
 
 
 
