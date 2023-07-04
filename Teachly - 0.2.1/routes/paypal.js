@@ -73,8 +73,8 @@ router.get('/payplal-gateway', async (req, res) => {
 
 //paypal oauth
 router.get("/signin-with-paypal", async (req, res) => {
-  url = paypal.getConnectionUrl()
-  res.redirect(url)
+  url = await paypal.getConnectionUrl()
+  res.send(url)
 })
 
 router.get("/oauth2/redirect/paypal", async (req, res) => {

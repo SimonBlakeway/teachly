@@ -37,8 +37,11 @@ async function payUser(userId, userStripeAcountId, amount, currency) {
 }
 
 
+// oauth
 async function getConnectionUrl() {
-    const url = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&scope=read_only&redirect_uri=${d}`
+    scopes = `read_only`
+    return_url = encodeURIComponent(`${baseHostURL}/gateway/paypal/oauth2/redirect/paypal`)
+    const url = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${scopes}&redirect_uri=${return_url}`
     return url
 }
 
@@ -52,19 +55,6 @@ async function getAcccesToken(code) {
 
     return res.data.access_token
 }
-async function getUserDetails(code) {
-    accessToken = await getAcccesToken(code)
-    const { data } = await axios({
-        url: 'https://www.googleapis.com/oauth2/v2/userinfo',
-        method: 'get',
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    })
-    return data
-
-}
-
 
 async function getUserID(code) {
     const response = await stripe.oauth.token({
@@ -79,5 +69,9 @@ async function getUserID(code) {
 
 
 module.exports = {
-    payUser
+    getConnectionUrl,
+    payUser,
+    getAcccesToken,
+    getUserID
 }
+

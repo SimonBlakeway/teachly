@@ -38,6 +38,7 @@
   .bg-image {
     background-image: url("/images/blue-bg.jpg") !important;
     background-repeat: no-repeat;
+    background-size: 100% 100%;
   }
 
   .custom-rounded {
@@ -754,19 +755,57 @@
   .h-100vh {
     height: 90vh;
   }
+
+  #create-course-finance {
+    margin-top: -20px !important;
+
+  }
+
+  #create-course-finance-col {
+    min-width: 300px !important;
+    max-width: 500px !important;
+    min-height: 300px !important;
+  }
 </style>
 
 <section id="create-course-finance"
-  class="py-5 px-0 mx-0 mt-5 d-flex justify-content-center align-items-center w-100 h-100vh">
-  <div class="container bg-light shadow-md w-75 mn-w-270p custom-rounded">
-    <div class="col-12 p-1">
-      <h3 class="m-4 fs-2">zxzxzx{{context.bodyContext.createCourseForm}}</h3>
-    </div>
+  class="py-5 px-0 mx-0 mt-5 d-flex justify-content-center align-items-center w-100 h-100vh bg-image">
+  <div class="container bg-light shadow-md w-75 mn-w-270p custom-rounded" id="create-course-finance-col">
 
 
-    <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
-      onclick="event.stopPropagation();">
-      scascfs
+
+    <div class="col-12 px-4 py-5">
+
+      <div class="row d-flex justify-content-center align-items-center fs-5 mb-4"
+        style="text-align: center !important;">
+        to complete the course, please log in with a financial platform
+      </div>
+
+
+
+      <div class="row d-flex justify-content-center align-items-center fs-3 mb-3" onclick="financeLoginPayPal()">
+        <div style="width:fit-content; border-radius:5px;">
+          <img src="https://www.paypalobjects.com/devdoc/log-in-with-paypal-button.png"></img>
+        </div>
+      </div>
+
+      <div class="row d-flex justify-content-center align-items-center mb-3" onclick="financeLoginStripe()">
+        <div class="d-flex justify-content-center align-items-center"
+          style="background-color:  #635bff; color:#ffffff; width: 211px; height: 46px; border-radius: 40px; font-weight: 500; font-size: 16px;">
+          <span style="display: inline-flex; margin-right: 5px;">
+            <img src="https://b.stripecdn.com/docs-statics-srv/assets/e9b76763ac024da464fae86e9b69dcbf.png" style="width: 30px;"></img>
+          </span>
+          <span style="display: inline-flex;">
+            Connect with
+          </span>
+          <span style="font-weight: 700; display: inline-flex; margin-left: 5px;">
+            Stripe
+          </span>
+        </div>
+      </div>
+
+
+
 
     </div>
 
@@ -785,14 +824,16 @@
 
   }
 
-
-  function financeLoginPayPal() {
-    res = axios.get('/gateway/paypal/signin-with-paypal')
+  async function financeLoginPayPal() {
+    res = await axios.get('/gateway/paypal/signin-with-paypal')
+    url = res.data
+    window.location = url
   }
 
-
-  function financeLoginStripe() {
-    res = axios.get('/gateway/stripe/signin-with-stripe')
+  async function financeLoginStripe() {
+    res = await axios.get('/gateway/stripe/signin-with-stripe')
+    url = res.data
+    window.location = url
 
   }
 

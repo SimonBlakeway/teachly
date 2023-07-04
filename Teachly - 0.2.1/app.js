@@ -112,7 +112,7 @@ const paypalApi = require('./util-APIs/paypal')
 
 asyncSetup = [
  // zoomApi.setup(),
-  paypalApi.setup()
+  //paypalApi.setup()
 ]
 
 

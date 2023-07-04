@@ -9,7 +9,7 @@ var access_token = "";
 
 
 //server side 
-async function setToken() {
+async function setServerToken() {
     try {
         url = `${baseURL}/v1/oauth2/token`
         data = {
@@ -184,10 +184,19 @@ async function payUser(userId, userPaypalAcountId, amount, currency) {
 //oauth
 
 async function getConnectionUrl() {
-    scopes = encodeURI(`https://uri.paypal.com/services/paypalattributes`)
-    const url = `https://www.sandbox.paypal.com/connect?flowEntry=static&client_id=${process.env.PAYPAL_CLIENT_ID}&scope=${scopes}&redirect_uri=[return URL]`
+     // http://127.0.0.1:3001/
+    scopes = ["openid", `https://uri.paypal.com/services/paypalattributes`].join(" ")
+    scopes = encodeURIComponent(scopes)
+    //scopes = encodeURIComponent("openid")
+    return_url = encodeURIComponent(`${baseHostURL}/gateway/paypal/oauth2/redirect/paypal`)
+    //return_url = encodeURIComponent("https://www.google.com/")
+    return_url
+
+
+    url = `https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=${process.env.PAYPAL_CLIENT_ID}&response_type=code&scope=${scopes}&redirect_uri=${return_url}`
     return url
 }
+
 
 async function getAcccesToken(code) {
     //to get any details from the google api you need the access token, so I decided it needs it's own function
@@ -201,24 +210,11 @@ async function getAcccesToken(code) {
             'grant_type': 'authorization_code'
         },
         headers: {
-            'Authorization': `Basic {Your Base64-encoded ClientID:Secret}`
+            'Authorization': `Basic ${ClientID}:${Secret}` // ?
         },
     });
     return res.data.access_token
 }
-async function getUserDetails(accessToken) {
-    accessToken = await getAcccesToken(code)
-    const { data } = await axios({
-        url: `${BaseUrl}/v1/identity/openidconnect/userinfo`,
-        method: 'get',
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    })
-    return data
-
-}
-
 
 async function getUserID(code) {
     accessToken = await getAcccesToken(code)
@@ -235,12 +231,15 @@ async function getUserID(code) {
 
 
 module.exports = {
-    setToken,
+    setServerToken,
     setup,
     payUser,
     verifyWebhook,
-    createOrder
+    createOrder,
+    getConnectionUrl,
+    getUserID
 }
+
 
 
 
