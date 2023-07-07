@@ -107,12 +107,14 @@ const io = socketio.setIo(server);
 // Static files
 app.use(express.static("public"));
 
-//const zoomApi = require('./util-APIs/zoom')
+const zoomApi = require('./util-APIs/zoom')
 const paypalApi = require('./util-APIs/paypal')
+const stripeAPI = require('./util-APIs/stripe')
 
 asyncSetup = [
  // zoomApi.setup(),
-  //paypalApi.setup()
+  paypalApi.setup()
+ // stripeAPI.setup()
 ]
 
 
@@ -126,6 +128,6 @@ Promise.all(asyncSetup).then(() => {
   })
 
 }).catch(function(err) {
-  console.log(err.message); // some coding error in handling happened
+  console.log(err); // some coding error in handling happened
 });
 

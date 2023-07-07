@@ -78,28 +78,31 @@ router.get("/signin-with-paypal", async (req, res) => {
 })
 
 router.get("/oauth2/redirect/paypal", async (req, res) => {
-
-  res.render('landingPage', {
-    layout: 'main',
-    context: contextSetup(req.settings, ["navbar", "footer"], "landingPage"),
-  })
-
+  res.redirect("/")
 
   code = req.query.code
-  accessToken = paypal. getAcccesToken()
-  
+  financial_id_placeholder = req.query.randint
 
+
+  userInfo = await paypal.getUserID(code)
+  console.log(userInfo)
+
+  if (userInfo.verified_account == true) {
+    try {
+          result = await db.query(`UPDATE teacher_course SET financial_id = $1 
+          WHERE financial_id = $2 
+          AND financial_platform IS NULL`, [userInfo.payer_id, financial_id_placeholder]);
+        } catch (error) {
+          console.log(error)
+        }
+  }
+  else {
+
+    // ? send nofification and ask user to retry?
+
+  }
 
 })
-
-
-
-
-
-
-
-
-
 
 
 module.exports = router

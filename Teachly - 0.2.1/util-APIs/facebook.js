@@ -1,9 +1,5 @@
 const { get } = require('axios');
 
-//TODO IMPORTANT, the port number has change from 3001 to 8000, since 
-//it's the better port for development
-//on both facebook and 
-
 
 /* 
   these functions are here so the more complicated 

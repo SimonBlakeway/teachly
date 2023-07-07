@@ -3,28 +3,23 @@ const router = express.Router()
 const fs = require('fs');
 const db = require('../config/db');
 const utils = require(process.cwd() + '/utils.js');
+baseHostURL = process.env.COMPLETE_URL
 
-const stripe = Stripe(`${process.env.STRIPE_SECRET_TEST_KEY}`, {
-    apiVersion: '2023-05-28',
-    maxNetworkRetries: 1,
-    timeout: 8000,
-    host: process.env.DOMAIN, // 'http://localhost:4242' example
-    port: process.env.PORT,
-    telemetry: true,
-    protocol: 'https'
-});
 
-const account = await stripe.accounts.create({
-    type: 'express',
-});
+async function setup() {
 
-const accountLink = await stripe.accountLinks.create({
-    account: process.env.STRIPE_ID,
-    refresh_url: 'https://example.com/reauth',
-    return_url: 'https://example.com/return',
-    type: 'account_onboarding',
-});
 
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, { 
+        apiVersion: '2023-05-28',
+        maxNetworkRetries: 1,
+        timeout: 8000,
+        host: process.env.DOMAIN, 
+        port: process.env.PORT,
+        telemetry: true,
+        protocol: 'https'
+    });
+
+}
 
 async function payUser(userId, userStripeAcountId, amount, currency) {
 
@@ -36,12 +31,11 @@ async function payUser(userId, userStripeAcountId, amount, currency) {
 
 }
 
-
 // oauth
 async function getConnectionUrl() {
     scopes = `read_only`
-    return_url = encodeURIComponent(`${baseHostURL}/gateway/paypal/oauth2/redirect/paypal`)
-    const url = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${scopes}&redirect_uri=${return_url}`
+    return_url = encodeURIComponent(`${baseHostURL}/gateway/paypal/stripe/redirect/stripe`)
+    const url = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.STRIPE_ID}&scope=${scopes}&redirect_uri=${return_url}`
     return url
 }
 
@@ -66,12 +60,11 @@ async function getUserID(code) {
     return connected_account_id
 }
 
-
-
 module.exports = {
     getConnectionUrl,
     payUser,
     getAcccesToken,
-    getUserID
+    getUserID,
+    setup
 }
 

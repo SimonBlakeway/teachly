@@ -2,9 +2,24 @@ const { randomUUID } = require('crypto');
 const db = require('../config/db');
 const utils = require(process.cwd() + '/utils.js');
 const axios = require('axios');
+const http = require("https");
 baseURL = process.env.PAYPAL_BASE_URL
 baseHostURL = process.env.COMPLETE_URL
 var access_token = "";
+
+
+
+
+function base64EncodeAuth(str) {
+    const buff = Buffer.from(str, 'utf-8');
+    const base64 = buff.toString('base64');
+    return base64
+}
+
+
+
+
+
 
 
 
@@ -31,10 +46,10 @@ async function setServerToken() {
     }
 }
 async function setup() {
-    await setToken()
+    await setServerToken()
     setInterval(async () => {
         //refresh access token every 50 min
-        setToken(access_token)
+        setServerToken(access_token)
     }, ((32341 - (5 * 60)) * 1000))
 }
 async function verifyWebhook(webhookObj) {
@@ -184,44 +199,47 @@ async function payUser(userId, userPaypalAcountId, amount, currency) {
 //oauth
 
 async function getConnectionUrl() {
-     // http://127.0.0.1:3001/
+    // http://127.0.0.1:3001/
     scopes = ["openid", `https://uri.paypal.com/services/paypalattributes`].join(" ")
     scopes = encodeURIComponent(scopes)
     //scopes = encodeURIComponent("openid")
-    return_url = encodeURIComponent(`${baseHostURL}/gateway/paypal/oauth2/redirect/paypal`)
-    //return_url = encodeURIComponent("https://www.google.com/")
-    return_url
+    //return_url = encodeURIComponent(`${baseHostURL}/gateway/paypal/oauth2/redirect/paypal`)
+    return_url = encodeURIComponent("https://www.google.com/")
+    return_url = encodeURIComponent("http://127.0.0.1:3001/gateway/paypal/oauth2/redirect/paypal")
 
 
     url = `https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=${process.env.PAYPAL_CLIENT_ID}&response_type=code&scope=${scopes}&redirect_uri=${return_url}`
     return url
 }
 
-
 async function getAcccesToken(code) {
-    //to get any details from the google api you need the access token, so I decided it needs it's own function
-
-    // the api docs said POST request instead of GET, in practice is doesn't make too much difference
-    res = await axios({
-        method: 'post',
-        url: `${baseURL}/v1/oauth2/token`,
-        data: {
-            'code': code,
-            'grant_type': 'authorization_code'
-        },
-        headers: {
-            'Authorization': `Basic ${ClientID}:${Secret}` // ?
-        },
-    });
-    return res.data.access_token
+    try {
+        basicStr =`Basic ${base64EncodeAuth(process.env.PAYPAL_CLIENT_ID +":"+process.env.PAYPAL_CLIENT_SECRET)}`
+        url = `${baseURL}/v1/oauth2/token`
+        const data = `grant_type=authorization_code&code=${code}`;
+        config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': basicStr
+            },
+        }
+        result = await axios.post(url, data, config)
+        return (result.data.access_token)
+    } catch (error) {
+        console.log(error.response.data)
+    }
 }
+
+
+
 
 async function getUserID(code) {
     accessToken = await getAcccesToken(code)
     const { data } = await axios({
-        url: `${BaseUrl}/v1/identity/openidconnect/userinfo`,
+        url: `${baseURL}/v1/identity/openidconnect/userinfo?schema=openid`,
         method: 'get',
         headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
             Authorization: `Bearer ${accessToken}`,
         },
     })
@@ -237,7 +255,8 @@ module.exports = {
     verifyWebhook,
     createOrder,
     getConnectionUrl,
-    getUserID
+    getUserID,
+    getAcccesToken,
 }
 
 

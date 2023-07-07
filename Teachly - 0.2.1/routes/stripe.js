@@ -4,10 +4,10 @@ const fs = require('fs');
 const db = require('../config/db');
 const utils = require(process.cwd() + '/utils.js');
 const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+const stripeUtils = require('../util-APIs/stripe.js');
 const { contextSetup } = require(process.cwd() + '/utils.js');
 
 subroute = `/gateway/stripe`
-
 /*
 try {
   result = await db.query('select * FROM users');
