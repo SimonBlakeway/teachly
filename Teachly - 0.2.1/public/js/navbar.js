@@ -68,6 +68,8 @@ function changeNavSettings(settingName, change) {
 }
 
 function toggleNavPopup(id) {
+    nav.style.display = "none";
+    nav.style.visibility = "hidden";
     var popup = document.getElementById(id);
     if ((popup.style.display != "block")) {
         clearNavPopups()
@@ -85,7 +87,7 @@ function toggleNavPopup(id) {
     }
 }
 
-function clearNavPopups() {
+function clearNavPopups() {    
     popupArr = document.getElementsByClassName("nav-popup")
     for (i = 0; i < popupArr.length; i++) {
         popupArr[i].style.display = "none";
@@ -120,4 +122,18 @@ window.addEventListener('load', function () {
         node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
         document.getElementById("currency-change").appendChild(node);
     }
+
+
+
+
+    document.getElementById("teachly-navbar").onclick = function(){clearNavPopups()};
+    document.getElementById("lang-popup-toggle").onclick = function(){toggleNavPopup('language-popup')};
+    document.getElementById("cur-popup-toggle").onclick = function(){toggleNavPopup('currency-popup')};
+    document.getElementById("toggle-nav").onclick = function(){toggleNav()};
+    document.getElementById("lang-popup-toggle2").onclick = function(){toggleNavPopup('language-popup')};
+    document.getElementById("cur-popup-toggle2").onclick = function(){toggleNavPopup('currency-popup')};
+    document.getElementById("teachly-navbar").onclick = function(){clearNavPopups()};
+
+
+
 })

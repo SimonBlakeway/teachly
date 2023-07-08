@@ -11,7 +11,7 @@
     width: 100%;
     height: auto;
     z-index: 200;
-    position:  relative;
+    position: relative;
 }
 
 .nav-link {
@@ -83,13 +83,19 @@
 #language-popup {
     width: 200px;
     height: 400px;
-    margin-right: 200px !important;
+    margin-left: -210px !important;
+    position: absolute;
+    margin-top: 10px;
 }
 
 #currency-popup {
     width: 150px;
     height: 300px;
+    margin-left: -160px !important;
     padding: 0px !important;
+    position: absolute;
+    margin-top: 10px;
+
 }
 
 #nav-popup-holder {
@@ -150,4 +156,39 @@
         visibility: hidden;
         display: none;
     }
+}
+
+.float-right {
+    float: right;
+}
+
+.mr--255p {
+    margin-right: 255px !important;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.m-10p {
+    margin: 10px;
+}
+
+.fs-25p {
+    font-size: 25px;
+}
+
+.w-120p {
+    width: 120px;
+}
+
+.ml--210pxi {
+    margin-left: 100px !important;
+}
+.w-80pi {
+    width:  80px;
+}
+
+.text-tr-upper {
+    text-transform: uppercase;
 }

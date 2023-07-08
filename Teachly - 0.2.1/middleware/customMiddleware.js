@@ -39,6 +39,7 @@ async function cookieSettings(req, res, next) {
         settings = userCookie
         settings.hasCookie = true
         settings.isUser = false
+        settings.cspNonce = res.locals.cspNonce
         req.settings = settings
         return next()
       }
@@ -68,7 +69,7 @@ async function cookieSettings(req, res, next) {
       res.clearCookie('user_refresh_token');
       parseJwt(req.cookies.user_refresh_token)
       try {
-       await db.query(`UPDATE user_info SET user_refresh_token [ ${malUserToken.accountNumber} ] = $1 WHERE id = $2;`, [{}, malUserToken.userId]);
+        await db.query(`UPDATE user_info SET user_refresh_token [ ${malUserToken.accountNumber} ] = $1 WHERE id = $2;`, [{}, malUserToken.userId]);
 
       } catch (error) {
 

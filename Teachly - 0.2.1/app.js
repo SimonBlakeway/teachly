@@ -7,9 +7,44 @@ const exphbs = require('express-handlebars');
 const app = express()
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-cors = require('cors'); // useful, but a security risk
+const cors = require('cors'); // useful, but a security risk
+const helmet = require('helmet');
+const crypto  = require('crypto')
 const db = require('./config/db');
 const customTimers = require('./customTimers');
+
+app.use(helmet());
+
+app.use((req, res, next) => {
+  nonce = crypto.randomBytes(16).toString("hex");
+  res.locals.cspNonce = nonce
+  next();
+});
+
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "script-src": [
+        "self",
+      //  "https://ajax.googleapis.com",
+      //  "https://cdnjs.cloudflare.com",
+      //  "https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js",
+      //  "https://ajax.googleapis.com",
+      //  "http://127.0.0.1:3001/js/navbar.js",
+      //  'http://127.0.0.1:3001/js/mainLayout.js',
+      //  'http://127.0.0.1:3001',
+        (req, res) => `'nonce-${res.locals.cspNonce}'`
+      ]
+      ,
+      "style-src": [
+        "self",
+        (req, res) => `'nonce-${res.locals.cspNonce}'`
+      ],
+    },
+  })
+);
+
 
 app.use(cors())
 
@@ -112,22 +147,22 @@ const paypalApi = require('./util-APIs/paypal')
 const stripeAPI = require('./util-APIs/stripe')
 
 asyncSetup = [
- // zoomApi.setup(),
-  paypalApi.setup()
- // stripeAPI.setup()
+  // zoomApi.setup(),
+  //paypalApi.setup(),
+  // stripeAPI.setup(),
 ]
 
 
 //the server makes calls to varying apis to get tokens/info
 //and this is a way to make sure that the calls will be completed
-Promise.all(asyncSetup).then(() => { 
+Promise.all(asyncSetup).then(() => {
 
   port = Number(process.env.PORT)
   server.listen(port, () => {
     console.log(`server listening on port ${port}`);
   })
 
-}).catch(function(err) {
+}).catch(function (err) {
   console.log(err); // some coding error in handling happened
 });
 

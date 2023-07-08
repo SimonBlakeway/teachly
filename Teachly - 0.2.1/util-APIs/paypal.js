@@ -7,20 +7,11 @@ baseURL = process.env.PAYPAL_BASE_URL
 baseHostURL = process.env.COMPLETE_URL
 var access_token = "";
 
-
-
-
 function base64EncodeAuth(str) {
     const buff = Buffer.from(str, 'utf-8');
     const base64 = buff.toString('base64');
     return base64
 }
-
-
-
-
-
-
 
 
 //server side 
@@ -151,25 +142,24 @@ async function createOrder(amount, currency, description, lang) {
         console.log((error.response.data))
     }
 }
-async function payUser(userId, userPaypalAcountId, amount, currency) {
-
+async function payUser(PAYPAL_ID, sender_item_id, sender_batch_id ,amount, currency) {
 
     url = `${baseURL}/v1/payments/payouts`
 
     data = JSON.stringify({
         "sender_batch_header": {
-            "sender_batch_id": "Payouts_2020_100007",
+            "sender_batch_id": sender_batch_id,
             "email_subject": "You have a payout!",
             "email_message": "You have received a payout! Thanks for using our service!"
         }, "items": [
             {
-                "recipient_type": "EMAIL", "amount": {
-                    "value": "9.87",
-                    "currency": "USD"
+                "recipient_type": "PAYPAL_ID", "amount": {
+                    "value": amount,
+                    "currency": currency
                 },
                 "note": "Thanks for your patronage!",
-                "sender_item_id": "201403140001",
-                "receiver": "receiver@example.com",  // PAYPAL_ID, basically
+                "sender_item_id": sender_item_id,
+                "receiver": PAYPAL_ID, 
                 "recipient_wallet": "RECIPIENT_SELECTED"
             }
         ]
@@ -181,23 +171,12 @@ async function payUser(userId, userPaypalAcountId, amount, currency) {
         },
     }
 
-
-
-
-
-    fetch('https://api-m.sandbox.paypal.com/v1/payments/payouts', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer A101.OLQiCyqOpVwigKQQDu3CYlamZ1KTKQmhrbAZK85RIy4IiWh9d_up_lTadp_lfXdV.P3gvkY3PO28akjKYaDorm12QdfK'
-        },
-        body: JSON.stringify({ "sender_batch_header": { "sender_batch_id": "Payouts_2020_100007", "email_subject": "You have a payout!", "email_message": "You have received a payout! Thanks for using our service!" }, "items": [{ "recipient_type": "EMAIL", "amount": { "value": "9.87", "currency": "USD" }, "note": "Thanks for your patronage!", "sender_item_id": "201403140001", "receiver": "receiver@example.com", "recipient_wallet": "RECIPIENT_SELECTED" }] })
-    });
+    result = await axios.post(url, data, config)
 
 }
 
-//oauth
 
+//oauth
 async function getConnectionUrl() {
     // http://127.0.0.1:3001/
     scopes = ["openid", `https://uri.paypal.com/services/paypalattributes`].join(" ")
@@ -211,7 +190,6 @@ async function getConnectionUrl() {
     url = `https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=${process.env.PAYPAL_CLIENT_ID}&response_type=code&scope=${scopes}&redirect_uri=${return_url}`
     return url
 }
-
 async function getAcccesToken(code) {
     try {
         basicStr =`Basic ${base64EncodeAuth(process.env.PAYPAL_CLIENT_ID +":"+process.env.PAYPAL_CLIENT_SECRET)}`
@@ -229,10 +207,6 @@ async function getAcccesToken(code) {
         console.log(error.response.data)
     }
 }
-
-
-
-
 async function getUserID(code) {
     accessToken = await getAcccesToken(code)
     const { data } = await axios({
@@ -245,7 +219,6 @@ async function getUserID(code) {
     })
     return data
 }
-
 
 
 module.exports = {

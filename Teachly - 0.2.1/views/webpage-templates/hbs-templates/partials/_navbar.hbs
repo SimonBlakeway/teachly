@@ -1,25 +1,26 @@
-<link rel="stylesheet" href="/css/navbar.css">
-<script src="/js/validCurrencies.js"></script>
-<script src="/js/validLanguages.js"></script>
+<link rel="stylesheet" href="/css/navbar.css" nonce="{{settings.cspNonce}}">
+<script src="/js/validCurrencies.js" nonce="{{settings.cspNonce}}"></script>
+<script src="/js/validLanguages.js" nonce="{{settings.cspNonce}}"></script>
 
 
-<div id="teachly-navbar" class="bg-dark p-0 m-0" onclick="clearNavPopups()">
+<div id="teachly-navbar" class="bg-dark p-0 m-0">
     <div id="toggle-nav" class="p-0 m-0">
         <div>
             <a class="navbar-brand p-2 fs-2 text-light" href="\ ">Teachly</a>
         </div>
         <div class="mr-2">
-            <i onclick="toggleNav()" class="fa fa-bars text-light"></i>
+            <i id="toggle-nav" class="fa fa-bars text-light"></i>
         </div>
-        <div id="settings-buttons" class="d-flex align-items-center" onclick="event.stopPropagation();">
-            <button onclick="toggleNavPopup('language-popup')" type="button"
+        <div id="settings-buttons" class="d-flex align-items-center stop-prop">
+            <button id="lang-popup-toggle" type="button"
                 class="btn btn-primary m-1 text-uppercase">{{settings.lang}}</button>
-            <button onclick="toggleNavPopup('currency-popup')" type="button"
+            <button id="cur-popup-toggle" type="button"
                 class="btn btn-primary m-1">{{settings.cur}}</button>
         </div>
     </div>
     <div id="navlist" class="row d-flex align-items-center justify-content-center m-0 p-0">
-        <div id="large-screen-teachly" class="pt-1"><a class="navbar-brand pl-1 p-2 fs-2 text-light" href="\ ">Teachly</a></div>
+        <div id="large-screen-teachly" class="pt-1"><a class="navbar-brand pl-1 p-2 fs-2 text-light"
+                href="\ ">Teachly</a></div>
         <div class="col d-flex align-items-center justify-content-center">
             <div class="row d-flex align-items-center justify-content-center">
                 <div class="col d-flex align-items-center justify-content-center">
@@ -40,12 +41,12 @@
                 </div>
             </div>
         </div>
-        <div id="settings-buttons-list" class="float-right w-130 p-1" onclick="event.stopPropagation();">
+        <div id="settings-buttons-list" class="float-right w-130 p-1cstop-prop">
             <div>
-                <button onclick="toggleNavPopup('language-popup')" type="button"
-                    class="btn btn-primary text-uppercase">{{settings.lang}}</button>
-                <button onclick="toggleNavPopup('currency-popup')" type="button"
-                    class="btn btn-primary">{{settings.cur}}</button>
+                <button type="button"
+                    class="btn btn-primary text-uppercase" id="lang-popup-toggle2">{{settings.lang}}</button>
+                <button type="button"
+                    class="btn btn-primary" id="cur-popup-toggle2">{{settings.cur}}</button>
             </div>
         </div>
     </div>
@@ -54,26 +55,25 @@
 
 
 <div id="nav-popup-holder">
-    <div style="float: right; margin-right:0px;">
-        <div style="margin-left:-255px;">
+    <div class="float-right mr-0">
+        <div >
             <div class="nav-popup" id="language-popup">
-                <div style="text-align: center; margin: 10px; font-size:25px">language</div>
+                <div class="text-align-center m-10p fs-25p">language</div>
                 <div class="d-flex align-items-center justify-content-center">
                     <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
-                        id="nav-language-search-input" style="width: 120px !important;"
-                        onkeyup="navLangSearch()"></input>
+                        id="nav-language-search-input w-120p" onkeyup="navLangSearch()"></input>
                 </div>
                 <ul id="language-change" class="nav-list">
                 </ul>
             </div>
         </div>
-        <div style="margin-left:-210px;">
+        <div >
             <div class="nav-popup" id="currency-popup">
-                <div style="text-align: center; margin: 10px; font-size:25px">currency</div>
+                <div class="text-align-center m-10p fs-25p">currency</div>
                 <div class="d-flex align-items-center justify-content-center">
-                    <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
-                        id="nav-currency-search-input" style="width: 80px !important; text-transform: uppercase;"
-                        onkeyup="navCurSearch()"></input>
+                    <input
+                        class="nav-input form-control form-control-lg border border-info rounded w-80pi text-tr-upper"
+                        type="text" id="nav-currency-search-input" onkeyup="navCurSearch()"></input>
                 </div>
                 <ul id="currency-change" class="nav-list">
                 </ul>
@@ -84,4 +84,4 @@
 
 
 
-<script src="/js/navbar.js"></script>
+<script src="/js/navbar.js" nonce="{{settings.cspNonce}}"></script>

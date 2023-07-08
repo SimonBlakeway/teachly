@@ -1,5 +1,3 @@
-
-
 toLocalCurClass = new Intl.NumberFormat(userLang, { //method call
     style: 'currency',
     currency: userCur,
@@ -11,8 +9,6 @@ toLocalCurClass = new Intl.NumberFormat(userLang, { //method call
 function toLocalCur(num) {
     return toLocalCurClass.format(num)
 }
-
-
 
 function updateCurrency(ratio) {
     curVals = document.getElementsByClassName("currency")
@@ -69,8 +65,10 @@ updateCurrencyInterval(userCur)
 
 updateDatesInterval()
 
-
-
-
+window.addEventListener('load', function () {
+    document.querySelectorAll('.stop-prop').forEach(el => el.addEventListener('click', event => {
+        event.stopPropagation();
+    }));
+})
 
 
