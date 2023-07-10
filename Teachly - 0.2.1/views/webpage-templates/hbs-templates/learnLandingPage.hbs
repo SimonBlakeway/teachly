@@ -3,248 +3,39 @@
 <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
 <meta name="theme-color" content="#7952b3">
 
-<style>
-  #landing-page-search-bar {
-    background-color: #eee;
-    font-family: "Poppins", sans-serif;
-    font-weight: 300;
-    width: 100vw !important;
-    padding: 0px !important;
-  }
+<link rel="stylesheet" href="/css/learnLandingPage.css"nonce="{{context.settings.cspNonce}}">
 
-  .list-header {
-    width: 100% !important;
-    height: 50px;
-    margin: 0% !important;
-    padding: 0%;
-    font-size: x-large;
-  }
-
-  .search-box {
-    display: flex;
-    flex-wrap: nowrap;
-    background-color: rgb(234, 234, 243);
-    box-shadow: 0px 0px 10px #0000005e;
-    border-radius: 5%;
-    font-size: large;
-    text-decoration: none;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    text-align: center !important;
-    width: 300px !important;
-    height: 180px !important;
-    margin: 10px !important;
-    border-radius: 1%;
-  }
-
-  .search-box:hover {
-    transition: all .4s ease;
-    -webkit-transition: all .4s ease;
-    -webkit-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    transform: scale(1.1s);
-    color: white;
-    background-color: #9fc4df;
-    box-shadow: 0px 0px 10px #8c8c965e;
-  }
-
-  @media screen and (max-width: 658px) {
-    .search-box {
-      background-color: #301a1a;
-      width: 260px !important;
-      height: 180px !important;
-      margin: 10px !important;
-      border-radius: 1%;
-    }
-  }
-
-  @media screen and (max-width: 555px) {
-    .search-box {
-      background-color: #301a1a;
-      width: 220px !important;
-      height: 180px !important;
-      margin: 5px !important;
-      border-radius: 1%;
-    }
-  }
-
-  @media screen and (max-width: 579px) {
-    .search-box {
-      background-color: #301a1a;
-      width: 180px !important;
-      height: 120px !important;
-      margin: 5px !important;
-    }
-  }
-
-  @media screen and (max-width: 579px) {
-    .search-box {
-      background-color: #301a1a;
-      width: 160px !important;
-      height: 120px !important;
-    }
-  }
-
-  @media screen and (max-width: 399px) {
-    .search-box {
-      background-color: #301a1a;
-      width: 100% !important;
-      height: auto !important;
-      min-height: 120px !important;
-    }
-  }
-</style>
+<script src="/js/learnLandingPage.js"  nonce="{{context.settings.cspNonce}}"></script>
 
 
-
-<script>
-
-  async function SearchBarSearch() {
-
-    var input, filter;
-    input = document.getElementById("search-bar-search-input");
-    filter = input.value.toUpperCase();
-
-    if (filter == "" || filter == " ") { return }
-
-    showSubjects = false;
-    subjectDiv = document.getElementById("subject-list")
-    subjectList = subjectDiv.children;
-
-    showSpecialities = false;
-    specialityDiv = document.getElementById("speciality-list")
-    specialityList = specialityDiv.children;
-
-    showCourses = false
-    courseDiv = document.getElementById("course-name-list")
-
-
-    for (i = 1; i < subjectList.length; i++) {
-      txtValue = subjectList[i].textContent || subjectList[i].innerHTML;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        subjectList[i].setAttribute("style", "display: flex !important;")
-        showSubjects = true
-      } else {
-        subjectList[i].setAttribute("style", "display: none !important;")
-      }
-    }
-    if (showSubjects) { subjectDiv.setAttribute("style", "display: flex !important;") }
-    else { subjectDiv.setAttribute("style", "display: none !important;") }
-
-    for (i = 1; i < specialityList.length; i++) {
-      txtValue = specialityList[i].textContent || specialityList[i].innerHTML;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        showSpecialities = true
-        specialityList[i].setAttribute("style", "display: flex !important;")
-      } else {
-        specialityList[i].setAttribute("style", "display: none !important;")
-      }
-    }
-    if (showSpecialities) { specialityDiv.setAttribute("style", "display: flex !important;") }
-    else { specialityDiv.setAttribute("style", "display: none !important;") }
-
-    res = await axios({
-      method: 'post',
-      url: '/learn/searchTutorCoursesByString',
-      data: filter,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    if (showCourses) { courseDiv.setAttribute("style", "display: flex !important;") }
-    else { courseDiv.setAttribute("style", "display: none !important;") }
-    window.scrollBy(0, 400);
-
-  }
-
-  window.addEventListener('load', function () {
-    axios.get('/get/validSubject').then(res => {
-      if (res.data == "404") { }
-      else {
-        arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-        for (i = 0; i < arr.length; i++) {
-          axios.get(`/get/validSpecialities/${arr[i]}`).then(res => {
-            if (res.data == "404") {
-            }
-            else {
-              arr = res.data
-              for (let i = 0; i < arr.length; i++) {
-                a = document.createElement("a");
-                a.href = `/learn/${arr[i]}`
-                a.className = "row search-box";
-                div = document.createElement("div");
-                div.innerHTML = `${arr[i]}`;
-                div.style.textAlign = "center"
-                a.appendChild(div);
-                document.getElementById("speciality-list").appendChild(a);
-              }
-            }
-          })
-        }
-
-        for (let i = 0; i < arr.length; i++) {
-          a = document.createElement("a");
-          a.href = `/learn/${arr[i]}`
-          a.className = "row search-box";
-          div = document.createElement("div");
-          div.innerHTML = `${arr[i]}`;
-          a.appendChild(div);
-          document.getElementById("subject-list").appendChild(a);
-        }
-      }
-    })
-
-    input = document.getElementById("search-bar-search-input");
-    input.addEventListener("keydown", function (e) {
-      if (e.code === "Enter") {
-        SearchBarSearch();
-      }
-    });
-  })
-
-</script>
-
-
-
-<main style="background-color: #eee; padding:20px !important; margin-top: -20px !important;">
-  <div id="landing-page-search-bar" class="container" style="width: 100% !important;">
-    <div class="d-flex align-items-center justify-content-center flex-column gap-4" style="height: 90vh;">
-      <div class="d-flex" style="width: 70%; max-width: 400px;">
-        <input style="height: 40px;" id="search-bar-search-input" class="form-control me-1" type="search"
+<main class="bg-eee p-20pi mt--20pi">
+  <div id="landing-page-search-bar w-100">
+    <div class="d-flex align-items-center justify-content-center flex-column gap-4 h-90vh">
+      <div class="d-flex w-70 mx-w-400p">
+        <input id="search-bar-search-input" class="form-control me-1 h-40p" type="search"
           placeholder="search subjects, specialities, or courses" aria-label="Search">
-        <button onclick="SearchBarSearch()"
-          style="margin-left: 10px; height: 45px; width: 55px; margin-top: -2.5px !important;"
-          class="btn btn-outline-primary" type="submit">
+        <button id="search-button" class="btn btn-outline-primary ml-10p h-45p w-55p mt--2-5pi" type="submit">
           <i class="fa fa-search"></i>
         </button>
       </div>
     </div>
   </div>
 
-  <div id="subject-list" class="row d-flex align-items-center justify-content-center"
-    style="width: 100% !important; margin:0% !important; padding:0%; display:none !important">
-
-    <div id="subject-header" class="row d-flex align-items-center justify-content-center list-header">
+  <div id="subject-list" class="row d-flex align-items-center justify-content-center w-100 m-0 p-0 ">
+    <div id="subject-header" class="row align-items-center justify-content-center list-header">
       Subjects
     </div>
   </div>
 
-  <div id="speciality-list" class="row d-flex align-items-center justify-content-center"
-    style="width: 100% !important; margin:0% !important; padding:0%; display:none !important">
-
-    <div id="specialities-header" class="row d-flex align-items-center justify-content-center list-header">
+  <div id="speciality-list" class="row d-flex align-items-center justify-content-center w-100 m-0 p-0">
+    <div id="specialities-header" class="row align-items-center justify-content-center list-header display-nonei">
       Specialities
     </div>
   </div>
 
-  <div id="course-name-list" class="row d-flex align-items-center justify-content-center"
-    style="width: 100% !important; margin:0% !important; padding:0%; display:none !important;">
-
-    <div id="courses-header" class="row d-flex align-items-center justify-content-center list-header">
+  <div id="course-name-list" class="row d-flex align-items-center justify-content-center w-100 m-0 p-0">
+    <div id="courses-header" class="row align-items-center justify-content-center list-header">
       Courses
     </div>
-
-
   </div>
 </main>

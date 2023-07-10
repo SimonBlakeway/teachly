@@ -185,10 +185,29 @@
 .ml--210pxi {
     margin-left: 100px !important;
 }
+
 .w-80pi {
-    width:  80px;
+    width: 80px;
 }
 
 .text-tr-upper {
     text-transform: uppercase;
+}
+
+.display-flex {
+    display: flex;
+
+}
+
+.align-items-center {
+    align-items: center;
+
+}
+
+.ml-30p {
+    margin-right: 30px;
+}
+
+.justify-content-space-between {
+    justify-content: space-between;
 }

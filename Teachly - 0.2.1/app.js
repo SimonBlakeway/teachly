@@ -13,13 +13,16 @@ const crypto  = require('crypto')
 const db = require('./config/db');
 const customTimers = require('./customTimers');
 
-app.use(helmet());
+
+
+//app.use(helmet());
 
 app.use((req, res, next) => {
   nonce = crypto.randomBytes(16).toString("hex");
   res.locals.cspNonce = nonce
   next();
 });
+/*
 
 app.use(
   helmet.contentSecurityPolicy({
@@ -44,6 +47,8 @@ app.use(
     },
   })
 );
+*/
+
 
 
 app.use(cors())

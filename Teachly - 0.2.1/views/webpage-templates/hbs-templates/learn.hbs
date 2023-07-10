@@ -350,22 +350,21 @@
 </style>
 
 
-<div style="margin-top: 100px;">
+<div class="mt--100p">
     <div id="search-bar-buttons">
-        <div class="fs-30p sans-serif light-blue-text-shadow"
-            style="float: left; padding-left: 15px; padding-right: 15px;">Filters</div>
-        <div style="float: right !important; width:calc(100% - 120px) !important">
+        <div class="fs-30p sans-serif light-blue-text-shadow float-left pl-15p pr-15p">Filters</div>
+        <div class="float-righti w-calc-100-120pi">
             <button onclick="togglesearchBar()"
-                class="bg-black h-40pi fs-20p float-right m-0 p-0 btn btn-outline-primary"
-                style="margin-left: 10px  !important; width: 50px;" id="toggle-search-bar-button">
-                <span class="fa-stack h-40p" style="vertical-align: top;">
+                class="bg-black h-40pi fs-20p float-right m-0 p-0 btn btn-outline-primary ml-10pi w-50p"
+                id="toggle-search-bar-button">
+                <span class="fa-stack h-40p vert-align-top">
                     <i id="toggle-search-bar-button-symbol"
-                        class="fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadow"
+                        class="fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-50p"
                         style="height: 40px !important; margin-top: -10px; width: 50px"></i>
                 </span>
             </button>
             <button onclick="toggleAdvancedsearchBar()" id="advanced-search-button"
-                class="bg-black h-40p fs-20p float-right m-0 p-1 btn btn-outline-primary hidden">
+                class="bg-black h-40p fs-20p float-right m-0 p-1 btn btn-outline-primary display-nonei">
                 advanced settings
             </button>
         </div>
@@ -434,8 +433,8 @@
 
 
 
-    <div class="row w-100 d-flex align-items-center justify-content-center m-0 p-0 pt-3" id="advanced-search-bar"
-        style="display:none  !important;">
+    <div class="row w-100 align-items-center justify-content-center m-0 p-0 pt-3 display-nonei"
+        id="advanced-search-bar">
         <div class="col">
             <div class="row">
                 <div class="col container d-flex align-items-center justify-content-center">
@@ -458,20 +457,16 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
-
-                <div class="col">
-                    <div class="row">
-                        <div class="col container d-flex align-items-center justify-content-center">
-                            <div onclick='toggleSearchBarPopup("timeRange-popup")'>
-
-                            </div>
-                            <div class="col container d-flex align-items-center justify-content-center">
-
-                            </div>
+                <div class="col container d-flex align-items-center justify-content-center">
+                    <div onclick='toggleSearchBarPopup("course-time-popup")'>
+                        <div class="my-3">‎</div>
+                        <div
+                            class="container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
+                        </div>
+                    </div>
+                    <div class="popup container d-flex align-items-center justify-content-center"
+                        id="">
+                        <div class="container text-center">
                         </div>
                     </div>
                 </div>
@@ -480,21 +475,33 @@
         <div class="col">
             <div class="row">
                 <div class="col container d-flex align-items-center justify-content-center">
+                    <div onclick='toggleSearchBarPopup("course-time-popup")'>
+                        <div class="my-3">‎</div>
+                        <div
+                            class="container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
+                        </div>
+                    </div>
+                    <div class="popup container d-flex align-items-center justify-content-center"
+                        id="">
+                        <div class="container text-center">
+                        </div>
+                    </div>
                 </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col container d-flex align-items-center justify-content-center">
-                            <div class="col container d-flex align-items-center justify-content-center">
-                            </div>
+                <div class="col container d-flex align-items-center justify-content-center">
+                    <div onclick='toggleSearchBarPopup("course-time-popup")'>
+                        <div class="my-3">‎</div>
+                        <div
+                            class="container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
+                        </div>
+                    </div>
+                    <div class="popup container d-flex align-items-center justify-content-center"
+                        id="">
+                        <div class="container text-center">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
-
     </div>
 
 
@@ -890,32 +897,38 @@
         button = document.getElementById("toggle-search-bar-button")
         bar = document.getElementById("product-search-bar")
         symbol = document.getElementById("toggle-search-bar-button-symbol")
-        if (bar.style.display === "none" || bar.style.display === "") {
-            bar.style.visibility = "visible";
-            bar.style.display = "block";
-            symbol.className = "fa fa-times fa-stack-1x fa-inverse"
-            document.getElementById("advanced-search-button").setAttribute('style', 'display: inline !important;');
+        advancedSearchButton = document.getElementById("advanced-search-button")
+        advancedBars = document.getElementById("advanced-search-bar")
+        if (bar.classList.contains("display-blocki") == false) {
+            bar.classList.add("display-blocki", "visibility-visiblei")
+            symbol.className = "fa fa-times fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-50p"
+
+            advancedSearchButton.classList.remove('display-nonei');
         }
         else {
-            bar.style.visibility = "hidden";
-            bar.style.display = "none";
-            symbol.className = "fa fa-bars fa-stack-1x fa-inverse"
-            document.getElementById("advanced-search-button").setAttribute('style', 'display: none !important;');
-            document.getElementById("advanced-search-button").classList.remove("active-advanced-search-button")
-            document.getElementById("advanced-search-bar").setAttribute('style', 'display: none !important;');
+            //hide
+            bar.classList.remove("display-blocki", "visibility-visiblei")
+            symbol.className = "fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-50p"
+            advancedSearchButton.classList.remove("active-advanced-search-button")
+            advancedSearchButton.classList.add("display-nonei")
+
+            advancedBars.classList.add("display-nonei")
+            advancedBars.classList.remove("d-flex")
         }
     }
 
     function toggleAdvancedsearchBar() {
         advancedBars = document.getElementById("advanced-search-bar")
-        if (advancedBars.style.display == "none") {
-            advancedBars.setAttribute('style', 'display: flex !important;');
-            document.getElementById("advanced-search-button").classList.add("active-advanced-search-button")
+        advancedSearchButton = document.getElementById("advanced-search-button")
+        if (advancedBars.classList.contains("display-nonei")) {
+            advancedBars.classList.remove("display-nonei")
+            advancedBars.classList.add("d-flex")
+            advancedSearchButton.classList.add("active-advanced-search-button")
         }
         else {
-            advancedBars.setAttribute('style', 'display: none !important;');
-            document.getElementById("advanced-search-bar").setAttribute('style', 'display: none !important;');
-            document.getElementById("advanced-search-button").classList.remove("active-advanced-search-button")
+            advancedBars.classList.add("display-nonei")
+            advancedBars.classList.remove("d-flex")
+            advancedSearchButton.classList.remove("active-advanced-search-button")
         }
     }
 
@@ -928,7 +941,7 @@
             courseId = courseObj.course_id
             teacherId = courseObj.teacher_id
             teacher_name = courseObj.teacher_name
-            ratings = (typeof courseObj.ratings == "undefined") ? 0: courseObj.ratings;
+            ratings = (typeof courseObj.ratings == "undefined") ? 0 : courseObj.ratings;
 
             ratings = (typeof courseObj.ratings == "undefined") ? 0 : courseObj.ratings;
 
