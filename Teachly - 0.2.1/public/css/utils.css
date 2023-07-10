@@ -38,9 +38,6 @@
     height: auto;
 }
 
-.mr-5p {
-    margin-right: 5px;
-}
 
 .pl-5p {
     padding-left: 5px;
@@ -235,9 +232,6 @@
     display: none;
 }
 
-.pl-5p {
-    padding-left: 5px;
-}
 
 .clr-gold {
     color: gold;
@@ -334,3 +328,14 @@
 
 
 
+.pr-20pi {
+    margin-right:  20px !important;
+}
+
+.m-4em {
+    margin: 4em;
+}
+
+.w-80 {
+    width: 100%;
+}

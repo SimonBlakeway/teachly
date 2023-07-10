@@ -286,3 +286,363 @@
     .light-blue-text-shadow {
         text-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .more-course-description {
+        margin-top: -1000px !important;
+        display: none;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        width: 100% !important;
+    }
+
+    #search-bar-buttons {
+        background: rgb(0, 0, 0);
+        color: white;
+        width: 100% !important;
+        height: 60px;
+        font-family: Verdana, sans-serif;
+        z-index: 40;
+        width: 100%;
+        margin-bottom: 50px;
+
+
+
+
+        display: flex;
+        flex-wrap: wrap;
+        /* for horizontal aligning of child divs */
+
+        /* for vertical aligning */
+        align-items: center;
+    }
+
+    .active-advanced-search-button {
+        background-color: #123f88 !important;
+    }
+
+    .subject-link-li {
+        text-decoration: none;
+    }
+
+    #product-search-bar {
+        position: relative;
+        background: black;
+        color: white;
+        width: 100% !important;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        margin: 0px !important;
+        margin-top: 0px !important;
+        margin-bottom: 50px;
+        height: auto !important;
+        display: none;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .popup {
+        position: absolute;
+        z-index: 20;
+        width: 300px;
+        height: 300px;
+        background-color: #ffffff;
+        display: none;
+        visibility: hidden;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        text-align: left;
+        overflow: auto;
+        -ms-overflow-style: none;
+        /* Internet Explorer 10+ */
+        scrollbar-width: none;
+        /* Firefox */
+        font-size: 20px;
+        border-radius: 10px;
+        webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border-style: solid;
+        border-color: white;
+        border-width: 30px;
+    }
+
+    .popup::-webkit-scrollbar {
+        display: none;
+        /* Safari and Chrome */
+    }
+
+    #pricePerLesson-popup {
+        width: 300px;
+        height: 200px;
+        margin-top: 320px;
+        margin-left: 150px;
+        border-width: 10px;
+    }
+
+    #course-time-popup {
+        width: 300px;
+        height: 200px;
+        margin-top: 320px;
+        margin-left: 150px;
+        border-width: 10px;
+    }
+
+    #subject-popup {
+        width: 200px;
+        margin-top: 400px;
+        margin-left: 40px;
+    }
+
+    #speciality-popup {
+        width: 310px;
+        height: 300px;
+        margin-left: 140px;
+        margin-top: 400px;
+        border-width: 10px;
+    }
+
+    #orderBy-popup {
+        width: 280px;
+        height: 190px;
+        margin-top: 320px;
+        margin-right: -130px;
+        border-width: 10px;
+
+    }
+
+    #timeRange-popup {
+        width: 300px;
+        height: 460px;
+        margin-top: 590px;
+        margin-right: 150px;
+        border-width: 10px;
+    }
+
+    #taughtIn-popup {
+        width: 250px;
+        height: 400px;
+        margin-left: -80px;
+        margin-top: 500px;
+    }
+
+    .day-div {
+        background-color: #89c4ff;
+        width: 100% !important;
+        height: 50px;
+        margin: 2px;
+        text-align: center;
+        font-size: 30px;
+        margin: 5px;
+    }
+
+    .time-slot-div {
+        background-color: #89c4ff;
+        border-radius: 12px 6px;
+        width: 85px !important;
+        height: 50px;
+        margin-left: 5px !important;
+        margin-right: 5px !important;
+        margin-top: 1px;
+        margin: 2px !important;
+
+    }
+
+    .active-time-slot-div {
+        background-color: #277dd3;
+        border-radius: 14px 7px;
+    }
+
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+
+    #toggle-search-bar-button {
+        font-size: 30px;
+        position: relative;
+        z-index: 30;
+        margin: 0px !important;
+    }
+
+
+    @media only screen and (max-width: 366px) {
+        #taughtIn-popup {
+            margin-right: 0px !important;
+            margin-left: 0px !important;
+        }
+
+        #pricePerLesson-popup {
+            margin-left: 0px;
+        }
+
+        #timeRange-popup {
+            margin-right: 0px;
+            margin-left: 0px;
+        }
+
+        #subject-popup {
+            margin-right: 0px;
+            margin-left: 0px;
+
+        }
+
+        #speciality-popup {
+            margin-right: 0px !important;
+            margin-left: 0px !important;
+        }
+    }
+
+    @media only screen and (max-width: 770px) {
+
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+
+        #toggle-search-bar-button {
+            display: block;
+            visibility: visible;
+        }
+
+    }
+
+
+
+    @media only screen and (max-width: 812) {
+
+        .en-100-366px {
+            width: 100%;
+        }
+    }
+
+    .fa-circle {
+        color: black;
+    }
+
+    .pagination-button {
+        margin: 2.5px;
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        border: none;
+        border-radius: 1%;
+        box-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
+    }
+
+    .pagination-button:hover {
+        background-color: rgb(238, 243, 248);
+        transition: 0.4s;
+        transform: scale(1.1);
+        color: #123f88;
+    }
+
+    .active-pagination-button {
+        margin: 2.5px;
+        width: 35px;
+        height: 35px;
+        border: none;
+        font-size: 20px;
+        background-color: #00000045;
+        box-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
+    }
+
+    .read-more-button {
+        border: none;
+        background: rgba(0, 0, 0, 0);
+        font-size: 19px;
+        border-radius: 5%;
+    }
+
+    .read-more-button:hover {
+        background: rgba(0, 0, 0, 0.05);
+        transition: 0.2s;
+        transform: scale(1.1)
+    }
+
+    .course-img {
+        object-fit: cover;
+        width: 100%;
+        max-height: 500px;
+    }
+
+
+    .bg-black {
+        background-color: black;
+    }
+
+    .h-40p {
+        height: 40px;
+    }
+
+    .h-40pi {
+        height: 40px !important;
+    }
+
+    .fs-20p {
+        font-size: 20px;
+    }
+
+    .fs-30p {
+        font-size: 30px;
+    }
+
+    .w-100p {
+        width: 100px;
+    }
+
+    .clr-wht {
+        color: white
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .w-auto {
+        width: auto !important;
+    }
+
+    .float-right {
+        float: right;
+    }
+
+    .sans-serif {
+        font-family: sans-serif;
+    }
+
+    .light-blue-text-shadow {
+        text-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
+    }
+
+    .mn-w-180pi {
+        min-width: 165px !important;
+    }

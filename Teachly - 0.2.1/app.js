@@ -15,14 +15,14 @@ const customTimers = require('./customTimers');
 
 
 
-//app.use(helmet());
+app.use(helmet());
 
 app.use((req, res, next) => {
   nonce = crypto.randomBytes(16).toString("hex");
   res.locals.cspNonce = nonce
   next();
 });
-/*
+
 
 app.use(
   helmet.contentSecurityPolicy({
@@ -30,13 +30,6 @@ app.use(
     directives: {
       "script-src": [
         "self",
-      //  "https://ajax.googleapis.com",
-      //  "https://cdnjs.cloudflare.com",
-      //  "https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js",
-      //  "https://ajax.googleapis.com",
-      //  "http://127.0.0.1:3001/js/navbar.js",
-      //  'http://127.0.0.1:3001/js/mainLayout.js',
-      //  'http://127.0.0.1:3001',
         (req, res) => `'nonce-${res.locals.cspNonce}'`
       ]
       ,
@@ -47,7 +40,7 @@ app.use(
     },
   })
 );
-*/
+
 
 
 

@@ -1,376 +1,31 @@
-<link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
-<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180" nonce="{{context.settings.cspNonce}}">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png" nonce="{{context.settings.cspNonce}}">
+<link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png" nonce="{{context.settings.cspNonce}}">
 <meta name="theme-color" content="#7952b3">
-
-<link rel="stylesheet" href="/css/utils.css">
-
-<script src="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.js"></script>
-<script src="https://unpkg.com/wnumb@1.1.0"></script>
-<link rel="stylesheet" href="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.css">
-
-<style>
-    .more-course-description {
-        margin-top: -1000px !important;
-        display: none;
-    }
-
-    img {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        width: 100% !important;
-    }
-
-    #search-bar-buttons {
-        background: rgb(0, 0, 0);
-        color: white;
-        width: 100% !important;
-        height: 60px;
-        font-family: Verdana, sans-serif;
-        z-index: 40;
-        width: 100%;
-        margin-bottom: 50px;
-
-
-
-
-        display: flex;
-        flex-wrap: wrap;
-        /* for horizontal aligning of child divs */
-
-        /* for vertical aligning */
-        align-items: center;
-    }
-
-    .active-advanced-search-button {
-        background-color: #123f88 !important;
-    }
-
-    .subject-link-li {
-        text-decoration: none;
-    }
-
-    #product-search-bar {
-        position: relative;
-        background: black;
-        color: white;
-        width: 100% !important;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        margin: 0px !important;
-        margin-top: 0px !important;
-        margin-bottom: 50px;
-        height: auto !important;
-        display: none;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    }
-
-    .popup {
-        position: absolute;
-        z-index: 20;
-        width: 300px;
-        height: 300px;
-        background-color: #ffffff;
-        display: none;
-        visibility: hidden;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        text-align: left;
-        overflow: auto;
-        -ms-overflow-style: none;
-        /* Internet Explorer 10+ */
-        scrollbar-width: none;
-        /* Firefox */
-        font-size: 20px;
-        border-radius: 10px;
-        webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        border-style: solid;
-        border-color: white;
-        border-width: 30px;
-    }
-
-    .popup::-webkit-scrollbar {
-        display: none;
-        /* Safari and Chrome */
-    }
-
-    #pricePerLesson-popup {
-        width: 300px;
-        height: 200px;
-        margin-top: 320px;
-        margin-left: 150px;
-        border-width: 10px;
-    }
-
-    #course-time-popup {
-        width: 300px;
-        height: 200px;
-        margin-top: 320px;
-        margin-left: 150px;
-        border-width: 10px;
-    }
-
-    #subject-popup {
-        width: 200px;
-        margin-top: 400px;
-        margin-left: 40px;
-    }
-
-    #speciality-popup {
-        width: 310px;
-        height: 300px;
-        margin-left: 140px;
-        margin-top: 400px;
-        border-width: 10px;
-    }
-
-    #orderBy-popup {
-        width: 280px;
-        height: 190px;
-        margin-top: 320px;
-        margin-right: -130px;
-        border-width: 10px;
-
-    }
-
-    #timeRange-popup {
-        width: 300px;
-        height: 460px;
-        margin-top: 590px;
-        margin-right: 150px;
-        border-width: 10px;
-    }
-
-    #taughtIn-popup {
-        width: 250px;
-        height: 400px;
-        margin-left: -80px;
-        margin-top: 500px;
-    }
-
-    .day-div {
-        background-color: #89c4ff;
-        width: 100% !important;
-        height: 50px;
-        margin: 2px;
-        text-align: center;
-        font-size: 30px;
-        margin: 5px;
-    }
-
-    .time-slot-div {
-        background-color: #89c4ff;
-        border-radius: 12px 6px;
-        width: 85px !important;
-        height: 50px;
-        margin-left: 5px !important;
-        margin-right: 5px !important;
-        margin-top: 1px;
-        margin: 2px !important;
-
-    }
-
-    .active-time-slot-div {
-        background-color: #277dd3;
-        border-radius: 14px 7px;
-    }
-
-    .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-    }
-
-    #toggle-search-bar-button {
-        font-size: 30px;
-        position: relative;
-        z-index: 30;
-        margin: 0px !important;
-    }
-
-
-    @media only screen and (max-width: 366px) {
-        #taughtIn-popup {
-            margin-right: 0px !important;
-            margin-left: 0px !important;
-        }
-
-        #pricePerLesson-popup {
-            margin-left: 0px;
-        }
-
-        #timeRange-popup {
-            margin-right: 0px;
-            margin-left: 0px;
-        }
-
-        #subject-popup {
-            margin-right: 0px;
-            margin-left: 0px;
-
-        }
-
-        #speciality-popup {
-            margin-right: 0px !important;
-            margin-left: 0px !important;
-        }
-    }
-
-    @media only screen and (max-width: 770px) {
-
-        .bd-placeholder-img-lg {
-            font-size: 3.5rem;
-        }
-
-        #toggle-search-bar-button {
-            display: block;
-            visibility: visible;
-        }
-
-    }
-
-
-
-    @media only screen and (max-width: 812) {
-
-        .en-100-366px {
-            width: 100%;
-        }
-    }
-
-    .fa-circle {
-        color: black;
-    }
-
-    .pagination-button {
-        margin: 2.5px;
-        width: 35px;
-        height: 35px;
-        font-size: 20px;
-        border: none;
-        border-radius: 1%;
-        box-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
-    }
-
-    .pagination-button:hover {
-        background-color: rgb(238, 243, 248);
-        transition: 0.4s;
-        transform: scale(1.1);
-        color: #123f88;
-    }
-
-    .active-pagination-button {
-        margin: 2.5px;
-        width: 35px;
-        height: 35px;
-        border: none;
-        font-size: 20px;
-        background-color: #00000045;
-        box-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
-    }
-
-    .read-more-button {
-        border: none;
-        background: rgba(0, 0, 0, 0);
-        font-size: 19px;
-        border-radius: 5%;
-    }
-
-    .read-more-button:hover {
-        background: rgba(0, 0, 0, 0.05);
-        transition: 0.2s;
-        transform: scale(1.1)
-    }
-
-    .course-img {
-        object-fit: cover;
-        width: 100%;
-        max-height: 500px;
-    }
-
-
-    .bg-black {
-        background-color: black;
-    }
-
-    .h-40p {
-        height: 40px;
-    }
-
-    .h-40pi {
-        height: 40px !important;
-    }
-
-    .fs-20p {
-        font-size: 20px;
-    }
-
-    .fs-30p {
-        font-size: 30px;
-    }
-
-    .w-100p {
-        width: 100px;
-    }
-
-    .clr-wht {
-        color: white
-    }
-
-    .hidden {
-        display: none !important;
-    }
-
-    .w-auto {
-        width: auto !important;
-    }
-
-    .float-right {
-        float: right;
-    }
-
-    .sans-serif {
-        font-family: sans-serif;
-    }
-
-    .light-blue-text-shadow {
-        text-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
-    }
-
-    .mn-w-180pi {
-        min-width: 165px !important;
-    }
-</style>
-
-
+<link rel="stylesheet" href="/css/utils.css" nonce="{{context.settings.cspNonce}}">
+<link rel="stylesheet" href="/css/learn.css" nonce="{{context.settings.cspNonce}}">
+<script src="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.js" nonce="{{context.settings.cspNonce}}"></script>
+<script src="https://unpkg.com/wnumb@1.1.0" nonce="{{context.settings.cspNonce}}"></script>
+<link rel="stylesheet" href="https://unpkg.com/nouislider@10.0.0/distribute/nouislider.min.css" nonce="{{context.settings.cspNonce}}">
 <div class="mt--100p">
     <div id="search-bar-buttons">
         <div class="fs-30p sans-serif light-blue-text-shadow float-left pl-15p pr-15p">Filters</div>
         <div class="float-righti w-calc-100-120pi">
-            <button onclick="togglesearchBar()"
+            <button
                 class="bg-black h-40pi fs-20p float-right m-0 p-0 btn btn-outline-primary ml-10pi w-50p"
                 id="toggle-search-bar-button">
                 <span class="fa-stack h-40p vert-align-top">
                     <i id="toggle-search-bar-button-symbol"
-                        class="fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-50p"
-                        style="height: 40px !important; margin-top: -10px; width: 50px"></i>
+                        class="fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-50p"></i>
                 </span>
             </button>
-            <button onclick="toggleAdvancedsearchBar()" id="advanced-search-button"
-                class="bg-black h-40p fs-20p float-right m-0 p-1 btn btn-outline-primary display-nonei">
+            <button id="advanced-search-button"
+                class="bg-black h-40p fs-20p float-right m-0 p-1 btn btn-outline-primary display-nonei mx-2">
                 advanced settings
             </button>
         </div>
     </div>
 </div>
-
 <div id="product-search-bar">
 
 
@@ -378,7 +33,7 @@
         <div class="col">
             <div class="row">
                 <div class="col container d-flex align-items-center justify-content-center">
-                    <div class="" onclick='toggleSearchBarPopup("subject-popup")'>
+                    <div id="toggle-subject-popup">
                         <div class="my-3">Subject Search</div>
                         <input required class="form-control form-control-md border border-info rounded mn-w-152p"
                             type="text" id="subject-search-input"
@@ -391,7 +46,7 @@
                     </div>
                 </div>
                 <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("speciality-popup")'>
+                    <div id="speciality-subject-popup">
                         <div class="my-3">Speciality Search</div>
                         <input required class="form-control form-control-md border border-info rounded mn-w-152p"
                             type="text" id="speciality-search-input" placeholder=""
@@ -416,7 +71,7 @@
                     </div>
                 </div>
                 <div class="col container d-flex align-items-center justify-content-center">
-                    <div class="" onclick='toggleSearchBarPopup("taughtIn-popup")'>
+                    <div id="taughtIn-subject-popup">
                         <div class="my-3">Taught In</div>
                         <input required class="form-control form-control-md border border-info rounded mn-w-152p"
                             id="taughtIn-search-input" type="text" placeholder=""
@@ -433,145 +88,70 @@
 
 
 
-    <div class="row w-100 align-items-center justify-content-center m-0 p-0 pt-3 display-nonei"
-        id="advanced-search-bar">
-        <div class="col">
-            <div class="row">
-                <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("course-time-popup")'>
-                        <div class="my-3">lesson time</div>
-                        <button
-                            class="btn btn-md btn-outline-secondary container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
-                            <span id="min-course-time"></span>
-                            <span style="margin-left: 5px; margin-right: 5px;">-</span>
-                            <span id="max-course-time"></span>
-                            <span> minutes</span>
-                        </button>
-                    </div>
-                    <div class="popup container d-flex align-items-center justify-content-center"
-                        id="course-time-popup">
-                        <div class="container text-center">
-                            <div class="container d-flex align-items-center justify-content-center text-dark">
-                            </div>
-                            <div style="margin: 4em w-100" class="time-slider"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("course-time-popup")'>
-                        <div class="my-3">‎</div>
-                        <div
-                            class="container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
-                        </div>
-                    </div>
-                    <div class="popup container d-flex align-items-center justify-content-center"
-                        id="">
-                        <div class="container text-center">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="row">
-                <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("course-time-popup")'>
-                        <div class="my-3">‎</div>
-                        <div
-                            class="container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
-                        </div>
-                    </div>
-                    <div class="popup container d-flex align-items-center justify-content-center"
-                        id="">
-                        <div class="container text-center">
-                        </div>
-                    </div>
-                </div>
-                <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("course-time-popup")'>
-                        <div class="my-3">‎</div>
-                        <div
-                            class="container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
-                        </div>
-                    </div>
-                    <div class="popup container d-flex align-items-center justify-content-center"
-                        id="">
-                        <div class="container text-center">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
 
     <div class="row w-100 d-flex align-items-center justify-content-center m-0 p-0 pt-3">
         <div class="col">
             <div class="row">
                 <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("pricePerLesson-popup")'>
+                    <div id="pricePerLesson-subject-popup">
                         <div class="my-3">price Per Lesson</div>
                         <button
                             class="btn btn-md btn-outline-secondary container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
                             <span class="currency">
-                                <span id="min-price-shown" style="display: none;">50.000</span>
+                                <span class="display-nonei" id="min-price-shown">50.000</span>
                                 <span></span>
                             </span>
 
-                            <span style="margin-left: 5px; margin-right: 5px;">-</span>
+                            <span class="ml-5p mr-5p">-</span>
 
                             <span class="currency">
-                                <span id="max-price-shown" style="display: none;">50.000</span>
+                                <span class="display-nonei" id="max-price-shown">50.000</span>
                                 <span></span>
                             </span>
-                            <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x" aria-hidden="true"></i>
+                            <i class="fa fa-caret-down fa-2x pl-5p" aria-hidden="true"></i>
                         </button>
                     </div>
                     <div class="popup container d-flex align-items-center justify-content-center"
                         id="pricePerLesson-popup">
-                        <div class="container text-center">
+                        <div class="container text-center p-0">
                             <div class="container d-flex align-items-center justify-content-center text-dark">
                             </div>
-                            <div style="margin: 4em w-100" class="regular-slider"></div>
+                            <div class="regular-slider d-flex align-items-center justify-content-center m-2"></div>
                         </div>
                     </div>
                 </div>
                 <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("orderBy-popup")'>
+                    <div id="orderBy-subject-popup">
                         <div class="my-3">order By</div>
                         <button id="orderBy-button"
                             class="d-flex align-items-center justify-content-center btn btn-md btn-outline-secondary text-capitalize mn-w-152p mn-h-46p">
-                            <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
-                                aria-hidden="true"></i></button>
+                            <i class="fa fa-caret-down fa-2x pl-5p" aria-hidden="true"></i></button>
                     </div>
                     <div class="popup" id="orderBy-popup">
                         <form action="#" class="p-2 ">
-                            <input required class="form-check-input" onclick='updateformData("orderBy", "Popularity")'
+                            <input required class="form-check-input"
                                 type="radio" value="Popularity" name="Order-By" id="Popularity">
                             <label class="form-check-label text-dark" for="Popularity">Popularity</label>
 
                             <br>
                             <input required class="form-check-input"
-                                onclick='updateformData("orderBy", "Price:-highest-first")' type="radio"
+                                 type="radio"
                                 value="Price:-highest-first" name="Order-By" id="Price:-highest-first">
                             <label class="form-check-label text-dark" for="Price:-highest-first">Price: highest
                                 first</label>
 
                             <br>
-                            <input class="form-check-input" onclick='updateformData("orderBy", "Price:-lowest-first")'
+                            <input class="form-check-input"
                                 type="radio" value="Price:-lowest-first" name="Order-By" id="Price:-lowest-first">
                             <label class="form-check-label text-dark" for="Price:-lowest-first">Price:
                                 lowest-first</label>
                             <br>
-                            <input class="form-check-input" onclick='updateformData("orderBy", "Number-of-reviews")'
+                            <input class="form-check-input"
                                 type="radio" value="Number-of-reviews" name="Order-By" id="Number-of-reviews">
                             <label class="form-check-label text-dark" for="Number-of-reviews">Number of
                                 reviews</label>
                             <br>
-                            <input class="form-check-input" onclick='updateformData("orderBy", "Best-rating")'
+                            <input class="form-check-input"
                                 type="radio" value="Best-rating" name="Order-By" id="Best-rating">
                             <label class="form-check-label text-dark" for="Best-rating">Best rating</label>
                         </form>
@@ -582,12 +162,11 @@
         <div class="col">
             <div class="row">
                 <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick='toggleSearchBarPopup("timeRange-popup")'>
+                    <div id="timeRange-subject-popup">
                         <div class="my-3">‎ </div>
                         <button
                             class="d-flex align-items-center justify-content-center btn btn-md btn-outline-secondary text-capitalize mn-w-152p mn-h-46p">timeRange
-                            <i style="padding-left: 5px;" class="fa fa-caret-down fa-2x"
-                                aria-hidden="true"></i></button>
+                            <i class="fa fa-caret-down fa-2x pl-5p" aria-hidden="true"></i></button>
                     </div>
                     <div class="popup" id="timeRange-popup">
                         <div id="timeRange-popup-rows" class="text-center w-100 p-0">
@@ -595,10 +174,10 @@
                     </div>
                 </div>
                 <div class="col container d-flex align-items-center justify-content-center">
-                    <div onclick="clearSearchBarPopups()">
+                    <div class="clear-search-popups">
                         <div class="my-3">‎ </div>
                         <div>
-                            <button onclick="searchCourses()"
+                            <button id="search-courses"
                                 class="btn btn-md btn-outline-secondary text-capitalize mn-w-152p mn-h-46p">search
                             </button>
                         </div>
@@ -609,589 +188,79 @@
     </div>
 
 
+    <div class="row w-100 align-items-center justify-content-center m-0 p-0 pt-3 display-nonei"
+        id="advanced-search-bar">
+        <div class="col">
+            <div class="row">
+                <div class="col container d-flex align-items-center justify-content-center">
+                    <div id="course-time-subject-popup">
+                        <div class="my-3">lesson time</div>
+                        <button
+                            class="btn btn-md btn-outline-secondary container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
+                            <span id="min-course-time"></span>
+                            <span class="ml-5p mr-5p">-</span>
+                            <span id="max-course-time"></span>
+                            <span> minutes</span>
+                        </button>
+                    </div>
+                    <div class="popup container d-flex align-items-center justify-content-center"
+                        id="course-time-popup">
+                        <div class="container text-center">
+                            <div class="container d-flex align-items-center justify-content-center text-dark">
+                            </div>
+                            <div class="time-slider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col container d-flex align-items-center justify-content-center">
+                    <div >
+                        <div class="my-3">‎</div>
+                        <div class="container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
+                        </div>
+                    </div>
+                    <div class="popup container d-flex align-items-center justify-content-center" id="">
+                        <div class="container text-center">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="col container d-flex align-items-center justify-content-center">
+                    <div>
+                        <div class="my-3">‎</div>
+                        <div class="container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
+                        </div>
+                    </div>
+                    <div class="popup container d-flex align-items-center justify-content-center" id="">
+                        <div class="container text-center">
+                        </div>
+                    </div>
+                </div>
+                <div class="col container d-flex align-items-center justify-content-center">
+                    <div >
+                        <div class="my-3">‎</div>
+                        <div class="container d-flex align-items-center justify-content-center mn-w-152p mn-h-46p">
+                        </div>
+                    </div>
+                    <div class="popup container d-flex align-items-center justify-content-center" id="">
+                        <div class="container text-center">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<script>
+<script nonce="{{context.settings.cspNonce}}">
     const subject = "{{context.settings.subject}}"
     const speciality = "{{context.settings.speciality}}"
-
-    function formDataSetup() {
-        teachlyFormDataDefault = {
-            "subject": subject,
-            "specialities": [],
-            "priceRange": [10, 60],
-            "searchby": "",
-            "taughtIn": [userLang],
-            "orderBy": "Popularity",
-            "availableTimes": [],
-            "courseTime": [20, 60],
-            "activePage": 1,
-
-        }
-        teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
-
-        if (teachlyFormData === null) {
-            teachlyFormData = teachlyFormDataDefault
-            localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
-        }
-
-        if (teachlyFormData.subject != teachlyFormDataDefault.subject) {
-            teachlyFormData = teachlyFormDataDefault
-            localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
-        }
-
-        if (!(teachlyFormData.specialities.includes(speciality)) && speciality != "") {
-            teachlyFormData = teachlyFormDataDefault
-            teachlyFormData.specialities.push(speciality)
-        }
-        for (i = 0; i < teachlyFormData.specialities.length; i++) {
-            document.getElementById(teachlyFormData.specialities[i].replaceAll("'", "&apos").replaceAll(" ", "-")).checked = true;
-        }
-
-        range1Shown = document.getElementById('min-price-shown');
-        range2Shown = document.getElementById('max-price-shown');
-        range1Shown.innerHTML = teachlyFormData.priceRange[0] * curConversionRatio;
-        range2Shown.innerHTML = teachlyFormData.priceRange[1] * curConversionRatio;
-
-        regularSlider = document.querySelector('.regular-slider')
-        prefixFormat = wNumb({ decimals: 2 })
-
-        slider = noUiSlider.create(regularSlider, {
-            start: [teachlyFormData.priceRange[0] * curConversionRatio, teachlyFormData.priceRange[1] * curConversionRatio],
-            connect: true,
-            margin: 5 * curConversionRatio,
-            range: { min: 10 * curConversionRatio, max: 60 * curConversionRatio },
-            tooltips: [prefixFormat, prefixFormat],
-            pips: {
-                mode: 'steps',
-                density: 5,
-            },
-        })
-        slider.on('update', function (values) {
-            updateformData("priceRange", values)
-        })
-
-
-        timeSlider = document.querySelector('.time-slider')
-        slider = noUiSlider.create(timeSlider, {
-            start: [teachlyFormData.courseTime[0], teachlyFormData.courseTime[1]],
-            connect: true,
-            step: 1,
-            margin: 1,
-            range: { min: 20, max: 60 },
-            pips: {
-                mode: 'steps',
-                density: 5,
-            },
-        })
-        slider.on('update', function (values) {
-            updateformData("courseTime", values)
-        })
-        document.getElementById("min-course-time").innerHTML = teachlyFormData.courseTime[0]
-        document.getElementById("max-course-time").innerHTML = teachlyFormData.courseTime[1]
-
-        setInterval(async function () {
-            try {
-                priceRange = JSON.parse(localStorage.getItem("TeachlyFormData")).priceRange
-                range1Shown = document.getElementById('min-price-shown');
-                range2Shown = document.getElementById('max-price-shown');
-                range1Shown.innerHTML = priceRange[0] * curConversionRatio;
-                range2Shown.innerHTML = priceRange[1] * curConversionRatio;
-                slider.updateOptions({
-                    margin: 5 * curConversionRatio,
-                    range: { min: 0, max: 60 * curConversionRatio },
-                });
-                slider.set([priceRange[0] * curConversionRatio, priceRange[1] * curConversionRatio]);
-            }
-            catch (err) {
-                console.log(err)
-            }
-        }, 300000);
-
-        document.getElementById("searchBy-input").value = teachlyFormData.searchby;
-        document.getElementById(teachlyFormData.orderBy.replaceAll(" ", "-")).checked = true;
-        document.getElementById('orderBy-button').innerHTML = teachlyFormData.orderBy;
-
-        for (i = 0; i < teachlyFormData.taughtIn.length; i++) {
-            document.getElementById(teachlyFormData.taughtIn[i]).checked = true;
-        }
-        for (i = 0; i < teachlyFormData.availableTimes.length; i++) {
-            document.getElementById(teachlyFormData.availableTimes[i]).classList.add("active-time-slot-div");
-        }
-
-    }
-
-    async function formSetup() {
-        let days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-        document.getElementById("subject-search-input").placeholder = subject
-        timeRange = document.getElementById("timeRange-popup-rows")
-
-        for (let i = 0; i <= 6; i++) {
-            outerDiv = document.createElement("div");
-            outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3";
-            //outerDiv.style.marginLeft = "0px"
-            dayVal = document.createElement("div");
-            dayVal.className = "day-div px-0"
-            dayVal.innerHTML = `${days[i]}`;
-            outerDiv.appendChild(dayVal);
-            for (let j = 0; j <= 23; j++) {
-                innerDiv = document.createElement("div");
-                innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
-                innerDiv.innerHTML = `${j} - ${j + 1}`;
-                innerDiv.id = `${j}-${j + 1}_${days[i]}`;
-                innerDiv.onclick = function () { updateformData(`availableTimes`, `${j}-${j + 1}_${days[i]}`) }
-                outerDiv.appendChild(innerDiv);
-            }
-            timeRange.appendChild(outerDiv);
-        }
-
-    }
-
-    function updateformData(type, val) {
-        teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
-        if (type == "specialities") {
-            val = val.replaceAll("&apos", "'").replaceAll("-", " ")
-            index = teachlyFormData["specialities"].indexOf(val)
-            if (index != -1) { teachlyFormData["specialities"].splice(index, 1) }
-            else { teachlyFormData["specialities"].push(val) }
-        }
-        else if (type == "priceRange") {
-            min = val[0] / curConversionRatio;
-            max = val[1] / curConversionRatio;
-            document.getElementById('min-price-shown').innerHTML = min
-            document.getElementById('max-price-shown').innerHTML = max
-            teachlyFormData["priceRange"] = [min, max];
-            updateCurrency(curConversionRatio)
-        }
-        else if (type == "searchBy") {
-            teachlyFormData.searchby = document.getElementById(val).value;
-        }
-        else if (type == "taughtIn") {
-            index = teachlyFormData["taughtIn"].indexOf(val.replaceAll("-", " "))
-            if (index != -1) { teachlyFormData["taughtIn"].splice(index, 1) }
-            else { teachlyFormData["taughtIn"].push(val.replaceAll("-", " ")) }
-        }
-        else if (type == "orderBy") {
-            document.getElementById('orderBy-button').innerHTML = val.replaceAll("-", " ");
-            teachlyFormData["orderBy"] = val.replaceAll("-", " ")
-        }
-        else if (type == "availableTimes") {
-            index = teachlyFormData.availableTimes.indexOf(val)
-            if (index != -1) {
-                teachlyFormData.availableTimes.splice(index, 1);
-                document.getElementById(val).classList.remove("active-time-slot-div");
-            }
-            else {
-                teachlyFormData.availableTimes.push(val)
-                document.getElementById(val).classList.add("active-time-slot-div");
-            }
-        }
-        else if (type == "courseTime") {
-            min = val[0];
-            max = val[1];
-            document.getElementById('min-course-time').innerHTML = min
-            document.getElementById('max-course-time').innerHTML = max
-            teachlyFormData["priceRange"] = [min, max];
-        }
-        else if (type == "pageNum") {
-            if (teachlyFormData.pageNum == val) {
-                return
-            }
-            else {
-                teachlyFormData.pageNum = val
-                searchCourses()
-            }
-        }
-        localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
-    }
-
-    function searchBox(boxId, inputId) {
-        filter = document.getElementById(inputId).value.toUpperCase();
-        boxChildren = document.getElementById(boxId).children;
-        for (i = 0; i < boxChildren.length; i++) {
-            txtValue = boxChildren[i].textContent || boxChildren[i].innerHTML;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                boxChildren[i].style.display = "";
-            } else {
-                boxChildren[i].style.display = "none";
-            }
-        }
-    }
-
-    function clearSearchBarPopups() {
-        popupArr = document.getElementsByClassName("popup")
-        for (i = 0; i < popupArr.length; i++) {
-            popupArr[i].style.display = "none";
-            popupArr[i].style.visibility = "hidden";
-        }
-    }
-
-    function toggleSearchBarPopup(id) {
-        subjectPopup = document.getElementById(id);
-        if (subjectPopup.style.display == "block") {
-            subjectPopup.style.display = "none";
-            subjectPopup.style.visibility = "hidden";
-        }
-        else {
-            clearSearchBarPopups()
-            subjectPopup.style.display = "block";
-            subjectPopup.style.visibility = "visible";
-        }
-    }
-
-    window.addEventListener('load', function () {
-
-        searchCourses()
-
-        formSetupRes = formSetup()
-        //populate subject
-        validSubject = axios.get('/get/validSubject').then(res => {
-            if (res.data == "404") { }
-            else {
-                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-                for (let i = 0; i < arr.length; i++) {
-                    node = document.createElement("li");
-                    node.className = "py-1 h-40p"
-                    node.innerHTML = `<a class="text-dark text-decoration-none text-hover" href="/learn/${arr[i]}">${arr[i]}</a>`;
-                    document.getElementById("subject-links").appendChild(node);
-                }
-            }
-        })
-        //populate Specialities
-        validSpecialities = axios.get(`/get/validSpecialities/${subject}`).then(res => {
-            if (res.data == "404") {
-            }
-            else {
-                arr = res.data.sort((a, b) => { return a.localeCompare(b, userLang) })
-                for (let i = 0; i < arr.length; i++) {
-                    node = document.createElement("div");
-                    specialityWithBars = arr[i].replaceAll(" ", "-").replaceAll("'", "&apos")
-                    node.innerHTML = `
-                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${specialityWithBars}" name="${specialityWithBars}" onclick='updateformData("specialities", "${specialityWithBars}")'></input>
-                    <label class="form-check-label text-dark fs-12p" for=${specialityWithBars}>${arr[i]}</label><br>`;
-                    document.getElementById("speciality-checkboxes").appendChild(node);
-                }
-            }
-        })
-
-        //populate taughtin
-        arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
-        for (let i = 0; i < arr.length; i++) {
-            langPair = arr[i].split(",")
-            node = document.createElement("div");
-            node.innerHTML = `
-                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[1]}" name="${langPair[0]}" onclick='updateformData("taughtIn", "${langPair[1]}")'></input>
-                    <label class="form-check-label text-dark" for=${langPair[0]}>${langPair[0]}</label><br>`;
-            document.getElementById("taughtIn-checkboxes").appendChild(node);
-        }
-
-
-
-        Promise.all([formSetupRes, validSubject, validSpecialities]).then((values) => {
-            formDataSetup()
-            updateCurrency(curConversionRatio)
-        });
-    })
-
-    function togglesearchBar() {
-        button = document.getElementById("toggle-search-bar-button")
-        bar = document.getElementById("product-search-bar")
-        symbol = document.getElementById("toggle-search-bar-button-symbol")
-        advancedSearchButton = document.getElementById("advanced-search-button")
-        advancedBars = document.getElementById("advanced-search-bar")
-        if (bar.classList.contains("display-blocki") == false) {
-            bar.classList.add("display-blocki", "visibility-visiblei")
-            symbol.className = "fa fa-times fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-50p"
-
-            advancedSearchButton.classList.remove('display-nonei');
-        }
-        else {
-            //hide
-            bar.classList.remove("display-blocki", "visibility-visiblei")
-            symbol.className = "fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-50p"
-            advancedSearchButton.classList.remove("active-advanced-search-button")
-            advancedSearchButton.classList.add("display-nonei")
-
-            advancedBars.classList.add("display-nonei")
-            advancedBars.classList.remove("d-flex")
-        }
-    }
-
-    function toggleAdvancedsearchBar() {
-        advancedBars = document.getElementById("advanced-search-bar")
-        advancedSearchButton = document.getElementById("advanced-search-button")
-        if (advancedBars.classList.contains("display-nonei")) {
-            advancedBars.classList.remove("display-nonei")
-            advancedBars.classList.add("d-flex")
-            advancedSearchButton.classList.add("active-advanced-search-button")
-        }
-        else {
-            advancedBars.classList.add("display-nonei")
-            advancedBars.classList.remove("d-flex")
-            advancedSearchButton.classList.remove("active-advanced-search-button")
-        }
-    }
-
-    async function searchCourses() {
-
-        var courseJson = JSON.parse(`{{json context.bodyContext.courseContext }}`.replaceAll('&quot;', `"`))
-
-        function generateCourse(courseObj) {
-            console.log(courseObj)
-            courseId = courseObj.course_id
-            teacherId = courseObj.teacher_id
-            teacher_name = courseObj.teacher_name
-            ratings = (typeof courseObj.ratings == "undefined") ? 0 : courseObj.ratings;
-
-            ratings = (typeof courseObj.ratings == "undefined") ? 0 : courseObj.ratings;
-
-            description = ""
-            if (courseObj.description.length > 232) {
-                description = courseObj.description
-                cutoff = description.substring(0, 232).lastIndexOf(" ")
-
-                shortenedDesc = description.substring(0, cutoff)
-                moreDesc = description.substring(cutoff, description.length)
-
-                description = `                                   
-                 <p class="card-text mb-0 fs-6" id="${courseObj.teacher_name.replaceAll(" ", "-")}-course">
-                   ${shortenedDesc}
-                    <span id="${courseId}-ellipses">...</span>
-                    <div id="${courseId}-more-course-description" class="more-course-description">
-                    ${moreDesc}
-                    </div>
-                </p>
-                <button onclick='readMoreDescToggle("${courseId}-ellipses", "${courseId}-more-course-description", "${courseId}-more-course-btn")' id="${courseId}-more-course-btn" class="mb-4 read-more-button">
-                    ${courseJson.readMore}
-                </button>`
-
-
-            }
-            else {
-                description = `
-                    <p class="card-text mb-0 fs-6" id="${teacher_name.replaceAll(" ", "-")}-course">
-                        ${courseObj.description}
-                    </p>`
-            }
-            box = document.createElement("div")
-            box.innerHTML = `            
-                           <div class="row mx-0 p-0 my-0  mt-5 custom-rounded custom-shadow align-items-center en-100-366px bg-wht mn-w-300p mx-w-1000p w-90">
-                            <div class="col p-3 m-0 mn-w-300p">
-                                <img src="/get/images/course/${courseId}" class="course-img rounded-start" width="1000" height="800"
-                                    alt="${courseJson.imageAlt.pre}${teacher_name}${courseJson.imageAlt.post}">
-                            </div>
-                            <div class="col p-0 m-0 mn-w-300p">
-                                <div class="card-body p-4 m-0">
-                                    <h5 class="card-title fs-1">${teacher_name}</h5>
-                                    <h5 class="card-text text-muted fs-5">${courseObj.subject}</h5>
-                                    <h6 class="card-text text-muted fs-6">${courseObj.specialities.join(", ")}</h6>
-                                    <div class="row d-flex justify-content-around mb-3 text-left p-3p w-auto">
-                                        <span class="w-50 mn-w-180pi px-0 py-2 text-center">
-                                            <i class="fa fa-users fs-15p" aria-hidden="true"></i>
-                                            ${courseJson.activeStudents.pre}
-                                            ${toLocalNum(courseObj.active_students)}
-                                            ${courseJson.activeStudents.post}
-                                        </span>
-                                        <span class="w-50 mn-w-180pi px-0 py-2 text-center">
-                                            <i class="fa fa-circle" aria-hidden="true"></i> 
-                                            ${courseJson.totalLessons.pre}
-                                            ${toLocalNum(courseObj.course_lessons)}
-                                            ${courseJson.totalLessons.post}
-                                        </span>
-                                    </div>
-                                    <p class="card-text mb-0" id="${teacher_name.replaceAll(" ", "-")}-course-description">
-                                        ${description}
-                                    </p>
-                                    <div class="row mt-5 h-auto">
-                                        <div class="col container d-flex justify-content-center mb-4">
-                                            <div class="row d-flex justify-content-center h-100">
-                                                <div class="col d-flex justify-content-center w-100p">
-                                                    <div class="w-100p">
-                                                        <div class="d-flex justify-content-center w-100">
-                                                            <i style="color:gold; margin-top: 5px !important; padding-right: 3px;"
-                                                                class="fa fa-star fs-15p" aria-hidden="true"></i>
-                                                            <span>${ratings}</span>
-                                                        </div>
-                                                        <div class="d-flex justify-content-center">${courseJson.ratings.pre}${ratings}${courseJson.ratings.post}</div>
-                                                    </div>
-                                                </div>
-                                                <div class="col w-130p"
-                                                    class="d-flex justify-content-center">
-                                                    <div class="d-flex justify-content-center w-100">
-                                                        <span class="currency">
-                                                            <span id="max-price-shown"
-                                                                style="display: none;">${courseObj.price_per_lesson}
-                                                            </span>
-                                                            <span>${toLocalCur(courseObj.price_per_lesson * curConversionRatio)}</span>
-                                                        </span>
-                                                    </div>
-                                                    <div class="d-flex justify-content-center w-100">${courseJson.lesson_time.pre}${courseObj.lesson_time}${courseJson.lesson_time.post}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col container d-flex justify-content-center mb-4">
-                                            <div class="row d-flex justify-content-center mn-w-150p w-100">
-                                                <div class="col d-flex justify-content-center m-1 w-130p">
-                                                    <button class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p">
-                                                        book lesson
-                                                    </button>
-                                                </div>
-                                                <div class="col d-flex justify-content-center m-1 mn-w-130p-i">
-                                                    <button class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p">
-                                                        message
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        `
-
-            return box.children[0]
-        }
-
-        function generatePagination(rows, offset) {
-            pageNum = Math.ceil(rows / 10) //limited to 10 cols per page
-            function genPagButton(active = false, text, offset) {
-                classPair = {
-                    false: "pagination-button",
-                    true: "active-pagination-button"
-                }
-                button = document.createElement("button")
-                button.className = classPair[`${active}`]
-                button.innerHTML = text
-                button.onclick = () => { searchCourses(offset) }
-                button.type = "button"
-                return button
-            }
-            buttonBox = document.createElement("div")
-            buttonBox.className = "pagination d-flex align-items-center justify-content-center"
-            buttonBox.id = "pagination-buttons"
-            if (offset > 3) {
-                buttonBox.appendChild(genPagButton(false, "&laquo;", 0))
-            }
-            startIndex = offset - 3
-            if ((pageNum - startIndex) < 4) {
-                startIndex--
-            }
-            startIndex = (((offset - 3) <= 0) ? 1 : (offset - 3));
-            for (let i = startIndex; i < offset; i++) {
-                buttonBox.appendChild(genPagButton(false, i, i))
-            }
-            buttonBox.appendChild(genPagButton(true, offset, offset))
-            if ((offset + 3) < pageNum) {
-                endIndex = (offset + 2)
-                if (((buttonBox.childElementCount) < 4) && ((pageNum - offset) > 1)) {
-                    endIndex++
-                }
-                for (let i = (offset + 1); i < endIndex; i++) {
-                    buttonBox.appendChild(genPagButton(false, i))
-                }
-                buttonBox.appendChild(genPagButton(false, "&raquo"))
-            }
-            else {
-                for (let i = (offset + 1); i <= pageNum; i++) {
-                    buttonBox.appendChild(genPagButton(false, i, pageNum))
-                }
-            }
-            document.getElementById("course-pagination").appendChild(buttonBox)
-        }
-
-
-
-        try {
-            teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
-
-            if (typeof window.pageAmount == "undefined") {
-                window.pageAmount = -1
-            }
-            teachlyFormData.pageAmount = window.pageAmount
-
-            res = await axios({
-                method: 'post',
-                url: '/learn/searchTutorCourses',
-                data: teachlyFormData,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-
-
-            if (res.data.err) {
-                if (res.data.err == 404) {
-                    document.getElementById("courses").style.display = "none"
-                    document.getElementById("no-courses").style.display = "block"
-                    document.getElementById("server-error").style.display = "none"
-                }
-                else if (res.data.err == "server error") {
-                    document.getElementById("courses").style.display = "none"
-                    document.getElementById("no-courses").style.display = "none"
-                    document.getElementById("server-error").style.display = "block"
-                }
-            }
-            else {
-
-                courseBox = document.createElement("div")
-
-                //generate course displays
-                courseArr = res.data.courses
-                for (let i = 0; i < courseArr.length; i++) {
-                    courseBox.appendChild(generateCourse(courseArr[i]))
-                }
-                document.getElementById("course-cards").append(...courseBox.children)
-                document.getElementById("courses").style.display = "block"
-                document.getElementById("no-courses").style.display = "none"
-                document.getElementById("server-error").style.display = "none"
-                generatePagination(res.data.count, teachlyFormData.activePage)
-
-            }
-
-        }
-        catch (err) {
-            console.log(err)
-            document.getElementById("courses").style.display = "none"
-            document.getElementById("no-courses").style.display = "none"
-            document.getElementById("server-error").style.display = "block"
-        }
-
-
-    }
-
-    function taughtInToggle(dotsId, MoreId, btnId) {
-        var dots = document.getElementById(dotsId);
-        var moreText = document.getElementById(MoreId);
-        var btnText = document.getElementById(btnId);
-
-        if (dots.style.display === "none") {
-            dots.style.display = "inline";
-            btnText.innerHTML = "Read more";
-            moreText.style.display = "none";
-        } else {
-            dots.style.display = "none";
-            btnText.innerHTML = "Read less";
-            moreText.style.display = "inline";
-        }
-    }
-
-    function readMoreDescToggle(dotsId, MoreId, btnId) {
-        let dots = document.getElementById(dotsId);
-        if (dots.style.display === "none") {
-            dots.style.display = "inline";
-            document.getElementById(btnId).innerHTML = "Read more";
-            document.getElementById(MoreId).style.display = "none";
-        } else {
-            dots.style.display = "none";
-            document.getElementById(btnId).innerHTML = "Read less";
-            document.getElementById(MoreId).style.display = "inline";
-        }
-    }
-
+    const courseJson = JSON.parse(`{{json context.bodyContext.courseContext }}`.replaceAll('&quot;', `"`))
 </script>
-
-<main onclick="clearSearchBarPopups()">
-    <section class="py-5 text-center container" style="height: 50vh; width: 100%;">
+<script src="/js/learn.js" nonce="{{context.settings.cspNonce}}"></script>
+<main class="clear-search-popups">
+    <section class="py-5 text-center container w-100 h-50vh">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto mt-5">
                 <br>
@@ -1206,104 +275,8 @@
         <div class="mx-0 px-0">
             <div class="row p-0 m-0">
                 <div id="courses" class="p-0 m-0">
-                    <div id="course-cards" class="m-0 py-5 p-0 my-5 p-0 d-flex flex-column justify-content-center align"
-                        style="background-color:beige;">
-
-                        <div class="row mx-0 p-0 my-05 custom-rounded custom-shadow align-items-center en-100-366px"
-                            style="background-color:rgb(255, 255, 255); min-width: 300px; max-width: 1000px; width: 90%;">
-                            <div class="col p-3 m-0" style="min-width: 300px !important;">
-                                <img src="/images/img-2.jpg" class="course-img rounded-start" width="1000" height="800"
-                                    alt="...">
-                            </div>
-                            <div class="col p-0 m-0" style="min-width: 300px !important;">
-                                <div class="card-body p-4 m-0">
-                                    <h5 class="card-title fs-1">becca</h5>
-                                    <h5 class="card-text text-muted fs-4">english</h5>
-                                    <div class="row d-flex justify-content-around mb-3" style="height: 20px;">
-                                        <span style="width: auto; padding: 3px;">
-                                            <i style="font-size: 15px;" class="fa fa-users" aria-hidden="true"></i>
-                                            5
-                                            active
-                                            students
-                                        </span>
-                                        <span style="width: auto; padding: 3px;">
-                                            <i class="fa fa-circle" aria-hidden="true"></i> 23 lessons
-                                        </span>
-                                    </div>
-                                    <p class="card-text mb-0">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-                                        imperdiet, nulla et dictum interdum, nisi lorem egestas vitae scel
-                                        <span id="teacherId-dots">...</span>
-                                    <div id="teacherId-more-course-description" class="more-course-description">
-                                        erisque enim ligula venenatis dolor. Maecenasnisl est, ultrices nec
-                                        congue eget, auctor vitae massa. Fusce luctus vestibulum augue ut aliquet.
-                                        Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. In at libero
-                                        sed nunc venenatis imperdiet
-
-                                        <p> sed ornare turpis. Donec vitae dui eget tellus</p>
-                                        gravid venenatis. Integer fringilla congue eros non fermentum. Sed dapibus
-                                        pulvinar nibh tempor porta.
-                                    </div>
-                                    </p>
-                                    <button
-                                        onclick='readMoreDescToggle("teacherId-dots", "teacherId-more-course-description", "teacherId-more-course-myBtn")'
-                                        id="teacherId-more-course-myBtn" class="mb-4 read-more-button">Read
-                                        more</button>
-                                    <div class="row mt-5" style="height: auto;">
-                                        <div class="col container d-flex justify-content-center mb-4">
-                                            <div class="row d-flex justify-content-center"
-                                                style="width: 100% !important;">
-                                                <div class="col d-flex justify-content-center"
-                                                    style="width: 120px !important" ;>
-                                                    <div style="width: 100px !important;">
-                                                        <div style="width: 100% !important;"
-                                                            class="d-flex justify-content-center">
-                                                            <i style="font-size: 15px !important; color:gold;"
-                                                                class="fa fa-star" aria-hidden="true"></i>
-                                                            <span>5.5</span>
-                                                        </div>
-                                                        <div class="d-flex justify-content-center">5 reviews</div>
-                                                    </div>
-                                                </div>
-                                                <div class="col" style="width: 130px !important;"
-                                                    class="d-flex justify-content-center">
-                                                    <div style="width: 100% !important;"
-                                                        class="d-flex justify-content-center">
-                                                        <span class="currency">
-                                                            <span id="max-price-shown"
-                                                                style="display: none;">50.000</span>
-                                                            <span></span>
-                                                        </span>
-                                                    </div>
-                                                    <div class="d-flex justify-content-center"
-                                                        style="width: 100% !important;">60 minute lesson</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col container d-flex justify-content-center mb-4">
-                                            <div class="row d-flex justify-content-center"
-                                                style="width: 100% !important; min-width: 150px;">
-                                                <div class="col d-flex justify-content-center m-1"
-                                                    style="width: 130px !important;">
-                                                    <button class="btn btn-md btn-outline-secondary text-capitalize"
-                                                        style="min-width: 130px !important; height: 50px;">
-                                                        book lesson
-                                                    </button>
-                                                </div>
-                                                <div class="col d-flex justify-content-center m-1"
-                                                    style="width: 130px !important;">
-                                                    <button class="btn btn-md btn-outline-secondary text-capitalize"
-                                                        style="min-width: 130px !important; height: 50px;">
-                                                        message
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div id="course-cards"
+                        class="m-0 py-5 p-0 my-5 p-0 d-flex flex-column justify-content-center align bg-beige">
                     </div>
                     <div id="course-pagination">
                     </div>
