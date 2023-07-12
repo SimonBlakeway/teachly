@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="/css/chat.css">
+<link rel="stylesheet" href="/css/chat.css" nonce="{{context.settings.cspNonce}}>
 
-<link rel="stylesheet" href="/css/utils.css">
-
-
+<link rel="stylesheet" href="/css/utils.css" nonce="{{context.settings.cspNonce}}>
 
 
-<section style="background-color: #eee; margin-top: -30px;">
+
+
+<section class="bg-eee mt--30p">
   <div class="pt-3 px-3">
 
     <div class="row d-flex justify-content-around h-90vh overflow-y-hidden p-0 m-0">
@@ -321,7 +321,7 @@
         </div >
       <div class="p-2 m-0 send-message-box row">
         <div class="p-0 m-0 mt-0 w-100-80p text-center">
-          <textarea class="message-textarea" id="${roomData.chat_id}-chat-textarea" maxlength="1024" style="" rows="2"></textarea>
+          <textarea class="message-textarea" id="${roomData.chat_id}-chat-textarea" maxlength="1024" rows="2"></textarea>
         </div>
         <div class="m-0 p-0 w-70p ml-10p">
           <button type="button" onclick="sendMessage(${roomData.chat_id})" class="btn btn-light send-message-button">Send</button>

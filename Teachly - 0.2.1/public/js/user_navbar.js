@@ -38,19 +38,54 @@ async function socketSetup() {
             box.id = `${data[i].notification_id}-notification`
             divClass = ""
             if (data[i].url) { object.onclick = () => { redirectByUrl(data[i].url, data[i].notification_id) } }
-            box.innerHTML = `
+
+            function genInner() {
+
+                inner = `
                 <div class="d-flex border-top-light mt-1">
-                  <div style="width: 220px">
+                  <div class="w-220p">
                     <div>${data[i].text}</div>
-                    <div class="pt-1 fs-6" style="color: #f2f2f2">${prettyifyDate(data[i].created_at)}</div>
+                    <div class="pt-1 fs-6 clr-f2f2f2">${prettyifyDate(data[i].created_at)}</div>
                   </div>
                   <div onclick="event.stopPropagation();">
                     <div>
-                      <div onClick="deleteNotification('${data[i].notification_id}')" class="color-white fs-3" style="margin-left: 10px;"><i class="fa fa-times" aria-hidden="true"></i></div>
+                      <div onClick="deleteNotification('${data[i].notification_id}')" class="color-white fs-3 ml-10p"><i class="fa fa-times" aria-hidden="true"></i></div>
                     </div>
                   </div>
                 </div>
                   `
+
+                outDiv = document.createElement("div")
+                outDiv.className = "d-flex border-top-light mt-1"
+
+                in1 = document.createElement("div")
+                in1.className = "w-220p"
+                in1.innerHTML = `
+                  <div>${data[i].text}</div>
+                  <div class="pt-1 fs-6 clr-f2f2f2">${prettyifyDate(data[i].created_at)}</div>
+                  `
+
+                in2 = document.createElement("div")
+                in2.addEventListener('click', event => {
+                    event.stopPropagation();
+                })
+
+                in2in = document.createElement("div")
+                in2in2 = document.createElement("div")
+                in2in2.addEventListener('click', event => {
+                    deleteNotification(`${data[i].notification_id}`)
+                })
+                in2in2.className = "color-white fs-3 ml-10p"
+                in2in2.innerHTML = `<i class="fa fa-times" aria-hidden="true"></i>`
+
+
+                in2in.appendChild(in2in2)
+                in2.appendChild(in2in)
+
+                outDiv.append(in1, in2)
+                return outDiv
+            }
+            box = genInner()
             notOuter.appendChild(box)
         }
     });
@@ -214,23 +249,81 @@ function clearNavPopups() {
 window.addEventListener('load', function () {
 
     async function langSetup() {
+        box = document.createElement("div")
         arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
         for (let i = 0; i < arr.length; i++) {
             langPair = arr[i].split(",")
             node = document.createElement("li");
-            node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${langPair[1]}")'>${langPair[0]}</div>`;
-            document.getElementById("language-change").appendChild(node);
+            //node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${langPair[1]}")'>${langPair[0]}</div>`;
+            div = document.createElement("div")
+            div.className = "nav-li"
+            div.innerHTML = `${langPair[0]}`
+            div.addEventListener("click", e => {
+                changeNavSettings("lang", `${langPair[1]}`)
+            })
+            node.append(div)
+            box.appendChild(node);
         }
+        document.getElementById("language-change").innerHTML = box.innerHTML
     }
     async function curSetup() {
         arr = currenciesArr.sort((a, b) => { return a.split(",")[0].localeCompare(b.split(",")[0], userLang) })
+        box = document.createElement("div")
         for (let i = 0; i < arr.length; i++) {
             node = document.createElement("li");
             node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
-            document.getElementById("currency-change").appendChild(node);
+
+            div = document.createElement("div")
+            div.className = "nav-li"
+            div.innerHTML = `${arr[i]}`
+            div.addEventListener("click", e => {
+                changeNavSettings("cur", `${arr[i]}`)
+            })
+            node.append(div)
+            box.appendChild(node);
         }
+        document.getElementById("currency-change").innerHTML = box.innerHTML
     }
 
     langSetup()
     curSetup()
+
+
+
+    document.getElementById("clear-nav-popups").addEventListener('click', event => {
+        clearNavPopups()
+    })
+
+    document.getElementById("toggle-navlist-popup").addEventListener('click', event => {
+        toggleNavPopup('navlist-popup')
+    })
+
+    document.querySelectorAll('.toggle-nav-lang-popup').forEach(el => el.addEventListener('click', event => {
+        toggleNavPopup('language-popup')
+    }));
+
+    document.querySelectorAll('.toggle-nav-currency-popup').forEach(el => el.addEventListener('click', event => {
+        toggleNavPopup('currency-popup')
+    }));
+
+    document.getElementById("toggle-nav-notifications-popup").addEventListener('click', event => {
+        toggleNavPopup('notifications-popup')
+    })
+
+    document.getElementById("toggle-nav-messages-popup").addEventListener('click', event => {
+        toggleNavPopup('messages-popup')
+    })
+
+    document.getElementById("toggle-nav-profile-popup").addEventListener('click', event => {
+        toggleNavPopup('profile-popup')
+    })
+
+    document.getElementById("nav-currency-search-input").addEventListener('keyup', event => {
+        navCurSearch()
+    })
+
+    document.getElementById("nav-language-search-input").addEventListener('keyup', event => {
+        navLangSearch()
+    })
+
 })

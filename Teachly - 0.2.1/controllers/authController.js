@@ -42,23 +42,19 @@ exports.login = async function (req, res) {
     FROM user_info
     WHERE user_info.name = $1`, [user.name]);
     if (result.rowCount == 0) {
-      res.json({ "err": "invalid name" })
-      return
+      throw new Error("invalid name")
     }
     isSame = await utils.compareHash(user.password, result.rows[0].pass_hash.trim())
     if (isSame == false) {
-      res.json({ "err": "invalid password" })
-      return
+      throw new Error("invalid password")
     }
 
     if (result.rows[0].email_code.trim() != "true") {
-      res.json(404)
-      return
+      throw new Error("invalid email")
     }
     try {
       userToken = await utils.genUserRefreshToken(result.rows[0].id)
       userCookie = await utils.genUserCookie(result.rows)
-      console.log("rrr")
       res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       res.sendStatus(200)
@@ -67,6 +63,7 @@ exports.login = async function (req, res) {
       console.log(error)
     }
   } catch (error) {
+    res.send(error.message)
     console.log(error)
   }
 };

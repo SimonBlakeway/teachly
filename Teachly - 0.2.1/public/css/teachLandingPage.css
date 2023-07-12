@@ -1,0 +1,46 @@
+  .small-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 3%;
+  }
+
+  .bg-image {
+      height: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-image: url('/images/img-8.jpg')
+  }
+
+
+  .underline-none {
+      text-decoration-line: none;
+  }
+
+  .blue-gradient {
+      background-color: #7475c2;
+      background-image: linear-gradient(to bottom right, #a1a1df, #88bdde, #b4a6d8, #939fe4, #a4a4eb, #97a2ef);
+  }
+
+  .bdr-lgt-bl {
+      border-style: solid;
+      border-color: #a1a1df;
+      border-width: 5px;
+  }
+
+  .custom-rounded {
+      border-radius: 3%;
+  }
+
+  .min-w-200p {
+      min-width: 300px !important;
+  }
+
+  .p-20p {
+      padding: 20px;
+  }
+
+  .min-h-220p {
+      min-height: 250px;
+  }

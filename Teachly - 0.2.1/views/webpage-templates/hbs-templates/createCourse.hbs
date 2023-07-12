@@ -242,8 +242,7 @@
               <div class="d-flex align-items-center justify-content-center">
                 <div id="subject" class="text-center py-2 border rounded border-primary w-240p">
                   {{context.bodyContext.choose}}</div>
-                <div
-                  style='height: 0px;width: 0px; overflow:hidden; position: absolute; margin-right: 200px;  margin-bottom: -17px;'>
+                <div class="h-0p w-0p overflow-hidden position-absolute mr-200p mb--17p">
                   <input required id="hidden-subject-input" />
                 </div>
               </div>
@@ -277,34 +276,34 @@
           </div>
         </div>
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0">
-          <div class="col p-0 m-2 d-flex align-items-center justify-content-center bg-dkr-lght-color mn-w-270p"
-            style="min-height:225px !important;">
+          <div
+            class="col p-0 m-2 d-flex align-items-center justify-content-center bg-dkr-lght-color mn-w-270p mn-h-225pi">
             <div class="mn-w-270p bg-dkr-lght-color p-3 h-100">
               <div class="my-2">{{context.bodyContext.description}}</div>
-              <textarea required id="description" style="height:max-content;" id="subject-search-input" name="" rows="5"
-                cols="80" maxlength="512" placeholder="{{context.bodyContext.maxLenDesChars}}"
-                class="form-control form-control-lg border border-info rounded fs-6 text-left"></textarea>
+              <textarea required id="description" id="subject-search-input" name="" rows="5" cols="80" maxlength="512"
+                placeholder="{{context.bodyContext.maxLenDesChars}}"
+                class="form-control form-control-lg border border-info rounded fs-6 text-left h-max-content"></textarea>
             </div>
           </div>
-          <div class="col p-0 m-2 mn-w-270p" style="min-height:225px;">
-            <div class="row d-flex align-items-center justify-content-center m-0 p-2 mb-3 bg-dkr-lght-color mn-w-270p"
-              style="height: 104.5px;">
+          <div class="col p-0 m-2 mn-w-270p mn-h-225p">
+            <div
+              class="row d-flex align-items-center justify-content-center m-0 p-2 mb-3 bg-dkr-lght-color mn-w-270p h-104-5p">
               <div class="h-200p">
                 <div class="my-2 mx-3">{{context.bodyContext.courseImg}}</div>
                 <div class="d-flex align-items-center justify-content-center">
-                  <div id="course-image" class="border rounded border-primary bg-dkr-lght-color overflow-hidden"
-                    onclick="getFile()"
-                    style="padding-top: 10px; height: 40px; width:240px !important; overflow:hidden !important; margin-bottom: 1px !important;">
+                  <div id="course-image"
+                    class="border rounded border-primary bg-dkr-lght-color overflow-hidden pt-10p h-40p w-240pi mt-1pi"
+                    onclick="getFile()">
                     {{context.bodyContext.clickUploadImageRatio}}</div>
-                  <div class=""
-                    style='height: 0px;width: 0px; overflow:hidden; position: absolute; margin-right: 320px; margin-bottom: 20px;'>
+                  <div class="h-0p w-0p overflow-hidden position-absolute mr-320p mb-20p">
                     <input required id="upfile" type="file" value="upload" onchange="sub(this)" accept="image/*" />
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row d-flex align-items-center justify-content-center m-0 p-2 mt-3 bg-dkr-lght-color mn-w-270p"
-              style="min-height: 104.5px;" onclick="event.stopPropagation();">
+            <div
+              class="row d-flex align-items-center justify-content-center m-0 p-2 mt-3 bg-dkr-lght-color mn-w-270p h-104-5p"
+              onclick="event.stopPropagation();">
               <div class="h-200p d-flex align-items-center justify-content-center"
                 onclick='toggleCoursePopup("taughtIn-popup")'>
                 <div>
@@ -313,8 +312,7 @@
                     <div id="taughtIn"
                       class="border rounded border-primary d-flex align-items-center justify-content-center py-2 w-240p">
                       {{context.bodyContext.choose}}
-                      <div
-                        style='height: 0px;width: 0px; overflow:hidden; position: absolute; margin-right: 200px; margin-top: 20px;'>
+                      <div class="h-0 w-0 overflow-hidden position-absolute mr-200p mt-20p">
                         <input required id="upfile" />
                       </div>
                     </div>
@@ -322,8 +320,8 @@
                 </div>
                 <div class="popup" id="taughtIn-popup">
                   <div class="d-flex align-items-center justify-content-center">
-                    <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                      id="taughtIn-search-input" style="width: 90% !important; margin:5px;"
+                    <input class="course-input form-control form-control-lg border border-info rounded w-90 m-5p" type="text"
+                      id="taughtIn-search-input"
                       onkeyup="searchBox('taughtIn-list', 'taughIn-search-input')"></input>
                   </div>
                   <div id="taughtIn-list" class="p-0 pt-3" onclick='toggleCoursePopup("taughtIn-popup")'>
@@ -339,8 +337,8 @@
             <div onclick="clearCoursePopups()">
               <div class="my-2">{{context.bodyContext.priceIn}} {{context.settings.cur}}</div>
               <div class="d-flex align-items-center justify-content-center">
-                <input type="number" id="price" required min="1" style="width: 240px !important;"
-                  class="course-input form-control form-control-lg border border-info rounded w-100"></input>
+                <input type="number" id="price" required min="1"
+                  class="course-input form-control form-control-lg border border-info rounded w-100 w-240pi"></input>
               </div>
             </div>
           </div>
@@ -352,8 +350,7 @@
                 <div id="timeRange-button"
                   class="text-center py-2 border rounded border-primary w-240p d-flex align-items-center justify-content-center">
                   {{context.bodyContext.choose}}
-                  <div
-                    style='height: 0px;width: 0px; overflow:hidden; position: absolute; margin-right: 200px;  margin-bottom: -20px;'>
+                  <div class="h-0 w-0 overflow-hidden position-absolute mr-200p mb--20p">
                     <input required id="hidden-timeRange-input" for="nach" />
                   </div>
                 </div>
@@ -369,12 +366,11 @@
         </div>
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
           onclick="event.stopPropagation();">
-          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
-            style="height: 107px !important;">
-            <div onclick="clearCoursePopups()" style="height: 107px !important;">
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p h-107pi">
+            <div onclick="clearCoursePopups()" class="h-107pi">
               <div class="my-2">time in minutes: <span id="time-shown"></span></div>
               <div class="d-flex align-items-center justify-content-center mt-4 w-100 w-240p">
-                <div style="width: 200px !important;" class="regular-slider"></div>
+                <div class="regular-slider w-200pi"></div>
               </div>
             </div>
           </div>
@@ -395,7 +391,7 @@
   </div>
 </section>
 
-<div id="err-popup" class="popup text-dark" style="position: fixed;">
+<div id="err-popup" class="popup text-dark position-fixed">
   <div class="err" id="image-err">{{context.bodyContext.errPopup.nameErr}}</div>
 </div>
 
@@ -776,46 +772,34 @@
 
     <div class="col-12 px-4 py-5">
 
-      <div class="row d-flex justify-content-center align-items-center fs-5 mb-4"
-        style="text-align: center !important;">
+      <div class="row d-flex justify-content-center align-items-center fs-5 mb-4 text-align-centeri">
         to complete the course, please log in with a financial platform
       </div>
 
 
 
       <div class="row d-flex justify-content-center align-items-center fs-3 mb-3" onclick="financeLoginPayPal()">
-        <div style="width:fit-content; border-radius:5px;">
+        <div class="br-5p w-fit-content">
           <img src="https://www.paypalobjects.com/devdoc/log-in-with-paypal-button.png"></img>
         </div>
       </div>
 
       <div class="row d-flex justify-content-center align-items-center mb-3" onclick="financeLoginStripe()">
-        <div class="d-flex justify-content-center align-items-center"
-          style="background-color:  #635bff; color:#ffffff; width: 211px; height: 46px; border-radius: 40px; font-weight: 500; font-size: 16px;">
-          <span style="display: inline-flex; margin-right: 5px;">
-            <img src="https://b.stripecdn.com/docs-statics-srv/assets/e9b76763ac024da464fae86e9b69dcbf.png" style="width: 28px;"></img>
+        <div class="d-flex justify-content-center align-items-center bg-635bff clr-white w-211p h-46p br-40p fw-500 fs-16p">
+          <span class="display-inline-flex mr-5p">
+            <img class="w-28p" src="https://b.stripecdn.com/docs-statics-srv/assets/e9b76763ac024da464fae86e9b69dcbf.png"></img>
           </span>
-          <span style="display: inline-flex;">
+          <span class="display-inline-flex">
             Connect with
           </span>
-          <span style="font-weight: 700; display: inline-flex; margin-left: 5px;">
+          <span class="fw-700 display-inline-flex ml-5p">
             Stripe
           </span>
         </div>
       </div>
-
-
-
-
     </div>
-
-
-
-
   </div>
-
 </section>
-
 
 <script>
   function switchToFinanceLogin() {

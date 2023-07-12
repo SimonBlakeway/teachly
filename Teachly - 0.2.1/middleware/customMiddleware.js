@@ -30,6 +30,7 @@ async function cookieSettings(req, res, next) {
         settings.accountNumber = userToken.accountNumber
         settings.user_refresh_string = userToken.user_refresh_string
         settings.token_created_at = userToken.created_at
+        settings.cspNonce = res.locals.cspNonce
 
         req.settings = settings
         return next()

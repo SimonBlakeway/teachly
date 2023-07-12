@@ -114,10 +114,6 @@
       max-width: 400px;
   }
 
-  .ml-10p {
-      margin-left: 10px;
-  }
-
   .h-45p {
       height: 45px;
   }
@@ -147,6 +143,4 @@
       display: none !important;
   }
 
-  .text-align-center {
-      text-align: center;
-  }
+

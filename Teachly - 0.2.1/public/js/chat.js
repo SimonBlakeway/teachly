@@ -14,13 +14,13 @@ socket.on("recieve message", (data) => {
         if (data[i].url) { object.onclick = () => { redirectByUrl(data[i].url, data[i].notification_id) } }
         box.innerHTML = `
             <div class="d-flex border-top-light mt-1">
-              <div style="width: 220px">
+              <div class="w-220p">
                 <div>${data[i].text}</div>
-                <div class="pt-1 fs-6" style="color: #f2f2f2">${prettyifyDate(data[i].created_at)}</div>
+                <div class="pt-1 fs-6 clr-f2f2f2">${prettyifyDate(data[i].created_at)}</div>
               </div>
               <div onclick="event.stopPropagation();">
                 <div>
-                  <div onClick="deleteNotification('${data[i].notification_id}')" class="color-white fs-3" style="margin-left: 10px;"><i class="fa fa-times" aria-hidden="true"></i></div>
+                  <div onClick="deleteNotification('${data[i].notification_id}')" class="color-white fs-3 ml-10p"><i class="fa fa-times" aria-hidden="true"></i></div>
                 </div>
               </div>
             </div>

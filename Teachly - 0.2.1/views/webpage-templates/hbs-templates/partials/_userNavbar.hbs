@@ -1,75 +1,70 @@
-<link rel="stylesheet" href="/css/user_navbar.css">
-<script src="/js/validCurrencies.js"></script>
-<script src="/js/validLanguages.js"></script>
-<div class="navbar text-light" onclick="clearNavPopups()">
-    <div style="float: left; padding-left: 10px;">
+<link rel="stylesheet" href="/css/user_navbar.css" nonce="{{context.settings.cspNonce}}">
+<script src="/js/validCurrencies.js" nonce="{{context.settings.cspNonce}}"></script>
+<script src="/js/validLanguages.js" nonce="{{context.settings.cspNonce}}"></script>
+<div class="navbar text-light" id="clear-nav-popups">
+    <div class="float-left pl-10p">
         <a href="/" class="light-blue-text-shadow normal-text fs-2 blue-hover enlarge-hover">Teachly</a>
     </div>
     <div class="float-right">
-        <div id="profile-buttons" class="d-flex align-items-center justify-content-center"
-            onclick="event.stopPropagation();">
-            <div style="width: 40px;" class="m-0 blue-text-shadow">
-                <i onclick="toggleNavPopup('navlist-popup')" class="fa fa-bars"
-                    style="height: 30px; width: 30px; font-size: 30px; padding-top: 5px;"></i>
+        <div id="profile-buttons" class="d-flex align-items-center justify-content-center stop-prop">
+            <div class="m-0 blue-text-shadow">
+                <i id="toggle-navlist-popup" class="fa fa-bars h-30p w-30p fs-30p pt-5p"></i>
             </div>
-            <div id="settings-buttons-list" class="dispr-mx-442p p-1" onclick="event.stopPropagation();">
+            <div id="settings-buttons-list" class="dispr-mx-442p p-1 stop-prop">
                 <div class="d-flex align-items-center justify-content-center">
                     <div class="m-2">
-                        <button onclick="toggleNavPopup('language-popup')" type="button"
-                            class="btn btn-outline-primary">{{settings.lang}}</button>
+                        <button type="button"
+                            class="btn btn-outline-primary toggle-nav-lang-popup">{{settings.lang}}</button>
                     </div>
                     <div>
-                        <button onclick="toggleNavPopup('currency-popup')" type="button"
-                            class="btn btn-outline-primary">{{settings.cur}}</button>
+                        <button type="button"
+                            class="btn btn-outline-primary toggle-nav-currency-popup">{{settings.cur}}</button>
                     </div>
                 </div>
             </div>
             <div>
                 <div class="icon-signaler" id="notification-signaler"></div>
-                <button onclick="toggleNavPopup('notifications-popup')" type="button"
+                <button id="toggle-nav-notifications-popup" type="button"
                     class="circle-icon bg-primary d-flex align-items-center justify-content-center" id="notifications">
-                    <i class="fa fa-bell" aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
+                    <i class="fa fa-bell fs-25p clr-white" aria-hidden="true"></i></button>
             </div>
             <div>
                 <div class="icon-signaler" id="messages-signaler"></div>
-                <button onclick="toggleNavPopup('messages-popup')" type="button" id="messages"
+                <button id="toggle-nav-messages-popup" type="button" id="messages"
                     class="circle-icon bg-primary d-flex align-items-center justify-content-center"><i
-                        class='fas fa-comments' aria-hidden="true" style="font-size: 25px; color:#ffffff;"></i></button>
+                        class='fas fa-comments fs-25p clr-white' aria-hidden="true"></i></button>
             </div>
             <div>
                 <div class="icon-signaler p-0 m-0" id="profile-signaler"></div>
-                <button onclick="toggleNavPopup('profile-popup')" class="profile-img mx-2" type="button">
+                <button id="toggle-nav-profile-popup" class="profile-img mx-2 p-0 w-50pi h-50pi" type="button">
 
-                    <div class="profile-img m-0 p-0"
-                        style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; margin-top: -2px !important; margin-left: -2px !important;">
-                    </div>
+                    <div class="w-100 h-100 profile-img m-0 p-0 bg-i-profile-img bg-r-no-repeat bg-s-cover mt--2pi ml--2pi w-50pi h-50pi"></div>
                 </button>
             </div>
         </div>
         <div class="nav-popup" id="language-popup">
-            <div style="text-align: center; margin: 10px; font-size:25px">language</div>
+            <div class="text-align-center m-10p fs-25p">language</div>
             <div class="d-flex align-items-center justify-content-center">
-                <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
-                    id="nav-language-search-input" style="width: 120px !important;" onkeyup="navLangSearch()"></input>
+                <input class="nav-input form-control form-control-lg border border-info rounded w-120pi" type="text"
+                    id="nav-language-search-input"></input>
             </div>
-            <ul id="language-change" class="nav-list scroll" style=" height: 228px !important; margin-top: 20px">
+            <ul id="language-change" class="nav-list scroll h-228pi mt-20p">
             </ul>
         </div>
         <div class="nav-popup" id="currency-popup">
-            <div style="text-align: center; margin: 10px; font-size:25px">currency</div>
+            <div class="text-align-center m-10p  fs-25p">currency</div>
             <div class="d-flex align-items-center justify-content-center">
-                <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
-                    id="nav-currency-search-input" style="width: 80px !important; text-transform: uppercase;"
-                    onkeyup="navCurSearch()"></input>
+                <input
+                    class="nav-input form-control form-control-lg border border-info rounded w-80pi text-transform-uppercase"
+                    type="text" id="nav-currency-search-input"></input>
             </div>
-            <ul id="currency-change" class="nav-list scroll" style=" height: 230px !important; margin-top: 20px">
+            <ul id="currency-change" class="nav-list scroll h-230pi mt-20p">
             </ul>
         </div>
         <div class="nav-popup" id="profile-popup">
             <div class="popup-link row d-flex justify-content-center align-items-center">
                 <div class="col d-flex justify-content-center align-items-center">
-                    <div class="profile-img"
-                        style="background-image: url('/profile/img'); background-repeat: no-repeat; background-size: cover; width: 60px !important; height: 60px !important">
+                    <div class="profile-img bg-i-profile-img bg-r-no-repeat bg-s-cover w-60pi h-60pi">
                     </div>
                 </div>
                 <div class="col d-flex justify-content-center align-items-center">{{settings.name}}</div>
@@ -88,12 +83,12 @@
             </ul>
         </div>
         <div class="nav-popup" id="messages-popup">
-            <div class="popup-link pt-0 mr-0" style="padding: 15px;">
+            <div class="popup-link pt-0 mr-0 p-15p">
                 <h3>
                     {{navbarContext.messagesPopup.messages}}
                 </h3>
             </div>
-            <ul class="navlist-list d-flex flex-column p-0 m-0" id="notifications-list" style="height: 100%;">
+            <ul class="navlist-list d-flex flex-column p-0 m-0" id="notifications-list h-100">
                 <div class="d-flex align-items-center justify-content-center">
                     {{navbarContext.messagesPopup.noMessages}}</div>
             </ul>
@@ -102,25 +97,25 @@
             <div id="settings-buttons-list" class="dispr-mn-442p p-1" onclick="event.stopPropagation();">
                 <div class="d-flex align-items-center justify-content-center">
                     <div class="m-2">
-                        <button onclick="toggleNavPopup('language-popup')" type="button"
-                            class="btn btn-outline-primary">{{settings.lang}}</button>
+                        <button type="button"
+                            class="btn btn-outline-primary toggle-nav-lang-popup">{{settings.lang}}</button>
                     </div>
                     <div>
-                        <button onclick="toggleNavPopup('currency-popup')" type="button"
-                            class="btn btn-outline-primary">{{settings.cur}}</button>
+                        <button type="button"
+                            class="btn btn-outline-primary toggle-nav-currency-popup">{{settings.cur}}</button>
                     </div>
                 </div>
             </div>
-            <a class="navbar-brand" style="margin-left: 60% !important;" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
-            <a class="navbar-brand" style="margin-left: 60% !important;" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
+            <a class="navbar-brand ml-60" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
+            <a class="navbar-brand ml-60" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
         </div>
-        <div class="nav-popup d-flex flex-column" id="notifications-popup" onclick="event.stopPropagation();">
-            <div class="popup-link pt-0 mr-0" style="padding: 15px;">
+        <div class="nav-popup d-flex flex-column stop-prop" id="notifications-popup">
+            <div class="popup-link pt-0 mr-0 p-15p">
                 <h3>
                     {{navbarContext.notificationsPopup.notifications}}
                 </h3>
             </div>
-            <ul class="navlist-list d-flex flex-column p-0 m-0" id="notifications-list" style="height: 100%;">
+            <ul class="navlist-list d-flex flex-column p-0 m-0" id="notifications-list h-100">
                 <div class="d-flex align-items-center justify-content-center">
                     {{navbarContext.notificationsPopup.noNotifications}}</div>
             </ul>
@@ -128,6 +123,6 @@
     </div>
 </div>
 <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
-    integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
-    crossorigin="anonymous"></script>
-<script src="/js/user_navbar.js"></script>
+    integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"
+    nonce="{{context.settings.cspNonce}}"></script>
+<script src="/js/user_navbar.js" nonce="{{context.settings.cspNonce}}"></script>
