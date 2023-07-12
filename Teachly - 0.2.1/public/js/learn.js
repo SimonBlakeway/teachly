@@ -269,7 +269,7 @@ window.addEventListener('load', function () {
 
                 /*
                                 node.innerHTML = `
-                                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${specialityWithBars}" name="${specialityWithBars}" onclick='updateformData("specialities", "${specialityWithBars}")'></input>
+                                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${specialityWithBars}" name="${specialityWithBars}" o000nclick='updateformData("specialities", "${specialityWithBars}")'></input>
                                     <label class="form-check-label text-dark fs-12p" for=${specialityWithBars}>${arr[i]}</label>
                                     <br>
                                     `;
@@ -310,7 +310,7 @@ window.addEventListener('load', function () {
 
         /*
         node.innerHTML = `
-                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[1]}" name="${langPair[0]}" onclick='updateformData("taughtIn", "${langPair[1]}")'></input>
+                    <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[1]}" name="${langPair[0]}" o000nclick='updateformData("taughtIn", "${langPair[1]}")'></input>
                     <label class="form-check-label text-dark" for=${langPair[0]}>${langPair[0]}</label><br>`;
         document.getElementById("taughtIn-checkboxes").appendChild(node);
         */

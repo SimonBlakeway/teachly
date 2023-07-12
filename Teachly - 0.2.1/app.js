@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors'); // useful, but a security risk
 const helmet = require('helmet');
-const crypto  = require('crypto')
+const crypto = require('crypto')
 const db = require('./config/db');
 const customTimers = require('./customTimers');
 
@@ -30,12 +30,24 @@ app.use(
     directives: {
       "script-src": [
         "self",
-        (req, res) => `'nonce-${res.locals.cspNonce}'`
+        (req, res) => `'nonce-${res.locals.cspNonce}'`,
+        "https://cdnjs.cloudflare.com"
       ]
       ,
       "style-src": [
         "self",
         (req, res) => `'nonce-${res.locals.cspNonce}'`
+      ],
+      "worker-src": [
+        "'self'",
+        "'unsafe-eval'",
+        "'unsafe-inline'",
+        'localhost',
+      ],
+      "img-src": [
+        "'self'", 
+        "https://www.paypalobjects.com",
+        'https://b.stripecdn.com'
       ],
     },
   })

@@ -47,9 +47,9 @@ async function socketSetup() {
                     <div>${data[i].text}</div>
                     <div class="pt-1 fs-6 clr-f2f2f2">${prettyifyDate(data[i].created_at)}</div>
                   </div>
-                  <div onclick="event.stopPropagation();">
+                  <div o000nclick="event.stopPropagation();">
                     <div>
-                      <div onClick="deleteNotification('${data[i].notification_id}')" class="color-white fs-3 ml-10p"><i class="fa fa-times" aria-hidden="true"></i></div>
+                      <div o000nClick="deleteNotification('${data[i].notification_id}')" class="color-white fs-3 ml-10p"><i class="fa fa-times" aria-hidden="true"></i></div>
                     </div>
                   </div>
                 </div>
@@ -254,7 +254,7 @@ window.addEventListener('load', function () {
         for (let i = 0; i < arr.length; i++) {
             langPair = arr[i].split(",")
             node = document.createElement("li");
-            //node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("lang", "${langPair[1]}")'>${langPair[0]}</div>`;
+            //node.innerHTML = `<div class="nav-li" o000nclick='changeNavSettings("lang", "${langPair[1]}")'>${langPair[0]}</div>`;
             div = document.createElement("div")
             div.className = "nav-li"
             div.innerHTML = `${langPair[0]}`
@@ -271,7 +271,7 @@ window.addEventListener('load', function () {
         box = document.createElement("div")
         for (let i = 0; i < arr.length; i++) {
             node = document.createElement("li");
-            node.innerHTML = `<div class="nav-li" onclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
+            //node.innerHTML = `<div class="nav-li" o000nclick='changeNavSettings("cur","${arr[i]}")''>${arr[i]}</div>`;
 
             div = document.createElement("div")
             div.className = "nav-li"
