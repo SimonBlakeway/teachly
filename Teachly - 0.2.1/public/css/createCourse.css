@@ -1,0 +1,221 @@
+  #create-course {
+    /* fallback for old browsers */
+    background: rgb(85, 138, 230);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to bottom right, rgba(3, 71, 117), rgba(85, 138, 230));
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to bottom right, rgb(3, 71, 117), rgb(85, 138, 230));
+    height: 80%;
+    width: 100%;
+    font-size: 18px;
+    background-image: url("/images/blue-bg.jpg") !important;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-top: -20px !important;
+
+  }
+
+  .bg-image {
+    background-image: url("/images/blue-bg.jpg") !important;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .custom-rounded {
+    border-radius: 3%;
+  }
+
+  .course-input {
+    font-size: 222px;
+    font-family: calibri;
+    width: 100%;
+    padding: 0px;
+    --webkit-border-radius: 3px;
+    --moz-border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #0baecf;
+    text-align: center;
+    background-color: rgb(210, 233, 231);
+    cursor: pointer;
+  }
+
+  #course-image {
+    font-size: 15px;
+    font-family: calibri;
+    width: 120px !important;
+    height: 46px;
+    padding: 4px;
+    --webkit-border-radius: 3px;
+    --moz-border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #0baecf;
+    text-align: center;
+    background-color: rgb(210, 233, 231);
+    cursor: pointer;
+  }
+
+  .popup {
+    position: absolute;
+    z-index: 20;
+    width: 300px;
+    height: 300px;
+    background-color: #ffffff;
+    display: none;
+    visibility: hidden;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: left;
+    overflow: auto;
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+    font-size: 20px;
+    border-radius: 10px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-style: solid;
+    border-color: white;
+    border-width: 30px;
+  }
+
+  .popup::-webkit-scrollbar {
+    display: none;
+    /* Safari and Chrome */
+  }
+
+  #subject-popup {
+    text-align: left;
+    width: 240px;
+    padding: 10px;
+    font-size: 20px;
+    margin-top: 0px;
+    padding-left: 20px !important;
+    margin-top: 420px;
+
+
+  }
+
+  #speciality-popup {
+    width: 310px;
+    height: 300px;
+    padding: 10px;
+    font-size: 20px;
+    margin-top: 420px;
+    border-width: 5px;
+    font-size: 12px;
+    padding-bottom: 20px;
+  }
+
+  #timeRange-popup {
+    width: 300px;
+    height: 460px;
+    margin-top: 490px;
+    margin-right: 0px;
+    border-width: 10px;
+  }
+
+  .day-div {
+    background-color: #89c4ff;
+    width: 100% !important;
+    height: 50px;
+    margin: 2px;
+    text-align: center;
+    font-size: 30px;
+    margin: 5px;
+  }
+
+  .time-slot-div {
+    background-color: #89c4ff;
+    border-radius: 12px 6px;
+    width: 85px !important;
+    height: 50px;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+    margin-top: 1px;
+    margin: 2px !important;
+
+  }
+
+  .active-time-slot-div {
+    background-color: #277dd3;
+    border-radius: 14px 7px;
+  }
+
+  #taughtIn-popup {
+    width: 250px;
+    height: 400px;
+    margin-top: 520px;
+  }
+
+  .day-div {
+    background-color: #89c4ff;
+    width: 100% !important;
+    height: 50px;
+    margin: 2px;
+    text-align: center;
+    font-size: 30px;
+    margin: 5px;
+  }
+
+  .time-slot-div {
+    background-color: #89c4ff;
+    border-radius: 12px 6px;
+    width: 85px !important;
+    height: 50px;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+    margin-top: 1px;
+    margin: 2px !important;
+
+  }
+
+  .active-time-slot-div {
+    background-color: #277dd3;
+    border-radius: 14px 7px;
+  }
+
+
+  .bg-dkr-lght-color {
+    background-color: #daecfd !important;
+  }
+
+
+
+  #subject-box {
+    list-style-type: none;
+    text-align: center;
+    padding: 0px;
+  }
+
+  li {
+    padding: 5px;
+    text-align: center;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+
+  #create-course-finance {
+    margin-top: -20px !important;
+
+  }
+
+  #create-course-finance-col {
+    min-width: 300px !important;
+    max-width: 500px !important;
+    min-height: 300px !important;
+  }

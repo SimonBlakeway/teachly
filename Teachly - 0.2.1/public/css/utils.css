@@ -670,3 +670,14 @@
 .m-10p {
     margin: 10px;
 }
+.h-100vh {
+    height: 90vh;
+  }
+
+  .w-240p {
+    width: 240px;
+  }
+
+  .mn-w-270p {
+    min-width: 270px;
+  }
