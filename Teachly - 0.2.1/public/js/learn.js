@@ -478,7 +478,7 @@ async function searchCourses() {
                     ${moreDesc}
                     </div>
                 </p>
-                <button onclick='readMoreDescToggle("${courseId}-ellipses", "${courseId}-more-course-description", "${courseId}-more-course-btn")' id="${courseId}-more-course-btn" class="mb-4 read-more-button">
+                <button id="${courseId}-more-course-btn" class="mb-4 read-more-button">
                     ${courseJson.readMore}
                 </button>`
 
@@ -662,6 +662,13 @@ async function searchCourses() {
             document.getElementById("server-error").style.display = "none"
             generatePagination(res.data.count, teachlyFormData.activePage)
 
+
+
+            document.querySelectorAll('.read-more-button').forEach(el => el.addEventListener('click', event => {
+                courseId = e.target.id.split("-")[0]
+                readMoreDescToggle(courseId)
+            }));
+
         }
 
     }
@@ -691,7 +698,12 @@ function taughtInToggle(dotsId, MoreId, btnId) {
     }
 }
 
-function readMoreDescToggle(dotsId, MoreId, btnId) {
+function readMoreDescToggle(courseId) {
+
+    dotsId =  `${courseId}-ellipses`
+    MoreId =  `${courseId}-more-course-description`
+    btnId =  `${courseId}-more-course-btn`
+
     let dots = document.getElementById(dotsId);
     if (dots.style.display === "none") {
         dots.style.display = "inline";

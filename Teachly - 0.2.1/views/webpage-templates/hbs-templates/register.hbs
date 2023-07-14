@@ -1,81 +1,7 @@
-<style>
-  #register {
-    background: rgb(85, 138, 230);
-    background: -webkit-linear-gradient(to bottom right, rgba(3, 71, 117), rgba(85, 138, 230));
-    background: linear-gradient(to bottom right, rgb(3, 71, 117), rgb(85, 138, 230));
-    height: 80%;
-    width: 100%;
-    font-size: 18px;
-  }
+<script src="/js/register.js" nonce="{{context.settings.cspNonce}}"></script>
 
-  .registration-form {
-    border-radius: 15px;
-    background-color: rgb(255, 255, 255) !important;
-    max-width: 800px;
-  }
+<link rel="stylesheet" href="/css/register.css" nonce="{{context.settings.cspNonce}}">
 
-  .profile-input {
-    width: 100%;
-    padding: 0px;
-    text-align: center;
-    background-color: rgb(240, 245, 244) !important;
-    height: 40px !important;
-    min-width: 150px !important;
-  }
-
-  #profile-image {
-    font-size: 15px;
-    font-family: calibri;
-    width: 100%;
-    padding: 4px;
-    cursor: pointer;
-  }
-
-  .popup {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-    width: 40%;
-    min-width: 300px;
-    height: fit-content;
-    padding: 20px;
-    border-radius: 20px;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    border-width: 10px;
-  }
-
-  #email-popup-submit {
-    margin-bottom: 20px;
-  }
-
-  #email-popup {
-    max-width: 300px !important;
-    -webkit-box-shadow: 0px 7px 49px 0px rgba(0, 0, 0, 1);
-    -moz-box-shadow: 0px 7px 49px 0px rgba(0, 0, 0, 1);
-    box-shadow: 0px 7px 49px 0px rgba(0, 0, 0, 1);
-  }
-
-  @media screen and (max-width: 48px) {
-    .popup {
-      width: 80%;
-      height: 45%;
-    }
-  }
-
-  @media screen and (max-width: 300px) {
-    .popup {
-      width: 80%;
-      height: 50%;
-      padding: 0px;
-    }
-
-  }
-</style>
 <section id="register" class="d-flex justify-content-center align-items-center">
   <div class="py-5 row justify-content-center align-items-center h-100 w-80">
     <div class="col d-flex justify-content-center align-items-center">
@@ -103,10 +29,10 @@
             <div class="col my-2">
               <label class="form-label text">{{context.bodyContext.profileImage}}</label>
               <div id="profile-image"
-                class="form-control form-control-md border border-info rounded profile-input d-flex align-items-center justify-content-center"
-                onclick="getFile()">click to upload image</div>
+                class="form-control form-control-md border border-info rounded profile-input d-flex align-items-center justify-content-center">
+                click to upload image</div>
               <div class="h-0p w-0p overflow-hidden"><input required id="upfile" type="file"
-                  value="upload" onchange="sub(this)" accept="image/*" /></div>
+                  value="upload" accept="image/*" /></div>
             </div>
           </div>
           <div class="row">
@@ -118,7 +44,7 @@
                 </label>
               </div>
               <div class="d-flex justify-content-center">
-                <button type='submit' onclick="sendSigninReq()" class="btn btn-outline-primary btn-lg">
+                <button type='submit' id="send-signin-req" class="btn btn-outline-primary btn-lg">
                   {{context.bodyContext.REGISTER}}</button>
               </div>
               <p class="text-center text-muted mt-5 mb-0 fw-bold text-body">
@@ -132,10 +58,6 @@
     </div>
   </div>
 </section>
-
-
-
-
 <div id="email-popup" class="popup p-5 bg-light shadow-lg">
   <form onsubmit="return false" id="email-input-form" class="d-flex flex-column">
     <label id="email-label" class="text text-center fs-18p" for="email-input">{{context.bodyContext.emailPopup.text}}</label>
@@ -143,7 +65,7 @@
     <input maxlength="5" type="numbers" required type="text" id="email-input"
       class="form-control form-control-lg border border-info rounded profile-input" />
     <br>
-    <button id="email-popup-submit" type='submit' onclick="sendEmailCode()"
+    <button id="email-popup-submit" type='submit'
       class="btn btn-outline-primary btn-lg">{{context.bodyContext.emailPopup.submitButtonText}}</button>
   </form>
 </div>
@@ -154,99 +76,3 @@
 <div id="emailcode-err-popup" class="popup p-5 bg-light shadow-lg text-center h-10 w-20">
   <div>{{context.bodyContext.emailCode.invalidEmailCode}}</div>
 </div>
-
-<script>
-  function getFile() {
-    document.getElementById("upfile").click();
-  }
-  function sub(obj) {
-    var file = obj.value;
-    var fileName = file.split("\\");
-    document.getElementById("profile-image").innerHTML = fileName[fileName.length - 1];
-  }
-  sendEmailCode = async function () {
-    emailCode = $("#email-input").val();
-    if (emailCode == "") { return }
-    email = $("#email").val();
-    res = await axios.get('/auth/emailValidation', { params: { "emailCode": emailCode, "email": email } });
-    if (res.data.err) {
-      console.log(res.data.err)
-      $("#emailcode-err-popup").attr("display", "grid");
-      setTimeout(function () {
-        $("#emailcode-err-popup").fadeOut('fast')
-      }, 1000);
-    }
-    else {
-      window.location = "/"
-    }
-  }
-  sendSigninReq = async function () {
-
-    function validateEmail(email) {
-      const res = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-      return res.test(String(email).toLowerCase());
-    }
-
-    try {
-      reader = new FileReader();
-      reader.onloadend = () => {
-        name = $("#username").val()
-        pass = $("#password").val()
-        email = $("#email").val()
-
-        if (pass.name < 5) { return }
-        if (pass.length < 5) { return }
-        if (reader.result.substring(0, 10) != "data:image") { return }
-        if (validateEmail(email) == false) { return }
-
-        sendReq([name, reader.result, pass, email])
-      };
-      reader.readAsDataURL($('#upfile').prop('files')[0])
-      sendReq = async function (arr) {
-        try {
-          formData = {
-            'name': arr[0],
-            'profileImage': arr[1],
-            'password': arr[2],
-            'email': arr[3],
-          }
-          res = await axios({
-            method: 'post',
-            url: '/auth/register',
-            data: formData,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
-          if (res.data.err) {
-            $("#err-popup").attr("display", "grid");
-            document.getElementById("err-popup").style.display = "grid";
-            if (res.data.err == "name taken") {
-              $('#name-err').show();
-              $('#email-err').hide();
-              setTimeout(function () {
-                $('#err-popup').fadeOut('fast')
-              }, 1000);
-            }
-            if (res.data.err == "email taken") {
-              $('#name-err').hide();
-              $('#email-err').show();
-              setTimeout(function () {
-                $('#err-popup').fadeOut('fast')
-              }, 1000);
-            }
-          }
-          else {
-            document.getElementById("email-popup").style.display = "grid";
-            document.getElementById("register").style.visibility = "hidden";
-          }
-        }
-        catch (err) {
-          console.log(err)
-        }
-      }
-    }
-    catch {
-    }
-  }
-</script>

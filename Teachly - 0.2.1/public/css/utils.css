@@ -370,11 +370,19 @@
 }
 
 .overflow-hidden {
+    overflow: hidden;
+}
+
+.overflow-hiddeni {
     overflow: hidden !important;
 }
 
-.position-absolute {
+.position-absolutei {
     position: absolute !important;
+}
+
+.position-absolute {
+    position: absolute;
 }
 
 .mr-200p {
@@ -680,4 +688,12 @@
 
   .mn-w-270p {
     min-width: 270px;
+  }
+
+  .ml-5pi {
+    margin-left: 5px !important;
+  }
+
+  .mr-5pi {
+    margin-right: 5px !important;
   }

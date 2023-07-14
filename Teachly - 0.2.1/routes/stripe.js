@@ -147,13 +147,22 @@ router.get("/signin-with-stripe", async (req, res) => {
 router.get("/oauth2/redirect/stripe", async (req, res) => {
 
 
-  res.render('landingPage', {
-    layout: 'main',
-    context: contextSetup(req.settings, ["navbar", "footer"], "landingPage"),
-  })
+  res.redirect("/")
 
   code = req.query.code
-  accessToken = stripe.getAcccesToken(code)
+  nonce = req.query.nonce
+  user_id = stripeUtils.getUserID(code)
+
+
+  try {
+    result = await db.query(`UPDATE teacher_course 
+    SET financial_id = $1 AND
+    financial_platform = $2
+    WHERE financial_id = $3 
+    AND financial_platform IS NULL`, [user_id, "stripe", nonce]);
+  } catch (error) {user_id, financia
+    console.log(error)
+  }
 
 
   res.send(user_details)

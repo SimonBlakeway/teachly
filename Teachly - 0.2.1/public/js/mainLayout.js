@@ -67,6 +67,7 @@ updateDatesInterval()
 
 window.addEventListener('load', function () {
     document.querySelectorAll('.stop-prop').forEach(el => el.addEventListener('click', event => {
+        console.log("stop prop")
         event.stopPropagation();
     }));
 })

@@ -17,10 +17,8 @@
     <form onsubmit="return false" class="row d-flex justify-content-center align-items-center">
       <div class="col-12 p-1">
         <h3 class="m-4 fs-2">{{context.bodyContext.createCourseForm}}</h3>
-        <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
-          onclick="event.stopPropagation();">
-          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
-            onclick='toggleCoursePopup("subject-popup")'>
+        <div class="row container d-flex align-items-center justify-content-center m-0 p-0 stop-prop">
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p  subject-box-toggle-popup">
             <div>
               <div class="my-2">{{context.bodyContext.subject}}</div>
               <div class="d-flex align-items-center justify-content-center">
@@ -34,14 +32,14 @@
             <div class="popup" id="subject-popup">
               <div>
                 <input class="course-input form-control form-control-lg border border-info rounded" type="text"
-                  id="subject-search-input" onkeyup="searchBox('subject-box', 'subject-search-input')"></input>
+                  id="subject-search-input"></input>
               </div>
-              <ul id="subject-box" onclick='toggleCoursePopup("subject-popup")'>
+              <ul id="subject-box" class="subject-box-toggle-popup">
               </ul>
             </div>
           </div>
           <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
-            onclick='toggleCoursePopup("speciality-popup")'>
+            id="speciality-box-toggle-popup">
             <div>
               <div class="my-2">{{context.bodyContext.specialities}}</div>
               <div class="d-flex align-items-center justify-content-center">
@@ -49,7 +47,7 @@
                   {{context.bodyContext.choose}}</div>
               </div>
             </div>
-            <div class="popup" id="speciality-popup" onclick="event.stopPropagation();">
+            <div class="popup stop-prop" id="speciality-popup">
               <input class="course-input form-control form-control-lg border border-info rounded" type="text"
                 id="speciality-search-input" placeholder=""
                 onkeyup="searchBox('speciality-checkboxes', 'speciality-search-input')"></input>
@@ -76,20 +74,17 @@
                 <div class="my-2 mx-3">{{context.bodyContext.courseImg}}</div>
                 <div class="d-flex align-items-center justify-content-center">
                   <div id="course-image"
-                    class="border rounded border-primary bg-dkr-lght-color overflow-hidden pt-10p h-40p w-240pi mt-1pi"
-                    onclick="getFile()">
+                    class="border rounded border-primary bg-dkr-lght-color overflow-hidden pt-10p h-40p w-240pi mt-1pi" id="get-file">
                     {{context.bodyContext.clickUploadImageRatio}}</div>
                   <div class="h-0p w-0p overflow-hidden position-absolute mr-320p mb-20p">
-                    <input required id="upfile" type="file" value="upload" onchange="sub(this)" accept="image/*" />
+                    <input required id="upfile" type="file" value="upload" accept="image/*" />
                   </div>
                 </div>
               </div>
             </div>
             <div
-              class="row d-flex align-items-center justify-content-center m-0 p-2 mt-3 bg-dkr-lght-color mn-w-270p h-104-5p"
-              onclick="event.stopPropagation();">
-              <div class="h-200p d-flex align-items-center justify-content-center"
-                onclick='toggleCoursePopup("taughtIn-popup")'>
+              class="row d-flex align-items-center justify-content-center m-0 p-2 mt-3 bg-dkr-lght-color mn-w-270p h-104-5p stop-prop">
+              <div class="h-200p d-flex align-items-center justify-content-center taughtIn-box-toggle-popup">
                 <div>
                   <div class="my-2">{{context.bodyContext.taughtIn}}</div>
                   <div class="d-flex align-items-center justify-content-center w-100 text-center">
@@ -97,7 +92,7 @@
                       class="border rounded border-primary d-flex align-items-center justify-content-center py-2 w-240p">
                       {{context.bodyContext.choose}}
                       <div class="h-0 w-0 overflow-hidden position-absolute mr-200p mt-20p">
-                        <input required id="upfile" />
+                        <input class="h-0 w-0 h-0pxi w-0pxi overflow-hiddeni position-absolutei" required id="" />
                       </div>
                     </div>
                   </div>
@@ -108,15 +103,14 @@
                       id="taughtIn-search-input"
                       onkeyup="searchBox('taughtIn-list', 'taughIn-search-input')"></input>
                   </div>
-                  <div id="taughtIn-list" class="p-0 pt-3" onclick='toggleCoursePopup("taughtIn-popup")'>
+                  <div id="taughtIn-list" class="p-0 pt-3 taughtIn-box-toggle-popup">
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
-          onclick="event.stopPropagation();">
+        <div class="row container d-flex align-items-center justify-content-center m-0 p-0 stop-prop">
           <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p clear-course-popups">
             <div>
               <div class="my-2">{{context.bodyContext.priceIn}} {{context.settings.cur}}</div>
@@ -126,30 +120,28 @@
               </div>
             </div>
           </div>
-          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p"
-            onclick='toggleCoursePopup("timeRange-popup")'>
+          <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p timeRange-box-toggle-popup">
             <div>
               <div class="my-2">{{context.bodyContext.timeRange}}</div>
               <div class="d-flex align-items-center justify-content-center">
                 <div id="timeRange-button"
                   class="text-center py-2 border rounded border-primary w-240p d-flex align-items-center justify-content-center">
                   {{context.bodyContext.choose}}
-                  <div class="h-0 w-0 overflow-hidden position-absolute mr-200p mb--20p">
-                    <input required id="hidden-timeRange-input" for="nach" />
+                  <div class="h-0 w-0 h-0pxi w-0pxi overflow-hiddeni position-absolutei mr-200p mb--20p">
+                    <input class="h-0 w-0 h-0pxi w-0pxi overflow-hiddeni position-absolutei" required id="hidden-timeRange-input" for="nach" />
                   </div>
                 </div>
               </div>
               <div class="d-flex align-items-center justify-content-center">
                 <div class="popup" id="timeRange-popup">
-                  <div id="timeRange-popup-rows" class="text-center w-100 p-0" onclick="event.stopPropagation();">
+                  <div id="timeRange-popup-rows" class="text-center w-100 p-0">
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="row container d-flex align-items-center justify-content-center m-0 p-0"
-          onclick="event.stopPropagation();">
+        <div class="row container d-flex align-items-center justify-content-center m-0 p-0 stop-prop">
           <div class="col p-2 bg-dkr-lght-color m-2 d-flex align-items-center justify-content-center mn-w-270p h-107pi clear-course-popups">
             <div class="h-107pi">
               <div class="my-2">time in minutes: <span id="time-shown"></span></div>
@@ -158,15 +150,14 @@
               </div>
             </div>
           </div>
-          <div class="col p-2 m-2 d-flex align-items-center justify-content-center mn-w-270p"
-            onclick='toggleCoursePopup("timeRange-popup")'>
+          <div class="col p-2 m-2 d-flex align-items-center justify-content-center mn-w-270p timeRange-box-toggle-popup">
 
           </div>
         </div>
         <div class="row pt-5">
           <div class="col-md-12 mb-4">
             <div class="d-flex justify-content-center">
-              <button type='submit' onclick="sendCourseData()" class="btn btn-outline-primary btn-lg mb-3">
+              <button type='submit' id="send-course-data" class="btn btn-outline-primary btn-lg mb-3">
                 {{context.bodyContext.createCourse}}</button>
             </div>
           </div>
@@ -183,7 +174,7 @@
 
 
 <section id="create-course-finance"
-  class="py-5 px-0 mx-0 mt-5 d-flex justify-content-center align-items-center w-100 h-100vh bg-image">
+  class="py-5 px-0 mx-0 mt-5 justify-content-center align-items-center w-100 h-100vh bg-image display-nonei">
   <div class="container bg-light shadow-md w-75 mn-w-270p custom-rounded" id="create-course-finance-col">
 
 
@@ -196,13 +187,13 @@
 
 
 
-      <div class="row d-flex justify-content-center align-items-center fs-3 mb-3" onclick="financeLoginPayPal()">
+      <div id="finance-login-paypal-btn" class="row d-flex justify-content-center align-items-center fs-3 mb-3">
         <div class="br-5p w-fit-content">
           <img src="https://www.paypalobjects.com/devdoc/log-in-with-paypal-button.png" nonce="{{context.settings.cspNonce}}"></img>
         </div>
       </div>
 
-      <div class="row d-flex justify-content-center align-items-center mb-3" onclick="financeLoginStripe()">
+      <div id="finance-login-stripe-btn" class="row d-flex justify-content-center align-items-center mb-3 finance-login-stripe-btn">
         <div class="d-flex justify-content-center align-items-center bg-635bff clr-white w-211p h-46p br-40p fw-500 fs-16p">
           <span class="display-inline-flex mr-5p">
             <img class="w-28p" src="https://b.stripecdn.com/docs-statics-srv/assets/e9b76763ac024da464fae86e9b69dcbf.png" nonce="{{context.settings.cspNonce}}"></img>

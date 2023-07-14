@@ -81,17 +81,18 @@ router.get("/oauth2/redirect/paypal", async (req, res) => {
   res.redirect("/")
 
   code = req.query.code
-  financial_id_placeholder = req.query.randint
+  nonce = req.query.nonce
 
 
   userInfo = await paypal.getUserID(code)
-  console.log(userInfo)
 
   if (userInfo.verified_account == true) {
     try {
-          result = await db.query(`UPDATE teacher_course SET financial_id = $1 
-          WHERE financial_id = $2 
-          AND financial_platform IS NULL`, [userInfo.payer_id, financial_id_placeholder]);
+          result = await db.query(`UPDATE teacher_course
+          SET financial_id = $1 AND
+          financial_platform = $2
+          WHERE financial_id = $3 
+          AND financial_platform IS NULL`, [userInfo.payer_id, "paypal", nonce]);
         } catch (error) {
           console.log(error)
         }

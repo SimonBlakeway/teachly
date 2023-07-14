@@ -1,0 +1,20 @@
+  #cookies-popup {
+    margin: auto;
+    width: 50%;
+    height: fit-content;
+    min-height: 30%;
+    min-width: 200px;
+    text-align: center;
+    padding: 20px;
+    background-color: aliceblue;
+    border-radius: 20px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+  }

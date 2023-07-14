@@ -1,41 +1,8 @@
-<style>
-#cookies-popup {
-  margin: auto;
-  width: 50%;
-  height:fit-content;
-  min-height: 30%;
-  min-width: 200px;
-  text-align: center;
-  padding: 20px;
-  background-color: aliceblue;
-  border-radius: 20px;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
-}
-</style>  
-  <div id="cookies-popup" class="shadow-lg">                 
-      <div  class="email-input-form">
-        <h2>{{cookiesText.cookiesPopupText}}<a href="">{{cookiesText.termsAndConditions}}</a></h2>
-        <button type="submit" id="email-popup-submit" onclick="acceptCookies()">✖</button>
-      </div>
-      <script>
-        async function acceptCookies() {
-          document.getElementById("cookies-popup").style.display = "none";
-          res = await axios({
-            method: 'post',
-            url: '/auth/settings',
-            data: {},
-            headers: {
-             'Content-Type': 'application/json'
-              },
-          })
-        }
-</script>
-    </div>
+<link rel="stylesheet" href="/css/cookiesPopup.css" nonce="{{context.settings.cspNonce}}">
+<div id="cookies-popup" class="shadow-lg">
+  <div class="">
+    <h2>{{cookiesText.cookiesPopupText}}<a href="">{{cookiesText.termsAndConditions}}</a></h2>
+    <button type="submit" id="cookies-popup-submit">✖</button>
+  </div>
+</div>
+<script src="/js/cookiesPopup.js" nonce="{{context.settings.cspNonce}}"></script>

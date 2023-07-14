@@ -34,7 +34,7 @@ app.use(
         "https://cdnjs.cloudflare.com"
       ]
       ,
-      "style-src": [
+      "style-src": [ 
         "self",
         (req, res) => `'nonce-${res.locals.cspNonce}'`
       ],
@@ -46,6 +46,7 @@ app.use(
       ],
       "img-src": [
         "'self'", 
+        "https: data:",
         "https://www.paypalobjects.com",
         'https://b.stripecdn.com'
       ],

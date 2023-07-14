@@ -32,9 +32,9 @@ async function payUser(userId, userStripeAcountId, amount, currency) {
 }
 
 // oauth
-async function getConnectionUrl() {
+async function getConnectionUrl(nonce) {
     scopes = `read_only`
-    return_url = encodeURIComponent(`${baseHostURL}/gateway/paypal/stripe/redirect/stripe`)
+    return_url = encodeURIComponent(`${baseHostURL}/gateway/paypal/stripe/redirect/stripe&nonce=${nonce}`)
     const url = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.STRIPE_ID}&scope=${scopes}&redirect_uri=${return_url}`
     return url
 }

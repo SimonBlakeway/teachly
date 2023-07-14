@@ -1,4 +1,3 @@
-const input = require("sharp/lib/input");
 
 const imageWorker = new Worker('/js/imageWorker.js', { credentials: "include" });
 imageWorker.onmessage = function (e) {
@@ -31,12 +30,15 @@ function setSubject(subject) {
 
 
     label = document.createElement("label")
+    label.for = `${specialityWithBars}`
+
     input = document.createElement("input")
 
-    input.className = "form-check-input"
+    input.className = "form-check-input mr-5pi"
     input.type = "checkbox"
     input.id = `${specialityWithBars}`
     input.name = `${specialityWithBars}`
+
     input.addEventListener("click", e => {
       setSpeciality(`${specialityWithBars}`)
     })
@@ -180,14 +182,16 @@ function getFile() {
 
 function sub(obj) {
   clearCoursePopups()
-  var file = obj.value;
+  input = document.getElementById(upfile)
+  var file = input.value;
+  console.log(obj)
   reader = new FileReader();
   reader.onloadend = () => {
     base64Image = reader.result.split(';base64,').pop();
     imageStr = false;
     imageWorker.postMessage(base64Image);
   }
-  reader.readAsDataURL($('#upfile').prop('files')[0])
+  reader.readAsDataURL(input.prop('files')[0])
 
   var fileName = file.split("\\");
   if (fileName[fileName.length - 1] == "") {
@@ -244,8 +248,7 @@ async function sendCourseData() {
         toggleErrPopup(res.data.err)
       }
       else {
-        console.log("reee")
-        window.location.href = window.location.origin + "/";
+        switchToFinanceLogin()
       }
     }
     catch (err) {
@@ -306,6 +309,8 @@ window.addEventListener('load', async function () {
         div.addEventListener("click", e => {
           setSubject(`${arr[i]}`)
         })
+        div.className = "subject-li"
+        div.innerHTML = `${arr[i]}`
         node.appendChild(div)
         //node.innerHTML = `<div class="subject-li" o000nclick='setSubject("${arr[i]}")''>${arr[i]}</div>`;
         document.getElementById("subject-box").appendChild(node);
@@ -336,6 +341,7 @@ window.addEventListener('load', async function () {
     catch (err) {
     }
   }
+
   subjects = await populateSubjects()
   populateSpecialities(subjects)
 
@@ -367,7 +373,7 @@ window.addEventListener('load', async function () {
     //node.innerHTML = `
     //                <input class="form-check-input w-20p mr-5p" type="checkbox" id="${langPair[0]}" name="${langPair[0]}" o000nclick='setTaughtIn()'></input>
     //                <label class="form-check-label text-dark" id="${langPair[1]}-label" for=${langPair[0]}>${langPair[0]}</label><br>`;
-    
+
     node.append(input, label, br)
     document.getElementById("taughtIn-list").appendChild(node);
   }
@@ -398,20 +404,10 @@ window.addEventListener('load', async function () {
 })
 
 
-
-
-
-
-
-
-
-
-
-
 function switchToFinanceLogin() {
-  document.getElementById("create-course").setAttribute('style', 'display: none !important');
-  document.getElementById("create-course-finance").setAttribute('style', 'display: flex !important');
-
+  document.getElementById("create-course").add("display-nonei");
+  document.getElementById("create-course-finance").classList.remove("display-nonei");
+  document.getElementById("create-course-finance").classList.add("d-flex");
 }
 
 async function financeLoginPayPal() {
@@ -431,15 +427,57 @@ async function financeLoginStripe() {
 
 window.addEventListener('load', function () {
 
-  //document.getElementById("clear-nav-popups").addEventListener('click', event => {
-   // clearNavPopups()
-  //})
+
+  document.getElementById('subject-search-input').addEventListener('keyup', event => {
+    searchBox('subject-box', 'subject-search-input')
+  })
 
 
-  clear-course-popups
+  document.querySelectorAll(".subject-box-toggle-popup").forEach(el => el.addEventListener('click', event => {
+    toggleCoursePopup("subject-popup")
+  }))
+
+  document.getElementById('speciality-box-toggle-popup').addEventListener('click', event => {
+    toggleCoursePopup("speciality-popup")
+  })
+
+  document.querySelectorAll(".taughtIn-box-toggle-popup").forEach(el => el.addEventListener('click', event => {
+    toggleCoursePopup("taughtIn-popup")
+  }))
+
+  document.querySelectorAll(".timeRange-search-input").forEach(el => el.addEventListener('click', event => {
+    toggleCoursePopup("timeRange-popup")
+  }))
 
   document.querySelectorAll('.clear-course-popups').forEach(el => el.addEventListener('click', event => {
     clearCoursePopups()
-}));
+  }));
+
+
+  document.getElementById('send-course-data').addEventListener('click', event => {
+    sendCourseData()
+  })
+
+  document.getElementById('course-image').addEventListener('click', event => {
+    getFile()
+  })
+
+  document.getElementById('upfile').addEventListener('change', event => {
+    console.log(event)
+    console.log(event.value)
+    // sub(this)
+  })
+
+
+
+
+
+  document.getElementById('finance-login-paypal-btn').addEventListener('change', event => {
+    financeLoginPayPal()
+  })
+
+  document.getElementById('finance-login-stripe-btn').addEventListener('change', event => {
+    financeLoginStripe()
+  })
 
 })

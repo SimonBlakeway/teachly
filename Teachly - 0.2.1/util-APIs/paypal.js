@@ -177,16 +177,10 @@ async function payUser(PAYPAL_ID, sender_item_id, sender_batch_id ,amount, curre
 
 
 //oauth
-async function getConnectionUrl() {
-    // http://127.0.0.1:3001/
+async function getConnectionUrl(nonce) {
     scopes = ["openid", `https://uri.paypal.com/services/paypalattributes`].join(" ")
     scopes = encodeURIComponent(scopes)
-    //scopes = encodeURIComponent("openid")
-    //return_url = encodeURIComponent(`${baseHostURL}/gateway/paypal/oauth2/redirect/paypal`)
-    return_url = encodeURIComponent("https://www.google.com/")
-    return_url = encodeURIComponent("http://127.0.0.1:3001/gateway/paypal/oauth2/redirect/paypal")
-
-
+    return_url = encodeURIComponent(`http://127.0.0.1:3001/gateway/paypal/oauth2/redirect/paypal&nonce=${nonce}`)
     url = `https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=${process.env.PAYPAL_CLIENT_ID}&response_type=code&scope=${scopes}&redirect_uri=${return_url}`
     return url
 }
