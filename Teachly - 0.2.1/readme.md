@@ -10,14 +10,11 @@ list of tasks
 
   >I gotta fix the non user navbar
 
-  >the google/facebook/custom signup/login is not completely setup
-
   >the websites css and apearance is lackluster
 
-  >json support to express.hbs
-    https://stackoverflow.com/questions/10232574/need-handlebars-js-to-render-object-data-instead-of-object-object#:~:text=Or%2C%20you%20can%20use%2Fdefine%20a%20helper%20to%20format,note%20triple%20brackets%20to%20disable%20HTML%20encoding%20%7D%29%3B
-
   >rust addons to increase speed
+
+  >hover course timetable in createCourse
 
 
 

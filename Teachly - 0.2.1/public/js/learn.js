@@ -1,3 +1,5 @@
+const { json } = require("body-parser")
+const { application } = require("express")
 
 function formDataSetup() {
     teachlyFormDataDefault = {
@@ -374,7 +376,7 @@ window.addEventListener('load', function () {
         updateformData("orderBy", "Price:-lowest-first")
     })
 
-   
+
 
     document.getElementById("Number-of-reviews").addEventListener('click', event => {
         updateformData("orderBy", "Number-of-reviews")
@@ -549,7 +551,7 @@ async function searchCourses() {
                                             <div class="row d-flex justify-content-center mn-w-150p w-100">
                                                 <div class="col d-flex justify-content-center m-1 w-130p">
                                                     <button class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p">
-                                                        book lesson
+                                                    <a href="/learn/book-lesson&id=${courseId}">book lesson</a>
                                                     </button>
                                                 </div>
                                                 <div class="col d-flex justify-content-center m-1 mn-w-130p-i">
@@ -669,6 +671,14 @@ async function searchCourses() {
                 readMoreDescToggle(courseId)
             }));
 
+
+            document.querySelectorAll('.send-message').forEach(el => el.addEventListener('click', event => {
+                courseId = e.target.id.split("-")[0]
+
+                createChat(courseId)
+                gotoChat(courseId)
+            }));
+
         }
 
     }
@@ -682,10 +692,10 @@ async function searchCourses() {
 
 }
 
-function taughtInToggle(dotsId, MoreId, btnId) {
-    var dots = document.getElementById(dotsId);
-    var moreText = document.getElementById(MoreId);
-    var btnText = document.getElementById(btnId);
+function taughtInToggle(courseId) {
+    var dots = document.getElementById(courseId);
+    var moreText = document.getElementById(courseId);
+    var btnText = document.getElementById(courseId);
 
     if (dots.style.display === "none") {
         dots.style.display = "inline";
@@ -698,11 +708,31 @@ function taughtInToggle(dotsId, MoreId, btnId) {
     }
 }
 
+
+
+function viewCourseTimeTable(courseId) {
+
+}
+
+async function requestLesson() {
+    res = await axios({
+        method: 'post',
+        url: '/oauth2.googleapis.com/token',
+        data: {
+            'courseId': courseId,
+            "teacherId": teacherId
+        },
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+}
+
 function readMoreDescToggle(courseId) {
 
-    dotsId =  `${courseId}-ellipses`
-    MoreId =  `${courseId}-more-course-description`
-    btnId =  `${courseId}-more-course-btn`
+    dotsId = `${courseId}-ellipses`
+    MoreId = `${courseId}-more-course-description`
+    btnId = `${courseId}-more-course-btn`
 
     let dots = document.getElementById(dotsId);
     if (dots.style.display === "none") {

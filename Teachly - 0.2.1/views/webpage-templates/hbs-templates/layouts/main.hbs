@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="{{context.language}}">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,8 +21,6 @@
   </title>
   {{/if}}
 </head>
-
-
 <script nonce="{{context.settings.cspNonce}}">
   const userLang = "{{context.settings.lang}}"
   const userCur = "{{context.settings.cur}}"
@@ -72,9 +69,17 @@
       }
 </script>
 <script src="/js/mainLayout.js" nonce="{{context.settings.cspNonce}}"></script>
-
-
 <body>
+<style nonce="{{context.settings.cspNonce}}">
+  .bg-333 {background-color: #333;}
+  .top-0 {top: 0;}
+  .left-0 {left:0px;}
+  .w-100 {width: 100%;} 
+  .h-100 {height: 100%;}
+  .z-index-max {z-index: 2147483647;}
+</style>
+<div id="loadOverlay" class="bg-333 top-0 left-0 w-100 h-100 z-index-max"></div>
+
   {{#if context.navbar}}
   {{> _navbar navbarContext = context.navbar settings = context.settings}}
   {{/if}}
@@ -92,5 +97,4 @@
   {{>_cookiesPopup cookiesText = context.cookiesPopup}}
   {{/if}}
 </body>
-
 </html>

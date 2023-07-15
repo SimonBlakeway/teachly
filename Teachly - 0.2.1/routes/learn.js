@@ -140,5 +140,36 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   }
 })
 
+// @desc    access tutor courses
+// @route   GET /
+router.get('/book-lesson', async (req, res) => {
+  courseId = req.query.code
+
+
+  res.render('createOrder', {
+    layout: "main",
+    context: contextSetup(req.settings, ["footer"], "createOrder"),
+  })
+
+
+
+})
+
+
+// @desc    access tutor courses
+// @route   GET /
+router.post('/request-lesson', async (req, res) => {
+
+//notify teacher,
+
+utils
+
+//add promise to the db
+
+
+
+
+})
+
 
 module.exports = router
