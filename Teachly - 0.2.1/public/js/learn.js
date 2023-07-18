@@ -1,6 +1,3 @@
-const { json } = require("body-parser")
-const { application } = require("express")
-
 function formDataSetup() {
     teachlyFormDataDefault = {
         "subject": subject,
@@ -411,6 +408,25 @@ window.addEventListener('load', function () {
         toggleSearchBarPopup("course-time-popup")
     })
 
+
+
+
+    document.getElementById("subject-search-input").addEventListener('click', event => {
+        searchBox("subject-links", "subject-search-input")
+    })
+
+    document.getElementById("speciality-search-input").addEventListener('click', event => {
+        searchBox("speciality-checkboxes", "speciality-search-input")
+    })
+
+    document.getElementById("searchBy-input").addEventListener('click', event => {
+        updateformData("searchBy", "searchBy-input")
+    })
+
+    document.getElementById("taughtIn-search-input").addEventListener('click', event => {
+        searchBox("taughtIn-checkboxes", "taughtIn-search-input")
+    })
+
 })
 
 function togglesearchBar() {
@@ -453,10 +469,8 @@ function toggleAdvancedsearchBar() {
 }
 
 async function searchCourses() {
-
-
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     function generateCourse(courseObj) {
-        console.log(courseObj)
         courseId = courseObj.course_id
         teacherId = courseObj.teacher_id
         teacher_name = courseObj.teacher_name
@@ -543,7 +557,7 @@ async function searchCourses() {
                                                             <span>${toLocalCur(courseObj.price_per_lesson * curConversionRatio)}</span>
                                                         </span>
                                                     </div>
-                                                    <div class="d-flex justify-content-center w-100">${courseJson.lesson_time.pre}${courseObj.lesson_time}${courseJson.lesson_time.post}</div>
+                                                    <div class="d-flex justify-content-center w-100 text-center">${courseJson.lesson_time.pre}${courseObj.lesson_time}${courseJson.lesson_time.post}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -617,7 +631,33 @@ async function searchCourses() {
         document.getElementById("course-pagination").appendChild(buttonBox)
     }
 
+    function generateCourseTimeTable(times) {
+        currentDay = days[new Date().getDay()]
+        dayIndex = new Date().getDay()
+        adaptedDays = [days.slice(),]
 
+        timeRange = document.createElement("div")
+        for (let i = 0; i <= 6; i++) {
+            outerDiv = document.createElement("div");
+            outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3";
+            dayVal = document.createElement("div");
+            dayVal.className = "day-div px-0"
+            dayVal.innerHTML = `${days[i]}`;
+            outerDiv.appendChild(dayVal);
+            for (let j = 0; j <= 23; j++) {
+                classes = "container d-flex align-items-center justify-content-center time-slot-div px-0"
+                if (times.includes(`${j}-${j + 1}_${days[i]}`)) { classes = "container d-flex align-items-center justify-content-center time-slot-div px-0 active-time-slot" }
+                innerDiv = document.createElement("div");
+                innerDiv.className = classes
+                innerDiv.innerHTML = `${j} - ${j + 1}`;
+                innerDiv.id = `${j}-${j + 1}_${days[i]}`;
+                innerDiv.onclick = function () { setTimeRange(`${j}-${j + 1}_${days[i]}`) }
+                outerDiv.appendChild(innerDiv);
+            }
+            timeRange.appendChild(outerDiv);
+        }
+        return timeRange
+    }
 
     try {
         teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
@@ -652,11 +692,15 @@ async function searchCourses() {
         else {
 
             courseBox = document.createElement("div")
+            timeTableBox = document.createElement("div")
 
             //generate course displays
             courseArr = res.data.courses
             for (let i = 0; i < courseArr.length; i++) {
                 courseBox.appendChild(generateCourse(courseArr[i]))
+                //timeTableBox.appendChild
+                courseBox.appendChild(   generateCourseTimeTable(courseArr[i].time_schedule) )
+
             }
             document.getElementById("course-cards").append(...courseBox.children)
             document.getElementById("courses").style.display = "block"
@@ -692,32 +736,24 @@ async function searchCourses() {
 
 }
 
-function taughtInToggle(courseId) {
-    var dots = document.getElementById(courseId);
-    var moreText = document.getElementById(courseId);
-    var btnText = document.getElementById(courseId);
 
-    if (dots.style.display === "none") {
-        dots.style.display = "inline";
-        btnText.innerHTML = "Read more";
-        moreText.style.display = "none";
-    } else {
-        dots.style.display = "none";
-        btnText.innerHTML = "Read less";
-        moreText.style.display = "inline";
+function toggleCourseTimeTable(courseId) {
+    timeTable = document.getElementById(`time-table-${courseId}`)
+    if (timeTable.classList.includes("visible")) {
+        timeTable.classList.remove("visible")
     }
-}
-
-
-
-function viewCourseTimeTable(courseId) {
-
+    else {
+        document.querySelector(".time-table-div").forEach(el => {
+            e.classList.remove("visible")
+        })
+        timeTable.classList.add("visible")
+    }
 }
 
 async function requestLesson() {
     res = await axios({
         method: 'post',
-        url: '/oauth2.googleapis.com/token',
+        url: '/learn/request-lesson',
         data: {
             'courseId': courseId,
             "teacherId": teacherId

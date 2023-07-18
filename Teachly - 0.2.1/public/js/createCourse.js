@@ -180,20 +180,21 @@ function getFile() {
   document.getElementById("upfile").click();
 }
 
-function sub(obj) {
+function sub() {
   clearCoursePopups()
-  input = document.getElementById(upfile)
-  var file = input.value;
-  console.log(obj)
+  input = document.getElementById("upfile")
+  var file = input.files[0];
+  console.log(file)
+  console.log((file))
   reader = new FileReader();
+  var fileName = file.name
   reader.onloadend = () => {
     base64Image = reader.result.split(';base64,').pop();
     imageStr = false;
     imageWorker.postMessage(base64Image);
   }
-  reader.readAsDataURL(input.prop('files')[0])
+  reader.readAsDataURL(file)
 
-  var fileName = file.split("\\");
   if (fileName[fileName.length - 1] == "") {
     document.getElementById("course-image").innerHTML = "{{context.bodyContext.clickUploadImageRatio}}"
   }
@@ -445,10 +446,6 @@ window.addEventListener('load', function () {
     toggleCoursePopup("taughtIn-popup")
   }))
 
-  document.querySelectorAll(".timeRange-search-input").forEach(el => el.addEventListener('click', event => {
-    toggleCoursePopup("timeRange-popup")
-  }))
-
   document.querySelectorAll('.clear-course-popups').forEach(el => el.addEventListener('click', event => {
     clearCoursePopups()
   }));
@@ -463,13 +460,28 @@ window.addEventListener('load', function () {
   })
 
   document.getElementById('upfile').addEventListener('change', event => {
-    console.log(event)
-    console.log(event.value)
-    // sub(this)
+    sub()
   })
 
 
+  document.getElementById('speciality-search-input').addEventListener('keyup', event => {
+    searchBox('speciality-checkboxes', 'speciality-search-input')
+  })
 
+  document.querySelectorAll('.timeRange-box-toggle-popup').forEach(el => el.addEventListener('click', event => {
+    toggleCoursePopup("timeRange-popup")
+  }));
+  
+  
+  
+
+ // timeRange-box-toggle-popup
+
+
+
+  document.getElementById('taughtIn-search-input').addEventListener('keyup', event => {
+    searchBox('taughtIn-list', 'taughIn-search-input')
+  })
 
 
   document.getElementById('finance-login-paypal-btn').addEventListener('change', event => {

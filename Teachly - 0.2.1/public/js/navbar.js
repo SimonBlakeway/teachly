@@ -149,7 +149,6 @@ window.addEventListener('load', function () {
     document.getElementById("lang-popup-toggle2").onclick = function () { toggleNavPopup('language-popup') };
     document.getElementById("cur-popup-toggle2").onclick = function () { toggleNavPopup('currency-popup') };
     document.getElementById("teachly-navbar").onclick = function () { clearNavPopups() };
-
-
+    document.getElementById("nav-currency-search-input").onclick = function () { navCurSearch() };
 
 })

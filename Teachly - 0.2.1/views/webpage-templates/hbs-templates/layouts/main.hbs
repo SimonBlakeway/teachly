@@ -26,13 +26,9 @@
   const userCur = "{{context.settings.cur}}"
   var curConversionRatio = "{{context.settings.curRatio}}"
 
-
   {{#if context.settings.isUser }}
   var lastRefresh = {{ context.settings.token_created_at }}
   {{/if}}
-
-
-
 
       function prettyifyDate(date) { // it comes in as seconds from epoch
         try {
@@ -96,5 +92,7 @@
   {{#if context.cookiesPopup}}
   {{>_cookiesPopup cookiesText = context.cookiesPopup}}
   {{/if}}
+
+  <div class="position-fixed top-80 w-300p" id="screen-notifications"></div>
 </body>
 </html>

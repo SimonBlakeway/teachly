@@ -699,28 +699,46 @@
     margin-right: 5px !important;
 }
 
+.pl-20p {
+    padding-left: 20px;
+}
 
+.pr-20p {
+    padding-right: 20px;
+}
 
+.invisible-clear-inner {
+    background: rgba(0, 0, 0, 0)
+}
 
+.p-5p {
+    padding: 5px;
+}
 
+.bg-aqua {
+    background-color: aqua;
+}
 
+.position-absolute {
+    position: absolute;
+}
 
+.screen-notification {
+    border-radius: 40px;
+    background-color: aqua;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
 
+.position-fixed {
+    position: fixed;
+}
 
+.top-80 {
+    top: 80%;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-#loadOverlay {
-    display: none;
+.w-300p {
+    width: 300px;
 }
