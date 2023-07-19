@@ -565,11 +565,11 @@ async function searchCourses() {
                                             <div class="row d-flex justify-content-center mn-w-150p w-100">
                                                 <div class="col d-flex justify-content-center m-1 w-130p">
                                                     <button class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p">
-                                                    <a href="/learn/book-lesson&id=${courseId}">book lesson</a>
+                                                    <a href="/learn/book-lesson&id=${courseId}">request lesson</a>
                                                     </button>
                                                 </div>
                                                 <div class="col d-flex justify-content-center m-1 mn-w-130p-i">
-                                                    <button class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p">
+                                                    <button id="${courseId}-request-lesson-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p request-lesson-button">
                                                         message
                                                     </button>
                                                 </div>
@@ -699,7 +699,7 @@ async function searchCourses() {
             for (let i = 0; i < courseArr.length; i++) {
                 courseBox.appendChild(generateCourse(courseArr[i]))
                 //timeTableBox.appendChild
-                courseBox.appendChild(   generateCourseTimeTable(courseArr[i].time_schedule) )
+                courseBox.appendChild(generateCourseTimeTable(courseArr[i].time_schedule))
 
             }
             document.getElementById("course-cards").append(...courseBox.children)
@@ -723,6 +723,13 @@ async function searchCourses() {
                 gotoChat(courseId)
             }));
 
+            document.querySelectorAll("request-lesson-button").forEach(el => el.addEventListener('click', event => {
+                courseId = e.target.id.split("-")[0]
+                requestLesson(courseId)
+                text = courseJson.requestCourseLessonNot
+                createOnScreenNotification(`${text}`)
+            }))
+
         }
 
     }
@@ -736,6 +743,22 @@ async function searchCourses() {
 
 }
 
+
+async function createChat(courseId) {
+
+    res = await axios({
+        method: 'post',
+        url: '/learn/create-chat',
+        data: {
+            'courseId': courseId,
+            "teacherId": teacherId
+        },
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+}
 
 function toggleCourseTimeTable(courseId) {
     timeTable = document.getElementById(`time-table-${courseId}`)

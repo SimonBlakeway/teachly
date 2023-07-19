@@ -19,12 +19,8 @@ function escapeStrArr(arr) {
   }
 }
 
-
-
-
-
 // @desc    learn landing page 
-// @route   GET /user/id
+// @route   GET /learn
 router.get('/', async (req, res) => {
   res.render('learnLandingPage', {
     layout: "main",
@@ -33,7 +29,7 @@ router.get('/', async (req, res) => {
 })
 
 // @desc    learn page  
-// @route   GET /subject or speciality
+// @route   GET /learn/(subject or speciality)
 router.get('/:str', async (req, res) => {
   try {
     str = req.params['str'].replaceAll("-", " ");
@@ -77,12 +73,12 @@ router.get('/:str', async (req, res) => {
 })
 
 // @desc    access tutor courses
-// @route   GET /
+// @route   POST /learn/searchTutorCourses
 router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req, res) => {
   reqObj = req.body
   lang = req.settings.lang
 
-  
+
   pricePerLessonRange = reqObj.pricePerLessonRange ? (reqObj.pricePerLessonRange) : [1, 50];
   subject = reqObj.subject ? (reqObj.subject) : "english";
   specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, escapeStrArr(reqObj.specialities))
@@ -141,7 +137,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
 })
 
 // @desc    access tutor courses
-// @route   GET /
+// @route   GET /learn/book-lesson
 router.get('/book-lesson', async (req, res) => {
   courseId = req.query.code
 
@@ -157,17 +153,72 @@ router.get('/book-lesson', async (req, res) => {
 
 
 // @desc    access tutor courses
-// @route   GET /
+// @route   post /learn/request-lesson
 router.post('/request-lesson', async (req, res) => {
+  try {
+    teacherId = req.body.teacherId
 
-//notify teacher,
+    //notify teacher,
+    utils.sendNotification("text", teacherId)
 
-utils
+    //add event to the db
+    try {
+      result = await db.query(`INSERT INTO event (type, created_at, meta, data ) VALUES ($1, $2, $3, $4)`, 
+      [user.name, user.email, user.profileImage, req.settings.lang]);
+    } catch (error) {
+      console.log(error)
+    }
 
-//add promise to the db
+
+    res.sendStatus()
+  } catch (error) {
+    res.sendStatus(400)
+  }
+})
 
 
+// @desc    access tutor courses
+// @route   post /learn/create-chat
+router.post('create-chat', async (req, res) => {
 
+  try {
+    courseId = req.body.courseId
+    teacherId = req.body.courseId
+    studentId = req.settings.id
+    createdAt = Math.floor(Date.now() / 1000)
+    result = await db.query(`
+        SELECT user_info.banned_users
+        FROM teacher_course t1 
+        FULL OUTER  JOIN  user_info t2
+          ON teacher_course.teacherId = user_info.id
+        WHERE  teacher_course.courseId = $1;`, [courseId]);
+
+
+    if (result.rowCount != 1) {
+      //if there isn't any rows, throw
+      throw new Error("no course/user")
+    }
+    if (result.rows[0].user_info == undefined) {
+      //if the user doesn't exist, throw 
+      throw new Error("no course/user")
+    }
+    if (result.rows[0].teacher_course == undefined) {
+      //if the course doesn't exist, throw 
+      throw new Error("no course/user")
+    }
+    if (result.rows[0].user_info.banned_users.inludes(studintId)) {
+      //if the user is banned by the teacher, throw
+      throw new Error("user is banned")
+    }
+
+    //all checks complete, creating chat
+    db.query(`INSERT INTO chat (student_id, teacher_id, created_at, course_id) 
+                    VALUES ($1, $2, $3, $4)`, [studentId, teacherId, createdAt, courseId]);
+
+    return true
+  } catch (error) {
+
+  }
 
 })
 

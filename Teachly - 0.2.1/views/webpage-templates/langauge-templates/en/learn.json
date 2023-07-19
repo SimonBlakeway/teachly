@@ -29,5 +29,6 @@
             "pre": "",
             "post": " minutes"
         }
-    }
+    },
+    "requestCourseLessonNot": "request sent"
 }
