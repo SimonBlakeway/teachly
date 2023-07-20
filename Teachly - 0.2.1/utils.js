@@ -6,32 +6,29 @@ const LZString = require('lz-string');
 const db = require('./config/db');
 const jwt = require("jwt-simple");
 const { compile } = require('html-to-text');
+const { text } = require('body-parser');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
 
+const companyEmailAddress = process.env.COMPANY_EMAIL_ADDRESS
+const companyLocation = process.env.COMPANY_LOCATION
+const companyPhoneNumber = process.env.COMPANY_PHONE_NUMBER
+const companyPrintNumber = process.env.COMPANY_PRINT_NUMBER
 
-companyEmailAddress = process.env.COMPANY_EMAIL_ADDRESS
-companyLocation = process.env.COMPANY_LOCATION
-companyPhoneNumber = process.env.COMPANY_PHONE_NUMBER
-companyPrintNumber = process.env.COMPANY_PRINT_NUMBER
+const notificationMessages = JSON.parse(fs.readFileSync(`./private_resources/json/notificationMessages.json`))
+const countryCodeToCurrency = JSON.parse(fs.readFileSync(`./private_resources/json/languageCodeToCurrency.json`))
 
-
-
-countryCodeToCurrency = JSON.parse(fs.readFileSync(`./private_resources/json/languageCodeToCurrency.json`))
-
-validspecialitiesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validspecialities.json`))
-validSubjectObj = JSON.parse(fs.readFileSync(`./private_resources/json/validSubject.json`))
-validLanguagesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validLanguages.json`))
-
+const validspecialitiesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validspecialities.json`))
+const validSubjectObj = JSON.parse(fs.readFileSync(`./private_resources/json/validSubject.json`))
+const validLanguagesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validLanguages.json`))
 
 const saltNum = Number(process.env.BCRYPT_SALT_NUM)
 const hashAdd = process.env.HASH_ADD
 
 const algorithm = 'aes-256-ctr'
 const secretKey = Buffer.from(process.env.CRYPTO_ENCRYPT_KEY, "hex")
-var iv = Buffer.from(process.env.CRYPTO_ENCRYPT_IV, 'hex')
-
+const iv = Buffer.from(process.env.CRYPTO_ENCRYPT_IV, 'hex')
 
 
 function isInt(value) {
@@ -68,7 +65,7 @@ function getCurrencyFromLanguageCode(code) {
   }
 }
 
-function contextSetup(settings, partials = [], pageName, layout = "main") {
+function contextSetup(settings, partials = [], pageName, dbQuery = {}, layout = "main") {
   try {
     context = {};
     context.companyInfo = {
@@ -99,7 +96,7 @@ function contextSetup(settings, partials = [], pageName, layout = "main") {
     }
 
     context.bodyContext = JSON.parse(fs.readFileSync(`./views/webpage-templates/langauge-templates/${settings.lang}/${pageName}.json`))
-
+    context.dbQuery = dbQuery
     context.layoutContext = JSON.parse(fs.readFileSync(`./views/webpage-templates/langauge-templates/${settings.lang}/layouts/${layout}.json`))
 
     context.language = settings.lang
@@ -114,9 +111,6 @@ function contextSetup(settings, partials = [], pageName, layout = "main") {
     return contextSetup({ cur: "USD", lang: "en" }, partials, pageName)
   }
 }
-
-
-
 
 async function ImagePrep(imgStr, name, dimensions = [1440, 1440], maxSize = 1048576) {
   //image stored as string, name to use as image name, dimension the the image will sit in [width, height], maxsize in bytes of image
@@ -138,7 +132,7 @@ async function ImagePrep(imgStr, name, dimensions = [1440, 1440], maxSize = 1048
   base64Image = imgStr.split(';base64,').pop(); //the "cap" needs to be removed before it can be converted into an image
 
 
-  imageQualityRatio =  Math.round(( maxSize  / (base64Image.length * 0.75) ) * 100)
+  imageQualityRatio = Math.round((maxSize / (base64Image.length * 0.75)) * 100)
 
 
 
@@ -233,7 +227,6 @@ function isValidSubjectSpeciality(lang, subject, specialities) {
     return false
   }
 }
-
 
 function isValidSubjectSpecialityNoSubject(lang, speciality) {
   try {
@@ -443,8 +436,6 @@ function langugeToLanguageCode(lang) {
   }
 }
 
-//a// query functions convert data from a client into valid postgresql code
-
 function convertTaughtInToQuery(languages) {
   //  console.log(languages, "retsaccacas")
   try {
@@ -569,7 +560,6 @@ function convertSearchByKeywordToQuery(str) {
   }
 }
 
-
 function sendNotification(text, id) {
   try {
     notObj = {
@@ -612,14 +602,80 @@ function sendNotificationGlobal(id, text) {
   }
 }
 
+function sendAutomatedNotification(lang, key, valObj, id) {
+  textLangArr = notificationMessages[`${lang}`][`${key}`].text
+  linkLangArr = notificationMessages[`${lang}`][`${key}`].link
+
+  textSpace = notificationMessages[`${lang}`]["textSpace"]
+
+  for (let i = 0; i < valObj.text; i++) {
+    textLangArr[textLangArr.indexOf(i)] = textValArr[i]
+  }
+  for (let i = 0; i < valObj.link; i++) {
+    linkLangArr[textLangArr.indexOf(i)] = textValArr[i]
+  }
+
+
+
+  try {
+    notObj = {
+      text: compiledConvert(textLangArr.join(textSpace)),
+      created_at: Math.floor(Date.now() / 1000),
+      userId: id,
+      link: linkLangArr.join("")
+    }
+    db.query(`
+    INSERT INTO notifications 
+    (text, created_at, user_id)
+    VALUES ($1, $2, $3)`,
+      [notObj.text, notObj.created_at, notObj.userId]);
+    global.io.to(`${id}-user`).emit("notification", notObj);
+
+  }
+  catch (err) {
+    console.log(err)
+    throw new Error(`error: ${err}`)
+  }
+}
+
+function sendAutomatedNotificationGlobal(lang, key, textValArr, id) {
+  textLangArr = notificationMessages[`${lang}`][`${key}`]
+  textSpace = notificationMessages[`${lang}`]["textSpace"]
+
+  for (let i = 0; i < textValArr; i++) {
+    textLangArr[textLangArr.indexOf(i)] = textValArr[i]
+  }
+
+
+  try {
+    notObj = {
+      text: compiledConvert(textLangArr.join(textSpace)),
+      created_at: Math.floor(Date.now() / 1000),
+      userId: id,
+      global: true,
+    }
+    db.query(`
+    INSERT INTO notifications 
+    (text, created_at, is_global)
+    VALUES ($1, $2, $3)
+    WHERE id = $4`,
+      [notObj.text, notObj.created_at, notObj.is_global, id]);
+
+    io.emit("notification", notObj);
+
+  }
+  catch (err) {
+    console.log(err)
+    throw new Error(`error: ${err}`)
+  }
+}
+
 function currencyFloatToInt(num) {
   return num
 
 }
 
-
-//ned wrk
-async function sendMessage(chat_id, text, sender_id) {
+async function sendMessage(chat_id, text, sender_id, settings) {
 
   text = compiledConvert(text)
   created_at = Math.floor(Date.now() / 1000)
@@ -627,14 +683,6 @@ async function sendMessage(chat_id, text, sender_id) {
 
 
   try {
-
-    /*
-    so the reason that the messages implementation is because
-    allowing a user to 
-
-    */
-
-
     result = await db.query(`
     INSERT INTO messages (text, created_at, sender_id, chatId) 
     VALUES ($1, $2, $3, $4) 
@@ -649,16 +697,18 @@ async function sendMessage(chat_id, text, sender_id) {
 
     reciever_id = result.rows[0].id
 
-
     //send add message to db to user
     result = await db.query(`
-    INSERT INTO messages (text, created_at, sender_id, chatId) 
+    INSERT INTO messages (text, created_at, sender_id, chat_id) 
     VALUES ($1, $2, $3, $4) 
     WHERE chat_id = $2 AND (teacher_id = $3 OR student_id = $3);
-     `, [])
+     `, [text, created_at, sender_id, chat_id])
 
     //send message to user
     io.to(`${reciever_id}-user`).emit("recieve message", notObj);
+
+    //send auto message to user, so if he's on a sepperate page from chat he sees it
+    sendAutomatedNotification(settings.lang, "message-notification", { text: [settings.name], link: [chat_id] }, reciever_id)
 
   }
   catch (err) {
@@ -666,40 +716,6 @@ async function sendMessage(chat_id, text, sender_id) {
   }
 }
 
-async function createChat(studintId, courseId) {
-
-  result = await db.query(`
-    SELECT user_info.banned_users
-    FROM teacher_course t1 
-    FULL OUTER  JOIN  user_info t2
-      ON teacher_course.teacherId = user_info.id
-    WHERE  teacher_course.courseId = $1;`, [courseId]);
-
-
-  if (result.rowCount != 1) {
-    //if there isn't any rows, throw
-    throw new Error("I'm Evil")
-  }
-  if (result.rows[0].user_info == undefined) {
-    //if the user doesn't exist, throw 
-    throw new Error("I'm Evil")
-  }
-  if (result.rows[0].teacher_course == undefined) {
-    //if the course doesn't exist, throw 
-    throw new Error("I'm Evil")
-  }
-  if (result.rows[0].user_info.banned_users.inludes(studintId)) {
-    //if the user is banned by the teacher, throw
-    throw new Error("I'm Evil")
-  }
-
-  //all checks complete, creating chat
-  db.query(`INSERT INTO chat (student_id, teacher_id, created_at, course_id) 
-                VALUES ($1, $2, $3, $4)`, [id, user_refresh_token, accountNumber]);
-
-  return true
-
-}
 
 
 
@@ -725,7 +741,6 @@ module.exports = {
   isValidSubject,
   isValidSubjectSpeciality,
   isValidSubjectSpecialityNoSubject,
-  createChat,
   convertTaughtInToQuery,
   convertTimeRangeToQuery,
   convertspecialityArrToQuery,
@@ -741,7 +756,9 @@ module.exports = {
   escapeStr,
   unEscapeStr,
   currencyFloatToInt,
-  compiledConvert
+  compiledConvert,
+  sendAutomatedNotification,
+  sendAutomatedNotificationGlobal,
 }
 
 

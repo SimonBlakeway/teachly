@@ -564,12 +564,12 @@ async function searchCourses() {
                                         <div class="col container d-flex justify-content-center mb-4">
                                             <div class="row d-flex justify-content-center mn-w-150p w-100">
                                                 <div class="col d-flex justify-content-center m-1 w-130p">
-                                                    <button class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p">
-                                                    <a href="/learn/book-lesson&id=${courseId}">request lesson</a>
+                                                    <button id="${courseId}-request-lesson-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p request-lesson-button">
+                                                    request lesson
                                                     </button>
                                                 </div>
                                                 <div class="col d-flex justify-content-center m-1 mn-w-130p-i">
-                                                    <button id="${courseId}-request-lesson-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p request-lesson-button">
+                                                    <button id="${courseId}-courseId-${teacherId}-teacherId-message-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p request-chat-button">
                                                         message
                                                     </button>
                                                 </div>
@@ -710,24 +710,31 @@ async function searchCourses() {
 
 
 
-            document.querySelectorAll('.read-more-button').forEach(el => el.addEventListener('click', event => {
+            document.querySelectorAll('.read-more-button').forEach(el => el.addEventListener('click', e => {
                 courseId = e.target.id.split("-")[0]
                 readMoreDescToggle(courseId)
             }));
 
 
-            document.querySelectorAll('.send-message').forEach(el => el.addEventListener('click', event => {
-                courseId = e.target.id.split("-")[0]
-
-                createChat(courseId)
-                gotoChat(courseId)
+            document.querySelectorAll('.request-chat-button').forEach(el => el.addEventListener('click', e => {
+                try {
+                    courseId = e.target.id.split("-")[0]
+                    teacherId = e.target.id.split("-")[2]
+                    chatId = requestChat(courseId)
+                    gotoChat(chatId)
+                } catch (error) {
+                    text = courseJson.requestChatError[`${error.message}`]
+                    if (typeof text == "undefined") createOnScreenNotification(text)
+                    else createOnScreenNotification(error.message)
+                }
             }));
 
-            document.querySelectorAll("request-lesson-button").forEach(el => el.addEventListener('click', event => {
+            document.querySelectorAll(".request-lesson-button").forEach(el => el.addEventListener('click', e => {
                 courseId = e.target.id.split("-")[0]
+                teacherId = e.target.id.split("-")[2]
                 requestLesson(courseId)
                 text = courseJson.requestCourseLessonNot
-                createOnScreenNotification(`${text}`)
+                createOnScreenNotification(text)
             }))
 
         }
@@ -743,21 +750,46 @@ async function searchCourses() {
 
 }
 
+async function requestChat(courseId, teacherId) {
+    try {
+        res = await axios({
+            method: 'post',
+            url: '/learn/request-chat',
+            data: {
+                courseId: courseId,
+                teacherId: teacherId
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return res.data.chatId
+    } catch (error) {
+        console.log(error)
+        //maybe show the user an error message?
 
-async function createChat(courseId) {
+    }
 
+}
+
+async function gotoChat(chatId) {
+    hostname = location.hostname
+    window.location.href = `${hostname}/profile/chat?id=${chatId}`;
+
+}
+
+async function requestLesson(courseId, teacherId) {
     res = await axios({
         method: 'post',
-        url: '/learn/create-chat',
+        url: '/learn/request-lesson',
         data: {
-            'courseId': courseId,
-            "teacherId": teacherId
+            courseId: courseId,
+            teacherId: teacherId
         },
         headers: {
             'Content-Type': 'application/json',
         },
     });
-
 }
 
 function toggleCourseTimeTable(courseId) {
@@ -771,20 +803,6 @@ function toggleCourseTimeTable(courseId) {
         })
         timeTable.classList.add("visible")
     }
-}
-
-async function requestLesson() {
-    res = await axios({
-        method: 'post',
-        url: '/learn/request-lesson',
-        data: {
-            'courseId': courseId,
-            "teacherId": teacherId
-        },
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
 }
 
 function readMoreDescToggle(courseId) {

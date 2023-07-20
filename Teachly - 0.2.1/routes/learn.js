@@ -151,20 +151,36 @@ router.get('/book-lesson', async (req, res) => {
 
 })
 
-
 // @desc    access tutor courses
 // @route   post /learn/request-lesson
 router.post('/request-lesson', async (req, res) => {
+
   try {
     teacherId = req.body.teacherId
+    studentId = req.settings.id
+    studentName = req.settings.name
+
+    //checks that course and teacher id are linked and also makes sure potential student isn't banned by teacher
+    result = await db.query(`
+      SELECT t1.name 
+      FROM user_info t1
+      FULL OUTER  JOIN  teacher_course t2
+        ON teacher_course.teacher_id = user_info.id
+      WHERE t1.id = $1
+      AND 'search text' = ANY(t1.banned_users)`,
+      [teacherId, studentId]);
+
+    if (result.rowCount != 1) {
+      throw new Error("bad teacher/course linking or student is banned") //maybe split this into two parts so as to get a better error message?
+    }
 
     //notify teacher,
-    utils.sendNotification("text", teacherId)
+    utils.sendAutomatedNotification(req.setting.lang, "request-lesson", {text: [studentName], link: []}, teacherId)
 
     //add event to the db
     try {
-      result = await db.query(`INSERT INTO event (type, created_at, meta, data ) VALUES ($1, $2, $3, $4)`, 
-      [user.name, user.email, user.profileImage, req.settings.lang]);
+      result = await db.query(`INSERT INTO event (type, created_at, meta, data ) VALUES ($1, $2, $3, $4)`,
+        [user.name, user.email, user.profileImage, req.settings.lang]);
     } catch (error) {
       console.log(error)
     }
@@ -176,15 +192,16 @@ router.post('/request-lesson', async (req, res) => {
   }
 })
 
-
 // @desc    access tutor courses
 // @route   post /learn/create-chat
-router.post('create-chat', async (req, res) => {
+router.post('request-chat', async (req, res) => {
 
   try {
     courseId = req.body.courseId
     teacherId = req.body.courseId
     studentId = req.settings.id
+    console.log(courseId, teacherId, studentId)
+    return
     createdAt = Math.floor(Date.now() / 1000)
     result = await db.query(`
         SELECT user_info.banned_users
@@ -206,7 +223,7 @@ router.post('create-chat', async (req, res) => {
       //if the course doesn't exist, throw 
       throw new Error("no course/user")
     }
-    if (result.rows[0].user_info.banned_users.inludes(studintId)) {
+    if (result.rows[0].user_info.banned_users.inludes(studentId)) {
       //if the user is banned by the teacher, throw
       throw new Error("user is banned")
     }

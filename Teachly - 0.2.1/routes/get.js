@@ -6,8 +6,8 @@ const db = require('../config/db');
 const { createAssetTimer } = require('../customTimers')
 
 
-validSpecialitiesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validspecialities.json`))
-validSubjectObj = JSON.parse(fs.readFileSync(`./private_resources/json/validSubject.json`))
+const validSpecialitiesObj = JSON.parse(fs.readFileSync(`./private_resources/json/validspecialities.json`))
+const validSubjectObj = JSON.parse(fs.readFileSync(`./private_resources/json/validSubject.json`))
 
 // @desc    get supported Subject
 // @route   GET /

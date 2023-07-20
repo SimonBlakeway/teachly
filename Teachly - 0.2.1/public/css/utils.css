@@ -303,6 +303,11 @@
     min-width: 130px !important;
 }
 
+.mn-w-135pi {
+    min-width: 135px !important;
+
+}
+
 .vert-align-top {
     vertical-align: top;
 }

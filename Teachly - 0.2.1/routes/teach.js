@@ -133,6 +133,26 @@ router.get('/course/:courseId/settings', async (req, res) => { //[req.params.cou
 })
 
 
+// @desc    teach landing page
+// @route   GET /
+router.get('/', async (req, res) => {
+
+  //get info
+  result = await db.query(`SELECT email, name FROM user_info WHERE email = $1 OR name=$2`, [user.email, user.name]);
+  queryInfo = result.something
+
+  try {
+    res.render('viewCourseRequest', {
+      layout: "main",
+      context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest", queryInfo), //add new param, dbData or something
+    })
+  }
+  catch (err) {
+    res.json({ "err": err })
+  }
+})
+
+
 
 
 module.exports = router
