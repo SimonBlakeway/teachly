@@ -475,8 +475,7 @@ async function searchCourses() {
         teacherId = courseObj.teacher_id
         teacher_name = courseObj.teacher_name
         ratings = (typeof courseObj.ratings == "undefined") ? 0 : courseObj.ratings;
-
-        ratings = (typeof courseObj.ratings == "undefined") ? 0 : courseObj.ratings;
+        ratingsAmount = courseObj.number_of_reviews
 
         description = ""
         if (courseObj.description.length > 232) {
@@ -540,16 +539,20 @@ async function searchCourses() {
                                             <div class="row d-flex justify-content-center h-100">
                                                 <div class="col d-flex justify-content-center w-100p">
                                                     <div class="w-100p">
-                                                        <div class="d-flex justify-content-center w-100">
+                                                        <div class="d-flex justify-content-center w-100 h-50"">
                                                             <i class="fa fa-star fs-15p clr-gold mt-5pi" aria-hidden="true"></i>
                                                             <span>${ratings}</span>
                                                         </div>
-                                                        <div class="d-flex justify-content-center">${courseJson.ratings.pre}${ratings}${courseJson.ratings.post}</div>
+                                                        <div class="d-flex justify-content-center h-50">
+                                                        <span>
+                                                        ${courseJson.ratings.pre}${ratingsAmount}${courseJson.ratings.post}
+                                                        </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col w-130p"
                                                     class="d-flex justify-content-center">
-                                                    <div class="d-flex justify-content-center w-100">
+                                                    <div class="d-flex justify-content-center w-100 h-50">
                                                         <span class="currency">
                                                             <span id="max-price-shown" class="display-none">
                                                                 ${courseObj.price_per_lesson}
@@ -563,6 +566,11 @@ async function searchCourses() {
                                         </div>
                                         <div class="col container d-flex justify-content-center mb-4">
                                             <div class="row d-flex justify-content-center mn-w-150p w-100">
+                                                <div class="col d-flex justify-content-center m-1 w-130p">
+                                                    <button id="${courseId}-view-calender-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p view-calender-button">
+                                                    view calender
+                                                    </button>
+                                                </div>
                                                 <div class="col d-flex justify-content-center m-1 w-130p">
                                                     <button id="${courseId}-request-lesson-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p request-lesson-button">
                                                     request lesson
@@ -634,7 +642,59 @@ async function searchCourses() {
     function generateCourseTimeTable(times) {
         currentDay = days[new Date().getDay()]
         dayIndex = new Date().getDay()
-        adaptedDays = [days.slice(),]
+        adaptedDays = [days.slice(dayIndex, days.length), days.slice(0, dayIndex)]
+
+
+
+        const timeZoneCorrect = (times, offset, stripTime = false) => {
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            if (stripTime == false) {
+                for (let i = 0; i <= times.length; i++) {
+                    let firstNum = times[i].split("-")[0]
+                    let secondNum = times[i].split("-")[1]
+                    let day = times[i].split("-")[2]
+                    firstNum += offset
+                    secondNum += offset
+                    if (secondNum > 24) {
+                        dayIndex = days.indexOf(times[i].split("-")[2])++
+                        if (dayIndex > 7)
+                            dayIndex -= 7
+                        day = days[dayIndex]
+                        firstNum -= 24
+                        secondNum -= 24
+                    }
+
+                    if (firstNum < 1) {
+
+                    }
+                    times[i] = `${firstNum}-${secondNum}-${day}`
+                    return times
+                }
+            }
+            else {
+                for (let i = 0; i <= times.length; i++) {
+                    let firstNum = times[i].split("-")[0]
+                    let secondNum = times[i].split("-")[1]
+                    let day = times[i].split("-")[2]
+                    firstNum += offset
+                    secondNum += offset
+                    if (secondNum > 24) {
+                        dayIndex = days.indexOf(times[i].split("-")[2])++
+                        if (dayIndex > 7)
+                            dayIndex -= 7
+                        day = days[dayIndex]
+                        firstNum -= 24
+                        secondNum -= 24
+                    }
+
+                    if (firstNum < 1) {
+
+                    }
+                    times[i] = `${firstNum}-${secondNum}-${day}`
+                    return times
+                }
+            }
+        }
 
         timeRange = document.createElement("div")
         for (let i = 0; i <= 6; i++) {
@@ -708,14 +768,10 @@ async function searchCourses() {
             document.getElementById("server-error").style.display = "none"
             generatePagination(res.data.count, teachlyFormData.activePage)
 
-
-
             document.querySelectorAll('.read-more-button').forEach(el => el.addEventListener('click', e => {
                 courseId = e.target.id.split("-")[0]
                 readMoreDescToggle(courseId)
             }));
-
-
             document.querySelectorAll('.request-chat-button').forEach(el => el.addEventListener('click', e => {
                 try {
                     courseId = e.target.id.split("-")[0]
@@ -728,7 +784,6 @@ async function searchCourses() {
                     else createOnScreenNotification(error.message)
                 }
             }));
-
             document.querySelectorAll(".request-lesson-button").forEach(el => el.addEventListener('click', e => {
                 courseId = e.target.id.split("-")[0]
                 teacherId = e.target.id.split("-")[2]
@@ -736,7 +791,10 @@ async function searchCourses() {
                 text = courseJson.requestCourseLessonNot
                 createOnScreenNotification(text)
             }))
-
+            document.querySelectorAll(".view-calender-button").forEach(el => el.addEventListener("click", e => {
+                courseId = e.target.id.split("-")[0]
+                toggleCourseCalender(courseId)
+            }))
         }
 
     }
@@ -775,6 +833,10 @@ async function requestChat(courseId, teacherId) {
 async function gotoChat(chatId) {
     hostname = location.hostname
     window.location.href = `${hostname}/profile/chat?id=${chatId}`;
+
+}
+
+async function toggleCourseCalender(courseId) {
 
 }
 
