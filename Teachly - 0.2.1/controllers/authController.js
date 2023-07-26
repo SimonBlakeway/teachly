@@ -69,7 +69,11 @@ exports.login = async function (req, res) {
 };
 exports.register = async function (req, res) {
   try {
- 
+
+    user = req.body
+
+
+
     result = await db.query(`SELECT email, name FROM user_info WHERE email = $1 OR name=$2`, [user.email, user.name]);
     if (result.rowCount != 0) {
       if (result.rows[0].name == user.name.trim()) {
@@ -88,9 +92,7 @@ exports.register = async function (req, res) {
     //email.sendSignUpEmail(user.email, randInt, req.settings.lang)  
     res.sendStatus(200)
   } catch (err) {
-    res.json({ "err": err.message })
-    if (err.message == "name taken") { }
-    else if (err.message == "email taken") { }
+    res.send({err: err.message})
     console.log(err)
   }
 };

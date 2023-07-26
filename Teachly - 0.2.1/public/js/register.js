@@ -2,9 +2,17 @@ function getFile() {
     document.getElementById("upfile").click();
 }
 function sub(obj) {
-    var file = obj.value;
-    var fileName = file.split("\\");
-    document.getElementById("profile-image").innerHTML = fileName[fileName.length - 1];
+    input = document.getElementById("upfile")
+    var file = input.files[0];
+    var fileName = file.name
+
+    if (fileName == "") {
+        document.getElementById("profile-image").innerHTML = ""
+    }
+    else {
+        document.getElementById("profile-image").innerHTML = fileName;
+    }
+
 }
 sendEmailCode = async function () {
     emailCode = $("#email-input").val();
@@ -61,20 +69,19 @@ sendSigninReq = async function () {
                     },
                 })
                 if (res.data.err) {
-                    $("#err-popup").attr("display", "grid");
-                    document.getElementById("err-popup").style.display = "grid";
-                    if (res.data.err == "name taken") {
-                        $('#name-err').show();
-                        $('#email-err').hide();
+                    document.getElementById("err-popup").classList.add("display-gridi")
+                    if (res.data.err == 'name taken') {
+                        document.getElementById("name-err").classList.remove("display-nonei")
+                        document.getElementById("email-err").classList.add("display-nonei")
                         setTimeout(function () {
-                            $('#err-popup').fadeOut('fast')
+                            document.getElementById("err-popup").classList.remove("display-gridi")
                         }, 1000);
                     }
-                    if (res.data.err == "email taken") {
-                        $('#name-err').hide();
-                        $('#email-err').show();
+                    else if (res.data.err == "email taken") {
+                        document.getElementById("name-err").classList.add("display-nonei")
+                        document.getElementById("email-err").classList.remove("display-nonei")
                         setTimeout(function () {
-                            $('#err-popup').fadeOut('fast')
+                            document.getElementById("err-popup").classList.remove("display-gridi")
                         }, 1000);
                     }
                 }
@@ -103,12 +110,12 @@ window.addEventListener('load', function () {
         sub(this)
     })
 
-    document.getElementById("send-signin-req").addEventListener("change", e => {
+    document.getElementById("send-signin-req").addEventListener("click", e => {
         sendSigninReq()
     })
 
-    
-    document.getElementById("email-popup-submit").addEventListener("change", e => {
+
+    document.getElementById("email-popup-submit").addEventListener("click", e => {
         sendEmailCode()
     })
 

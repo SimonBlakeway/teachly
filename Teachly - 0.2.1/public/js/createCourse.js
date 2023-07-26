@@ -92,6 +92,291 @@ function setTimeRange(id) {
   else { field.value = field.defaultValue; } //setting to "" stops required from working}
 }
 
+function convertTimeToInteger(time) {
+  //time format "11:22"
+  let d = new Date(0);
+  time += ":00"
+  let newDate = new Date(d.toString().split(":")[0].slice(0, -2) + time);
+  return newDate.getTime() / 1000
+}
+
+function convertIntegerToTime(int) {
+  //int format "minutes from start of day"
+  let d = new Date(int * 1000);
+  str = `${d.getHours()}:${d.getMinutes()}`
+  return str
+}
+
+
+function generateCourseTimeTable() {
+  currentDay = days[new Date().getDay()]
+  dayIndex = new Date().getDay()
+  adaptedDays = [days.slice(dayIndex, days.length), days.slice(0, dayIndex)]
+  const timeOffset = new Date().getTimezoneOffset() / 60
+
+
+
+  const convertToTimeFormat = (num) => {
+    var time = new Date(num * 1000 * 60).toLocaleTimeString().substring(0, 5)
+    return time
+  }
+
+
+  timeRange = document.createElement("div")
+  timeRange.id = `calender-outer`
+  timeRange.className = "w-300pi h-300pi p-0 m-0 m-0pi p-0pi bg-white brdr-r-2 custom-shadow position-absolute"
+
+  //generate days
+  for (let i = 0; i < 7; i++) {
+    let day = days[i]
+    outerDiv = document.createElement("div");
+    outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3 w-300pi h-300pi";
+    dayVal = document.createElement("div");
+    outerDiv.id = `${i}-calender`
+    dayVal.className = "h-50pi fs-30p m-0pi p-0pi bg-blacki clr-white user-select-none brdr-r-2 display-flex justify-content-space-between w-300pi h-300pi"
+
+    if (i == 0) {
+      outerDiv.className = "h-50pi w-100 text-center fs-30p m-0pi p-0pi bg-blacki brdr-r-5p w-300pi h-300pi"
+      dayVal.innerHTML = `
+      <button type="button"class="m-1 w-60p display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline disabled">prev</button>
+      <div class="display-inline">
+      <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
+      </div>
+      <button id="goto-cal-day-${i + 1}-from-${i}"  type="button" class="m-1 display-inline bg-blacki h-40p w-60p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">next</button>
+          `;
+
+    }
+    else if (i == 6) {
+      outerDiv.className = "px-0 h-50pi w-100 text-center fs-30p px-0 bg-blacki display-nonei"
+      dayVal.innerHTML = `
+          <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">prev</button>
+          <div class="display-inline">
+          <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
+          </div>
+          <button type="button" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline" disabled>next</button>
+          `;
+    }
+    else {
+      outerDiv.className = "px-0 h-50pi w-100 text-center fs-30p px-0 bg-blacki display-nonei"
+      dayVal.innerHTML = `
+          <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">prev</button>
+          <div class="display-inline">
+          <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
+          </div>       
+          <button type="button" id="goto-cal-day-${i + 1}-from-${i}" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">next</button>
+      `;
+    }
+
+    outerDiv.appendChild(dayVal);
+    let box = document.createElement("div");
+    box.id = `${days[i]}-dates`
+    box.className = "inline-grid-r-auto-c-auto justify-items-center align-items-center grid-gap-3p m-0 p-0"
+
+    innerDiv = document.createElement("div");
+
+    innerDiv.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
+    innerDiv.innerHTML = `+`;
+    innerDiv.addEventListener("click", e => {
+      toggleDayPopup(day)
+
+    })
+    box.appendChild(innerDiv);
+    outerDiv.append(box)
+
+
+
+
+    timeRange.appendChild(outerDiv);
+  }
+
+  //genreate add time popup
+
+  addTimePopup = document.createElement("div")
+  addTimePopup.id = `add-time-popup`
+  addTimePopup.className = "display-nonei w-300pi h-200pi p-0 m-0 bg-white brdr-r-2 brdr-w-5p border-style-solid brdr-clr-white custom-shadow position-absolute"
+  addTimePopup.addEventListener("click", e => {
+    e.stopPropagation();
+  })
+  header = document.createElement("div");
+  header.className = "h-50pi w-100 text-center fs-30p px-0 bg-blacki clr-white user-select-none brdr-r-2"
+  span = document.createElement("span")
+  span.id = "add-time-calender-day"
+  button = document.createElement("button")
+  button.type = "button"
+  button.className = "m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline"
+  button.addEventListener("click", e => {
+    toggleDayPopup("empty-day-val")
+  })
+  button.innerHTML = "❌"
+
+  body = document.createElement("div")
+  body.id = "add-time-calender-body"
+
+
+  header.append(span, button)
+
+  addTimePopup.append(header, body)
+
+  timeRange.append(addTimePopup)
+  return timeRange
+}
+
+function toggleDayPopup(day) {
+  document.getElementById(`add-time-popup`).classList.toggle("display-nonei")
+  document.getElementById("add-time-calender-day").innerHTML = day
+
+  box = document.getElementById("add-time-calender-body")
+
+
+  {
+    divOuter = document.createElement("div")
+    divOuter.className = "p-3 px-5"
+
+
+    divInner1 = document.createElement("div")
+    divInner1.className = "float-left"
+
+    divInner1Text = document.createElement("div")
+    divInner1Text.innerHTML = "start"
+
+    divInner1Input = document.createElement("div")
+    divInner1Input.className = ""
+    divInner1Input.append(createCustomTimeDate({
+      id: "start-time-date",
+      max: 1440,
+      min: 0
+    }))
+    divInner1.append(divInner1Text, divInner1Input)
+
+    divInner2 = document.createElement("div")
+    divInner2.className = "float-right"
+
+    divInner2Text = document.createElement("div")
+    divInner2Text.className = "m-0 p-0"
+    divInner2Text.innerHTML = "finish"
+
+    divInner2Input = document.createElement("div")
+    divInner2Input.className = ""
+    divInner2Input.append(createCustomTimeDate({
+      id: "start-time-date",
+      max: 1440,
+      min: 0
+    }))
+
+    divInner2.append(divInner2Text, divInner2Input)
+
+    buttonOuter = document.createElement("div")
+    buttonOuter.className = "w-100 p-0 m-0 d-flex align-items-center justify-content-center h-60pi"
+
+    button = document.createElement("button")
+    button.type = "button"
+    button.id = "add-time-calender"
+    button.innerHTML = "Submit"
+
+    buttonOuter.append(button)
+
+    divOuter.append(divInner1, divInner2)
+
+
+    box.append(divOuter, buttonOuter)
+
+  }
+  /*
+    document.getElementById("add-time-calender-body").innerHTML = `
+    <div class="p-3 px-5">
+      <div class="float-left">
+        <div class="">
+          start
+        </div>
+      <div>
+        <input type="time" id="start-time-calender" min="00:00" max="24:00" required>
+      </div>
+    </div>
+    <div class="float-right">
+      <div class="">
+        end
+      </div>
+      <div>
+        <input type="time" id="end-time-calender" min="09:00" max="18:00" required disabled>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="w-100 p-0 m-0 d-flex align-items-center justify-content-center h-60pi">
+    <button type="button" value="Submit" id="add-time-calender">Submit</input>
+  </div>
+    `
+    */
+
+
+  function dateRules() {
+
+
+    startDateInput = document.getElementById(`start-time-calender`)
+    endDateInput = document.getElementById(`end-time-calender`)
+
+
+    startDate = convertTimeToInteger(startDateInput.value)
+    endDate = convertTimeToInteger(endDateInput.value)
+
+
+    if (startDate != "some values other than time str") {
+
+      if (startDate >= (60 * 23)) {
+        endDateInput.max = convertIntegerToTime(startDate)
+      }
+      else {
+        endDateInput.max = convertIntegerToTime(startDate)
+      }
+    }
+
+    console.log("reee")
+
+  }
+
+
+
+
+}
+
+function addTimeCalender(day) {
+
+  dateBox = document.getElementById(`${day}-dates`)
+
+  startDate = document.getElementById(`start-time-calender`).value
+  endDate = document.getElementById(`end-time-calender`).value
+  let id = `${getRandomInt(999999999999999)}-calender-date`
+
+
+  console.log(day, startDate, endDate)
+
+
+  /*
+    div = document.createElement("div")
+    div.id = `${id}`
+    div.className = "w-100p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
+  
+    span = document.createElement("div")
+    span.innerHTML = "someting"
+    button = document.createElement("button")
+    button.type = "button"
+    button.innerHTML = "X"
+    button.addEventListener("click", e => {
+      removeElement(id)
+    })
+  
+    addDateButton = dateBox.lastChild
+    dateBox.removeChild(dateBox.lastChild);
+    dateBox.append(div, addDateButton)
+  
+    */
+
+}
+
+
+
+
 function setTaughtIn() {
   innerDivs = document.getElementById("taughtIn-list").children
   chosenSpec = []
@@ -379,24 +664,20 @@ window.addEventListener('load', async function () {
     document.getElementById("taughtIn-list").appendChild(node);
   }
 
-  timeRange = document.getElementById("timeRange-popup-rows")
-  for (let i = 0; i <= 6; i++) {
-    outerDiv = document.createElement("div");
-    outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3";
-    dayVal = document.createElement("div");
-    dayVal.className = "day-div px-0"
-    dayVal.innerHTML = `${days[i]}`;
-    outerDiv.appendChild(dayVal);
-    for (let j = 0; j <= 23; j++) {
-      innerDiv = document.createElement("div");
-      innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
-      innerDiv.innerHTML = `${j} - ${j + 1}`;
-      innerDiv.id = `${j}-${j + 1}_${days[i]}`;
-      innerDiv.onclick = function () { setTimeRange(`${j}-${j + 1}_${days[i]}`) }
-      outerDiv.appendChild(innerDiv);
-    }
-    timeRange.appendChild(outerDiv);
-  }
+  document.getElementById("timeRange-popup").appendChild(generateCourseTimeTable())
+
+  document.querySelectorAll(".goto-calender-day-button").forEach(el => el.addEventListener("click", e => {
+
+    newDayIndex = parseInt(e.target.id.split("-")[3])
+    oldDayIndex = parseInt(e.target.id.split("-")[5])
+    document.getElementById(`${oldDayIndex}-calender`).classList.add("display-nonei")
+    document.getElementById(`${newDayIndex}-calender`).classList.remove("display-nonei")
+
+    document.getElementById(`add-time-popup`).classList.add("display-nonei")
+
+
+  }))
+
 
   //populate price input
   price = document.getElementById("price")
@@ -471,12 +752,6 @@ window.addEventListener('load', function () {
   document.querySelectorAll('.timeRange-box-toggle-popup').forEach(el => el.addEventListener('click', event => {
     toggleCoursePopup("timeRange-popup")
   }));
-  
-  
-  
-
- // timeRange-box-toggle-popup
-
 
 
   document.getElementById('taughtIn-search-input').addEventListener('keyup', event => {

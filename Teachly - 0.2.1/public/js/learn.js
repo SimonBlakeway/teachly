@@ -636,84 +636,179 @@ async function searchCourses() {
                 buttonBox.appendChild(genPagButton(false, i, pageNum))
             }
         }
+
+        if ("the pag is just an activated button wioth nothing else") { console.log("empty pag") }
         document.getElementById("course-pagination").appendChild(buttonBox)
     }
 
-    function generateCourseTimeTable(times) {
+    function generateCourseTimeTable(availableTimes) {
         currentDay = days[new Date().getDay()]
         dayIndex = new Date().getDay()
         adaptedDays = [days.slice(dayIndex, days.length), days.slice(0, dayIndex)]
+        const timeOffset = new Date().getTimezoneOffset() / 60
 
 
 
-        const timeZoneCorrect = (times, offset, stripTime = false) => {
-            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-            if (stripTime == false) {
-                for (let i = 0; i <= times.length; i++) {
-                    let firstNum = times[i].split("-")[0]
-                    let secondNum = times[i].split("-")[1]
-                    let day = times[i].split("-")[2]
-                    firstNum += offset
-                    secondNum += offset
-                    if (secondNum > 24) {
-                        dayIndex = days.indexOf(times[i].split("-")[2])++
-                        if (dayIndex > 7)
-                            dayIndex -= 7
-                        day = days[dayIndex]
-                        firstNum -= 24
-                        secondNum -= 24
-                    }
+        availableTimes = {
+            "Sunday": [
+                [0, 1130],
+                [1440, 1440],
+                [1440, 1440],
 
-                    if (firstNum < 1) {
+            ]
 
-                    }
-                    times[i] = `${firstNum}-${secondNum}-${day}`
-                    return times
-                }
-            }
-            else {
-                for (let i = 0; i <= times.length; i++) {
-                    let firstNum = times[i].split("-")[0]
-                    let secondNum = times[i].split("-")[1]
-                    let day = times[i].split("-")[2]
-                    firstNum += offset
-                    secondNum += offset
-                    if (secondNum > 24) {
-                        dayIndex = days.indexOf(times[i].split("-")[2])++
-                        if (dayIndex > 7)
-                            dayIndex -= 7
-                        day = days[dayIndex]
-                        firstNum -= 24
-                        secondNum -= 24
-                    }
 
-                    if (firstNum < 1) {
+            ,
+            "Monday": [],
+            "Tuesday": [],
+            "Wednesday": [],
+            "Thursday": [],
+            "Friday": [],
+            "Saturday": [],
+        }
 
-                    }
-                    times[i] = `${firstNum}-${secondNum}-${day}`
-                    return times
+        const rand = (min, max) => {
+            return min + Math.floor(Math.random() * (max - min))
+        }
+
+        const generateTime = () => {
+            for (let i = 0; i < 7; i++) {
+
+                for (let j = 0; j < rand(2, 6); j++) {
+                    baseTime = rand(0, 1400)
+                    addedTime = baseTime + rand(0, 40)
+                    availableTimes[`${days[i]}`].push([baseTime, addedTime])
                 }
             }
         }
 
+        const timeZoneCorrect = (availableTimes, offset, stripTime = false) => {
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            indexToRemove = []
+
+            if (stripTime == false) {
+                for (let i = 0; i < 7; i++) {
+                    for (let j = 0; j < availableTimes[`${days[i]}`].length; j++) {
+                        availableTimes[`${days[i]}`][j][0] = availableTimes[`${days[i]}`][j][0] + offset
+                        availableTimes[`${days[i]}`][j][1] = availableTimes[`${days[i]}`][j][1] + offset
+                        if (availableTimes[`${days[i]}`][j][0] < 0) {
+                            console.log("ddddddddd")
+                            indexToRemove.push([i, j])
+                            newIndex = (i - 1)
+                            if (newIndex == -1) newIndex = 6
+                            offsettedTime = [availableTimes[`${days[i]}`][j][0] + 1440, availableTimes[`${days[i]}`][j][1] + 1440]
+                            availableTimes[`${days[newIndex]}`].push(offsettedTime)
+                            delete availableTimes[`${days[i]}`][j]
+                        }
+                        else if (availableTimes[`${days[i]}`][j][0] > 1440) {
+                            console.log("ddddddddd")
+                            indexToRemove.push([i, j])
+                            newIndex = (i + 1)
+                            if (newIndex == 7) newIndex = 0
+                            offsettedTime = [availableTimes[`${days[i]}`][j][0] - 1440, availableTimes[`${days[i]}`][j][1] - 1440]
+                            availableTimes[`${days[newIndex]}`].push(offsettedTime)
+                            delete availableTimes[`${days[i]}`][j]
+                        }
+
+                    }
+                }
+            }
+            else {
+                for (let i = 0; i < times.length; i++) {
+                    for (let j = 0; j < availableTimes[`${days[i]}`].length; j++) {
+                        availableTimes[`${days[i]}`][j][0] = availableTimes[`${days[i]}`][j][0] - offset
+                        availableTimes[`${days[i]}`][j][1] = availableTimes[`${days[i]}`][j][1] - offset
+                        if (availableTimes[`${days[i]}`][j][0] < 0) {
+                            indexToRemove.push([i, j])
+                            newIndex = (i - 1)
+                            if (newIndex == -1) newIndex = 6
+                            offsettedTime = [availableTimes[`${days[i]}`][j][0] + 1440, availableTimes[`${days[i]}`][j][1] + 1440]
+                            availableTimes[`${days[newIndex]}`].push(offsettedTime)
+                            delete availableTimes[`${days[i]}`][j]
+                        }
+                        else if (availableTimes[`${days[i]}`][j][1] > 1440) {
+                            indexToRemove.push([i, j])
+                            newIndex = (i + 1)
+                            if (newIndex == 7) newIndex = 0
+                            offsettedTime = [availableTimes[`${days[i]}`][j][0] - 1440, availableTimes[`${days[i]}`][j][1] - s1440]
+                            availableTimes[`${days[newIndex]}`].push(offsettedTime)
+                            delete availableTimes[`${days[i]}`][j]
+                        }
+                    }
+                }
+            }
+
+            for (let i = 0; i < indexToRemove.length; i++) {
+                availableTimes[`${days[indexToRemove[i][0]]}`].splice(indexToRemove[i][1], 1); // 2nd parameter means remove one item only
+            }
+
+
+            return availableTimes
+
+        }
+
+        generateTime()
+
+        availableTimes = timeZoneCorrect(availableTimes, timeOffset)
+
+
+
+        const convertToTimeFormat = (num) => {
+            var time = new Date(num * 1000 * 60).toLocaleTimeString().substring(0, 5)
+            return time
+        }
+
+
         timeRange = document.createElement("div")
-        for (let i = 0; i <= 6; i++) {
+        timeRange.id = `calender-outer`
+        timeRange.className = "w-300pi h-300pi p-0 m-0 bg-white brdr-r-2 brdr-w-5p border-style-solid brdr-clr-white custom-shadow position-absolute"
+
+        for (let i = 0; i < 7; i++) {
             outerDiv = document.createElement("div");
             outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3";
             dayVal = document.createElement("div");
-            dayVal.className = "day-div px-0"
-            dayVal.innerHTML = `${days[i]}`;
-            outerDiv.appendChild(dayVal);
-            for (let j = 0; j <= 23; j++) {
-                classes = "container d-flex align-items-center justify-content-center time-slot-div px-0"
-                if (times.includes(`${j}-${j + 1}_${days[i]}`)) { classes = "container d-flex align-items-center justify-content-center time-slot-div px-0 active-time-slot" }
-                innerDiv = document.createElement("div");
-                innerDiv.className = classes
-                innerDiv.innerHTML = `${j} - ${j + 1}`;
-                innerDiv.id = `${j}-${j + 1}_${days[i]}`;
-                innerDiv.onclick = function () { setTimeRange(`${j}-${j + 1}_${days[i]}`) }
-                outerDiv.appendChild(innerDiv);
+            outerDiv.id = `${i}-calender`
+            dayVal.className = "h-50pi w-100 text-center fs-30p px-0 bg-blacki clr-white user-select-none brdr-r-2"
+
+            if (i == 0) {
+                outerDiv.className = "h-50pi w-100 text-center fs-30p px-0 bg-blacki brdr-r-5p"
+                dayVal.innerHTML = `
+                <button type="button" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline disabled">prev</button>
+                <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
+                <button id="goto-cal-day-${i + 1}-from-${i}"  type="button" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">next</button>
+                `;
             }
+            else if (i == 6) {
+                outerDiv.className = "px-0 h-50pi w-100 text-center fs-30p px-0 bg-blacki display-nonei"
+                dayVal.innerHTML = `
+                <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">prev</button>
+                <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
+                <button type="button" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline" disabled>next</button>
+                `;
+            }
+            else {
+                outerDiv.className = "px-0 h-50pi w-100 text-center fs-30p px-0 bg-blacki display-nonei"
+                dayVal.innerHTML = `
+                <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">prev</button>
+                <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
+                <button type="button" id="goto-cal-day-${i + 1}-from-${i}" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">next</button>
+            `;
+            }
+
+            outerDiv.appendChild(dayVal);
+            let box = document.createElement("div");
+            box.className = "inline-grid-r-auto-c-auto justify-items-center align-items-center grid-gap-3p m-0 p-0"
+            for (let j = 0; j < availableTimes[days[i]].length; j++) {
+                start = availableTimes[days[i]][j][0]
+                finish = availableTimes[days[i]][j][1]
+                innerDiv = document.createElement("div");
+                let innerStr = `${convertToTimeFormat(start)} - ${convertToTimeFormat(finish)}`;
+
+                innerDiv.className = "w-100p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
+                innerDiv.innerHTML = innerStr
+                box.appendChild(innerDiv);
+            }
+            outerDiv.append(box)
             timeRange.appendChild(outerDiv);
         }
         return timeRange
@@ -795,6 +890,13 @@ async function searchCourses() {
                 courseId = e.target.id.split("-")[0]
                 toggleCourseCalender(courseId)
             }))
+            document.querySelectorAll(".goto-calender-day-button").forEach(el => el.addEventListener("click", e => {
+
+                newDayIndex = parseInt(e.target.id.split("-")[3])
+                oldDayIndex = parseInt(e.target.id.split("-")[5])
+                document.getElementById(`${oldDayIndex}-calender`).classList.add("display-nonei")
+                document.getElementById(`${newDayIndex}-calender`).classList.remove("display-nonei")
+            }))
         }
 
     }
@@ -837,6 +939,11 @@ async function gotoChat(chatId) {
 }
 
 async function toggleCourseCalender(courseId) {
+
+}
+
+async function gotoCalenderDay(day) {
+    document.getElementById(`day-${day}-goto`)  // .scrollBy(0, 400);
 
 }
 

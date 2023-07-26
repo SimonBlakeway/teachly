@@ -11,10 +11,13 @@
 
 <link rel="stylesheet" href="/css/createCourse.css" nonce="{{context.settings.cspNonce}}">
 
+<script src="/js/customTimeDate.js" nonce="{{context.settings.cspNonce}}"></script>
+<link rel="stylesheet" href="/css/customTimeDate.css" nonce="{{context.settings.cspNonce}}">
+
 
 <section id="create-course" class="py-5 px-0 mx-0 mt-5 d-flex justify-content-center align-items-center w-100 clear-course-popups">
   <div class="container bg-light shadow-md w-75 mn-w-270p custom-rounded" id="create-course-details">
-    <form onsubmit="return false" class="row d-flex justify-content-center align-items-center">
+    <form class="row d-flex justify-content-center align-items-center onsubmit-return-false">
       <div class="col-12 p-1">
         <h3 class="m-4 fs-2">{{context.bodyContext.createCourseForm}}</h3>
         <div class="row container d-flex align-items-center justify-content-center m-0 p-0 stop-prop">
@@ -130,9 +133,8 @@
                   </div>
                 </div>
               </div>
-              <div class="d-flex align-items-center justify-content-center">
-                <div class="popup" id="timeRange-popup">
-                  <div id="timeRange-popup-rows" class="text-center w-100 p-0">
+              <div class="d-flex align-items-center justify-content-center stop-prop">
+                <div class="popup p-0 m-0 border-none" id="timeRange-popup">
                   </div>
                 </div>
               </div>
@@ -183,7 +185,7 @@
 
 
       <div id="finance-login-paypal-btn" class="row d-flex justify-content-center align-items-center fs-3 mb-3">
-        <div class="br-5p w-fit-content">
+        <div class="brdr-r-5p w-fit-content">
           <img src="https://www.paypalobjects.com/devdoc/log-in-with-paypal-button.png" nonce="{{context.settings.cspNonce}}"></img>
         </div>
       </div>

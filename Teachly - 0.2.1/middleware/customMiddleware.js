@@ -53,7 +53,8 @@ async function cookieSettings(req, res, next) {
         lang: lang,
         cur: cur,
         hasCookie: false,
-        isUser: false
+        isUser: false,
+        cspNonce: res.locals.cspNonce
       }
       return next()
     }

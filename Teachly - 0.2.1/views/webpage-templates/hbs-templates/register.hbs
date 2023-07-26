@@ -7,7 +7,7 @@
     <div class="col d-flex justify-content-center align-items-center">
       <div class="registration-form p-4 p-md-5">
         <h3 class="p-4">{{context.bodyContext.registrationForm}}</h3>
-        <form onsubmit="return false" class="registration-form-color">
+        <form action="#" class="registration-form-color onsubit-return-false">
           <div class="row">
             <div class="col my-2">
               <label class="form-label text" for="firstName">{{context.bodyContext.fullName}}</label>
@@ -31,8 +31,8 @@
               <div id="profile-image"
                 class="form-control form-control-md border border-info rounded profile-input d-flex align-items-center justify-content-center">
                 click to upload image</div>
-              <div class="h-0p w-0p overflow-hidden"><input required id="upfile" type="file"
-                  value="upload" accept="image/*" /></div>
+              <div class="h-0p w-0p overflow-hidden"><input required id="upfile" type="file" value="upload"
+                  accept="image/*" /></div>
             </div>
           </div>
           <div class="row">
@@ -59,20 +59,24 @@
   </div>
 </section>
 <div id="email-popup" class="popup p-5 bg-light shadow-lg">
-  <form onsubmit="return false" id="email-input-form" class="d-flex flex-column">
-    <label id="email-label" class="text text-center fs-18p" for="email-input">{{context.bodyContext.emailPopup.text}}</label>
+  <div id="email-input-form" class="d-flex flex-column">
+    <label id="email-label" class="text text-center fs-18p"
+      for="email-input">{{context.bodyContext.emailPopup.text}}</label>
     <br>
     <input maxlength="5" type="numbers" required type="text" id="email-input"
       class="form-control form-control-lg border border-info rounded profile-input" />
     <br>
     <button id="email-popup-submit" type='submit'
       class="btn btn-outline-primary btn-lg">{{context.bodyContext.emailPopup.submitButtonText}}</button>
-  </form>
+    </form>
+  </div>
 </div>
-<div id="err-popup" class="popup p-5 bg-light shadow-lg">
-  <div id="email-err">{{context.bodyContext.errPopup.emailErr}}</div>
-  <div id="name-err">{{context.bodyContext.errPopup.nameErr}}</div>
+
+<div id="err-popup" class="popup p-5 bg-light shadow-lg z-index-999">
+  <div id="email-err" class="display-nonei">{{context.bodyContext.errPopup.emailErr}}</div>
+  <div id="name-err" class="display-nonei">{{context.bodyContext.errPopup.nameErr}}</div>
 </div>
-<div id="emailcode-err-popup" class="popup p-5 bg-light shadow-lg text-center h-10 w-20">
+
+<div id="emailcode-err-popup" class="popup p-5 bg-light shadow-lg text-center h-10 w-20 z-index-999">
   <div>{{context.bodyContext.emailCode.invalidEmailCode}}</div>
 </div>

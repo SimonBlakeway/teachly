@@ -119,12 +119,11 @@
   }
 
   #timeRange-popup {
-    width: 300px;
-    height: 460px;
-    margin-top: 490px;
+    margin-top: 320px !important;
     margin-right: 0px;
-    border-width: 10px;
+    border-width: 0px !important;
   }
+
 
   .day-div {
     background-color: #89c4ff;
@@ -218,4 +217,9 @@
     min-width: 300px !important;
     max-width: 500px !important;
     min-height: 300px !important;
+  }
+
+  .date-input {
+    width: 25px;
+
   }

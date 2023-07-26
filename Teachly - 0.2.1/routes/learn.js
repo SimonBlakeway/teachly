@@ -35,11 +35,8 @@ router.get('/:str', async (req, res) => {
     str = req.params['str'].replaceAll("-", " ");
     if (utils.isValidSubject(req.settings.lang, str)) {
       settings.title = str
-      setting = req.settings
-      setting.subject
-      setting.speciality
-      setting.subject = str
-      setting.speciality = ""
+      settings = req.settings
+      settings.subject = str
       res.render('learn', {
         layout: "main",
         context: contextSetup(settings, ["footer", "navbar"], "learn"),
@@ -48,11 +45,11 @@ router.get('/:str', async (req, res) => {
     else {
       posSub = utils.isValidSubjectSpecialityNoSubject(req.settings.lang, str)
       if (posSub) {
-        setting = req.settings
-        setting.subject
-        setting.speciality
-        setting.subject = posSub
-        setting.speciality = str
+        settings = req.settings
+        settings.subject
+        settings.speciality
+        settings.subject = posSub
+        settings.speciality = str
         res.render('learn', {
           layout: "main",
           context: contextSetup(settings, ["footer", "navbar"], "learn"),
@@ -90,6 +87,11 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
   if (((pricePerLessonRange[0] > 50) || (pricePerLessonRange[0] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
   if (((pricePerLessonRange[1] > 50) || (pricePerLessonRange[1] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
   if (!utils.isValidSubject(lang, subject)) { res.json({ "err": "invalid subject" }) }
+
+
+
+  // json_each postgrsql
+
 
   queryString = `
   SELECT  created_at, course_id, description, teacher_id, course_lessons, price_per_lesson, specialities, subject, taught_in, time_schedule, teacher_name, rating, lesson_time, number_of_reviews  FROM teacher_course

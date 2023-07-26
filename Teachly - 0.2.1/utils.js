@@ -31,6 +31,24 @@ const secretKey = Buffer.from(process.env.CRYPTO_ENCRYPT_KEY, "hex")
 const iv = Buffer.from(process.env.CRYPTO_ENCRYPT_IV, 'hex')
 
 
+
+function convertTimeToInteger(time) {
+  //time format "11:22"
+  let d = new Date(0);
+  time += ":00"
+  let newDate = new Date(d.toString().split(":")[0].slice(0, -2) + time);
+  return newDate.getTime() / 1000
+}
+
+function convertIntegerToTime(int) {
+  //int format "minutes from start of day"
+  let d = new Date(int * 1000);
+  str = `${d.getHours()}:${d.getMinutes()}`
+  return str
+}
+
+
+
 function isInt(value) {
   var x = parseFloat(value);
   return !isNaN(value) && (x | 0) === x;
@@ -495,6 +513,49 @@ function convertTimeRangeToQuery(arr) {
     console.log(error)
     return ""
   }
+
+
+
+}
+
+function convertTimeRangeToQuery(obj) {
+
+  queryString = `AND (`
+  const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+
+  obj = {
+    "sunday": [
+      [0, 1130],
+      [1440, 1440],
+      [1440, 1440],
+
+    ],
+    "monday": [],
+    "tuesday": [],
+    "wednesday": [],
+    "thursday": [],
+    "friday": [],
+    "saturday": [],
+  }
+  for (let index = 0; index < days.length; index++) {
+    const key = days[index];
+    if (obj[`${key}`].length > 0) {
+      for (let j = 0; j < obj[`${key}`].length; j++) {
+        let element = obj[`${key}`][j];
+        let min = element[0]
+        let max = element[1]
+        addStr =
+          `
+          ${min} > ANY ( ${key} )  AND
+          ${max} < ANY ( ${key} )  AND
+        `
+        queryString += addStr
+      }
+    }
+  }
+  split = queryString.split("AND")
+  queryString = split.splice(0, split.length - 1).join("AND") + ` )`
+  return queryString
 }
 
 function convertMinuteTimeRangeToQuery(arr) {

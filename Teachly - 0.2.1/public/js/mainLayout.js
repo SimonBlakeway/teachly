@@ -79,6 +79,10 @@ window.addEventListener('load', function () {
     document.querySelectorAll('.stop-prop').forEach(el => el.addEventListener('click', event => {
         event.stopPropagation();
     }));
+
+    document.querySelectorAll('.onsubmit-return-false').forEach(el => el.addEventListener('submit', e => {
+        e.preventDefault();
+    }));
 })
 
 
