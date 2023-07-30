@@ -11,7 +11,7 @@
     "taughtIn": "taught in",
     "priceIn": "Price In",
     "timeRange": "Time Range",
-    "clickUploadImageRatio": "click to upload image, ratio 16:9",
+    "clickUploadImageRatio": "click to upload image",
     "createCourse": "create Course",
     "errPopup": {
         "subjectErr": "{{context.bodyContext.errPopup.nameErr}}",

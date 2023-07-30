@@ -8,18 +8,19 @@
   .custom-date-input-box:focus-within {
       border: thin solid black;
       border-radius: 2px;
-
       height: calc(100% - 5px) !important;
+      margin:-2px 0 0 -2px;
   }
 
   .custom-date-input {
       height: 100%;
       letter-spacing: 2px;
       text-align: center;
+      width: 30px;
   }
 
   .custom-date-input-separator {
       color: black;
       margin-bottom: 4px;
-      
+
   }

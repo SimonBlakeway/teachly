@@ -144,8 +144,24 @@
     background-color: blue;
 }
 
+.clr-black {
+    color: black;
+}
+
+.text-btn {
+    border: none;
+    background-color: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-block;
+    color: black;
+    width: fit-content !important;
+  }
+  
+  .text-btn:hover {background: #eee;}
+
 .custom-rounded {
-    border-radius: 1px;
+    border-radius: 5px;
 }
 
 .custom-shadow {

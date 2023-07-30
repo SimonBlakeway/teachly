@@ -1,8 +1,15 @@
 const origin = window.location.origin;
+const baseTitle = document.title
+
+$(window).focus(function () {
+    document.title = baseTitle //reset title when user focueses on the page
+});
+
 var socket;
 refresh = () => axios({ method: 'post', url: `/auth/refresh-token` }).catch(error => { /* handle error here */ });
 now = () => Math.floor(Date.now() / 1000)
 var refreshInterval = 0;
+
 
 
 setRefreshInterval = () => {
@@ -22,7 +29,6 @@ setRefreshTimeout = async () => {
 
 async function socketSetup() {
     socket = io.connect(origin);
-
 
     socket.on("connect", () => {
         console.log("socket connected");
@@ -97,20 +103,38 @@ async function socketSetup() {
 
     socket.on("notification", (data) => {
         switchSignaler("notification", turnOn = true)
-        console.log("notifications");
-        console.log(data)
 
         notOuter = document.getElementById("notifications-list")
-        console.log([data.length], "free")
 
         for (let i = 0; i < data.length; i++) {
+            element = data[i]
 
-            box = createElement("li")
-            box.innerHTML = `
-                  <div>${data[i].text}</div>
-                  <div>${data[i].created_at}</div>
-                  `
+            if (element.url) {
+                box = createElement("li")
+                box.innerHTML = `
+                    <a href="${element.url}">
+                      <div>${element.text}</div>
+                      <div>${element.created_at}</div>
+                    </a>
+                      `
+            }
+            else {
+                box = createElement("li")
+                box.innerHTML = `
+                      <div>${element.text}</div>
+                      <div>$element.created_at}</div>
+                      `
+
+            }
+
+
             notOuter.appendChild(box)
+        }
+
+
+        //show notification on title if user isn't looking at page
+        if (document.visibilityState == "hidden") {
+            document.title = "skreee"
         }
     });
 

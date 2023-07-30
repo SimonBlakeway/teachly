@@ -96,7 +96,10 @@ function convertTimeToInteger(time) {
   //time format "11:22"
   let d = new Date(0);
   time += ":00"
+
+  console.log(d.toString().split(":")[0].slice(0, -2) + time)
   let newDate = new Date(d.toString().split(":")[0].slice(0, -2) + time);
+
   return newDate.getTime() / 1000
 }
 
@@ -109,18 +112,11 @@ function convertIntegerToTime(int) {
 
 
 function generateCourseTimeTable() {
+  const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   currentDay = days[new Date().getDay()]
   dayIndex = new Date().getDay()
-  adaptedDays = [days.slice(dayIndex, days.length), days.slice(0, dayIndex)]
+  adaptedDays = [...days.slice(dayIndex, days.length), ...days.slice(0, dayIndex)]
   const timeOffset = new Date().getTimezoneOffset() / 60
-
-
-
-  const convertToTimeFormat = (num) => {
-    var time = new Date(num * 1000 * 60).toLocaleTimeString().substring(0, 5)
-    return time
-  }
-
 
   timeRange = document.createElement("div")
   timeRange.id = `calender-outer`
@@ -128,7 +124,7 @@ function generateCourseTimeTable() {
 
   //generate days
   for (let i = 0; i < 7; i++) {
-    let day = days[i]
+    let day = adaptedDays[i]
     outerDiv = document.createElement("div");
     outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3 w-300pi h-300pi";
     dayVal = document.createElement("div");
@@ -140,7 +136,7 @@ function generateCourseTimeTable() {
       dayVal.innerHTML = `
       <button type="button"class="m-1 w-60p display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline disabled">prev</button>
       <div class="display-inline">
-      <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
+      <span class="user-select-none fs-25p" id="day-${day}-goto">${day}</span>
       </div>
       <button id="goto-cal-day-${i + 1}-from-${i}"  type="button" class="m-1 display-inline bg-blacki h-40p w-60p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">next</button>
           `;
@@ -151,7 +147,7 @@ function generateCourseTimeTable() {
       dayVal.innerHTML = `
           <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">prev</button>
           <div class="display-inline">
-          <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
+          <span class="user-select-none fs-25p" id="day-${day}-goto">${day}</span>
           </div>
           <button type="button" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline" disabled>next</button>
           `;
@@ -161,7 +157,7 @@ function generateCourseTimeTable() {
       dayVal.innerHTML = `
           <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">prev</button>
           <div class="display-inline">
-          <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
+          <span class="user-select-none fs-25p" id="day-${day}-goto">${day}</span>
           </div>       
           <button type="button" id="goto-cal-day-${i + 1}-from-${i}" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">next</button>
       `;
@@ -169,11 +165,10 @@ function generateCourseTimeTable() {
 
     outerDiv.appendChild(dayVal);
     let box = document.createElement("div");
-    box.id = `${days[i]}-dates`
+    box.id = `${day}-dates`
     box.className = "inline-grid-r-auto-c-auto justify-items-center align-items-center grid-gap-3p m-0 p-0"
 
     innerDiv = document.createElement("div");
-
     innerDiv.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
     innerDiv.innerHTML = `+`;
     innerDiv.addEventListener("click", e => {
@@ -227,7 +222,19 @@ function toggleDayPopup(day) {
 
   box = document.getElementById("add-time-calender-body")
 
+  function makeSureMaxIsGood(e) {
+    startTime = convertTimeToInteger(getCustomTimeDateVals("start-time-date"))
+    endTime = convertTimeToInteger(getCustomTimeDateVals("end-time-date"))
 
+    updateCustomTimeDateSettings("end-time-date", {
+      updateType: "max",
+      updateVal: startTime + 60
+    })
+    updateCustomTimeDateSettings("end-time-date", {
+      updateType: "min",
+      updateVal: startTime + 20
+    })
+  }
   {
     divOuter = document.createElement("div")
     divOuter.className = "p-3 px-5"
@@ -237,14 +244,20 @@ function toggleDayPopup(day) {
     divInner1.className = "float-left"
 
     divInner1Text = document.createElement("div")
-    divInner1Text.innerHTML = "start"
+    divInner1Text.innerHTML = "Start"
 
     divInner1Input = document.createElement("div")
     divInner1Input.className = ""
     divInner1Input.append(createCustomTimeDate({
       id: "start-time-date",
-      max: 1440,
-      min: 0
+      max: 1440, //5 min before midnight
+      min: 1,
+      eventListeners: [
+        {
+          eventType: "input",
+          eventFunction: makeSureMaxIsGood
+        }
+      ]
     }))
     divInner1.append(divInner1Text, divInner1Input)
 
@@ -253,14 +266,20 @@ function toggleDayPopup(day) {
 
     divInner2Text = document.createElement("div")
     divInner2Text.className = "m-0 p-0"
-    divInner2Text.innerHTML = "finish"
+    divInner2Text.innerHTML = "Finish"
 
     divInner2Input = document.createElement("div")
     divInner2Input.className = ""
     divInner2Input.append(createCustomTimeDate({
-      id: "start-time-date",
-      max: 1440,
-      min: 0
+      id: "end-time-date",
+      max: 1440, //5 min before midnight
+      min: 60,
+      eventListeners: [
+        {
+          eventType: "input",
+          eventFunction: makeSureMaxIsGood
+        }
+      ]
     }))
 
     divInner2.append(divInner2Text, divInner2Input)
@@ -272,6 +291,9 @@ function toggleDayPopup(day) {
     button.type = "button"
     button.id = "add-time-calender"
     button.innerHTML = "Submit"
+    button.addEventListener("click", e => {
+      addTimeCalender(day)
+    })
 
     buttonOuter.append(button)
 
@@ -281,99 +303,62 @@ function toggleDayPopup(day) {
     box.append(divOuter, buttonOuter)
 
   }
-  /*
-    document.getElementById("add-time-calender-body").innerHTML = `
-    <div class="p-3 px-5">
-      <div class="float-left">
-        <div class="">
-          start
-        </div>
-      <div>
-        <input type="time" id="start-time-calender" min="00:00" max="24:00" required>
-      </div>
-    </div>
-    <div class="float-right">
-      <div class="">
-        end
-      </div>
-      <div>
-        <input type="time" id="end-time-calender" min="09:00" max="18:00" required disabled>
-      </div>
-    </div>
-  </div>
-  
-  
-  <div class="w-100 p-0 m-0 d-flex align-items-center justify-content-center h-60pi">
-    <button type="button" value="Submit" id="add-time-calender">Submit</input>
-  </div>
-    `
-    */
-
-
-  function dateRules() {
-
-
-    startDateInput = document.getElementById(`start-time-calender`)
-    endDateInput = document.getElementById(`end-time-calender`)
-
-
-    startDate = convertTimeToInteger(startDateInput.value)
-    endDate = convertTimeToInteger(endDateInput.value)
-
-
-    if (startDate != "some values other than time str") {
-
-      if (startDate >= (60 * 23)) {
-        endDateInput.max = convertIntegerToTime(startDate)
-      }
-      else {
-        endDateInput.max = convertIntegerToTime(startDate)
-      }
-    }
-
-    console.log("reee")
-
-  }
-
-
-
-
 }
 
 function addTimeCalender(day) {
 
+  
+
+  startDate = getCustomTimeDateVals("start-time-date")
+  endDate = getCustomTimeDateVals("end-time-date")
+
   dateBox = document.getElementById(`${day}-dates`)
 
-  startDate = document.getElementById(`start-time-calender`).value
-  endDate = document.getElementById(`end-time-calender`).value
   let id = `${getRandomInt(999999999999999)}-calender-date`
 
 
-  console.log(day, startDate, endDate)
+  timeDiv = document.createElement("div")
+  timeDiv.id = `${id}`
+  timeDiv.className = "w-100p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
+
+  timeText = document.createElement("div")
+  timeText.innerHTML = `${startDate} - ${endDate}`
+
+  timeRemove = document.createElement("button")
+  timeRemove.className = "clr-black text-btn"
+  timeRemove.type = "button"
+  timeRemove.innerHTML = "❌"
+  timeRemove.addEventListener("click", e => {
+    removeElement(id)
+  })
+  timeDiv.append(timeText, timeRemove)
 
 
-  /*
-    div = document.createElement("div")
-    div.id = `${id}`
-    div.className = "w-100p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
-  
-    span = document.createElement("div")
-    span.innerHTML = "someting"
-    button = document.createElement("button")
-    button.type = "button"
-    button.innerHTML = "X"
-    button.addEventListener("click", e => {
-      removeElement(id)
-    })
-  
-    addDateButton = dateBox.lastChild
-    dateBox.removeChild(dateBox.lastChild);
-    dateBox.append(div, addDateButton)
-  
-    */
+  addDateButton = document.createElement("div");
+  addDateButton.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
+  addDateButton.innerHTML = "+";
+  addDateButton.addEventListener("click", e => {
+    toggleDayPopup(day)
+  })
 
+  dateBox.removeChild(dateBox.lastChild); //remove addTime button
+  dateBox.append(timeDiv, addDateButton)
 }
 
+function getTimesCalender(id) {
+  const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+  adaptedDays = [...days.slice(dayIndex, days.length), ...days.slice(0, dayIndex)]
+
+  for (let i = 0; i < adaptedDays.length; i++) {
+    const day = adaptedDays[i];
+    children = document.getElementById(`${day}-dates`).children;
+
+
+    for (let j = 0; index < (children.length - 1); j++) {  //last element is not time, is add time button
+      const dateElement = children[j];
+    }
+  }
+}
 
 
 
@@ -685,7 +670,6 @@ window.addEventListener('load', async function () {
 
 })
 
-
 function switchToFinanceLogin() {
   document.getElementById("create-course").add("display-nonei");
   document.getElementById("create-course-finance").classList.remove("display-nonei");
@@ -702,69 +686,46 @@ async function financeLoginStripe() {
   res = await axios.get('/gateway/stripe/signin-with-stripe')
   url = res.data
   window.location = url
-
 }
 
-
-
 window.addEventListener('load', function () {
-
-
   document.getElementById('subject-search-input').addEventListener('keyup', event => {
     searchBox('subject-box', 'subject-search-input')
   })
-
-
   document.querySelectorAll(".subject-box-toggle-popup").forEach(el => el.addEventListener('click', event => {
     toggleCoursePopup("subject-popup")
   }))
-
   document.getElementById('speciality-box-toggle-popup').addEventListener('click', event => {
     toggleCoursePopup("speciality-popup")
   })
-
   document.querySelectorAll(".taughtIn-box-toggle-popup").forEach(el => el.addEventListener('click', event => {
     toggleCoursePopup("taughtIn-popup")
   }))
-
   document.querySelectorAll('.clear-course-popups').forEach(el => el.addEventListener('click', event => {
     clearCoursePopups()
   }));
-
-
   document.getElementById('send-course-data').addEventListener('click', event => {
     sendCourseData()
   })
-
   document.getElementById('course-image').addEventListener('click', event => {
     getFile()
   })
-
   document.getElementById('upfile').addEventListener('change', event => {
     sub()
   })
-
-
   document.getElementById('speciality-search-input').addEventListener('keyup', event => {
     searchBox('speciality-checkboxes', 'speciality-search-input')
   })
-
   document.querySelectorAll('.timeRange-box-toggle-popup').forEach(el => el.addEventListener('click', event => {
     toggleCoursePopup("timeRange-popup")
   }));
-
-
   document.getElementById('taughtIn-search-input').addEventListener('keyup', event => {
     searchBox('taughtIn-list', 'taughIn-search-input')
   })
-
-
   document.getElementById('finance-login-paypal-btn').addEventListener('change', event => {
     financeLoginPayPal()
   })
-
   document.getElementById('finance-login-stripe-btn').addEventListener('change', event => {
     financeLoginStripe()
   })
-
 })
