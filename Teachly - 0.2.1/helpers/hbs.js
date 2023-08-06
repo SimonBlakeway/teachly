@@ -21,5 +21,19 @@ module.exports = {
 
     }
   },
+  mathAdd: function () {
+    newVal = 0
+    for (var i = 0; i < arguments.length; i++) {
+      newVal += arguments[i]
+    }
+    return newVal
+  },
+  mathMultiply: function () {
+    newVal = 1
+    for (var i = 0; i < arguments.length; i++) {
+      newVal *= arguments[i]
+    }
+    return newVal
+  },
 
 }

@@ -72,69 +72,86 @@ router.get('/:str', async (req, res) => {
 // @desc    access tutor courses
 // @route   POST /learn/searchTutorCourses
 router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req, res) => {
-  reqObj = req.body
-  lang = req.settings.lang
-
-
-  pricePerLessonRange = reqObj.pricePerLessonRange ? (reqObj.pricePerLessonRange) : [1, 50];
-  subject = reqObj.subject ? (reqObj.subject) : "english";
-  specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, escapeStrArr(reqObj.specialities))
-  orderByQueryString = utils.convertOrderByToQuery(reqObj.orderBy)
-  timeRangeQueryString = utils.convertTimeRangeToQuery(reqObj.availableTimes)
-  taughtInToQuery = utils.convertTaughtInToQuery(reqObj.taughtIn)
-  searchByKeywordQueryString = utils.convertSearchByKeywordToQuery(reqObj.searchby)
-  pagePlace = Number(reqObj.pagePlace) ? Number(reqObj.pagePlace) * 10 : 0;
-  if (((pricePerLessonRange[0] > 50) || (pricePerLessonRange[0] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
-  if (((pricePerLessonRange[1] > 50) || (pricePerLessonRange[1] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
-  if (!utils.isValidSubject(lang, subject)) { res.json({ "err": "invalid subject" }) }
-
-
-
-  // json_each postgrsql
-
-
-  queryString = `
-  SELECT  created_at, course_id, description, teacher_id, course_lessons, price_per_lesson, specialities, subject, taught_in, time_schedule, teacher_name, rating, lesson_time, number_of_reviews  FROM teacher_course
-  WHERE subject =  '${subject}'
-  AND price_per_lesson > ${pricePerLessonRange[0]}  
-  AND price_per_lesson < ${pricePerLessonRange[1]}  
-  ${specialityQueryString}
-  ${searchByKeywordQueryString}
-  ${timeRangeQueryString}
-  ${taughtInToQuery}
-  ${specialityQueryString}
-  ${specialityQueryString}
-  ${orderByQueryString}
-  LIMIT ${10} OFFSET ${pagePlace};
-  `
-  /*
-   * maybe cache countResult on the server?
-   * say if their is 1000s of requests for the courses,
-   * there's gonna be overlap, right? and by storing the 
-   * count on the server it could result in overall less db requests
-   * since the result can just be handed to the user,
-   */
   try {
-    countQuery = `SELECT COUNT ( * )  FROM teacher_course \n  ` + "WHERE" + queryString.split("WHERE")[1].split("ORDER BY")[0]
-    countResult = (reqObj.pageAmount == -1) ? db.query(countQuery) : reqObj.pageAmount
-    courseResult = db.query(queryString);
+    reqObj = req.body
+    lang = req.settings.lang
 
-    Promise.all([courseResult, countResult]).then((vals) => {
 
-      if (typeof vals[1] != "object") {
-        res.json({ "courses": vals[0].rows, "count": reqObj.pageAmount })
-      }
-      else {
-        res.json({ "courses": vals[0].rows, "count": Number(vals[1].rows[0].count) })
-      }
-    }).catch(err => {
-      console.log(countQuery)
-      console.log(err)
-      res.json({ "err": "bad query" })
-    })
+    pricePerLessonRange = reqObj.pricePerLessonRange ? (reqObj.pricePerLessonRange) : [1, 50];
+    subject = reqObj.subject
+    specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, escapeStrArr(reqObj.specialities))
+    orderByQueryString = utils.convertOrderByToQuery(reqObj.orderBy)
+    timeRangeQueryString = utils.convertTimeRangeToQuery(reqObj.availableTimes)
+    taughtInToQuery = utils.convertTaughtInToQuery(reqObj.taughtIn)
+    searchByKeywordQueryString = utils.convertSearchByKeywordToQuery(reqObj.searchby)
+    pagePlace = Number(reqObj.pagePlace) ? Number(reqObj.pagePlace) * 10 : 0;
+    if (((pricePerLessonRange[0] > 50) || (pricePerLessonRange[0] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
+    if (((pricePerLessonRange[1] > 50) || (pricePerLessonRange[1] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
+    if (!utils.isValidSubject(lang, subject)) { res.json({ "err": "invalid subject" }) }
+
+
+
+    /*
+     * maybe cache countResult on the server?
+     * say if their is 1000s of requests for the courses,
+     * there's gonna be overlap, right? and by storing the 
+     * count on the server it could result in overall less db requests
+     * since the result can just be handed to the user,
+     */
+
+
+    queryString = `
+    SELECT  created_at,
+      course_id,
+      description,
+      teacher_id,
+      course_lessons,
+      specialities,
+      subject,
+      taught_in,
+      teacher_name,
+      rating,
+      number_of_reviews, 
+      calender_times,
+      price_per_minute
+    FROM teacher_course
+    WHERE subject =  '${subject}'
+    AND price_per_lesson > ${pricePerLessonRange[0]}  
+    AND price_per_lesson < ${pricePerLessonRange[1]}  
+    ${specialityQueryString}
+    ${searchByKeywordQueryString}
+    ${timeRangeQueryString}
+    ${taughtInToQuery}
+    ${specialityQueryString}
+    ${specialityQueryString}
+    ${orderByQueryString}
+    LIMIT ${10} OFFSET ${pagePlace};
+    `
+
+    try {
+      countQuery = `SELECT COUNT ( * )  FROM teacher_course \n  ` + "WHERE" + queryString.split("WHERE")[1].split("ORDER BY")[0]
+      countResult = (reqObj.pageAmount == -1) ? db.query(countQuery) : reqObj.pageAmount
+      courseResult = db.query(queryString);
+
+      Promise.all([courseResult, countResult]).then((vals) => {
+
+        if (typeof vals[1] != "object") {
+          res.json({ "courses": vals[0].rows, "count": reqObj.pageAmount })
+        }
+        else {
+          res.json({ "courses": vals[0].rows, "count": Number(vals[1].rows[0].count) })
+        }
+      }).catch(err => {
+        console.log(countQuery)
+        console.log(err)
+        res.json({ "err": "bad query" })
+      })
+    } catch (error) {
+      console.log(error)
+      res.json({ "err": "server error" })
+    }
   } catch (error) {
-    console.log(error)
-    res.json({ "err": "server error" })
+
   }
 })
 
@@ -177,7 +194,7 @@ router.post('/request-lesson', async (req, res) => {
     }
 
     //notify teacher,
-    utils.sendAutomatedNotification(req.setting.lang, "request-lesson", {text: [studentName], link: []}, teacherId)
+    utils.sendAutomatedNotification(req.setting.lang, "request-lesson", { text: [studentName], link: [] }, teacherId)
 
     //add event to the db
     try {

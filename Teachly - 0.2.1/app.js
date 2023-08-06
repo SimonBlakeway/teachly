@@ -34,7 +34,7 @@ app.use(
         "https://cdnjs.cloudflare.com"
       ]
       ,
-      "style-src": [ 
+      "style-src": [
         "self",
         (req, res) => `'nonce-${res.locals.cspNonce}'`
       ],
@@ -45,7 +45,7 @@ app.use(
         'localhost',
       ],
       "img-src": [
-        "'self'", 
+        "'self'",
         "https: data:",
         "https://www.paypalobjects.com",
         'https://b.stripecdn.com'
@@ -77,14 +77,36 @@ app.use(require('./middleware/customMiddleware.js').cookieSettings)
 
 // Logging
 if (process.env.NODE_ENV === 'development') {
+  if (process.env.SECURE == "FALSE") process.env.SECURE = false
+  else process.env.SECURE = true
+
   app.use(morgan('dev'))
 }
+
+
+// dependant vars
+if (process.env.NODE_ENV === 'ngrok') {
+  if (process.env.SECURE == "FALSE") process.env.SECURE = false
+  else process.env.SECURE = true
+
+  url = process.env.NGROK_URL
+
+  process.env.DOMAIN = url
+  process.env.SECURE = false
+  process.env.COMPLETE_URL = url
+  process.env.IP_ADDRESS_URL = url
+
+  app.use(morgan('dev'))
+}
+
 
 // Handlebars Helpers
 const {
   formatDate,
   json,
   currency,
+  mathAdd,
+  mathMultiply
 } = require('./helpers/hbs');
 
 // Handlebars
@@ -93,6 +115,8 @@ app.engine('.hbs', exphbs.engine({
     formatDate,
     json,
     currency,
+    mathAdd,
+    mathMultiply
   },
   defaultLayout: 'main',
   extname: '.hbs', // this is where you can change the extension name

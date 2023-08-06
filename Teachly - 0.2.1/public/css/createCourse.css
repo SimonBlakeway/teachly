@@ -27,6 +27,10 @@
     background-size: 100% 100%;
   }
 
+  .w-108pi {
+    width: 108px !important;
+  }
+
 
   .course-input {
     font-size: 222px;

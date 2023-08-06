@@ -1,15 +1,20 @@
+var imageWorker; //= new Worker('/js/imageWorker.js', { credentials: "include" });
 
-const imageWorker = new Worker('/js/imageWorker.js', { credentials: "include" });
-imageWorker.onmessage = function (e) {
-  imageStr = e.data;
-};
 
-imageWorker.postMessage("base64Image");
 
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 var specialitiesObj = {};
 var imageStr = false
 var taughtInArr = []
+
+function getUTCTimeStampNoHours(date = new Date()) {
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate()
+  ).getTime()
+}
+
 
 function setSubject(subject) {
   document.getElementById("subject").innerText = subject
@@ -73,7 +78,9 @@ function setSpeciality() {
     document.getElementById("specialities").innerText = chosenSpec.join(", ")
   }
   else {
-    document.getElementById("specialities").innerText = "{{context.bodyContext.choose}}"
+    textBox = document.getElementById("specialities")
+    defaultText = textBox.getAttribute("data-default-val")
+    textBox.innerText = defaultText
   }
 }
 
@@ -96,10 +103,8 @@ function convertTimeToInteger(time) {
   //time format "11:22"
   let d = new Date(0);
   time += ":00"
-
   console.log(d.toString().split(":")[0].slice(0, -2) + time)
   let newDate = new Date(d.toString().split(":")[0].slice(0, -2) + time);
-
   return newDate.getTime() / 1000
 }
 
@@ -111,15 +116,16 @@ function convertIntegerToTime(int) {
 }
 
 
-function generateCourseTimeTable() {
+function generateCalenderTimeTable(calenderId) {
+  //calenderId: str, valid css/html class/id, no "-"
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   currentDay = days[new Date().getDay()]
-  dayIndex = new Date().getDay()
+  dayIndex = new Date().getDay() - 1
   adaptedDays = [...days.slice(dayIndex, days.length), ...days.slice(0, dayIndex)]
   const timeOffset = new Date().getTimezoneOffset() / 60
 
   timeRange = document.createElement("div")
-  timeRange.id = `calender-outer`
+  timeRange.id = `calender-outer-${calenderId}`
   timeRange.className = "w-300pi h-300pi p-0 m-0 m-0pi p-0pi bg-white brdr-r-2 custom-shadow position-absolute"
 
   //generate days
@@ -128,7 +134,7 @@ function generateCourseTimeTable() {
     outerDiv = document.createElement("div");
     outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3 w-300pi h-300pi";
     dayVal = document.createElement("div");
-    outerDiv.id = `${i}-calender`
+    outerDiv.id = `${i}-calender-${calenderId}`
     dayVal.className = "h-50pi fs-30p m-0pi p-0pi bg-blacki clr-white user-select-none brdr-r-2 display-flex justify-content-space-between w-300pi h-300pi"
 
     if (i == 0) {
@@ -138,14 +144,14 @@ function generateCourseTimeTable() {
       <div class="display-inline">
       <span class="user-select-none fs-25p" id="day-${day}-goto">${day}</span>
       </div>
-      <button id="goto-cal-day-${i + 1}-from-${i}"  type="button" class="m-1 display-inline bg-blacki h-40p w-60p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">next</button>
+      <button id="goto-cal-day-${i + 1}-from-${i}-${calenderId}"  type="button" class="m-1 display-inline bg-blacki h-40p w-60p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">next</button>
           `;
 
     }
     else if (i == 6) {
       outerDiv.className = "px-0 h-50pi w-100 text-center fs-30p px-0 bg-blacki display-nonei"
       dayVal.innerHTML = `
-          <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">prev</button>
+          <button type="button" id="goto-cal-day-${i - 1}-from-${i}-${calenderId}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">prev</button>
           <div class="display-inline">
           <span class="user-select-none fs-25p" id="day-${day}-goto">${day}</span>
           </div>
@@ -155,24 +161,24 @@ function generateCourseTimeTable() {
     else {
       outerDiv.className = "px-0 h-50pi w-100 text-center fs-30p px-0 bg-blacki display-nonei"
       dayVal.innerHTML = `
-          <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">prev</button>
+          <button type="button" id="goto-cal-day-${i - 1}-from-${i}-${calenderId}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">prev</button>
           <div class="display-inline">
           <span class="user-select-none fs-25p" id="day-${day}-goto">${day}</span>
           </div>       
-          <button type="button" id="goto-cal-day-${i + 1}-from-${i}" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">next</button>
+          <button type="button" id="goto-cal-day-${i + 1}-from-${i}-${calenderId}" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">next</button>
       `;
     }
 
     outerDiv.appendChild(dayVal);
     let box = document.createElement("div");
     box.id = `${day}-dates`
-    box.className = "inline-grid-r-auto-c-auto justify-items-center align-items-center grid-gap-3p m-0 p-0"
+    box.className = "inline-grid-r-auto2-c-auto2 justify-items-center align-items-center grid-gap-3p m-0 p-0"
 
     innerDiv = document.createElement("div");
     innerDiv.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
     innerDiv.innerHTML = `+`;
     innerDiv.addEventListener("click", e => {
-      toggleDayPopup(day)
+      toggleCalenderDayPopup(calenderId, day)
 
     })
     box.appendChild(innerDiv);
@@ -187,7 +193,7 @@ function generateCourseTimeTable() {
   //genreate add time popup
 
   addTimePopup = document.createElement("div")
-  addTimePopup.id = `add-time-popup`
+  addTimePopup.id = `${calenderId}-add-time-popup`
   addTimePopup.className = "display-nonei w-300pi h-200pi p-0 m-0 bg-white brdr-r-2 brdr-w-5p border-style-solid brdr-clr-white custom-shadow position-absolute"
   addTimePopup.addEventListener("click", e => {
     e.stopPropagation();
@@ -195,12 +201,12 @@ function generateCourseTimeTable() {
   header = document.createElement("div");
   header.className = "h-50pi w-100 text-center fs-30p px-0 bg-blacki clr-white user-select-none brdr-r-2"
   span = document.createElement("span")
-  span.id = "add-time-calender-day"
+  span.id = `${calenderId}-add-time-calender-day`
   button = document.createElement("button")
   button.type = "button"
   button.className = "m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline"
   button.addEventListener("click", e => {
-    toggleDayPopup("empty-day-val")
+    toggleCalenderDayPopup(calenderId)
   })
   button.innerHTML = "❌"
 
@@ -216,21 +222,34 @@ function generateCourseTimeTable() {
   return timeRange
 }
 
-function toggleDayPopup(day) {
-  document.getElementById(`add-time-popup`).classList.toggle("display-nonei")
-  document.getElementById("add-time-calender-day").innerHTML = day
+function toggleCalenderDayPopup(calenderId, day) {
+  if (typeof day == "undefined") {
+    dayName = window[`${calenderId}-activeCalenderDay`]
+    document.getElementById(`${dayName}-dates`).classList.remove("display-nonei")
+    document.getElementById(`${calenderId}-add-time-popup`).classList.add("display-nonei")
+    return
+  }
+  window[`${calenderId}-activeCalenderDay`] = day
+
+  document.getElementById(`${calenderId}-add-time-popup`).classList.remove("display-nonei")
+  document.getElementById(`${day}-dates`).classList.remove("display-nonei")
+
+  document.getElementById(`${calenderId}-add-time-calender-day`).innerHTML = day
+
 
   box = document.getElementById("add-time-calender-body")
+  currentMinutes = new Date().getMinutes() + 5
+  currentHours = new Date().getHours()
 
   function makeSureMaxIsGood(e) {
-    startTime = convertTimeToInteger(getCustomTimeDateVals("start-time-date"))
-    endTime = convertTimeToInteger(getCustomTimeDateVals("end-time-date"))
+    startTime = convertTimeToInteger(getCustomTimeDateInfo("startTimeDate", "currentTimeStr"))
+    endTime = convertTimeToInteger(getCustomTimeDateInfo("endTimeDate", "currentTimeStr"))
 
-    updateCustomTimeDateSettings("end-time-date", {
+    updateCustomTimeDateSettings("endTimeDate", {
       updateType: "max",
       updateVal: startTime + 60
     })
-    updateCustomTimeDateSettings("end-time-date", {
+    updateCustomTimeDateSettings("endTimeDate", {
       updateType: "min",
       updateVal: startTime + 20
     })
@@ -238,7 +257,6 @@ function toggleDayPopup(day) {
   {
     divOuter = document.createElement("div")
     divOuter.className = "p-3 px-5"
-
 
     divInner1 = document.createElement("div")
     divInner1.className = "float-left"
@@ -248,10 +266,14 @@ function toggleDayPopup(day) {
 
     divInner1Input = document.createElement("div")
     divInner1Input.className = ""
+    baseMin = 1
+    if (adaptedDays.indexOf(day) == 0) {
+      baseMin = (currentHours * 60) + currentMinutes
+    }
     divInner1Input.append(createCustomTimeDate({
-      id: "start-time-date",
+      id: "startTimeDate",
       max: 1440, //5 min before midnight
-      min: 1,
+      min: baseMin,
       eventListeners: [
         {
           eventType: "input",
@@ -271,9 +293,9 @@ function toggleDayPopup(day) {
     divInner2Input = document.createElement("div")
     divInner2Input.className = ""
     divInner2Input.append(createCustomTimeDate({
-      id: "end-time-date",
+      id: "endTimeDate",
       max: 1440, //5 min before midnight
-      min: 60,
+      min: baseMin + 20,
       eventListeners: [
         {
           eventType: "input",
@@ -292,44 +314,49 @@ function toggleDayPopup(day) {
     button.id = "add-time-calender"
     button.innerHTML = "Submit"
     button.addEventListener("click", e => {
-      addTimeCalender(day)
+      addTimeCalender(calenderId, day)
     })
 
     buttonOuter.append(button)
 
     divOuter.append(divInner1, divInner2)
 
-
+    box.innerHTML = '';
     box.append(divOuter, buttonOuter)
 
   }
 }
 
-function addTimeCalender(day) {
+function addTimeCalender(calenderId) {
 
-  
+  day = window[`${calenderId}-activeCalenderDay`]
 
-  startDate = getCustomTimeDateVals("start-time-date")
-  endDate = getCustomTimeDateVals("end-time-date")
+  toggleCalenderDayPopup(calenderId)
+
+  startDate = getCustomTimeDateInfo("startTimeDate", "currentTimeStr")
+  endDate = getCustomTimeDateInfo("endTimeDate", "currentTimeStr")
+
+
 
   dateBox = document.getElementById(`${day}-dates`)
 
-  let id = `${getRandomInt(999999999999999)}-calender-date`
+  let id = `${getRandomInt(999999999999999)}-${day}-calender-date-${calenderId}`
 
 
   timeDiv = document.createElement("div")
   timeDiv.id = `${id}`
-  timeDiv.className = "w-100p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
+  timeDiv.className = `w-136pi p-0 fs-15p d-flex brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary calender-time-${calenderId}`
 
   timeText = document.createElement("div")
   timeText.innerHTML = `${startDate} - ${endDate}`
+  timeText.className = "w-108pi pt-2p"
 
   timeRemove = document.createElement("button")
-  timeRemove.className = "clr-black text-btn"
+  timeRemove.className = "float-right text-btn bg-blacki btn btn-outline-primary h-28pi d-flex align-items-center justify-content-center w-28pi"
   timeRemove.type = "button"
-  timeRemove.innerHTML = "❌"
+  timeRemove.innerHTML = `<div class="fs-w-bolder mb-3-5pi">  ╳  </div>`
   timeRemove.addEventListener("click", e => {
-    removeElement(id)
+    removeTimeCalender(calenderId, id)
   })
   timeDiv.append(timeText, timeRemove)
 
@@ -338,29 +365,102 @@ function addTimeCalender(day) {
   addDateButton.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
   addDateButton.innerHTML = "+";
   addDateButton.addEventListener("click", e => {
-    toggleDayPopup(day)
+    toggleCalenderDayPopup(calenderId, day)
   })
 
   dateBox.removeChild(dateBox.lastChild); //remove addTime button
   dateBox.append(timeDiv, addDateButton)
-}
 
-function getTimesCalender(id) {
-  const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-  adaptedDays = [...days.slice(dayIndex, days.length), ...days.slice(0, dayIndex)]
+  timeRanges = getTimesCalender(calenderId, removeTimeZone = true)
 
-  for (let i = 0; i < adaptedDays.length; i++) {
-    const day = adaptedDays[i];
-    children = document.getElementById(`${day}-dates`).children;
-
-
-    for (let j = 0; index < (children.length - 1); j++) {  //last element is not time, is add time button
-      const dateElement = children[j];
-    }
+  if (timeRanges.length == 0) {
+    hiddenInput = document.getElementById("hidden-timeRange-input")
+    hiddenInput.value = hiddenInput.defaultValue //"the user has not selected a time"
+  }
+  else {
+    console.log("is good")
+    hiddenInput = document.getElementById("hidden-timeRange-input")
+    hiddenInput.value = "the user has selected a time"
   }
 }
 
+function removeTimeCalender(calenderId, timeId) {
+  timeRangeBox = document.getElementById(timeId)
+  removeElement(timeId)
+  const timeRanges = getTimesCalender(calenderId, removeTimeZone = true)
+  if (timeRanges.length == 0) {
+    hiddenInput = document.getElementById("hidden-timeRange-input")
+    hiddenInput.value = hiddenInput.defaultValue //"the user has not selected a time"
+  }
+  else {
+    console.log("is good")
+    hiddenInput = document.getElementById("hidden-timeRange-input")
+    hiddenInput.value = "the user has selected a time"
+  }
+}
 
+function getTimesCalender(calenderId, removeTimeZone = true) {
+  const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+  adaptedDays = [...days.slice(dayIndex, days.length), ...days.slice(0, dayIndex)]
+
+
+  let timesArr = []
+  let timesDivs = document.querySelectorAll(`.calender-time-${calenderId}`)
+  const timeOffset = new Date().getTimezoneOffset()
+  const BaseTime = getUTCTimeStampNoHours()
+
+
+
+  if (removeTimeZone) {
+    for (let i = 0; i < timesDivs.length; i++) {
+      let timesDiv = timesDivs[i]
+      let day = timesDiv.id.split("-")[1]
+      let dayIndex = adaptedDays.indexOf(day)
+      times = timesDiv.children[0].innerHTML.split(" - ")
+
+      start = convertTimeToInteger(times[0]) - timeOffset
+      finish = convertTimeToInteger(times[1]) - timeOffset
+
+      if (start < 0) {
+        //use prev day
+        dayIndex--
+      }
+      if (start > 1440) {
+        //use next day
+        dayIndex++
+      }
+      start = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000 * 60)
+
+      finish = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (finish * 1000 * 60)
+
+      timesArr.push([start, finish])
+
+    }
+  }
+  else {
+    for (let i = 0; i < timesDivs.length; i++) {
+      let timesDiv = timesDivs[i]
+      let day = timesDiv.id.split("-")[1]
+      let dayIndex = adaptedDays.indexOf(day)
+      let times = timesDiv.children[0].innerHTML.split(" - ")
+
+      start = parseInt(convertTimeToInteger(times[0])) - timeOffset
+      finish = parseInt(convertTimeToInteger(times[1])) - timeOffset
+
+      start = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)
+
+      finish = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)
+
+      timesArr.push([start, finish])
+
+    }
+  }
+
+  if (timesArr.length == 0) {
+    return timesArr
+  }
+  return timesArr
+}
 
 function setTaughtIn() {
   innerDivs = document.getElementById("taughtIn-list").children
@@ -445,31 +545,45 @@ function toggleErrPopup(errName) {
   }, 1000);
 }
 
-function getFile() {
-  clearCoursePopups()
-  document.getElementById("upfile").click();
-}
-
 function sub() {
   clearCoursePopups()
   input = document.getElementById("upfile")
   var file = input.files[0];
-  console.log(file)
-  console.log((file))
   reader = new FileReader();
-  var fileName = file.name
+  var fileName = file.name.split(".")[0]
   reader.onloadend = () => {
     base64Image = reader.result.split(';base64,').pop();
     imageStr = false;
+    if (imageWorker) { // if image is already proceesing, stop and restart
+      imageWorker.terminate()
+      imageWorker = new Worker('/js/imageWorker.js', { credentials: "include" });
+      imageWorker.postMessage(base64Image);
+
+    }
+    else { // else just create and activate
+      imageWorker = new Worker('/js/imageWorker.js', { credentials: "include" });
+      imageWorker.postMessage(base64Image);
+    }
+
+    imageWorker.onmessage = function (e) {
+      imageStr = e.data;
+      imageWorker.terminate() //stop worker when done
+    };
+
     imageWorker.postMessage(base64Image);
   }
   reader.readAsDataURL(file)
+  document.getElementById("upfile").click(); //click the required input
+
+  console.log("fileName", fileName)
 
   if (fileName[fileName.length - 1] == "") {
-    document.getElementById("course-image").innerHTML = "{{context.bodyContext.clickUploadImageRatio}}"
+    defaultText = document.getElementById("course-image").getAttribute("default-val")
+    document.getElementById("course-image").innerHTML = defaultText
   }
   else {
-    document.getElementById("course-image").innerHTML = fileName[fileName.length - 1];
+    console.log(fileName.slice(0, 15))
+    document.getElementById("course-image").innerHTML = fileName.slice(0, 15) //50 chars for now
   }
 }
 
@@ -477,31 +591,13 @@ async function sendCourseData() {
 
   if (imageStr == false) return
 
-  function convertTimeRange(arr) {
-    obj = {}
-    for (i = 0; i < arr.length; i++) {
-      index = days.indexOf(arr[i].split("-")[0])
-      if (index != -1) {
-        subObj = days[index]
-        if (obj[subObj]) {
-          obj[subObj].push(arr[i].split("-").slice(1, 3).join("-"))
-        }
-        else {
-          obj[subObj] = [arr[i].split("-").slice(1, 3).join("-")]
-        }
-      }
-    }
-    return Object.keys(obj) != 0 ? obj : false
-  }
-
   function basicCourseObjCheck(obj) {
     if (obj.subject == "") { return false }
     if (obj.description == "") { return false }
     if (obj.taughtIn == "") { return false }
-    if (obj.price == "") { return false }
-    if (obj.price > 60) { return false }
-    if (obj.price < 1) { return false }
-    if (obj.timeRange == "") { return false }
+    if (obj.price_per_minute > 0.05) { return false }
+    if (obj.price_per_minute > 5) { return false }
+    if (obj.courseTimeRanges.length == 0) { return false }
     return true
   }
 
@@ -527,8 +623,6 @@ async function sendCourseData() {
     }
   }
   try {
-
-
     specialities = $("#specialities").text()
     if (specialities == "\n                  Choose") { specialities = [] }
     else { specialities = specialities.split(", ") }
@@ -539,9 +633,8 @@ async function sendCourseData() {
       description: $("#description").val(),
       courseImg: imageStr,
       taughtIn: taughtInArr,
-      pricePerLesson: Number($("#price").val()),
-      availableTimes: $(".active-time-slot-div").map(function () { return this.id }).get(),
-      lesson_time: Number(document.getElementById("time-shown").innerHTML),
+      pricePerMinute: Number($("#price").val()) / curConversionRatio, 
+      courseTimeRanges: getTimesCalender("courseTimes", removeTimeZone = true)
     }
     if (!basicCourseObjCheck(courseData)) {
       return
@@ -554,20 +647,6 @@ async function sendCourseData() {
 }
 
 window.addEventListener('load', async function () {
-
-  regularSlider = document.querySelector('.regular-slider')
-  slider = noUiSlider.create(regularSlider, {
-    start: 20,
-    connect: false,
-    step: 5,
-    margin: 5,
-    range: { min: 10, max: 60 },
-  })
-  regularSlider.noUiSlider.on('update', function (values, handle) {
-    document.getElementById("time-shown").innerHTML = Math.trunc(values[handle])
-  });
-
-
   async function populateSubjects() {
     try {
       res = await axios.get('/get/validSubject')
@@ -649,18 +728,16 @@ window.addEventListener('load', async function () {
     document.getElementById("taughtIn-list").appendChild(node);
   }
 
-  document.getElementById("timeRange-popup").appendChild(generateCourseTimeTable())
+  document.getElementById("timeRange-popup").appendChild(generateCalenderTimeTable("courseTimes"))
 
   document.querySelectorAll(".goto-calender-day-button").forEach(el => el.addEventListener("click", e => {
-
-    newDayIndex = parseInt(e.target.id.split("-")[3])
-    oldDayIndex = parseInt(e.target.id.split("-")[5])
-    document.getElementById(`${oldDayIndex}-calender`).classList.add("display-nonei")
-    document.getElementById(`${newDayIndex}-calender`).classList.remove("display-nonei")
-
-    document.getElementById(`add-time-popup`).classList.add("display-nonei")
-
-
+    idArr = e.target.id.split("-")
+    calenderId = idArr[6]
+    newDayIndex = parseInt(idArr[3])
+    oldDayIndex = parseInt(idArr[5])
+    document.getElementById(`${oldDayIndex}-calender-${calenderId}`).classList.add("display-nonei")
+    document.getElementById(`${newDayIndex}-calender-${calenderId}`).classList.remove("display-nonei")
+    document.getElementById(`${calenderId}-add-time-popup`).classList.add("display-nonei")
   }))
 
 
@@ -707,8 +784,8 @@ window.addEventListener('load', function () {
   document.getElementById('send-course-data').addEventListener('click', event => {
     sendCourseData()
   })
-  document.getElementById('course-image').addEventListener('click', event => {
-    getFile()
+  document.getElementById('course-image').addEventListener('click', e => {
+    document.getElementById('upfile').click()
   })
   document.getElementById('upfile').addEventListener('change', event => {
     sub()

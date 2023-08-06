@@ -48,6 +48,58 @@ function convertIntegerToTime(int) {
 }
 
 
+function getUTCTimeStampNoHours(date = new Date()) {
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate()
+  ).getTime()
+}
+
+function getUTCTimeStampComplete(date = new Date()) {
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCMilliseconds()
+  ).getTime()
+}
+
+function formatToPGRange(input, rules = ["exclusive", "inclusive"]) {
+  //arr: [start, finish]
+  //rules: ["rule for start", "rule for finish"]
+  ruleToVal = {
+    "start": {
+      "exclusive": "[",
+      "inclusive": "("
+    },
+    "finish": {
+      "exclusive": "]",
+      "inclusive": ")"
+    }
+  }
+  ranges = []
+  if (input[0].constructor === Array) {
+    for (let index = 0; index < input.length; index++) {
+      const range = input[index];
+      const start = range[0]
+      const finish = range[1]
+      newRange = `${ruleToVal.start[rules[0]]} ${start}   , ${finish}   ${ruleToVal.finish[rules[1]]}`
+      ranges.push(newRange)
+    }
+  }
+  else {
+    const range = input
+    const start = range[0]
+    const finish = range[1]
+    newRange = `${ruleToVal.start[rules[0]]} ${start}   , ${finish}   ${ruleToVal.finish[rules[1]]}`
+    ranges.push(newRange)
+  }
+  return ranges
+  // example '[0,5)'
+}
 
 function isInt(value) {
   var x = parseFloat(value);
@@ -499,10 +551,10 @@ function convertTimeRangeToQuery(arr) {
 
     for (i = 0; i < arr.length; i++) {
       if (i == 0) {
-        queryString += ` ( '${arr[i]}' = ANY (time_schedule) )`
+        queryString += ` ( '[1, 2]' <@  = ANY (calender_times ) )`
       }
       else {
-        queryString += ` OR ( '${arr[i]}' = ANY (time_schedule) )`
+        queryString += ` OR ( '[1, 2]' <@ ANY (calender_times ) )`
       }
     }
     queryString += ` )`

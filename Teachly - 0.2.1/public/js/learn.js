@@ -566,6 +566,11 @@ async function searchCourses() {
                                         </div>
                                         <div class="col container d-flex justify-content-center mb-4">
                                             <div class="row d-flex justify-content-center mn-w-150p w-100">
+                                               <div class="col d-flex justify-content-center m-1 w-130p">
+                                                   <button id="${courseId}-view-reviews-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p view-calender-button">
+                                                   view reviews
+                                                   </button>
+                                               </div>
                                                 <div class="col d-flex justify-content-center m-1 w-130p">
                                                     <button id="${courseId}-view-calender-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p view-calender-button">
                                                     view calender
@@ -643,7 +648,7 @@ async function searchCourses() {
 
     function generateCourseTimeTable(availableTimes) {
         currentDay = days[new Date().getDay()]
-        dayIndex = new Date().getDay()
+        dayIndex = new Date().getDay() -1 
         adaptedDays = [days.slice(dayIndex, days.length), days.slice(0, dayIndex)]
         const timeOffset = new Date().getTimezoneOffset() / 60
 
@@ -814,6 +819,12 @@ async function searchCourses() {
         return timeRange
     }
 
+    function generateCourseReviews(courseId) {
+
+
+
+    }
+
     try {
         teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
 
@@ -975,6 +986,25 @@ function toggleCourseTimeTable(courseId) {
 }
 
 function readMoreDescToggle(courseId) {
+
+    dotsId = `${courseId}-ellipses`
+    MoreId = `${courseId}-more-course-description`
+    btnId = `${courseId}-more-course-btn`
+
+    let dots = document.getElementById(dotsId);
+    if (dots.style.display === "none") {
+        dots.style.display = "inline";
+        document.getElementById(btnId).innerHTML = "Read more";
+        document.getElementById(MoreId).style.display = "none";
+    } else {
+        dots.style.display = "none";
+        document.getElementById(btnId).innerHTML = "Read less";
+        document.getElementById(MoreId).style.display = "inline";
+    }
+}
+
+
+function toggleCourseReviews(courseId) {
 
     dotsId = `${courseId}-ellipses`
     MoreId = `${courseId}-more-course-description`

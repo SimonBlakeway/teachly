@@ -6,6 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node app",
     "dev": "cross-env NODE_ENV=development nodemon app",
+    "ngrok": "cross-env NODE_ENV=ngrok nodemon app",
     "postinstall": "node ./scripts/post-install.js"
   },
   "author": "Simon Blakeway",

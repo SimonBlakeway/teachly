@@ -2,10 +2,12 @@ const { randomUUID } = require('crypto');
 const db = require('../config/db');
 const utils = require(process.cwd() + '/utils.js');
 const axios = require('axios');
-const http = require("https");
-baseURL = process.env.PAYPAL_BASE_URL
-baseHostURL = process.env.COMPLETE_URL
-var access_token = "";
+const baseURL = process.env.PAYPAL_BASE_URL
+const baseHostURL = process.env.COMPLETE_URL
+const ipAddressUrl = process.env.IP_ADDRESS_URL
+
+let  access_token = "";
+
 
 function base64EncodeAuth(str) {
     const buff = Buffer.from(str, 'utf-8');
@@ -180,7 +182,13 @@ async function payUser(PAYPAL_ID, sender_item_id, sender_batch_id ,amount, curre
 async function getConnectionUrl(nonce) {
     scopes = ["openid", `https://uri.paypal.com/services/paypalattributes`].join(" ")
     scopes = encodeURIComponent(scopes)
+
+
     return_url = encodeURIComponent(`http://127.0.0.1:3001/gateway/paypal/oauth2/redirect/paypal&nonce=${nonce}`)
+    // `http://127.0.0.1:3001/gateway/paypal/oauth2/redirect/paypal&nonce=${nonce}`
+    
+
+
     url = `https://www.sandbox.paypal.com/connect/?flowEntry=static&client_id=${process.env.PAYPAL_CLIENT_ID}&response_type=code&scope=${scopes}&redirect_uri=${return_url}`
     return url
 }
