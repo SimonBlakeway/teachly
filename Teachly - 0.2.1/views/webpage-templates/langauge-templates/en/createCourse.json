@@ -17,12 +17,16 @@
     "clickUpload": "Click To Upload",
     "createCourse": "create Course",
     "errPopup": {
-        "subjectErr": "{{context.bodyContext.errPopup.nameErr}}",
-        "specialityErr": "{{context.bodyContext.errPopup.nameErr}}",
-        "descriptionErr": "{{context.bodyContext.errPopup.nameErr}}",
-        "imageErr": "{{context.bodyContext.errPopup.nameErr}}",
-        "taughtInErr": "{{context.bodyContext.errPopup.nameErr}}",
-        "priceErr": "{{context.bodyContext.errPopup.emailErr}}",
-        "timeRangeErr": "{{context.bodyContext.errPopup.emailErr}}"
+        "invalidImage": "invalid image",
+        "invalidPrice": "invalid price",
+        "priceToHigh": "price per minute is too high",
+        "priceToLow": "price per minute is too low",
+        "invalidDescription": "invalid description",
+        "descriptionToLong": "description is too long",
+        "descriptionToShort": "description is too short",
+        "invalidTaughtIn": "invalid taughtIn",
+        "taughtInLenToLow": "invalid taughtIn",
+        "invalidOffersTrialLesson": "invalid offer Trial lesson",
+        "invalidCalenderTimes": "invalid calender times"
     }
 }

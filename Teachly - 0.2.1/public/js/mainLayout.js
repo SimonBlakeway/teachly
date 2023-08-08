@@ -1,3 +1,4 @@
+
 toLocalCurClass = new Intl.NumberFormat(userLang, { //method call
     style: 'currency',
     currency: userCur,
@@ -71,6 +72,26 @@ function createOnScreenNotification(text) {
         })
     }, 1000);
 }
+
+function fadeout(id, callback) {
+    /*
+    obj = {
+        id: id pointing to element,
+    }
+    */
+    let element = document.getElementById(id)
+    animClasses = ["anim-dur-1000", "anim-perm", "anim-n-disappear"]
+    element.classList.add(...animClasses)
+
+    setTimeout(async function () {
+        element.classList.add("display-nonei")
+        element.classList.remove(...animClasses)
+
+        callback()
+    }, 1000)
+
+}
+
 updateCurrencyInterval(userCur)
 
 updateDatesInterval()
@@ -86,3 +107,8 @@ window.addEventListener('load', function () {
 })
 
 
+
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}

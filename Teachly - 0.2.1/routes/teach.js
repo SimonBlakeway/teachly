@@ -53,24 +53,25 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
     courseData = req.body
 
     //price_per_minute check
-    if (typeof courseData.price_per_minute != "number") throw new Error("price too low")
-    if (courseData.price_per_minute > 5) throw new Error("price too high")
-    if (courseData.price_per_minute < 0.05) throw new Error("price too low")
+    if (typeof courseData.pricePerMinute != "number") throw new Error("price not number")
+    if (courseData.pricePerMinute > 5) throw new Error("price too high")
+    if (courseData.pricePerMinute < 0.05) throw new Error("price too low")
 
     //description check
-    if (typeof courseData.description != "string") throw new Error("price too low")
-    if (courseData.description.length > 6969) throw new Error("price too low")
-    if (courseData.description.length < 0) throw new Error("price too low")
+    if (typeof courseData.description != "string") throw new Error("description not str")
+    if (courseData.description.length > 6969) throw new Error("description len too high")
+    if (courseData.description.length < 0) throw new Error("description len too low")
 
     //taughtIn check
-    if (courseData.taughtIn.constructor !== Array) throw new Error("price too low")
-    if (courseData.taughtIn.length == 0) throw new Error("price too low")
+    if (courseData.taughtIn.constructor !== Array) throw new Error("taughtIn not Array")
+    if (courseData.taughtIn.length == 0) throw new Error("taughtIn len too low")
 
     //offersTrialLesson check
-    if (typeof courseData.offersTrialLesson != "boolean") throw new Error("price too low")
+    if (typeof courseData.offersTrialLesson != "boolean") throw new Error("offersTrialLesson not bool")
+
 
     //calender_times check
-    if (typeof courseData.calender_times.constructor !== Array) throw new Error("price too low")
+    if (courseData.courseTimeRanges.constructor !== Array) throw new Error("calender_times not Array")
 
 
 
@@ -89,7 +90,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       availableTimes: courseData.availableTimes,
       courseImg: await utils.ImagePrep(utils.LZDecompress(courseData.courseImg), `${req.settings.name}-course-${courseData.subject}`, dimensions = [1440, 1440], maxSize = 2097152),
       price_per_minute: courseData.price_per_minute,
-      calender_times: courseData.courseTimeRanges
+      calender_times: utils.formatToPGRange(courseData.courseTimeRanges)
     }
 
 
@@ -107,7 +108,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
             course_img,
             price_per_minute,
             calender_times
-              ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, to_tsvector( $10 ), $11)`,
+              ) VALUES ($1, $2, $3, $4, $5, $6, $7, to_tsvector( $8 ), $9, $10, $11)`,
         [courseObj.description,
         courseObj.createdAt,
         courseObj.taughtIn,

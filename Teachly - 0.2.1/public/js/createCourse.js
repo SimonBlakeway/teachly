@@ -5,7 +5,6 @@ var imageWorker; //= new Worker('/js/imageWorker.js', { credentials: "include" }
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 var specialitiesObj = {};
 var imageStr = false
-var taughtInArr = []
 
 function getUTCTimeStampNoHours(date = new Date()) {
   return new Date(
@@ -378,7 +377,6 @@ function addTimeCalender(calenderId) {
     hiddenInput.value = hiddenInput.defaultValue //"the user has not selected a time"
   }
   else {
-    console.log("is good")
     hiddenInput = document.getElementById("hidden-timeRange-input")
     hiddenInput.value = "the user has selected a time"
   }
@@ -393,65 +391,110 @@ function removeTimeCalender(calenderId, timeId) {
     hiddenInput.value = hiddenInput.defaultValue //"the user has not selected a time"
   }
   else {
-    console.log("is good")
     hiddenInput = document.getElementById("hidden-timeRange-input")
     hiddenInput.value = "the user has selected a time"
   }
 }
 
-function getTimesCalender(calenderId, removeTimeZone = true) {
+function getTimesCalender(calenderId, removeTimeZone = true, removeMilliseconds = true) {
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
   adaptedDays = [...days.slice(dayIndex, days.length), ...days.slice(0, dayIndex)]
-
 
   let timesArr = []
   let timesDivs = document.querySelectorAll(`.calender-time-${calenderId}`)
   const timeOffset = new Date().getTimezoneOffset()
   const BaseTime = getUTCTimeStampNoHours()
 
-
-
   if (removeTimeZone) {
-    for (let i = 0; i < timesDivs.length; i++) {
-      let timesDiv = timesDivs[i]
-      let day = timesDiv.id.split("-")[1]
-      let dayIndex = adaptedDays.indexOf(day)
-      times = timesDiv.children[0].innerHTML.split(" - ")
+    if (removeMilliseconds) {
+      for (let i = 0; i < timesDivs.length; i++) {
+        let timesDiv = timesDivs[i]
+        let day = timesDiv.id.split("-")[1]
+        let dayIndex = adaptedDays.indexOf(day)
+        times = timesDiv.children[0].innerHTML.split(" - ")
 
-      start = convertTimeToInteger(times[0]) - timeOffset
-      finish = convertTimeToInteger(times[1]) - timeOffset
+        start = convertTimeToInteger(times[0]) - timeOffset
+        finish = convertTimeToInteger(times[1]) - timeOffset
 
-      if (start < 0) {
-        //use prev day
-        dayIndex--
+        if (start < 0) {
+          //use prev day
+          dayIndex--
+        }
+        if (start > 1440) {
+          //use next day
+          dayIndex++
+        }
+        start = Math.floor((BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000 * 60)) / 1000)
+
+        finish = Math.floor((BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (finish * 1000 * 60)) / 1000)
+
+        timesArr.push([start, finish])
+
       }
-      if (start > 1440) {
-        //use next day
-        dayIndex++
+    }
+    else {
+      for (let i = 0; i < timesDivs.length; i++) {
+        let timesDiv = timesDivs[i]
+        let day = timesDiv.id.split("-")[1]
+        let dayIndex = adaptedDays.indexOf(day)
+        times = timesDiv.children[0].innerHTML.split(" - ")
+
+        start = convertTimeToInteger(times[0]) - timeOffset
+        finish = convertTimeToInteger(times[1]) - timeOffset
+
+        if (start < 0) {
+          //use prev day
+          dayIndex--
+        }
+        if (start > 1440) {
+          //use next day
+          dayIndex++
+        }
+        start = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000 * 60)
+
+        finish = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (finish * 1000 * 60)
+
+        timesArr.push([start, finish])
+
       }
-      start = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000 * 60)
-
-      finish = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (finish * 1000 * 60)
-
-      timesArr.push([start, finish])
-
     }
   }
   else {
-    for (let i = 0; i < timesDivs.length; i++) {
-      let timesDiv = timesDivs[i]
-      let day = timesDiv.id.split("-")[1]
-      let dayIndex = adaptedDays.indexOf(day)
-      let times = timesDiv.children[0].innerHTML.split(" - ")
+    if (removeMilliseconds) {
+      for (let i = 0; i < timesDivs.length; i++) {
+        let timesDiv = timesDivs[i]
+        let day = timesDiv.id.split("-")[1]
+        let dayIndex = adaptedDays.indexOf(day)
+        let times = timesDiv.children[0].innerHTML.split(" - ")
 
-      start = parseInt(convertTimeToInteger(times[0])) - timeOffset
-      finish = parseInt(convertTimeToInteger(times[1])) - timeOffset
+        start = parseInt(convertTimeToInteger(times[0])) - timeOffset
+        finish = parseInt(convertTimeToInteger(times[1])) - timeOffset
 
-      start = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)
+        start = Math.floor((BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)) / 1000)
 
-      finish = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)
+        finish = Math.floor((BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)) / 1000)
 
-      timesArr.push([start, finish])
+        timesArr.push([start, finish])
+
+      }
+    }
+    else {
+      for (let i = 0; i < timesDivs.length; i++) {
+        let timesDiv = timesDivs[i]
+        let day = timesDiv.id.split("-")[1]
+        let dayIndex = adaptedDays.indexOf(day)
+        let times = timesDiv.children[0].innerHTML.split(" - ")
+
+        start = parseInt(convertTimeToInteger(times[0])) - timeOffset
+        finish = parseInt(convertTimeToInteger(times[1])) - timeOffset
+
+        start = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)
+
+        finish = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)
+
+        timesArr.push([start, finish])
+
+      }
 
     }
   }
@@ -476,7 +519,9 @@ function setTaughtIn() {
     document.getElementById("taughtIn").innerText = chosenSpec.join(", ")
   }
   else {
-    document.getElementById("taughtIn").innerText = "{{context.bodyContext.choose}}"
+    taughtInElement = document.getElementById("taughtIn")
+    defaultVal = taughtInElement.getAttribute("data-default-val")
+    taughtInElement.innerText = defaultVal
   }
 }
 
@@ -527,10 +572,23 @@ function toggleCoursePopup(id) {
 }
 
 function toggleErrPopup(errName) {
-  var ErrPopups = document.getElementsByClassName("err");
+  let ErrPopups = document.getElementsByClassName("err");
+  let parentElement = document.getElementsByClassName("err-popup")
   for (i = 0; i < ErrPopups.length; i++) {
-    ErrPopups[i].style.display = "none";
-    ErrPopups[i].style.visibility = "hidden";
+    let posErrPopop = ErrPopups[i]
+
+    if (posErrPopop.getAttribute("data-text") == errName) {
+      posErrPopop.classList.add("display-flexi")
+      parentElement.classList.add("display-flexi")
+      setTimeout(() => {
+        fadeout("err-popup", () => {
+          posErrPopop.classList.remove("display-flexi")
+          parentElement.classList.remove("display-flexi")
+        })
+      }, 2000);
+      break;
+
+    }
 
   }
   chosenPopup = document.getElementById(errName + "-err")
@@ -575,14 +633,12 @@ function sub() {
   reader.readAsDataURL(file)
   document.getElementById("upfile").click(); //click the required input
 
-  console.log("fileName", fileName)
 
   if (fileName[fileName.length - 1] == "") {
     defaultText = document.getElementById("course-image").getAttribute("default-val")
     document.getElementById("course-image").innerHTML = defaultText
   }
   else {
-    console.log(fileName.slice(0, 15))
     document.getElementById("course-image").innerHTML = fileName.slice(0, 15) //50 chars for now
   }
 }
@@ -592,11 +648,12 @@ async function sendCourseData() {
   if (imageStr == false) return
 
   function basicCourseObjCheck(obj) {
+    console.log(obj)
     if (obj.subject == "") { return false }
     if (obj.description == "") { return false }
     if (obj.taughtIn == "") { return false }
-    if (obj.price_per_minute > 0.05) { return false }
-    if (obj.price_per_minute > 5) { return false }
+    if (obj.pricePerMinute < 0.05) { return false }
+    if (obj.pricePerMinute > 5) { return false }
     if (obj.courseTimeRanges.length == 0) { return false }
     return true
   }
@@ -623,20 +680,23 @@ async function sendCourseData() {
     }
   }
   try {
-    specialities = $("#specialities").text()
-    if (specialities == "\n                  Choose") { specialities = [] }
-    else { specialities = specialities.split(", ") }
+    specialitiesElement = document.getElementById("specialities")
+    specialities = ""
+    if (specialitiesElement.innerHTML == specialitiesElement.getAttribute("data-default-val")) { specialities = [] }
+    else { specialities = specialitiesElement.innerHTML.split(", ") }
 
     courseData = {
       subject: $("#subject").text(),
       specialities: specialities,
       description: $("#description").val(),
       courseImg: imageStr,
-      taughtIn: taughtInArr,
-      pricePerMinute: Number($("#price").val()) / curConversionRatio, 
-      courseTimeRanges: getTimesCalender("courseTimes", removeTimeZone = true)
+      taughtIn: document.getElementById("taughtIn").innerHTML.split(", "),
+      pricePerMinute: Number($("#price").val()) / curConversionRatio,
+      courseTimeRanges: getTimesCalender("courseTimes", removeTimeZone = true, removeMilliseconds = true),
+      offersTrialLesson: false
     }
     if (!basicCourseObjCheck(courseData)) {
+      console.log("sdfsdfsdf")
       return
     }
     sendReq(courseData)
@@ -748,7 +808,7 @@ window.addEventListener('load', async function () {
 })
 
 function switchToFinanceLogin() {
-  document.getElementById("create-course").add("display-nonei");
+  document.getElementById("create-course").classList.add("display-nonei");
   document.getElementById("create-course-finance").classList.remove("display-nonei");
   document.getElementById("create-course-finance").classList.add("d-flex");
 }

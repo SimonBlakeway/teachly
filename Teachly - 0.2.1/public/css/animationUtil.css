@@ -1,0 +1,46 @@
+.anim-dur-500 {
+    animation-duration: 1000ms;
+}
+
+.anim-dur-1000 {
+    animation-duration: 1000ms;
+}
+
+.anim-dur-2000 {
+    animation-duration: 1000ms;
+}
+
+.anim-dur-3000 {
+    animation-duration: 1000ms;
+}
+
+
+.anim-dur-4000 {
+    animation-duration: 1000ms;
+}
+
+.anim-perm {
+    animation-fill-mode: forwards;
+}
+
+
+
+
+
+
+
+
+
+.anim-n-disappear {
+    animation-name: disappear-anim;
+}
+
+@keyframes disappear-anim {
+    from {
+        opacity: 100;
+    }
+
+    to {
+        opacity: 0;
+    }
+}

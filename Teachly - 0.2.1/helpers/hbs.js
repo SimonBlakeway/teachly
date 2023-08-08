@@ -23,14 +23,14 @@ module.exports = {
   },
   mathAdd: function () {
     newVal = 0
-    for (var i = 0; i < arguments.length; i++) {
+    for (var i = 0; i < (arguments.length - 1); i++) {
       newVal += arguments[i]
     }
     return newVal
   },
   mathMultiply: function () {
     newVal = 1
-    for (var i = 0; i < arguments.length; i++) {
+    for (let i = 0; i < (arguments.length - 1); i++) {
       newVal *= arguments[i]
     }
     return newVal

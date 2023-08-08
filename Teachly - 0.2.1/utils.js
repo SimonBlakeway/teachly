@@ -70,6 +70,7 @@ function getUTCTimeStampComplete(date = new Date()) {
 function formatToPGRange(input, rules = ["exclusive", "inclusive"]) {
   //arr: [start, finish]
   //rules: ["rule for start", "rule for finish"]
+  //function only works with well formed input/rules
   ruleToVal = {
     "start": {
       "exclusive": "[",
@@ -86,7 +87,7 @@ function formatToPGRange(input, rules = ["exclusive", "inclusive"]) {
       const range = input[index];
       const start = range[0]
       const finish = range[1]
-      newRange = `${ruleToVal.start[rules[0]]} ${start}   , ${finish}   ${ruleToVal.finish[rules[1]]}`
+      newRange = `${ruleToVal.start[rules[0]]}${start},${finish}${ruleToVal.finish[rules[1]]}`
       ranges.push(newRange)
     }
   }
@@ -94,7 +95,7 @@ function formatToPGRange(input, rules = ["exclusive", "inclusive"]) {
     const range = input
     const start = range[0]
     const finish = range[1]
-    newRange = `${ruleToVal.start[rules[0]]} ${start}   , ${finish}   ${ruleToVal.finish[rules[1]]}`
+    newRange = `${ruleToVal.start[rules[0]]}${start}, ${finish}${ruleToVal.finish[rules[1]]}`
     ranges.push(newRange)
   }
   return ranges
@@ -545,6 +546,8 @@ function convertTaughtInToQuery(languages) {
   }
 }
 
+
+
 function convertTimeRangeToQuery(arr) {
   try {
     var queryString = `AND (`
@@ -610,17 +613,87 @@ function convertTimeRangeToQuery(obj) {
   return queryString
 }
 
-function convertMinuteTimeRangeToQuery(arr) {
-  if (arr.constructor !== Array || arr.length != 2) return ""
-  try {
-    lowNum = arr[0]
-    highNum = arr[1]
-    queryString = `AND ((lesson_time  > ${lowNum}) AND (lesson_time  < ${highNum})) \n`
-    return queryString
+function convertMinuteTimeRangeToQuery(arr, min, max) {
+  if (arr.constructor !== Array || arr.length == 0) return ""
+  if ((typeof min != "number") || (typeof max != "number")) return ""
+  {
+  /*
+   
+    WHERE
+    
+  (
+      (calender_times = any(
+      SELECT calender_times 
+      FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
+      WHERE ( 
+        (
+        40 > upper( calender_times [s]) AND
+        60 < lower( calender_times [s]) AND
+        calender_times [s] @> '[ 12, 15)'
+        )
+      )
+    )) 
+    OR
+      (calender_times = any(
+      SELECT calender_times 
+      FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
+      WHERE ( 
+        (
+        40 > upper( calender_times [s]) AND
+        60 < lower( calender_times [s]) AND
+        calender_times [s] @> '[ 10, 13)'
+        )
+      )
+    )) 
+  )
+   
+   */
   }
-  catch (err) {
-    return ""
+  queryStr = `
+  (  `
+
+  for (let index = 0; index < arr.length; index++) {
+    const range = arr[index];
+    start = range[0]
+    finish = range[1]
+
+    if (index == 0) {
+      queryStr += `
+      (calender_times = any(
+        SELECT calender_times 
+        FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
+        WHERE ( 
+          (
+          ${max} > upper( calender_times [s]) AND
+          ${min} < lower( calender_times [s]) AND
+          calender_times [s] @> '[ ${start}, ${finish})'
+          )
+        )
+      ))
+      `
+    }
+    else {
+      queryStr += `
+      OR
+      (calender_times = any(
+      SELECT calender_times 
+      FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
+      WHERE ( 
+        (
+        ${max} > upper( calender_times [s]) AND
+        ${min} < lower( calender_times [s]) AND
+        calender_times [s] @> '[ ${start}, ${finish})'
+        )
+      )
+    )) `
+    }
   }
+
+  queryStr += `  
+  )`
+
+  return queryStr
+
 }
 
 function convertspecialityArrToQuery(lang, subjectName, specialities) {
@@ -872,7 +945,7 @@ module.exports = {
   compiledConvert,
   sendAutomatedNotification,
   sendAutomatedNotificationGlobal,
+  formatToPGRange
 }
-
 
 

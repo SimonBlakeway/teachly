@@ -81,7 +81,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
     subject = reqObj.subject
     specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, escapeStrArr(reqObj.specialities))
     orderByQueryString = utils.convertOrderByToQuery(reqObj.orderBy)
-    timeRangeQueryString = utils.convertTimeRangeToQuery(reqObj.availableTimes)
+    timeRangeQueryString = utils.convertMinuteTimeRangeToQuery(reqObj.availableTimes, reqObj.min, reqObj.man)
     taughtInToQuery = utils.convertTaughtInToQuery(reqObj.taughtIn)
     searchByKeywordQueryString = utils.convertSearchByKeywordToQuery(reqObj.searchby)
     pagePlace = Number(reqObj.pagePlace) ? Number(reqObj.pagePlace) * 10 : 0;
@@ -116,8 +116,8 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
       price_per_minute
     FROM teacher_course
     WHERE subject =  '${subject}'
-    AND price_per_lesson > ${pricePerLessonRange[0]}  
-    AND price_per_lesson < ${pricePerLessonRange[1]}  
+    AND price_per_minute > ${pricePerLessonRange[0]}  
+    AND price_per_minute < ${pricePerLessonRange[1]}  
     ${specialityQueryString}
     ${searchByKeywordQueryString}
     ${timeRangeQueryString}
@@ -127,6 +127,8 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
     ${orderByQueryString}
     LIMIT ${10} OFFSET ${pagePlace};
     `
+
+    console.log(queryString)
 
     try {
       countQuery = `SELECT COUNT ( * )  FROM teacher_course \n  ` + "WHERE" + queryString.split("WHERE")[1].split("ORDER BY")[0]

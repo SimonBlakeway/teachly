@@ -98,7 +98,7 @@
                 <div>
                   <div class="my-2">{{context.bodyContext.taughtIn}}</div>
                   <div class="d-flex align-items-center justify-content-center w-100 text-center">
-                    <div id="taughtIn"
+                    <div id="taughtIn" data-default-val="{{context.bodyContext.choose}}"
                       class="border rounded border-primary d-flex align-items-center justify-content-center py-2 w-240p">
                       {{context.bodyContext.choose}}
                       <div class="h-0 w-0 overflow-hidden position-absolute mr-200p mt-20p">
@@ -125,7 +125,7 @@
             <div>
               <div class="my-2">{{context.bodyContext.priceIn}} {{context.settings.cur}}</div>
               <div class="d-flex align-items-center justify-content-center">
-                <input type="number" id="price" required
+                <input type="number" id="price" required for="price"
                   min="{{mathMultiply context.bodyContext.pricePerMinuteMin context.settings.curRatio}}"
                   step="{{mathMultiply context.bodyContext.pricePerMinuteStep context.settings.curRatio}}"
                   max="{{mathMultiply context.bodyContext.pricePerMinuteMax context.settings.curRatio}}"
@@ -169,7 +169,39 @@
 </section>
 
 <div id="err-popup" class="popup text-dark position-fixed">
-  <div class="err" id="image-err">{{context.bodyContext.errPopup.nameErr}}</div>
+  <div class="err" data-text="invalid image">
+    {{context.bodyContext.errPopup.invalidImage}}
+  </div>
+  <div class="err" data-text="price not number">
+    {{context.bodyContext.errPopup.invalidPrice}}
+  </div>
+  <div class="err" data-text="price too high">
+    {{context.bodyContext.errPopup.priceToHigh}}
+  </div>
+  <div class="err" data-text="price too low">
+    {{context.bodyContext.errPopup.priceToLow}}
+  </div>
+  <div class="err" data-text="description not str">
+    {{context.bodyContext.errPopup.invalidDescription}}
+  </div>
+  <div class="err" data-text="description len too high">
+    {{context.bodyContext.errPopup.descriptionToLong}}
+  </div>
+  <div class="err" data-text="description len too low">
+    {{context.bodyContext.errPopup.descriptionToShort}}
+  </div>
+  <div class="err" data-text="taughtIn not Array">
+    {{context.bodyContext.errPopup.invalidTaughtIn}}
+  </div>
+  <div class="err" data-text="taughtIn len too low">
+    {{context.bodyContext.errPopup.taughtInLenToLow}}
+  </div>
+  <div class="err" data-text="offersTrialLesson not bool">
+    {{context.bodyContext.errPopup.invalidOffersTrialLesson}}
+  </div>
+  <div class="err" data-text="calender_times not Array">
+    {{context.bodyContext.errPopup.invalidCalenderTimes}}
+  </div>
 </div>
 
 <section id="create-course-finance"

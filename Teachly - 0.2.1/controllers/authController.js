@@ -55,8 +55,8 @@ exports.login = async function (req, res) {
     try {
       userToken = await utils.genUserRefreshToken(result.rows[0].id)
       userCookie = await utils.genUserCookie(result.rows)
-      res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-      res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: process.env.SECURE, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: process.env.SECURE, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       res.sendStatus(200)
 
     } catch (error) {
@@ -131,8 +131,8 @@ exports.emailValidation = async function (req, res) {
       userCookie = await utils.genUserCookie(result.rows)
       db.query(`UPDATE user_info SET email_code = $1 WHERE email = $2;`, ["true", userEmail])
 
-      res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-      res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.cookie('userCookie', userCookie, { sameSite: true, httpOnly: true, secure: process.env.SECURE, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.cookie('user_refresh_token', userToken, { sameSite: true, httpOnly: true, secure: process.env.SECURE, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       console.log("all good")
       res.sendStatus(200)
 
@@ -231,8 +231,8 @@ exports.settings = function (req, res) {
           user_refresh_token = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
 
           db.query(`UPDATE user_info SET ${change.settingName} = $1 WHERE id = $2;`, [change.change, req.settings.id])
-          res.cookie('userCookie', userToken, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
-          res.cookie('user_refresh_token', user_refresh_token, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+          res.cookie('userCookie', userToken, { sameSite: true, httpOnly: true, secure: process.env.SECURE, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+          res.cookie('user_refresh_token', user_refresh_token, { sameSite: true, httpOnly: true, secure: process.env.SECURE, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
         }
         else {
           userToken = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
@@ -241,7 +241,7 @@ exports.settings = function (req, res) {
           settings = jwt.encode(userToken, process.env.JWT_SECRET)
 
 
-          res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+          res.cookie('userCookie', settings, { sameSite: true, httpOnly: true, secure: process.env.SECURE, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
         }
       }
       else {
@@ -346,7 +346,7 @@ exports.refreshToken = async function (req, res) {
 
     if (update_result.rowCount == 1) { //successful update
       encoded_client_token = jwt.encode(updated_client_token, process.env.JWT_SECRET)
-      res.cookie('user_refresh_token', encoded_client_token, { sameSite: true, httpOnly: true, secure: true, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
+      res.cookie('user_refresh_token', encoded_client_token, { sameSite: true, httpOnly: true, secure: process.env.SECURE, expires: new Date(Date.now() + (30 * 24 * 3600000)) })
       res.sendStatus(200)
     }
     else {
