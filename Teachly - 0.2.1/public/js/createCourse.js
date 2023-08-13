@@ -207,7 +207,7 @@ function generateCalenderTimeTable(calenderId) {
   button.addEventListener("click", e => {
     toggleCalenderDayPopup(calenderId)
   })
-  button.innerHTML = "❌"
+  button.innerHTML = " ╳ "
 
   body = document.createElement("div")
   body.id = "add-time-calender-body"
@@ -502,6 +502,8 @@ function getTimesCalender(calenderId, removeTimeZone = true, removeMilliseconds 
   if (timesArr.length == 0) {
     return timesArr
   }
+  //might be returning [validTime * 10, [validTime * 10,...]
+  //might be extra 0 at end or one less than neccacarry
   return timesArr
 }
 
@@ -523,6 +525,20 @@ function setTaughtIn() {
     defaultVal = taughtInElement.getAttribute("data-default-val")
     taughtInElement.innerText = defaultVal
   }
+}
+
+function getTaughtIn() {
+  innerDivs = document.getElementById("taughtIn-list").children
+  chosenSpec = []
+  taughtInArr = []
+
+  for (i = 0; i < innerDivs.length; i++) {
+    if (innerDivs[i].children[0].checked) {
+      chosenSpec.push(innerDivs[i].children[1].innerHTML)
+      taughtInArr.push(innerDivs[i].children[1].getAttribute("data-lang-code"))
+    }
+  }
+  return taughtInArr
 }
 
 function searchBox(boxId, inputId) {
@@ -645,13 +661,13 @@ function sub() {
 
 async function sendCourseData() {
 
+
   if (imageStr == false) return
 
   function basicCourseObjCheck(obj) {
-    console.log(obj)
     if (obj.subject == "") { return false }
     if (obj.description == "") { return false }
-    if (obj.taughtIn == "") { return false }
+    if (obj.taughtIn.length == 0) { return false }
     if (obj.pricePerMinute < 0.05) { return false }
     if (obj.pricePerMinute > 5) { return false }
     if (obj.courseTimeRanges.length == 0) { return false }
@@ -690,7 +706,7 @@ async function sendCourseData() {
       specialities: specialities,
       description: $("#description").val(),
       courseImg: imageStr,
-      taughtIn: document.getElementById("taughtIn").innerHTML.split(", "),
+      taughtIn: getTaughtIn(),
       pricePerMinute: Number($("#price").val()) / curConversionRatio,
       courseTimeRanges: getTimesCalender("courseTimes", removeTimeZone = true, removeMilliseconds = true),
       offersTrialLesson: false
@@ -767,12 +783,14 @@ window.addEventListener('load', async function () {
     label.id = `${langPair[1]}-label`
     label.for = `${langPair[0]}`
     label.innerHTML = `${langPair[0]}`
+    label.setAttribute("data-lang-code", langPair[1])
 
     input = document.createElement("input");
     input.className = "form-check-input w-20p mr-5p"
     input.type = "checkbox"
     input.id = `${langPair[0]}`
     input.name = `${langPair[0]}`
+    input.setAttribute("data-lang-code", langPair[1])
     input.addEventListener('click', event => {
       setTaughtIn()
     })
@@ -809,6 +827,7 @@ window.addEventListener('load', async function () {
 
 function switchToFinanceLogin() {
   document.getElementById("create-course").classList.add("display-nonei");
+  document.getElementById("create-course").classList.remove("d-flex");
   document.getElementById("create-course-finance").classList.remove("display-nonei");
   document.getElementById("create-course-finance").classList.add("d-flex");
 }

@@ -89,7 +89,7 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
       specialities: courseData.specialities,
       availableTimes: courseData.availableTimes,
       courseImg: await utils.ImagePrep(utils.LZDecompress(courseData.courseImg), `${req.settings.name}-course-${courseData.subject}`, dimensions = [1440, 1440], maxSize = 2097152),
-      price_per_minute: courseData.price_per_minute,
+      price_per_minute: courseData.pricePerMinute,
       calender_times: utils.formatToPGRange(courseData.courseTimeRanges)
     }
 

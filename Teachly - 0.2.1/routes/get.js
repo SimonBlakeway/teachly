@@ -111,7 +111,7 @@ router.get('/images/profile/:id', async (req, res) => {
 router.get('/curConversionRatio/:cur', (req, res) => {
   try {
     //res.json({ "ratio": global.currencyObj.conversion_rates[req.params.cur] })
-    res.json({ "ratio": 5 })
+    res.json({ "ratio": 1 })
   }
   catch (err) {
     res.json({ "err": err })

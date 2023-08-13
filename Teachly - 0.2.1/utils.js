@@ -31,7 +31,6 @@ const secretKey = Buffer.from(process.env.CRYPTO_ENCRYPT_KEY, "hex")
 const iv = Buffer.from(process.env.CRYPTO_ENCRYPT_IV, 'hex')
 
 
-
 function convertTimeToInteger(time) {
   //time format "11:22"
   let d = new Date(0);
@@ -55,6 +54,16 @@ function getUTCTimeStampNoHours(date = new Date()) {
     date.getUTCDate()
   ).getTime()
 }
+
+function getUTCTimeStampNoMilliseconds(date = new Date()) {
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCMinutes(),
+  ).getTime()
+}
+
 
 function getUTCTimeStampComplete(date = new Date()) {
   return new Date(
@@ -616,84 +625,139 @@ function convertTimeRangeToQuery(obj) {
 function convertMinuteTimeRangeToQuery(arr, min, max) {
   if (arr.constructor !== Array || arr.length == 0) return ""
   if ((typeof min != "number") || (typeof max != "number")) return ""
+
+  min = min * 1000
+  max = max * 1000
   {
-  /*
-   
-    WHERE
-    
-  (
-      (calender_times = any(
-      SELECT calender_times 
-      FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
-      WHERE ( 
-        (
-        40 > upper( calender_times [s]) AND
-        60 < lower( calender_times [s]) AND
-        calender_times [s] @> '[ 12, 15)'
+    /*
+     
+      WHERE
+      
+    (
+        (calender_times = any(
+        SELECT calender_times 
+        FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
+        WHERE ( 
+          (
+          40 > ( upper( calender_times [s]) - lower( calender_times [s]) ) AND
+          60 < ( upper( calender_times [s]) - lower( calender_times [s]) ) AND
+          calender_times [s] @> '[ 12, 15)'
+          )
         )
-      )
-    )) 
-    OR
-      (calender_times = any(
-      SELECT calender_times 
-      FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
-      WHERE ( 
-        (
-        40 > upper( calender_times [s]) AND
-        60 < lower( calender_times [s]) AND
-        calender_times [s] @> '[ 10, 13)'
+      )) 
+      OR
+        (calender_times = any(
+        SELECT calender_times 
+        FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
+        WHERE ( 
+          (
+          40 > upper( calender_times [s]) AND
+          60 < lower( calender_times [s]) AND
+          calender_times [s] @> '[ 10, 13)'
+          )
         )
-      )
-    )) 
-  )
-   
-   */
+      )) 
+    )
+     
+     */
   }
   queryStr = `
   (  `
 
-  for (let index = 0; index < arr.length; index++) {
-    const range = arr[index];
-    start = range[0]
-    finish = range[1]
 
-    if (index == 0) {
-      queryStr += `
+  if (arr.length != 0) {
+
+    for (let index = 0; index < arr.length; index++) {
+      const range = arr[index];
+      start = range[0]
+      finish = range[1]
+
+      if (index == 0) {
+        queryStr += `
       (calender_times = any(
         SELECT calender_times 
         FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
         WHERE ( 
           (
-          ${max} > upper( calender_times [s]) AND
-          ${min} < lower( calender_times [s]) AND
+          ${max} >= upper( calender_times [s]) AND
+          ${min} <= lower( calender_times [s]) AND
           calender_times [s] @> '[ ${start}, ${finish})'
           )
         )
       ))
       `
-    }
-    else {
-      queryStr += `
+      }
+      else {
+        queryStr += `
       OR
       (calender_times = any(
       SELECT calender_times 
       FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
       WHERE ( 
         (
-        ${max} > upper( calender_times [s]) AND
-        ${min} < lower( calender_times [s]) AND
+        ${max} > ( upper( calender_times [s]) - lower( calender_times [s]) ) AND
+        ${min} < ( upper( calender_times [s]) - lower( calender_times [s]) ) AND
         calender_times [s] @> '[ ${start}, ${finish})'
         )
       )
     )) `
+      }
     }
-  }
 
-  queryStr += `  
+    queryStr += `  
   )`
+  }
+  else {
+    //the min max query would not work if there was no query times without this 
 
+    /*
+      possible problem
+
+      does this mean that a querr like min = 10, max = 20
+
+      will pull [10,11),[12,13),[14,15)
+
+      but not   [9 ,11),[12,13),[14,21)
+
+      even though [12,13) is a valid time it might skip
+
+      must check in playgound online later
+
+      might apply to for loop query as well
+
+      >>>no problem detected
+
+
+
+  select times from tes 
+    WHERE
+    times = any(
+      SELECT times
+        FROM (SELECT generate_subscripts(times, 1) AS s, times FROM tes) foo
+          WHERE  
+                (
+                  11 >= upper( times[s] ) AND
+                  2 <= lower( times[s] )
+                )
+              )
+
+
+
+    */
+    queryStr += `
+      (calender_times = any(
+        SELECT calender_times 
+        FROM (SELECT generate_subscripts( calender_times , 1) AS s, calender_times FROM tes) foo
+        WHERE ( 
+          (
+          ${max} >= upper( calender_times [s]) AND
+          ${min} <= lower( calender_times [s]) AND
+          )
+        )
+      ))
+      `
+  }
   return queryStr
-
 }
 
 function convertspecialityArrToQuery(lang, subjectName, specialities) {

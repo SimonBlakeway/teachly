@@ -16,6 +16,12 @@ list of tasks
 
   >hover course timetable in createCourse
 
+  >autocomplete="off" on inputs
+
+  >IMPORTANT!!! using chrome crashed some of the js/css, must be fixed!!!
+
+  >add workers into node image proccessing
+
 
 
 This app uses Node.js/Express/MongoDB with Google OAuth for authentication

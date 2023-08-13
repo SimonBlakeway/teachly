@@ -5,6 +5,44 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
+
+async function clear() {
+  str = `TRUNCATE teacher_course CASCADE`
+  res = await db.query(str)
+}
+
+
+
+async function search() {
+
+
+  str = `
+  SELECT  created_at,
+  course_id,
+  description,
+  teacher_id,
+  course_lessons,
+  specialities,
+  subject,
+  taught_in,
+  teacher_name,
+  rating,
+  number_of_reviews,
+  calender_times,
+  price_per_minute
+FROM teacher_course
+WHERE subject =  'english'
+  ORDER BY number_of_active_students ASC
+LIMIT 10 OFFSET 0;`
+
+  res = await db.query(str)
+
+  console.log(res.rows[0])
+
+
+}
+
+
 function escapeStrArr(arr) {
   try {
     newArr = []
@@ -77,18 +115,19 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
     lang = req.settings.lang
 
 
-    pricePerLessonRange = reqObj.pricePerLessonRange ? (reqObj.pricePerLessonRange) : [1, 50];
+    pricePerLessonRange = reqObj.pricePerLessonRange ? (reqObj.priceRange) : [0.05, 5];
     subject = reqObj.subject
+
+
     specialityQueryString = utils.convertspecialityArrToQuery(lang, subject, escapeStrArr(reqObj.specialities))
     orderByQueryString = utils.convertOrderByToQuery(reqObj.orderBy)
-    timeRangeQueryString = utils.convertMinuteTimeRangeToQuery(reqObj.availableTimes, reqObj.min, reqObj.man)
+    timeRangeQueryString = utils.convertMinuteTimeRangeToQuery(reqObj.availableTimeRanges, reqObj.min, reqObj.man)
     taughtInToQuery = utils.convertTaughtInToQuery(reqObj.taughtIn)
     searchByKeywordQueryString = utils.convertSearchByKeywordToQuery(reqObj.searchby)
     pagePlace = Number(reqObj.pagePlace) ? Number(reqObj.pagePlace) * 10 : 0;
-    if (((pricePerLessonRange[0] > 50) || (pricePerLessonRange[0] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
-    if (((pricePerLessonRange[1] > 50) || (pricePerLessonRange[1] < 1))) { res.json({ "err": "invalid pricePerLessonRange" }) }
-    if (!utils.isValidSubject(lang, subject)) { res.json({ "err": "invalid subject" }) }
-
+    if (((pricePerLessonRange[0] < 0.05) || (pricePerLessonRange[0] > 5))) throw new Error("invalid pricePerLessonRange")
+    if (((pricePerLessonRange[1] > 5) || (pricePerLessonRange[1] < 0.05))) throw new Error("invalid pricePerLessonRange")
+    if (!utils.isValidSubject(lang, subject)) throw new Error("invalid subject")
 
 
     /*
@@ -97,11 +136,14 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
      * there's gonna be overlap, right? and by storing the 
      * count on the server it could result in overall less db requests
      * since the result can just be handed to the user,
+     *
      */
 
 
+
     queryString = `
-    SELECT  created_at,
+    SELECT 
+      created_at,
       course_id,
       description,
       teacher_id,
@@ -126,34 +168,23 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
     ${specialityQueryString}
     ${orderByQueryString}
     LIMIT ${10} OFFSET ${pagePlace};
-    `
+    `;
 
-    console.log(queryString)
 
-    try {
-      countQuery = `SELECT COUNT ( * )  FROM teacher_course \n  ` + "WHERE" + queryString.split("WHERE")[1].split("ORDER BY")[0]
-      countResult = (reqObj.pageAmount == -1) ? db.query(countQuery) : reqObj.pageAmount
-      courseResult = db.query(queryString);
-
-      Promise.all([courseResult, countResult]).then((vals) => {
-
-        if (typeof vals[1] != "object") {
-          res.json({ "courses": vals[0].rows, "count": reqObj.pageAmount })
-        }
-        else {
-          res.json({ "courses": vals[0].rows, "count": Number(vals[1].rows[0].count) })
-        }
-      }).catch(err => {
-        console.log(countQuery)
-        console.log(err)
-        res.json({ "err": "bad query" })
-      })
-    } catch (error) {
-      console.log(error)
-      res.json({ "err": "server error" })
-    }
+    countQuery = `SELECT COUNT ( * )  FROM teacher_course \n  ` + "WHERE" + queryString.split("WHERE")[1].split("ORDER BY")[0]
+    countResult = (reqObj.pageAmount == -1) ? db.query(countQuery) : reqObj.pageAmount
+    courseResult = db.query(queryString);
+    Promise.all([courseResult, countResult]).then((vals) => {
+      if (typeof vals[1] != "object") {
+        res.json({ "courses": vals[0].rows, "count": reqObj.pageAmount })
+      }
+      else {
+        res.json({ "courses": vals[0].rows, "count": Number(vals[1].rows[0].count) })
+      }
+    })
   } catch (error) {
-
+    console.log(err.message)
+    res.json({ "err": err.message })
   }
 })
 

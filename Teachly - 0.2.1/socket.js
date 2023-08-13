@@ -53,17 +53,10 @@ async function sendNotifications(id) {
 
 }
 
-
-
-
-
 //socketio.js
 module.exports = {
   setIo: (server) => {
     const io = new Server(server);
-
-
-
 
     io.engine.use(cookieParser())
     io.engine.use((req, res, next) => {

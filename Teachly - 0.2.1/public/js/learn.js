@@ -1,15 +1,24 @@
+const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday",]
+const currentDay = days[new Date().getDay()]
+const dayIndex = new Date().getDay()
+const adaptedDays = [...days.slice(dayIndex, days.length), ...days.slice(0, dayIndex)]
+const nowInMinutes = Math.floor(Date.now() / 1000)
+const timeOffset = new Date().getTimezoneOffset() / 60
+
+
+
 function formDataSetup() {
     teachlyFormDataDefault = {
         "subject": subject,
         "specialities": [],
-        "priceRange": [10, 60],
+        "priceRange": [0.05, 5],
         "searchby": "",
         "taughtIn": [userLang],
         "orderBy": "Popularity",
-        "availableTimes": [],
         "courseTime": [20, 60],
         "activePage": 1,
-        "availableTimeRanges": []
+        "availableTimeRanges": [],
+        "pageAmount": 1,
 
     }
     teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
@@ -43,8 +52,8 @@ function formDataSetup() {
     slider = noUiSlider.create(regularSlider, {
         start: [teachlyFormData.priceRange[0] * curConversionRatio, teachlyFormData.priceRange[1] * curConversionRatio],
         connect: true,
-        margin: 5 * curConversionRatio,
-        range: { min: 10 * curConversionRatio, max: 60 * curConversionRatio },
+        margin: 0.0005 * curConversionRatio,
+        range: { min: 0.05 * curConversionRatio, max: 5 * curConversionRatio },
         tooltips: [prefixFormat, prefixFormat],
         pips: {
             mode: 'steps',
@@ -80,7 +89,7 @@ function formDataSetup() {
             range2Shown.innerHTML = priceRange[1] * curConversionRatio;
             slider.updateOptions({
                 margin: 5 * curConversionRatio,
-                range: { min: 0, max: 60 * curConversionRatio },
+                range: { min: 0.05 * curConversionRatio, max: 5 * curConversionRatio },
             });
             slider.set([priceRange[0] * curConversionRatio, priceRange[1] * curConversionRatio]);
         }
@@ -93,13 +102,30 @@ function formDataSetup() {
     document.getElementById(teachlyFormData.orderBy.replaceAll(" ", "-")).checked = true;
     document.getElementById('orderBy-button').innerHTML = teachlyFormData.orderBy;
 
+
     for (i = 0; i < teachlyFormData.taughtIn.length; i++) {
         document.getElementById(teachlyFormData.taughtIn[i]).checked = true;
     }
-    for (i = 0; i < teachlyFormData.availableTimes.length; i++) {
-        document.getElementById(teachlyFormData.availableTimes[i]).classList.add("active-time-slot-div");
-    }
 
+
+    cleanedCalenderTimesArr = []
+    for (i = 0; i < teachlyFormData.availableTimeRanges.length; i++) {
+        range = teachlyFormData.availableTimeRanges[i]
+        start = range[0]
+        finish = range[1]
+
+
+        if (start > nowInMinutes) { // times isn't in the past
+            cleanedCalenderTimesArr.push(range)
+            day = (days[new Date(start * 1000).getDay()])
+            start = convertIntegerToTime(start)
+            finish = convertIntegerToTime(finish)
+            addTimeCalenderFromMemory("searchCalenderTimes", day, start, finish)
+        }
+    }
+    teachlyFormData.availableTimeRanges = cleanedCalenderTimesArr
+
+    localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
 }
 
 async function formSetup() {
@@ -156,15 +182,26 @@ function updateformData(type, val) {
         document.getElementById('orderBy-button').innerHTML = val.replaceAll("-", " ");
         teachlyFormData["orderBy"] = val.replaceAll("-", " ")
     }
-    else if (type == "availableTimes") {
-        index = teachlyFormData.availableTimes.indexOf(val)
-        if (index != -1) {
-            teachlyFormData.availableTimes.splice(index, 1);
-            document.getElementById(val).classList.remove("active-time-slot-div");
+    else if (type == "calenderTimes") {
+        range = val[0]
+        actionType = val[1]
+
+        if (actionType == "removeTime") {
+
+            teachlyFormData.availableTimeRanges
+
+            for (let index = 0; index < teachlyFormData.availableTimeRanges.length; index++) {
+                const element = teachlyFormData.availableTimeRanges[index];
+                if ((element[0] = range[0]) && (element[1] = range[1])) {
+                    preElements = teachlyFormData.availableTimeRanges.splice(0, index)
+                    portElements = teachlyFormData.availableTimeRanges.splice(index, teachlyFormData.availableTimeRanges.length)
+                    teachlyFormData.availableTimeRanges = [...preElements, ...portElements]
+                    break;
+                }
+            }
         }
         else {
-            teachlyFormData.availableTimes.push(val)
-            document.getElementById(val).classList.add("active-time-slot-div");
+            teachlyFormData.availableTimeRanges.push(range)
         }
     }
     else if (type == "courseTime") {
@@ -220,18 +257,18 @@ function toggleSearchBarPopup(id) {
     }
 }
 
-
-
+function getUTCTimeStampNoHours(date = new Date()) {
+    return new Date(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate()
+    ).getTime()
+}
 
 
 
 function generateCalenderTimeTable(calenderId) {
     //calenderId: str, valid css/html class/id, no "-"
-    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-    currentDay = days[new Date().getDay()]
-    dayIndex = new Date().getDay() - 1
-    adaptedDays = [...days.slice(dayIndex, days.length), ...days.slice(0, dayIndex)]
-    const timeOffset = new Date().getTimezoneOffset() / 60
 
     timeRange = document.createElement("div")
     timeRange.id = `calender-outer-${calenderId}`
@@ -284,7 +321,7 @@ function generateCalenderTimeTable(calenderId) {
         box.className = "inline-grid-r-auto2-c-auto2 justify-items-center align-items-center grid-gap-3p m-0 p-0"
 
         innerDiv = document.createElement("div");
-        innerDiv.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
+        innerDiv.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30pi my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
         innerDiv.innerHTML = `+`;
         innerDiv.addEventListener("click", e => {
             toggleCalenderDayPopup(calenderId, day)
@@ -317,7 +354,7 @@ function generateCalenderTimeTable(calenderId) {
     button.addEventListener("click", e => {
         toggleCalenderDayPopup(calenderId)
     })
-    button.innerHTML = "❌"
+    button.innerHTML = " ╳ "
 
     body = document.createElement("div")
     body.id = "add-time-calender-body"
@@ -421,6 +458,7 @@ function toggleCalenderDayPopup(calenderId, day) {
         button = document.createElement("button")
         button.type = "button"
         button.id = "add-time-calender"
+        button.className = "btn btn-outline-primary bg-blacki"
         button.innerHTML = "Submit"
         button.addEventListener("click", e => {
             addTimeCalender(calenderId, day)
@@ -445,20 +483,27 @@ function addTimeCalender(calenderId) {
     startDate = getCustomTimeDateInfo("startTimeDate", "currentTimeStr")
     endDate = getCustomTimeDateInfo("endTimeDate", "currentTimeStr")
 
+    base = Math.floor(getUTCTimeStampNoHours() / 1000)
 
+    startDateInMinutes = parseInt(startDate.split(":")[0] * 60) + parseInt(startDate.split(":")[1])
+    endDateInMinutes = parseInt(endDate.split(":")[0] * 60) + parseInt(endDate.split(":")[1])
+    dayNum = adaptedDays.indexOf(day)
+    startDateTimeStamp = base + (dayNum * (60 * 60 * 24)) + (startDateInMinutes * 60)
+    endDateTimeStamp = base + (dayNum * (60 * 60 * 24)) + (endDateInMinutes * 60)
+
+    updateformData("calenderTimes", [[startDateTimeStamp, endDateTimeStamp], "addTime"])
 
     dateBox = document.getElementById(`${day}-dates`)
 
     let id = `${getRandomInt(999999999999999)}-${day}-calender-date-${calenderId}`
 
-
     timeDiv = document.createElement("div")
     timeDiv.id = `${id}`
-    timeDiv.className = `w-136pi p-0 fs-15p d-flex brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary calender-time-${calenderId}`
+    timeDiv.className = `w-136pi p-0 fs-15p d-flex brdr-r-5 h-30pi my-1 bg-blacki h-40p fs-20p btn btn-outline-primary calender-time-${calenderId}`
 
     timeText = document.createElement("div")
     timeText.innerHTML = `${startDate} - ${endDate}`
-    timeText.className = "w-108pi pt-2p"
+    timeText.className = "w-108pi pt-2p h-30pi"
 
     timeRemove = document.createElement("button")
     timeRemove.className = "float-right text-btn bg-blacki btn btn-outline-primary h-28pi d-flex align-items-center justify-content-center w-28pi"
@@ -469,9 +514,54 @@ function addTimeCalender(calenderId) {
     })
     timeDiv.append(timeText, timeRemove)
 
+    dateBox.removeChild(dateBox.lastChild); //remove addTime button
 
-    addDateButton = document.createElement("div");
-    addDateButton.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
+    timeRanges = getTimesCalender(calenderId, removeTimeZone = true)
+
+    if (timeRanges.length == 11) { //if range is full
+        dateBox.append(timeDiv)
+    }
+    else {
+        addDateButton = document.createElement("div");
+        addDateButton.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki fs-20p btn btn-outline-primary"
+        addDateButton.innerHTML = "+";
+        addDateButton.addEventListener("click", e => {
+            toggleCalenderDayPopup(calenderId, day)
+        })
+        dateBox.append(timeDiv, addDateButton)
+    }
+}
+
+
+function addTimeCalenderFromMemory(calenderId, day, startDate, endDate) {
+
+
+
+    let dateBox = document.getElementById(`${day}-dates`)
+    let id = `${getRandomInt(999999999999999)}-${day}-calender-date-${calenderId}`
+
+
+    timeDiv = document.createElement("div")
+    timeDiv.id = `${id}`
+    timeDiv.className = `w-136pi p-0 fs-15p d-flex brdr-r-5 h-30pi my-1 bg-blacki h-40p fs-20p btn btn-outline-primary calender-time-${calenderId}`
+
+
+    let timeText = document.createElement("div")
+    timeText.innerHTML = `${startDate} - ${endDate}`
+    timeText.className = "w-108pi pt-2p"
+
+    let timeRemove = document.createElement("button")
+    timeRemove.className = "float-right text-btn bg-blacki btn btn-outline-primary h-28pi d-flex align-items-center justify-content-center w-28pi"
+    timeRemove.type = "button"
+    timeRemove.innerHTML = `<div class="fs-w-bolder mb-3-5pi">  ╳  </div>`
+    timeRemove.addEventListener("click", e => {
+        removeTimeCalender(calenderId, id)
+    })
+    timeDiv.append(timeText, timeRemove)
+
+
+    let addDateButton = document.createElement("div");
+    addDateButton.className = "w-40p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30pi my-1 bg-blacki fs-20p btn btn-outline-primary"
     addDateButton.innerHTML = "+";
     addDateButton.addEventListener("click", e => {
         toggleCalenderDayPopup(calenderId, day)
@@ -481,34 +571,32 @@ function addTimeCalender(calenderId) {
     dateBox.append(timeDiv, addDateButton)
 
     timeRanges = getTimesCalender(calenderId, removeTimeZone = true)
-
-    if (timeRanges.length == 0) {
-        hiddenInput = document.getElementById("hidden-timeRange-input")
-        hiddenInput.value = hiddenInput.defaultValue //"the user has not selected a time"
-    }
-    else {
-        hiddenInput = document.getElementById("hidden-timeRange-input")
-        hiddenInput.value = "the user has selected a time"
-    }
 }
+
 
 function removeTimeCalender(calenderId, timeId) {
-    timeRangeBox = document.getElementById(timeId)
+    let timesDiv = document.getElementById(timeId)
+    let day = timesDiv.id.split("-")[1]
+    let dayNum = adaptedDays.indexOf(day)
+    times = timesDiv.children[0].innerHTML.split(" - ")
+    startDate = times[0]
+    endDate = times[1]
+
+    base = Math.floor(getUTCTimeStampNoHours() / 1000)
+
+    startDateInMinutes = parseInt(startDate.split(":")[0] * 60) + parseInt(startDate.split(":")[1]) * 1000
+    endDateInMinutes = parseInt(endDate.split(":")[0] * 60) + parseInt(endDate.split(":")[1]) * 1000
+
+    startDateTimeStamp = base + (dayNum * (60 * 24)) + startDateInMinutes
+    endDateTimeStamp = base + (dayNum * (60 * 24)) + endDateInMinutes
+
+    updateformData("calenderTimes", [[startDateTimeStamp, endDateTimeStamp], "removeTime"])
     removeElement(timeId)
-    const timeRanges = getTimesCalender(calenderId, removeTimeZone = true)
-    if (timeRanges.length == 0) {
-        hiddenInput = document.getElementById("hidden-timeRange-input")
-        hiddenInput.value = hiddenInput.defaultValue //"the user has not selected a time"
-    }
-    else {
-        hiddenInput = document.getElementById("hidden-timeRange-input")
-        hiddenInput.value = "the user has selected a time"
-    }
 }
 
+
+//time is stored in localstorage anyway, so maybe remove?
 function getTimesCalender(calenderId, removeTimeZone = true, removeMilliseconds = true) {
-    const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-    adaptedDays = [...days.slice(dayIndex, days.length), ...days.slice(0, dayIndex)]
 
     let timesArr = []
     let timesDivs = document.querySelectorAll(`.calender-time-${calenderId}`)
@@ -620,20 +708,11 @@ function getTimesCalender(calenderId, removeTimeZone = true, removeMilliseconds 
 
 
 
-
-
-
-
-
-
-
-
-
 window.addEventListener('load', function () {
 
     searchCourses()
 
-    formSetupRes = formSetup()
+    //formSetupRes = formSetup()
     //populate subject
     validSubject = axios.get('/get/validSubject').then(res => {
         if (res.data == "404") { }
@@ -730,9 +809,23 @@ window.addEventListener('load', function () {
     }
     document.getElementById("taughtIn-checkboxes").innerHTML = box.innerHTML
 
+    //populate/generate calender
+
+    document.getElementById("timeRange-popup-rows").appendChild(generateCalenderTimeTable("searchCalenderTimes"))
 
 
-    Promise.all([formSetupRes, validSubject, validSpecialities]).then((values) => {
+    document.querySelectorAll(".goto-calender-day-button").forEach(el => el.addEventListener("click", e => {
+        idArr = e.target.id.split("-")
+        calenderId = idArr[6]
+        newDayIndex = parseInt(idArr[3])
+        oldDayIndex = parseInt(idArr[5])
+        document.getElementById(`${oldDayIndex}-calender-${calenderId}`).classList.add("display-nonei")
+        document.getElementById(`${newDayIndex}-calender-${calenderId}`).classList.remove("display-nonei")
+        document.getElementById(`${calenderId}-add-time-popup`).classList.add("display-nonei")
+    }))
+
+
+    Promise.all([/*formSetupRes,*/ validSubject, validSpecialities]).then((values) => {
         formDataSetup()
         updateCurrency(curConversionRatio)
     });
@@ -799,6 +892,12 @@ window.addEventListener('load', function () {
         toggleSearchBarPopup("timeRange-popup")
     })
 
+
+    document.getElementById("course-time-subject-popup").addEventListener('click', event => {
+        toggleSearchBarPopup("course-time-popup")
+    })
+
+
     document.querySelectorAll('.clear-search-popups').forEach(el => el.addEventListener('click', event => {
         clearSearchBarPopups()
     }));
@@ -864,6 +963,9 @@ function togglesearchBar() {
 }
 
 function toggleAdvancedsearchBar() {
+    clearSearchBarPopups()
+
+
     advancedBars = document.getElementById("advanced-search-bar")
     advancedSearchButton = document.getElementById("advanced-search-button")
     if (advancedBars.classList.contains("display-nonei")) {
@@ -879,7 +981,6 @@ function toggleAdvancedsearchBar() {
 }
 
 async function searchCourses() {
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     function generateCourse(courseObj) {
         courseId = courseObj.course_id
         teacherId = courseObj.teacher_id
@@ -1052,50 +1153,40 @@ async function searchCourses() {
             }
         }
 
+
+        console.log(buttonBox)
+
         if ("the pag is just an activated button wioth nothing else") { console.log("empty pag") }
         document.getElementById("course-pagination").appendChild(buttonBox)
     }
 
-    function generateCourseTimeTable(availableTimes) {
-        currentDay = days[new Date().getDay()]
-        dayIndex = new Date().getDay() - 1
-        adaptedDays = [days.slice(dayIndex, days.length), days.slice(0, dayIndex)]
-        const timeOffset = new Date().getTimezoneOffset() / 60
+    function generateCourseTimeTable(calender_times, courseId) {
 
 
-
-        availableTimes = {
-            "Sunday": [
-                [0, 1130],
-                [1440, 1440],
-                [1440, 1440],
-
-            ]
-
-
-            ,
-            "Monday": [],
-            "Tuesday": [],
-            "Wednesday": [],
-            "Thursday": [],
-            "Friday": [],
-            "Saturday": [],
-        }
-
-        const rand = (min, max) => {
-            return min + Math.floor(Math.random() * (max - min))
-        }
-
-        const generateTime = () => {
-            for (let i = 0; i < 7; i++) {
-
-                for (let j = 0; j < rand(2, 6); j++) {
-                    baseTime = rand(0, 1400)
-                    addedTime = baseTime + rand(0, 40)
-                    availableTimes[`${days[i]}`].push([baseTime, addedTime])
-                }
+        function convertToFormat(calender_times) {
+            const pad = num => ("0" + num).slice(-2); // or use padStart
+            const getTimeFromDate = timestamp => {
+                const date = new Date(timestamp);
+                let hours = date.getHours(),
+                    minutes = date.getMinutes()
+                //seconds = date.getSeconds();
+                return pad(hours) + ":" + pad(minutes)// + ":" + pad(seconds)
             }
+            obj = {
+                "sunday": [], "monday": [], "tuesday": [], "wednesday": [], "thursday": [], "friday": [], "saturday": [],
+            }
+            rangeArr = calender_times.split(`"`).slice(1, -1)
+            for (let index = 0; index < rangeArr.length; index += 2) {
+                rangeStr = rangeArr[index].split(",")
+                start = parseInt(rangeStr[0].slice(1, -1)) * 1000
+                finish = parseInt(rangeStr[0].slice(1, -1)) * 1000
+                day = days[new Date(start).getDay()]
+                obj[`${day}`].push([getTimeFromDate(start), getTimeFromDate(finish)])
+            }
+            return obj
         }
+
+        const cleanedCalenderTimes = convertToFormat(calender_times)
 
         const timeZoneCorrect = (availableTimes, offset, stripTime = false) => {
             const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -1162,17 +1253,6 @@ async function searchCourses() {
 
         }
 
-        generateTime()
-
-        availableTimes = timeZoneCorrect(availableTimes, timeOffset)
-
-
-
-        const convertToTimeFormat = (num) => {
-            var time = new Date(num * 1000 * 60).toLocaleTimeString().substring(0, 5)
-            return time
-        }
-
 
         timeRange = document.createElement("div")
         timeRange.id = `calender-outer`
@@ -1188,41 +1268,49 @@ async function searchCourses() {
             if (i == 0) {
                 outerDiv.className = "h-50pi w-100 text-center fs-30p px-0 bg-blacki brdr-r-5p"
                 dayVal.innerHTML = `
-                <button type="button" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline disabled">prev</button>
+                <button type="button" class="m-1 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline disabled">prev</button>
                 <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
-                <button id="goto-cal-day-${i + 1}-from-${i}"  type="button" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">next</button>
+                <button id="goto-cal-day-${i + 1}-from-${i}" data-course-id="${courseId}"  type="button" class="m-1 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button-course">next</button>
                 `;
             }
             else if (i == 6) {
                 outerDiv.className = "px-0 h-50pi w-100 text-center fs-30p px-0 bg-blacki display-nonei"
                 dayVal.innerHTML = `
-                <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button">prev</button>
+                <button type="button" id="goto-cal-day-${i - 1}-from-${i}" data-course-id="${courseId}" class="m-1 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline goto-calender-day-button-course">prev</button>
                 <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
-                <button type="button" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline" disabled>next</button>
+                <button type="button" class="m-1 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary display-inline" disabled>next</button>
                 `;
             }
             else {
                 outerDiv.className = "px-0 h-50pi w-100 text-center fs-30p px-0 bg-blacki display-nonei"
                 dayVal.innerHTML = `
-                <button type="button" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 mx-3 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">prev</button>
+                <button type="button" data-course-id="${courseId}" id="goto-cal-day-${i - 1}-from-${i}" class="m-1 float-left display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button-course">prev</button>
                 <span class="user-select-none fs-25p" id="day-${days[i]}-goto">${days[i]}</span>
-                <button type="button" id="goto-cal-day-${i + 1}-from-${i}" class="m-1 mx-3 float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button">next</button>
+                <button type="button" data-course-id="${courseId}" id="goto-cal-day-${i + 1}-from-${i}" class="m-1  float-right display-inline bg-blacki h-40p fs-20p btn btn-outline-primary goto-calender-day-button-course">next</button>
             `;
             }
 
             outerDiv.appendChild(dayVal);
             let box = document.createElement("div");
-            box.className = "inline-grid-r-auto-c-auto justify-items-center align-items-center grid-gap-3p m-0 p-0"
-            for (let j = 0; j < availableTimes[days[i]].length; j++) {
-                start = availableTimes[days[i]][j][0]
-                finish = availableTimes[days[i]][j][1]
-                innerDiv = document.createElement("div");
-                let innerStr = `${convertToTimeFormat(start)} - ${convertToTimeFormat(finish)}`;
 
-                innerDiv.className = "w-100p p-0 fs-15p text-center d-flex align-items-center justify-content-center brdr-r-5 h-30p my-1 bg-blacki h-40p fs-20p btn btn-outline-primary"
-                innerDiv.innerHTML = innerStr
-                box.appendChild(innerDiv);
+
+            for (let j = 0; j < cleanedCalenderTimes[`${days[i]}`].length; j++) {
+                times = cleanedCalenderTimes[`${days[i]}`][j]
+                startDate = times[0]
+                endDate = times[1]
+
+                timeDiv = document.createElement("div")
+                timeDiv.className = `w-100p p-0 fs-15p d-flex brdr-r-5 h-30pi bg-blacki h-40p fs-20p btn btn-outline-primary m-0 my-2`
+
+                let timeText = document.createElement("div")
+                timeText.innerHTML = `${startDate} - ${endDate}`
+                timeText.className = "pt-2p"
+
+                timeDiv.append(timeText)
+                box.append(timeDiv)
             }
+
+            box.className = "inline-grid-r-auto3-c-auto3 justify-items-center align-items-center grid-gap-3p m-0 p-0"
             outerDiv.append(box)
             timeRange.appendChild(outerDiv);
         }
@@ -1275,7 +1363,7 @@ async function searchCourses() {
             for (let i = 0; i < courseArr.length; i++) {
                 courseBox.appendChild(generateCourse(courseArr[i]))
                 //timeTableBox.appendChild
-                courseBox.appendChild(generateCourseTimeTable(courseArr[i].time_schedule))
+                courseBox.appendChild(generateCourseTimeTable(courseArr[i]["calender_times"], courseArr[i].course_id))
 
             }
             document.getElementById("course-cards").append(...courseBox.children)
@@ -1311,8 +1399,8 @@ async function searchCourses() {
                 courseId = e.target.id.split("-")[0]
                 toggleCourseCalender(courseId)
             }))
-            document.querySelectorAll(".goto-calender-day-button").forEach(el => el.addEventListener("click", e => {
-
+            document.querySelectorAll(".goto-calender-day-button-course").forEach(el => el.addEventListener("click", e => {
+                courseId = e.target.getAttribute("data-course-id")
                 newDayIndex = parseInt(e.target.id.split("-")[3])
                 oldDayIndex = parseInt(e.target.id.split("-")[5])
                 document.getElementById(`${oldDayIndex}-calender`).classList.add("display-nonei")
