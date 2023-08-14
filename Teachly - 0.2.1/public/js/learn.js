@@ -43,6 +43,10 @@ function formDataSetup() {
 
     range1Shown = document.getElementById('min-price-shown');
     range2Shown = document.getElementById('max-price-shown');
+
+    range1Shown.setAttribute("data-amount-in-usd", teachlyFormData.priceRange[0])
+    range2Shown.setAttribute("data-amount-in-usd", teachlyFormData.priceRange[1])
+
     range1Shown.innerHTML = teachlyFormData.priceRange[0] * curConversionRatio;
     range2Shown.innerHTML = teachlyFormData.priceRange[1] * curConversionRatio;
 
@@ -52,12 +56,13 @@ function formDataSetup() {
     slider = noUiSlider.create(regularSlider, {
         start: [teachlyFormData.priceRange[0] * curConversionRatio, teachlyFormData.priceRange[1] * curConversionRatio],
         connect: true,
-        margin: 0.0005 * curConversionRatio,
+        margin: 0.05 * curConversionRatio,
         range: { min: 0.05 * curConversionRatio, max: 5 * curConversionRatio },
         tooltips: [prefixFormat, prefixFormat],
         pips: {
-            mode: 'steps',
-            density: 5,
+            mode: 'count',
+            values: 5,
+            density: -1
         },
     })
     slider.on('update', function (values) {
@@ -70,13 +75,19 @@ function formDataSetup() {
         start: [teachlyFormData.courseTime[0], teachlyFormData.courseTime[1]],
         connect: true,
         step: 1,
-        margin: 1,
+        margin: 5,
         range: { min: 20, max: 60 },
         tooltips: [prefixFormatTime, prefixFormatTime],
+        pips: {
+            mode: 'count',
+            values: 5,
+            density: -1
+        },
     })
     slider.on('update', function (values) {
         updateformData("courseTime", values)
     })
+
     document.getElementById("min-course-time").innerHTML = teachlyFormData.courseTime[0]
     document.getElementById("max-course-time").innerHTML = teachlyFormData.courseTime[1]
 
@@ -85,13 +96,16 @@ function formDataSetup() {
             priceRange = JSON.parse(localStorage.getItem("TeachlyFormData")).priceRange
             range1Shown = document.getElementById('min-price-shown');
             range2Shown = document.getElementById('max-price-shown');
-            range1Shown.innerHTML = priceRange[0] * curConversionRatio;
-            range2Shown.innerHTML = priceRange[1] * curConversionRatio;
+
+            minSelectedPriceInUSD = Number(range1Shown.getAttribute("data-amount-in-usd"))
+            maxSelectedPriceInUSD = Number(range2Shown.getAttribute("data-amount-in-usd"))
+
             slider.updateOptions({
-                margin: 5 * curConversionRatio,
+                step: 0.05 * curConversionRatio,
+                margin: 0.05 * curConversionRatio,
                 range: { min: 0.05 * curConversionRatio, max: 5 * curConversionRatio },
             });
-            slider.set([priceRange[0] * curConversionRatio, priceRange[1] * curConversionRatio]);
+            slider.set([minSelectedPriceInUSD * curConversionRatio, maxSelectedPriceInUSD * curConversionRatio]);
         }
         catch (err) {
             console.log(err)
@@ -128,32 +142,6 @@ function formDataSetup() {
     localStorage.setItem("TeachlyFormData", JSON.stringify(teachlyFormData))
 }
 
-async function formSetup() {
-    let days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-    document.getElementById("subject-search-input").placeholder = subject
-    timeRange = document.getElementById("timeRange-popup-rows")
-
-    for (let i = 0; i <= 6; i++) {
-        outerDiv = document.createElement("div");
-        outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3";
-        //outerDiv.style.marginLeft = "0px"
-        dayVal = document.createElement("div");
-        dayVal.className = "day-div px-0"
-        dayVal.innerHTML = `${days[i]}`;
-        outerDiv.appendChild(dayVal);
-        for (let j = 0; j <= 23; j++) {
-            innerDiv = document.createElement("div");
-            innerDiv.className = "container d-flex align-items-center justify-content-center time-slot-div px-0";
-            innerDiv.innerHTML = `${j} - ${j + 1}`;
-            innerDiv.id = `${j}-${j + 1}_${days[i]}`;
-            innerDiv.onclick = function () { updateformData(`availableTimes`, `${j}-${j + 1}_${days[i]}`) }
-            outerDiv.appendChild(innerDiv);
-        }
-        timeRange.appendChild(outerDiv);
-    }
-
-}
-
 function updateformData(type, val) {
     teachlyFormData = JSON.parse(localStorage.getItem("TeachlyFormData"))
     if (type == "specialities") {
@@ -165,8 +153,16 @@ function updateformData(type, val) {
     else if (type == "priceRange") {
         min = val[0] / curConversionRatio;
         max = val[1] / curConversionRatio;
-        document.getElementById('min-price-shown').innerHTML = min
-        document.getElementById('max-price-shown').innerHTML = max
+
+        range1Shown = document.getElementById('min-price-shown');
+        range2Shown = document.getElementById('max-price-shown');
+
+        range1Shown.setAttribute("data-amount-in-usd", min)
+        range2Shown.setAttribute("data-amount-in-usd", max)
+
+
+        range1Shown.innerHTML = val[0]
+        range2Shown.innerHTML = val[1]
         teachlyFormData["priceRange"] = [min, max];
         updateCurrency(curConversionRatio)
     }
@@ -209,7 +205,7 @@ function updateformData(type, val) {
         max = `${val[1]}`.split(".")[0];
         document.getElementById('min-course-time').innerHTML = min
         document.getElementById('max-course-time').innerHTML = max
-        teachlyFormData["priceRange"] = [min, max];
+        teachlyFormData["courseTime"] = [min, max];
     }
     else if (type == "pageNum") {
         if (teachlyFormData.pageNum == val) {
@@ -264,8 +260,6 @@ function getUTCTimeStampNoHours(date = new Date()) {
         date.getUTCDate()
     ).getTime()
 }
-
-
 
 function generateCalenderTimeTable(calenderId) {
     //calenderId: str, valid css/html class/id, no "-"
@@ -516,9 +510,9 @@ function addTimeCalender(calenderId) {
 
     dateBox.removeChild(dateBox.lastChild); //remove addTime button
 
-    timeRanges = getTimesCalender(calenderId, removeTimeZone = true)
 
-    if (timeRanges.length == 11) { //if range is full
+    let times = document.querySelectorAll(`.calender-time-${calenderId}`).length
+    if (times == 11) { //if range is full
         dateBox.append(timeDiv)
     }
     else {
@@ -531,7 +525,6 @@ function addTimeCalender(calenderId) {
         dateBox.append(timeDiv, addDateButton)
     }
 }
-
 
 function addTimeCalenderFromMemory(calenderId, day, startDate, endDate) {
 
@@ -570,9 +563,7 @@ function addTimeCalenderFromMemory(calenderId, day, startDate, endDate) {
     dateBox.removeChild(dateBox.lastChild); //remove addTime button
     dateBox.append(timeDiv, addDateButton)
 
-    timeRanges = getTimesCalender(calenderId, removeTimeZone = true)
 }
-
 
 function removeTimeCalender(calenderId, timeId) {
     let timesDiv = document.getElementById(timeId)
@@ -594,125 +585,25 @@ function removeTimeCalender(calenderId, timeId) {
     removeElement(timeId)
 }
 
-
-//time is stored in localstorage anyway, so maybe remove?
-function getTimesCalender(calenderId, removeTimeZone = true, removeMilliseconds = true) {
-
-    let timesArr = []
-    let timesDivs = document.querySelectorAll(`.calender-time-${calenderId}`)
-    const timeOffset = new Date().getTimezoneOffset()
-    const BaseTime = getUTCTimeStampNoHours()
-
-    if (removeTimeZone) {
-        if (removeMilliseconds) {
-            for (let i = 0; i < timesDivs.length; i++) {
-                let timesDiv = timesDivs[i]
-                let day = timesDiv.id.split("-")[1]
-                let dayIndex = adaptedDays.indexOf(day)
-                times = timesDiv.children[0].innerHTML.split(" - ")
-
-                start = convertTimeToInteger(times[0]) - timeOffset
-                finish = convertTimeToInteger(times[1]) - timeOffset
-
-                if (start < 0) {
-                    //use prev day
-                    dayIndex--
-                }
-                if (start > 1440) {
-                    //use next day
-                    dayIndex++
-                }
-                start = Math.floor((BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000 * 60)) / 1000)
-
-                finish = Math.floor((BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (finish * 1000 * 60)) / 1000)
-
-                timesArr.push([start, finish])
-
-            }
-        }
-        else {
-            for (let i = 0; i < timesDivs.length; i++) {
-                let timesDiv = timesDivs[i]
-                let day = timesDiv.id.split("-")[1]
-                let dayIndex = adaptedDays.indexOf(day)
-                times = timesDiv.children[0].innerHTML.split(" - ")
-
-                start = convertTimeToInteger(times[0]) - timeOffset
-                finish = convertTimeToInteger(times[1]) - timeOffset
-
-                if (start < 0) {
-                    //use prev day
-                    dayIndex--
-                }
-                if (start > 1440) {
-                    //use next day
-                    dayIndex++
-                }
-                start = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000 * 60)
-
-                finish = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (finish * 1000 * 60)
-
-                timesArr.push([start, finish])
-
-            }
-        }
+function clearCoursePopups() {
+    let popups = document.querySelectorAll(`.active-course-popup`)
+    for (let index = 0; index < popups.length; index++) {
+        const popup = popups[index];
+        popup.classList.remove("active-course-popup")
+        popup.classList.add("display-nonei")
     }
-    else {
-        if (removeMilliseconds) {
-            for (let i = 0; i < timesDivs.length; i++) {
-                let timesDiv = timesDivs[i]
-                let day = timesDiv.id.split("-")[1]
-                let dayIndex = adaptedDays.indexOf(day)
-                let times = timesDiv.children[0].innerHTML.split(" - ")
-
-                start = parseInt(convertTimeToInteger(times[0])) - timeOffset
-                finish = parseInt(convertTimeToInteger(times[1])) - timeOffset
-
-                start = Math.floor((BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)) / 1000)
-
-                finish = Math.floor((BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)) / 1000)
-
-                timesArr.push([start, finish])
-
-            }
-        }
-        else {
-            for (let i = 0; i < timesDivs.length; i++) {
-                let timesDiv = timesDivs[i]
-                let day = timesDiv.id.split("-")[1]
-                let dayIndex = adaptedDays.indexOf(day)
-                let times = timesDiv.children[0].innerHTML.split(" - ")
-
-                start = parseInt(convertTimeToInteger(times[0])) - timeOffset
-                finish = parseInt(convertTimeToInteger(times[1])) - timeOffset
-
-                start = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)
-
-                finish = BaseTime + (dayIndex * (1000 * 60 * 60 * 24)) + (start * 1000)
-
-                timesArr.push([start, finish])
-
-            }
-
-        }
-    }
-
-    if (timesArr.length == 0) {
-        return timesArr
-    }
-    return timesArr
 }
 
-
-
-
-
+function toggleCoursePopup(id) {
+    let popup = document.getElementById(id)
+    popup.classList.toggle("active-course-popup")
+    popup.classList.toggle("display-nonei")
+}
 
 window.addEventListener('load', function () {
 
     searchCourses()
 
-    //formSetupRes = formSetup()
     //populate subject
     validSubject = axios.get('/get/validSubject').then(res => {
         if (res.data == "404") { }
@@ -825,7 +716,7 @@ window.addEventListener('load', function () {
     }))
 
 
-    Promise.all([/*formSetupRes,*/ validSubject, validSpecialities]).then((values) => {
+    Promise.all([validSubject, validSpecialities]).then((values) => {
         formDataSetup()
         updateCurrency(curConversionRatio)
     });
@@ -838,16 +729,13 @@ window.addEventListener('load', function () {
         toggleAdvancedsearchBar()
     })
 
-
     document.getElementById("toggle-subject-popup").addEventListener('click', event => {
         toggleSearchBarPopup("subject-popup")
     })
 
-
     document.getElementById("speciality-subject-popup").addEventListener('click', event => {
         toggleSearchBarPopup("speciality-popup")
     })
-
 
     document.getElementById("taughtIn-subject-popup").addEventListener('click', event => {
         toggleSearchBarPopup("taughtIn-popup")
@@ -857,16 +745,13 @@ window.addEventListener('load', function () {
         toggleSearchBarPopup("pricePerLesson-popup")
     })
 
-
     document.getElementById("orderBy-subject-popup").addEventListener('click', event => {
         toggleSearchBarPopup("orderBy-popup")
     })
 
-
     document.getElementById("Popularity").addEventListener('click', event => {
         updateformData("orderBy", "Popularity")
     })
-
 
     document.getElementById("Price:-highest-first").addEventListener('click', event => {
         updateformData("orderBy", "Price:-highest-first")
@@ -876,33 +761,25 @@ window.addEventListener('load', function () {
         updateformData("orderBy", "Price:-lowest-first")
     })
 
-
-
     document.getElementById("Number-of-reviews").addEventListener('click', event => {
         updateformData("orderBy", "Number-of-reviews")
     })
-
 
     document.getElementById("Best-rating").addEventListener('click', event => {
         updateformData("orderBy", "Best-rating")
     })
 
-
     document.getElementById("timeRange-subject-popup").addEventListener('click', event => {
         toggleSearchBarPopup("timeRange-popup")
     })
-
 
     document.getElementById("course-time-subject-popup").addEventListener('click', event => {
         toggleSearchBarPopup("course-time-popup")
     })
 
-
     document.querySelectorAll('.clear-search-popups').forEach(el => el.addEventListener('click', event => {
         clearSearchBarPopups()
     }));
-
-
 
     document.getElementById("search-courses").addEventListener('click', event => {
         searchCourses()
@@ -912,13 +789,9 @@ window.addEventListener('load', function () {
         toggleSearchBarPopup("course-time-popup")
     })
 
-
     document.getElementById("course-time-subject-popup").addEventListener('click', event => {
         toggleSearchBarPopup("course-time-popup")
     })
-
-
-
 
     document.getElementById("subject-search-input").addEventListener('click', event => {
         searchBox("subject-links", "subject-search-input")
@@ -935,6 +808,12 @@ window.addEventListener('load', function () {
     document.getElementById("taughtIn-search-input").addEventListener('click', event => {
         searchBox("taughtIn-checkboxes", "taughtIn-search-input")
     })
+
+
+    document.getElementById("courses").addEventListener('click', event => {
+        clearCoursePopups()
+    })
+
 
 })
 
@@ -1064,28 +943,27 @@ async function searchCourses() {
                                                 <div class="col w-130p"
                                                     class="d-flex justify-content-center">
                                                     <div class="d-flex justify-content-center w-100 h-50">
-                                                        <span class="currency">
-                                                            <span id="max-price-shown" class="display-none">
-                                                                ${courseObj.price_per_lesson}
-                                                            </span>
-                                                            <span>${toLocalCur(courseObj.price_per_lesson * curConversionRatio)}</span>
+                                                        <span class="currency" data-amount-in-usd="${courseObj.price_per_minute}">
+                                                            ${toLocalCur(courseObj.price_per_minute * curConversionRatio)}
                                                         </span>
                                                     </div>
-                                                    <div class="d-flex justify-content-center w-100 text-center">${courseJson.lesson_time.pre}${courseObj.lesson_time}${courseJson.lesson_time.post}</div>
+                                                    <div class="d-flex justify-content-center w-100 text-center"></div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col container d-flex justify-content-center mb-4">
                                             <div class="row d-flex justify-content-center mn-w-150p w-100">
                                                <div class="col d-flex justify-content-center m-1 w-130p">
-                                                   <button id="${courseId}-view-reviews-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p view-calender-button">
+                                                   <button id="${courseId}-view-reviews-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p view-reviews-button">
                                                    view reviews
                                                    </button>
                                                </div>
                                                 <div class="col d-flex justify-content-center m-1 w-130p">
-                                                    <button id="${courseId}-view-calender-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p view-calender-button">
+                                                    <button data-course-id="${courseId}" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p view-calender-button">
                                                     view calender
                                                     </button>
+                                                    <div id="${courseId}-calender-popup" class="mr-465pi position-absolute display-nonei stop-prop-course">
+                                                    </div>
                                                 </div>
                                                 <div class="col d-flex justify-content-center m-1 w-130p">
                                                     <button id="${courseId}-request-lesson-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p request-lesson-button">
@@ -1154,10 +1032,8 @@ async function searchCourses() {
         }
 
 
-        console.log(buttonBox)
-
-        if ("the pag is just an activated button wioth nothing else") { console.log("empty pag") }
-        document.getElementById("course-pagination").appendChild(buttonBox)
+        //pag is not empty
+        if (buttonBox.children.length != 1) document.getElementById("course-pagination").appendChild(buttonBox)
     }
 
     function generateCourseTimeTable(calender_times, courseId) {
@@ -1255,7 +1131,6 @@ async function searchCourses() {
 
 
         timeRange = document.createElement("div")
-        timeRange.id = `calender-outer`
         timeRange.className = "w-300pi h-300pi p-0 m-0 bg-white brdr-r-2 brdr-w-5p border-style-solid brdr-clr-white custom-shadow position-absolute"
 
         for (let i = 0; i < 7; i++) {
@@ -1362,8 +1237,6 @@ async function searchCourses() {
             courseArr = res.data.courses
             for (let i = 0; i < courseArr.length; i++) {
                 courseBox.appendChild(generateCourse(courseArr[i]))
-                //timeTableBox.appendChild
-                courseBox.appendChild(generateCourseTimeTable(courseArr[i]["calender_times"], courseArr[i].course_id))
 
             }
             document.getElementById("course-cards").append(...courseBox.children)
@@ -1376,6 +1249,19 @@ async function searchCourses() {
                 courseId = e.target.id.split("-")[0]
                 readMoreDescToggle(courseId)
             }));
+
+
+            document.querySelectorAll('.stop-prop-course').forEach(el => el.addEventListener('click', e => {
+                e.stopPropagation();
+            }));
+
+            //the stuff the user will see insantly is done after here, now generating the popups and less visible
+
+
+            for (let i = 0; i < courseArr.length; i++) {
+                document.getElementById(`${courseArr[i].course_id}-calender-popup`).appendChild(generateCourseTimeTable(courseArr[i]["calender_times"], courseArr[i].course_id))
+            }
+
             document.querySelectorAll('.request-chat-button').forEach(el => el.addEventListener('click', e => {
                 try {
                     courseId = e.target.id.split("-")[0]
@@ -1396,8 +1282,9 @@ async function searchCourses() {
                 createOnScreenNotification(text)
             }))
             document.querySelectorAll(".view-calender-button").forEach(el => el.addEventListener("click", e => {
-                courseId = e.target.id.split("-")[0]
-                toggleCourseCalender(courseId)
+                let id = `${e.target.getAttribute("data-course-id")}-calender-popup`
+                toggleCoursePopup(id)
+                e.stopPropagation();
             }))
             document.querySelectorAll(".goto-calender-day-button-course").forEach(el => el.addEventListener("click", e => {
                 courseId = e.target.getAttribute("data-course-id")
@@ -1406,6 +1293,8 @@ async function searchCourses() {
                 document.getElementById(`${oldDayIndex}-calender`).classList.add("display-nonei")
                 document.getElementById(`${newDayIndex}-calender`).classList.remove("display-nonei")
             }))
+
+
         }
 
     }
@@ -1447,15 +1336,6 @@ async function gotoChat(chatId) {
 
 }
 
-async function toggleCourseCalender(courseId) {
-
-}
-
-async function gotoCalenderDay(day) {
-    document.getElementById(`day-${day}-goto`)  // .scrollBy(0, 400);
-
-}
-
 async function requestLesson(courseId, teacherId) {
     res = await axios({
         method: 'post',
@@ -1470,39 +1350,7 @@ async function requestLesson(courseId, teacherId) {
     });
 }
 
-function toggleCourseTimeTable(courseId) {
-    timeTable = document.getElementById(`time-table-${courseId}`)
-    if (timeTable.classList.includes("visible")) {
-        timeTable.classList.remove("visible")
-    }
-    else {
-        document.querySelector(".time-table-div").forEach(el => {
-            e.classList.remove("visible")
-        })
-        timeTable.classList.add("visible")
-    }
-}
-
 function readMoreDescToggle(courseId) {
-
-    dotsId = `${courseId}-ellipses`
-    MoreId = `${courseId}-more-course-description`
-    btnId = `${courseId}-more-course-btn`
-
-    let dots = document.getElementById(dotsId);
-    if (dots.style.display === "none") {
-        dots.style.display = "inline";
-        document.getElementById(btnId).innerHTML = "Read more";
-        document.getElementById(MoreId).style.display = "none";
-    } else {
-        dots.style.display = "none";
-        document.getElementById(btnId).innerHTML = "Read less";
-        document.getElementById(MoreId).style.display = "inline";
-    }
-}
-
-
-function toggleCourseReviews(courseId) {
 
     dotsId = `${courseId}-ellipses`
     MoreId = `${courseId}-more-course-description`

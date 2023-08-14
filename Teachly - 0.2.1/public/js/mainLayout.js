@@ -10,8 +10,9 @@ function toLocalCur(num) {
 function updateCurrency(ratio) {
     curVals = document.getElementsByClassName("currency")
     for (let i = 0; i < curVals.length; i++) {
-        convertedCur = Number(curVals[i].children[0].innerHTML) * Number(ratio)
-        curVals[i].children[1].innerHTML = toLocalCur(convertedCur)
+        amountInUSD =Number( curVals[i].getAttribute("data-amount-in-usd"))
+        convertedCur = Number(amountInUSD) * Number(ratio)
+        curVals[i].innerHTML = toLocalCur(convertedCur)
     }
 }
 function updateCurrencyInterval() {

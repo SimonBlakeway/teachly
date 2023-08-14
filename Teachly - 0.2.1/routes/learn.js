@@ -253,7 +253,7 @@ router.post('request-chat', async (req, res) => {
     teacherId = req.body.courseId
     studentId = req.settings.id
     console.log(courseId, teacherId, studentId)
-    return
+
     createdAt = Math.floor(Date.now() / 1000)
     result = await db.query(`
         SELECT user_info.banned_users
@@ -281,8 +281,12 @@ router.post('request-chat', async (req, res) => {
     }
 
     //all checks complete, creating chat
-    db.query(`INSERT INTO chat (student_id, teacher_id, created_at, course_id) 
-                    VALUES ($1, $2, $3, $4)`, [studentId, teacherId, createdAt, courseId]);
+    res = db.query(`
+      INSERT INTO chat 
+      (student_id, teacher_id, created_at, course_id) 
+      VALUES ($1, $2, $3, $4)
+      RETURNING chat_id`, 
+      [studentId, teacherId, createdAt, courseId]);
 
     return true
   } catch (error) {
