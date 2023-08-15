@@ -30,5 +30,7 @@
             "post": " minutes"
         }
     },
-    "requestCourseLessonNot": "request sent"
+    "learnContext": {
+        "requestCourseLessonNot": "request sent"
+    }
 }

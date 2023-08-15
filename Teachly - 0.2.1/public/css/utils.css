@@ -85,6 +85,15 @@
     padding-left: 5px;
 }
 
+.sczxc {
+    margin-top: 50px !important;
+}
+
+
+
+
+
+
 .mn-w-152p {
     min-width: 152px;
 }
@@ -184,9 +193,23 @@
     font-weight: bolder;
 }
 
+.mb-5pi {
+    margin-bottom: 5px !important;
+}
+
 .custom-shadow {
     box-shadow: 0px 0px 10px #0000005e;
 }
+
+
+.custom-shadow {
+    box-shadow: 0px 0px 10px #0000005e;
+}
+
+.light-grey-shadow {
+    box-shadow: 0 0 3px 1px grey;
+}
+
 
 .center {
     text-align: center;
@@ -320,6 +343,10 @@
 .w-50p {
     width: 50px;
 
+}
+
+.w-50 {
+    width: 50%;
 }
 
 .vert-align-top {
@@ -959,6 +986,18 @@
 
 .mt-55pi {
     margin-top: 55px !important;
+}
+
+.mt-20 {
+    margin-top: 20%;
+}
+
+.mt-calc-20a5p {
+    margin-top: calc(20% + 4px) !important;
+}
+
+.dsdvsdv {
+    margin-top:  40px !important;
 }
 
 .w-136pi {

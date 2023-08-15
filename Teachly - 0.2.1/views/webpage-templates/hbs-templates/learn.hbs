@@ -251,6 +251,9 @@
     const subject = "{{context.settings.subject}}"
     const speciality = "{{context.settings.speciality}}"
     const courseJson = JSON.parse(`{{json context.bodyContext.courseContext }}`.replaceAll('&quot;', `"`))
+
+    const learnJson = JSON.parse(`{{json context.bodyContext.learnContext }}`.replaceAll('&quot;', `"`))
+
 </script>
 <script src="/js/learn.js" nonce="{{context.settings.cspNonce}}"></script>
 <main class="clear-search-popups">

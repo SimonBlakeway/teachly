@@ -5,6 +5,8 @@ const utils = require(process.cwd() + '/utils.js');
 const bodyParser = require('body-parser');
 const db = require('../config/db');
 
+ensureUser = require('../middleware/auth.js').ensureUser
+
 
 async function clear() {
   str = `TRUNCATE teacher_course CASCADE`
@@ -190,7 +192,7 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
 
 // @desc    access tutor courses
 // @route   GET /learn/book-lesson
-router.get('/book-lesson', async (req, res) => {
+router.get('/book-lesson', ensureUser, async (req, res) => {
   courseId = req.query.code
 
 
@@ -205,34 +207,64 @@ router.get('/book-lesson', async (req, res) => {
 
 // @desc    access tutor courses
 // @route   post /learn/request-lesson
-router.post('/request-lesson', async (req, res) => {
-
+router.post('/request-lesson', [ensureUser, bodyParser.json({ limit: "2mb" })], async (req, res) => {
   try {
     teacherId = req.body.teacherId
     studentId = req.settings.id
     studentName = req.settings.name
 
+
+
     //checks that course and teacher id are linked and also makes sure potential student isn't banned by teacher
     result = await db.query(`
       SELECT t1.name 
       FROM user_info t1
-      FULL OUTER  JOIN  teacher_course t2
-        ON teacher_course.teacher_id = user_info.id
-      WHERE t1.id = $1
-      AND 'search text' = ANY(t1.banned_users)`,
+      WHERE 
+        t1.id = $1 AND
+        $2 = ANY( t1.banned_users )
+        `,
       [teacherId, studentId]);
 
+
+
+    /*
+
+  //checks that course and teacher id are linked and also makes sure potential student isn't banned by teacher
+  result = await db.query(`
+    SELECT t1.name 
+    FROM user_info t1
+    WHERE 
+      t1.id = $1 AND
+      $2 != ANY( t1.banned_users )
+      `,
+    [teacherId, studentId]); //   
+
+    */
+
+    console.log(result.rows)
+
     if (result.rowCount != 1) {
-      throw new Error("bad teacher/course linking or student is banned") //maybe split this into two parts so as to get a better error message?
+      throw new Error("or student is banned") //maybe split this into two parts so as to get a better error message?
     }
+
+    return
 
     //notify teacher,
     utils.sendAutomatedNotification(req.setting.lang, "request-lesson", { text: [studentName], link: [] }, teacherId)
 
     //add event to the db
     try {
-      result = await db.query(`INSERT INTO event (type, created_at, meta, data ) VALUES ($1, $2, $3, $4)`,
-        [user.name, user.email, user.profileImage, req.settings.lang]);
+      result = await db.query(`INSERT INTO event ( type, created_at, data ) VALUES ($1, $2, $3, $4)`,
+        [
+          "lesson_request",
+          Math.floor(Date.now() / 1000),
+          {
+            courseId: courseId,
+            teacherId: teacherId,
+            studentId: studentId
+
+          }
+        ]);
     } catch (error) {
       console.log(error)
     }
@@ -240,18 +272,20 @@ router.post('/request-lesson', async (req, res) => {
 
     res.sendStatus()
   } catch (error) {
+    console.log(error)
     res.sendStatus(400)
   }
 })
 
 // @desc    access tutor courses
 // @route   post /learn/create-chat
-router.post('request-chat', async (req, res) => {
+router.post('request-chat', bodyParser.json({ limit: "2mb" }), async (req, res) => {
 
   try {
     courseId = req.body.courseId
     teacherId = req.body.courseId
     studentId = req.settings.id
+    subject = req.body.subject
     console.log(courseId, teacherId, studentId)
 
     createdAt = Math.floor(Date.now() / 1000)
@@ -260,7 +294,8 @@ router.post('request-chat', async (req, res) => {
         FROM teacher_course t1 
         FULL OUTER  JOIN  user_info t2
           ON teacher_course.teacherId = user_info.id
-        WHERE  teacher_course.courseId = $1;`, [courseId]);
+        WHERE  teacher_course.courseId = $1 AND 
+        $2 != ANY t2.banned_users ;`, [courseId, studentId]);
 
 
     if (result.rowCount != 1) {
@@ -285,10 +320,23 @@ router.post('request-chat', async (req, res) => {
       INSERT INTO chat 
       (student_id, teacher_id, created_at, course_id) 
       VALUES ($1, $2, $3, $4)
-      RETURNING chat_id`, 
+      RETURNING chat_id`,
       [studentId, teacherId, createdAt, courseId]);
 
-    return true
+    utils.sendAutomatedNotification(
+      req.setting.lang,
+      "request-lesson",
+      {
+        text: [
+          req.settings.name
+        ]
+        ,
+        link: [
+
+        ]
+      },
+      reqs.settings.id)
+
   } catch (error) {
 
   }

@@ -60,9 +60,9 @@ function getRandomInt(max) {
 function createOnScreenNotification(text) {
     notBox = document.getElementById("screen-notifications")
     newNotDiv = document.createElement("div")
-    newNotDiv.className = "br-40p p-5p pl-20p pr-20p bg-aqua"
+    newNotDiv.className = "br-40p p-5p pl-20p pr-20p bg-white light-grey-shadow mb-5pi text-center"
     randInt = getRandomInt(99999999999)
-    randInt = crypto.getRandomValues(new Uint32Array(1))[0] //math.random didn't work, was overlap
+    randInt = crypto.getRandomValues(new Uint32Array(1))[0]
     newNotDiv.innerHTML = text
     let id = `screen-notification-${randInt}`
     newNotDiv.id = id

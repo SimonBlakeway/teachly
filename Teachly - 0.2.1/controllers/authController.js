@@ -357,6 +357,7 @@ exports.refreshToken = async function (req, res) {
     }
 
   } catch (error) {
+    console.log(error)
     accountNumber = req.settings.accountNumber
     id = req.settings.id
 

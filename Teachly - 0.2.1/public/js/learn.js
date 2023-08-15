@@ -903,7 +903,7 @@ async function searchCourses() {
                                     alt="${courseJson.imageAlt.pre}${teacher_name}${courseJson.imageAlt.post}">
                             </div>
                             <div class="col p-0 m-0 mn-w-300p">
-                                <div class="card-body p-4 m-0">
+                                <div class="card-body p-4 m-0 py-3">
                                     <h5 class="card-title fs-1">${teacher_name}</h5>
                                     <h5 class="card-text text-muted fs-5">${courseObj.subject}</h5>
                                     <h6 class="card-text text-muted fs-6">${courseObj.specialities.join(", ")}</h6>
@@ -925,33 +925,46 @@ async function searchCourses() {
                                         ${description}
                                     </p>
                                     <div class="row mt-5 h-auto">
-                                        <div class="col container d-flex justify-content-center mb-4">
-                                            <div class="row d-flex justify-content-center h-100">
-                                                <div class="col d-flex justify-content-center w-100p">
-                                                    <div class="w-100p">
-                                                        <div class="d-flex justify-content-center w-100 h-50"">
-                                                            <i class="fa fa-star fs-15p clr-gold mt-5pi" aria-hidden="true"></i>
-                                                            <span>${ratings}</span>
+                                        <div class="col container d-flex justify-content-center">
+                                            <div class="row d-flex justify-content-center">
+                                                <div class="row d-flex justify-content-center">
+                                                    <div class="col d-flex justify-content-center m-1 ">
+                                                        <div class="h-50p d-flex justify-content-center align-items-center">
+                                                            <span>
+                                                                <i class="fa fa-star fs-15p clr-gold" aria-hidden="true"></i>
+                                                                <span class="mt-20">${ratings}</span>
+                                                            </span>
                                                         </div>
-                                                        <div class="d-flex justify-content-center h-50">
-                                                        <span>
-                                                        ${courseJson.ratings.pre}${ratingsAmount}${courseJson.ratings.post}
+                                                    </div>
+                                                <div class="col d-flex justify-content-center m-1">
+                                                    <div class=" h-50p d-flex justify-content-center align-items-center">
+                                                        <span class="text-center">
+                                                            ${courseJson.ratings.pre}${ratingsAmount}${courseJson.ratings.post}
                                                         </span>
-                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col w-130p"
-                                                    class="d-flex justify-content-center">
-                                                    <div class="d-flex justify-content-center w-100 h-50">
-                                                        <span class="currency" data-amount-in-usd="${courseObj.price_per_minute}">
-                                                            ${toLocalCur(courseObj.price_per_minute * curConversionRatio)}
-                                                        </span>
+                                            </div>
+                                                <div class="row d-flex justify-content-center">
+                                                    <div class="col d-flex justify-content-center m-1 ">
+                                                        <div class=" h-50p d-flex justify-content-center align-items-center">
+                                                            <span class="text-center">
+                                                                <span class="currency pr-3p" data-amount-in-usd="${courseObj.price_per_minute}">
+                                                                    ${toLocalCur(courseObj.price_per_minute * curConversionRatio)}
+                                                                </span>
+                                                                <span>
+                                                                    per minute
+                                                                </span>
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div class="d-flex justify-content-center w-100 text-center"></div>
+                                                    <div class="col d-flex justify-content-center m-1">
+                                                        <div class=" h-50p d-flex justify-content-center align-items-center w-50pi">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col container d-flex justify-content-center mb-4">
+                                        <div class="col container d-flex justify-content-center">
                                             <div class="row d-flex justify-content-center mn-w-150p w-100">
                                                <div class="col d-flex justify-content-center m-1 w-130p">
                                                    <button id="${courseId}-view-reviews-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p view-reviews-button">
@@ -962,16 +975,16 @@ async function searchCourses() {
                                                     <button data-course-id="${courseId}" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p view-calender-button">
                                                     view calender
                                                     </button>
-                                                    <div id="${courseId}-calender-popup" class="mr-465pi position-absolute display-nonei stop-prop-course">
+                                                    <div id="${courseId}-calender-popup" class="mr-465pi position-absolute display-nonei stop-prop-course mt-55pi">
                                                     </div>
                                                 </div>
                                                 <div class="col d-flex justify-content-center m-1 w-130p">
-                                                    <button id="${courseId}-request-lesson-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p request-lesson-button">
+                                                    <button data-course-id="${courseId}" data-teacher-id="${teacherId}"  class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p request-lesson-button">
                                                     request lesson
                                                     </button>
                                                 </div>
-                                                <div class="col d-flex justify-content-center m-1 mn-w-130p-i">
-                                                    <button id="${courseId}-courseId-${teacherId}-teacherId-message-button" class="btn btn-md btn-outline-secondary text-capitalize mn-w-130p-i h-50p request-chat-button">
+                                                <div class="col d-flex justify-content-center m-1 w-130p">
+                                                    <button data-course-id="${courseId}" data-teacher-id="${teacherId}" class="btn btn-md btn-outline-secondary text-capitalize mn-w-135pi h-50p request-chat-button">
                                                         message
                                                     </button>
                                                 </div>
@@ -1262,11 +1275,10 @@ async function searchCourses() {
                 document.getElementById(`${courseArr[i].course_id}-calender-popup`).appendChild(generateCourseTimeTable(courseArr[i]["calender_times"], courseArr[i].course_id))
             }
 
-            document.querySelectorAll('.request-chat-button').forEach(el => el.addEventListener('click', e => {
+            document.querySelectorAll('.request-chat-button').forEach(el => el.addEventListener('click', async e => {
                 try {
-                    courseId = e.target.id.split("-")[0]
-                    teacherId = e.target.id.split("-")[2]
-                    chatId = requestChat(courseId)
+                    teacherId = e.target.getAttribute("data-teacher-id")
+                    chatId = await requestChat(courseId)
                     gotoChat(chatId)
                 } catch (error) {
                     text = courseJson.requestChatError[`${error.message}`]
@@ -1275,17 +1287,26 @@ async function searchCourses() {
                 }
             }));
             document.querySelectorAll(".request-lesson-button").forEach(el => el.addEventListener('click', e => {
-                courseId = e.target.id.split("-")[0]
-                teacherId = e.target.id.split("-")[2]
-                requestLesson(courseId)
-                text = courseJson.requestCourseLessonNot
+                courseId = e.target.getAttribute("data-course-id")
+                teacherId = e.target.getAttribute("data-teacher-id")
+                text = learnJson.requestCourseLessonNot
                 createOnScreenNotification(text)
+                requestLesson(courseId, teacherId)
             }))
             document.querySelectorAll(".view-calender-button").forEach(el => el.addEventListener("click", e => {
                 let id = `${e.target.getAttribute("data-course-id")}-calender-popup`
                 toggleCoursePopup(id)
                 e.stopPropagation();
             }))
+
+
+            document.querySelectorAll(".view-reviews-button").forEach(el => el.addEventListener("click", e => {
+                let id = `${e.target.getAttribute("data-course-id")}-reviews-popup`
+                toggleCoursePopup(id)
+                e.stopPropagation();
+            }))
+
+
             document.querySelectorAll(".goto-calender-day-button-course").forEach(el => el.addEventListener("click", e => {
                 courseId = e.target.getAttribute("data-course-id")
                 newDayIndex = parseInt(e.target.id.split("-")[3])
@@ -1315,7 +1336,8 @@ async function requestChat(courseId, teacherId) {
             url: '/learn/request-chat',
             data: {
                 courseId: courseId,
-                teacherId: teacherId
+                teacherId: teacherId,
+                subject: subject
             },
             headers: {
                 'Content-Type': 'application/json',
@@ -1325,9 +1347,9 @@ async function requestChat(courseId, teacherId) {
     } catch (error) {
         console.log(error)
         //maybe show the user an error message?
+        createOnScreenNotification(error.message)
 
     }
-
 }
 
 async function gotoChat(chatId) {
