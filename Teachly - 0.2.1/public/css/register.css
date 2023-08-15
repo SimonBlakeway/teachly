@@ -1,7 +1,6 @@
   #register {
-    background: rgb(85, 138, 230);
-    background: -webkit-linear-gradient(to bottom right, rgba(3, 71, 117), rgba(85, 138, 230));
-    background: linear-gradient(to bottom right, rgb(3, 71, 117), rgb(85, 138, 230));
+    background-color: #7475c2;
+    background-image: linear-gradient(to bottom right, #a1a1df, #9ac0d8, #b4a6d8, #939fe4, #a4a4eb, #9ea6e6);
     height: 80%;
     width: 100%;
     font-size: 18px;

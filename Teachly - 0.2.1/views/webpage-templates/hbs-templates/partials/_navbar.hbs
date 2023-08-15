@@ -2,84 +2,58 @@
 <script src="/js/validCurrencies.js" nonce="{{settings.cspNonce}}"></script>
 <script src="/js/validLanguages.js" nonce="{{settings.cspNonce}}"></script>
 
-
-<div id="teachly-navbar" class="bg-dark p-0 m-0">
-    <div id="toggle-nav" class="p-0 m-0">
-        <div>
-            <a class="navbar-brand p-2 fs-2 text-light" href="\ ">Teachly</a>
-        </div>
-        <div class="mr-2">
-            <i id="toggle-nav" class="fa fa-bars text-light"></i>
-        </div>
-        <div id="settings-buttons" class="d-flex align-items-center stop-prop">
-            <button id="lang-popup-toggle" type="button"
-                class="btn btn-primary m-1 text-uppercase">{{settings.lang}}</button>
-            <button id="cur-popup-toggle" type="button"
-                class="btn btn-primary m-1">{{settings.cur}}</button>
-        </div>
-    </div>
-    <div id="navlist" class="row d-flex align-items-center justify-content-center m-0 p-0">
-        <div id="large-screen-teachly" class="pt-1"><a class="navbar-brand pl-1 p-2 fs-2 text-light"
-                href="\ ">Teachly</a></div>
-        <div class="col d-flex align-items-center justify-content-center">
-            <div class="row d-flex align-items-center justify-content-center">
-                <div class="col d-flex align-items-center justify-content-center">
-                    <a class="navbar-brand nav-link" href="\learn">{{navbarContext.findTutor}}</a>
-                </div>
-                <div class="col d-flex align-items-center justify-content-center">
-                    <a class="navbar-brand nav-link" href="\teach">{{navbarContext.becomeTutor}}</a>
-                </div>
-            </div>
-        </div>
-        <div class="col d-flex align-items-center justify-content-center">
-            <div class="row d-flex align-items-center justify-content-center">
-                <div class="col d-flex align-items-center justify-content-center">
-                    <a class="navbar-brand nav-link" href="\register">{{navbarContext.signUp}}</a>
-                </div>
-                <div class="col d-flex align-items-center justify-content-center align-middle">
-                    <a class="navbar-brand nav-link align-middle" href="\login">{{navbarContext.login}}</a>
-                </div>
-            </div>
-        </div>
-        <div id="settings-buttons-list" class="float-right w-130 p-2 stop-prop display-flex justify-content-space-between ">
-                <button type="button"
-                    class="btn btn-outline-primary text-uppercase" id="lang-popup-toggle2">{{settings.lang}}</button>
-                <button type="button"
-                    class="btn btn-outline-primary" id="cur-popup-toggle2">{{settings.cur}}</button>
-        </div>
-    </div>
+<div id="teachly-navbar" class="p-0 m-0 stop-prop">
+    <span>
+        <a class="navbar-brand fs-25pi text-light p-0 m-0" href="\ ">Teachly</a>
+    </span>
+    <span id="settings-buttons" class="stop-prop float-right w-auto mr-20">
+        <button id="lang-popup-toggle" type="button"
+            class="btn btn-outline-primary text-uppercase">{{settings.lang}}</button>
+        <button id="cur-popup-toggle" type="button" class="btn btn-outline-primary">{{settings.cur}}</button>
+        <button id="nav-popup-toggle" type="button" class="btn btn-outline-primary">
+            <span><i class="fa fa-bars fs-20p clr-wht light-blue-text-shadowi w-30p"></i></span>
+        </button>
+    </span>
 </div>
 
-
-
-<div id="nav-popup-holder">
+<div id="nav-popup-holder" class="stop-prop">
     <div class="float-right mr-0">
-        <div >
+        <div>
             <div class="nav-popup" id="language-popup">
                 <div class="text-align-center m-10p fs-25p">language</div>
-                <div class="d-flex align-items-center justify-content-center">
+                <div class="d-flex align-items-center justify-content-center mb-20pi">
                     <input class="nav-input form-control form-control-lg border border-info rounded" type="text"
                         id="nav-language-search-input w-120p"></input>
                 </div>
-                <ul id="language-change" class="nav-list">
+                <ul id="language-change" class="nav-list hidden-scrollbar h-225pi">
                 </ul>
             </div>
         </div>
-        <div >
+        <div>
             <div class="nav-popup" id="currency-popup">
                 <div class="text-align-center m-10p fs-25p">currency</div>
-                <div class="d-flex align-items-center justify-content-center">
+                <div class="d-flex align-items-center justify-content-center mb-20pi">
                     <input
                         class="nav-input form-control form-control-lg border border-info rounded w-80pi text-tr-upper"
                         type="text" id="nav-currency-search-input"></input>
                 </div>
-                <ul id="currency-change" class="nav-list">
-                </ul>
+
+                <div>
+                    <ul id="currency-change" class="nav-list hidden-scrollbar h-135pi">
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div>
+            <div class="nav-popup" id="nav-menu-popup">
+                <div class="my-2"> <a class="normal-text clr-blk" href="\learn">{{navbarContext.findTutor}}</a></div>
+                <div class="my-2"> <a class="normal-text clr-blk" href="\teach">{{navbarContext.becomeTutor}}</a></div>
+                <div class="my-2"> <a class="normal-text clr-blk" href="\register">{{navbarContext.signUp}}</a></div>
+                <div class="my-2"> <a class="normal-text clr-blk" href="\login">{{navbarContext.login}}</a></div>
             </div>
         </div>
     </div>
+
+    <script src="/js/navbar.js" nonce="{{settings.cspNonce}}"></script>
 </div>
-
-
-
-<script src="/js/navbar.js" nonce="{{settings.cspNonce}}"></script>

@@ -45,6 +45,20 @@ LIMIT 10 OFFSET 0;`
 }
 
 
+
+async function search() {
+
+
+  str = `
+  SELECT  name FROM user_info`
+
+  res = await db.query(str)
+
+  console.log(res.rows[0])
+
+
+}
+
 function escapeStrArr(arr) {
   try {
     newArr = []

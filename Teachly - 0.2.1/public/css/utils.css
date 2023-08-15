@@ -11,7 +11,40 @@
     overflow: auto;
 }
 
+.asfasf{
+    margin-top: 170px !important;
+}
+
+.clr-blk {
+    color: #000 !important;
+  }
+
+.fs-25pi {
+    font-size: 25px !important;
+}
+
+.normal-text {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
 .w-20p {
+    width: 20px !important;
+}
+
+.mr-20 {
+    margin-right: 20px;
+}
+
+.w-40pi {
+    width: 40px !important;
+}
+
+.w-30pi {
+    width: 30px !important;
+}
+
+.w-20pi {
     width: 20px !important;
 }
 
@@ -997,7 +1030,7 @@
 }
 
 .dsdvsdv {
-    margin-top:  40px !important;
+    margin-top: 40px !important;
 }
 
 .w-136pi {

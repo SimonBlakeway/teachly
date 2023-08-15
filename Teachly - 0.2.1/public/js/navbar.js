@@ -1,28 +1,3 @@
-var nav = document.getElementById('navlist');
-
-function windowResizeHandler() {
-    if (window.innerWidth > 1045) {
-        nav.style.visibility = "visible";
-        nav.style.display = "block";
-
-    }
-    else {
-        nav.style.display = "none";
-        nav.style.visibility = "hidden";
-    }
-}
-
-function toggleNav() {
-    if (nav.style.display === "none") {
-        nav.style.display = "block";
-        nav.style.visibility = "visible";
-    }
-    else {
-        nav.style.display = "none";
-        nav.style.visibility = "hidden";
-    }
-}
-
 function navLangSearch() {
     var input, filter;
     input = document.getElementById("nav-language-search-input");
@@ -68,9 +43,7 @@ function changeNavSettings(settingName, change) {
 }
 
 function toggleNavPopup(id) {
-    nav.style.display = "none";
-    nav.style.visibility = "hidden";
-    var popup = document.getElementById(id);
+    let popup = document.getElementById(id);
     if ((popup.style.display != "block")) {
         clearNavPopups()
         popup.style.display = "block";
@@ -96,18 +69,6 @@ function clearNavPopups() {
 }
 
 window.addEventListener('load', function () {
-    var nav = document.getElementById('navlist');
-    if (window.innerWidth > 1045) {
-        nav.style.visibility = "visible";
-        nav.style.display = "block";
-    }
-    else {
-        nav.style.display = "none";
-        nav.style.visibility = "hidden";
-    }
-
-    window.addEventListener("resize", windowResizeHandler);
-
     arr = languageArr.sort((a, b) => { return a[0].localeCompare(b[0], userLang) })
     for (let i = 0; i < arr.length; i++) {
         langPair = arr[i].split(",")
@@ -139,16 +100,14 @@ window.addEventListener('load', function () {
         document.getElementById("currency-change").appendChild(node);
     }
 
-
-
-
     document.getElementById("teachly-navbar").onclick = function () { clearNavPopups() };
     document.getElementById("lang-popup-toggle").onclick = function () { toggleNavPopup('language-popup') };
     document.getElementById("cur-popup-toggle").onclick = function () { toggleNavPopup('currency-popup') };
-    document.getElementById("toggle-nav").onclick = function () { toggleNav() };
-    document.getElementById("lang-popup-toggle2").onclick = function () { toggleNavPopup('language-popup') };
-    document.getElementById("cur-popup-toggle2").onclick = function () { toggleNavPopup('currency-popup') };
+    document.getElementById("nav-popup-toggle").onclick = function () { toggleNavPopup('nav-menu-popup') };
     document.getElementById("teachly-navbar").onclick = function () { clearNavPopups() };
     document.getElementById("nav-currency-search-input").onclick = function () { navCurSearch() };
 
+    window.addEventListener("click", e => {
+        clearNavPopups()
+    });
 })

@@ -1,53 +1,28 @@
 #teachly-navbar {
     background-color: rgb(0, 0, 0) !important;
     width: 100% !important;
-    height: 60px !important;
-    margin-bottom: 135px !important;
+    height: 50px  !important;
+    margin-bottom: 130px !important;
+    padding-top: 3px !important;
+    padding-left: 5px !important;
+    z-index: 525;
 }
 
-#navlist {
-    display: flex;
-    background-color: black !important;
-    width: 100%;
-    height: auto;
-    z-index: 200;
-    position: relative;
+
+
+.hidden-scrollbar {
+    overflow: auto;
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
-.nav-link {
-    color: aliceblue !important;
-    width: fit-content !important;
-    display: inline;
-    min-width: 170px;
-    font-size: 20px;
-}
-
-.nav-link {
-    color: aliceblue !important;
-    width: fit-content !important;
-    margin: 0px !important;
-    display: inline;
-    min-width: 170px;
-    font-size: 20px;
-    text-align: center;
-    background-color: rgb(26, 24, 24);
-    height: 50px;
-    padding: 10px !important;
-}
-
-#toggle-nav {
-    height: 60px;
-    margin: auto;
-    cursor: pointer;
-    flex-wrap: wrap;
-    align-items: center;
-    visibility: hidden;
+.hidden-scrollbar::-webkit-scrollbar {
     display: none;
-    justify-content: space-around;
-    width: 100%;
-    padding: 0px;
-    font-size: 30px !important;
 }
+
+
 
 .nav-popup {
     position: absolute;
@@ -58,14 +33,9 @@
     visibility: hidden;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     text-align: left;
-    overflow: auto;
-    -ms-overflow-style: none;
-    /* Internet Explorer 10+ */
-    scrollbar-width: none;
-    /* Firefox */
     font-size: 20px;
     border-radius: 10px;
-    webkit-touch-callout: none;
+    -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -74,11 +44,10 @@
     border-style: solid;
     border-color: white;
     border-width: 20px;
+    z-index: 9999999;
 }
 
-.nav-popup::-webkit-scrollbar {
-    display: none;
-}
+
 
 #language-popup {
     width: 200px;
@@ -98,6 +67,19 @@
 
 }
 
+
+#nav-menu-popup {
+    width: 200px;
+    height: 300px;
+    margin-left: -210px !important;
+    padding: 0px !important;
+    position: absolute;
+    margin-top: 10px;
+    text-align: right;
+
+}
+
+
 #nav-popup-holder {
     width: 100% !important;
     z-index: 0;
@@ -109,6 +91,22 @@
     text-align: center;
     padding: 0px;
     padding-top: 10px;
+}
+
+.mt-20pi {
+    margin-top: 20px !important;
+}
+
+.mb-20pi {
+    margin-bottom:  20px !important;
+}
+
+.h-135pi {
+    height: 135px !important;
+}
+
+.h-225pi {
+    height: 225px !important;
 }
 
 .nav-li {
@@ -130,33 +128,6 @@
     width: 130px !important;
 }
 
-@media only screen and (max-width: 1045px) {
-
-    #toggle-nav {
-        visibility: visible;
-        display: flex;
-    }
-
-    #settings-buttons-list {
-        visibility: hidden;
-        display: none;
-    }
-
-    #navlist {
-        padding: 10px;
-        height: auto;
-        padding-bottom: 0px;
-    }
-
-    .nav-link {
-        margin: 5px !important;
-    }
-
-    #large-screen-teachly {
-        visibility: hidden;
-        display: none;
-    }
-}
 
 .float-right {
     float: right;

@@ -3,11 +3,11 @@
 <section id="login" class="d-flex justify-content-center align-items-center">
   <section id="form-section" class="row container p-1 py-4 m-0 mx-w-600p">
     <div class="col-12 p-md-5" id="login-form-col">
-      <form id="onsubmit-return-false">
+      <form class="onsubmit-return-false">
         <div class="row py-3">
           <div class="col mn-w-200 mx-w-300p">
             <label class="form-label text" for="firstName">{{context.bodyContext.fullName}}</label>
-            <input required type="text" id="username"
+            <input required type="text" id="username" minlength="5"
               class="form-control form-control-md border border-info rounded login-input mn-w-150p" />
           </div>
           <div class="col mn-w-200 mx-w-300p">

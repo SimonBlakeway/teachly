@@ -350,4 +350,11 @@ window.addEventListener('load', function () {
         navLangSearch()
     })
 
+
+    window.addEventListener("click", e => {
+        clearNavPopups()
+    });
+
+
+
 })
