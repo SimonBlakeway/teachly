@@ -135,6 +135,10 @@
     min-height: 48px;
 }
 
+.fs-10pi {
+    font-size: 10px !important;
+}
+
 .fs-12p {
     font-size: 12px !important;
 }
@@ -353,6 +357,10 @@
 
 .float-left {
     float: left;
+}
+
+.h-fit-content {
+    height: fit-content;
 }
 
 .pl-15p {

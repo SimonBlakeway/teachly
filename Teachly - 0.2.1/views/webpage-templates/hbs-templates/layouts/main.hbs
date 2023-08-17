@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{context.language}}">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,60 +25,48 @@
   {{/if}}
 </head>
 <script nonce="{{context.settings.cspNonce}}">
+ const  layoutJson = JSON.parse(`{{json context.layoutContext }}`.replaceAll('&quot;', `"`))
+
   const userLang = "{{context.settings.lang}}"
   const userCur = "{{context.settings.cur}}"
   var curConversionRatio = "{{context.settings.curRatio}}"
 
-  {{#if context.settings.isUser }}
+  {{#if context.settings.isUser}}
   var lastRefresh = {{ context.settings.token_created_at }}
   {{/if}}
 
-      function prettyifyDate(date) { // it comes in as seconds from epoch
-        try {
 
-          if (typeof date != "number") return date
-          // I made this with no internet, pls ignore horrible conditional
-          if (`${date}` == "NaN") return ""
-
-          var secs = Math.floor(Date.now() / 1000) - date
-          if (secs <= 1) return "1 second ago"
-          if (secs < 60) return "{{context.layoutContext.secsAgoPrier}}" + secs + " seconds ago" //"{{context.layoutContext.secsAgoPost}}";
-          if (secs < 3600) return "{{context.layoutContext.minAgoPrier}}" + Math.floor(secs / 60) + "{{context.layoutContext.minAgoPost}}";
-          if (secs < 86400) return "{{context.layoutContext.hourAgoPrier}}" + Math.floor(secs / 3600) + "{{context.layoutContext.hourAgoPost}}";
-          if (secs < 604800) return "{{context.layoutContext.daysAgoPrier}}" + Math.floor(secs / 86400) + "{{context.layoutContext.daysAgoPost}}";
-          return new Date(secs * 1000).toLocaleDateString();
-        }
-        catch (err) {
-          console.log(err)
-          return ""
-        }
-      }
-
-      function updateDates() {
-        dates = document.getElementsByClassName("date")
-        for (let i = 0; i < dates.length; i++) {
-          try { // the try is here because I don't want an error to break the loop
-            num = parseInt(dates[i].children[0].innerHTML)
-            dates[i].children[1].innerHTML = prettyifyDate(num)
-          }
-          catch (err) {
-            console.log(err)
-          }
-        }
-      }
 </script>
 <script src="/js/mainLayout.js" nonce="{{context.settings.cspNonce}}"></script>
+
 <body>
   <div id="total-visible"></div>
-<style nonce="{{context.settings.cspNonce}}">
-  .bg-333 {background-color: #333;}
-  .top-0 {top: 0;}
-  .left-0 {left:0px;}
-  .w-100 {width: 100%;} 
-  .h-100 {height: 100%;}
-  .z-index-max {z-index: 2147483647;}
-</style>
-<div id="loadOverlay" class="bg-333 top-0 left-0 w-100 h-100 z-index-max"></div>
+  <style nonce="{{context.settings.cspNonce}}">
+    .bg-333 {
+      background-color: #333;
+    }
+
+    .top-0 {
+      top: 0;
+    }
+
+    .left-0 {
+      left: 0px;
+    }
+
+    .w-100 {
+      width: 100%;
+    }
+
+    .h-100 {
+      height: 100%;
+    }
+
+    .z-index-max {
+      z-index: 2147483647;
+    }
+  </style>
+  <div id="loadOverlay" class="bg-333 top-0 left-0 w-100 h-100 z-index-max"></div>
 
   {{#if context.navbar}}
   {{> _navbar navbarContext = context.navbar settings = context.settings}}
@@ -99,4 +88,5 @@
   <div class="position-fixed top-80 w-300p" id="screen-notifications"></div>
   </div>
 </body>
+
 </html>

@@ -1,3 +1,4 @@
+
 const origin = window.location.origin;
 const baseTitle = document.title
 
@@ -35,7 +36,14 @@ async function socketSetup() {
     });
 
     socket.on("old notifications", (data) => {
-        switchSignaler("notification", turnOn = true)
+
+
+
+        box = document.createElement("div")
+
+
+
+        
         notOuter = document.getElementById("notifications-list")
         notOuter.innerHTML = '';
         for (let i = 0; i < data.length; i++) {
@@ -94,57 +102,16 @@ async function socketSetup() {
             box = genInner()
             notOuter.appendChild(box)
         }
-    });
 
-    socket.on("old messages", (data) => {
-        console.log("old messages");
-        console.log(data)
+
+        switchSignaler("notification", turnOn = true)
     });
 
     socket.on("notification", (data) => {
-        switchSignaler("notification", turnOn = true)
-
-        notOuter = document.getElementById("notifications-list")
-
-        for (let i = 0; i < data.length; i++) {
-            element = data[i]
-
-            if (element.url) {
-                box = createElement("li")
-                box.innerHTML = `
-                    <a href="${element.url}">
-                      <div>${element.text}</div>
-                      <div>${element.created_at}</div>
-                    </a>
-                      `
-            }
-            else {
-                box = createElement("li")
-                box.innerHTML = `
-                      <div>${element.text}</div>
-                      <div>$element.created_at}</div>
-                      `
-
-            }
-
-
-            notOuter.appendChild(box)
-        }
-
-
-        //show notification on title if user isn't looking at page
-        if (document.visibilityState == "hidden") {
-            document.title = "skreee"
-        }
+        generateNotification(data)
     });
 
-    socket.on("message", (data) => {
-        switchSignaler("message", turnOn = true)
 
-        //fill messages
-        console.log("old messages");
-        console.log(data)
-    });
 
     socket.on("disconnect", () => {
         console.log("socket disconected");
@@ -167,6 +134,161 @@ window.addEventListener('offline', function (event) {
 });
 
 
+function generateNotification(obj) {
+
+
+    box = document.createElement("div")
+    box.className = "m-0 pr-15p clr-blue-ice h-fit-content"
+    box.id = `${obj.notification_id}-notification`
+    link = obj.link
+    text = obj.text
+    createdAt = obj.created_at
+
+    if (link) {
+        box.innerHTML = `
+        <div class="brdr-btm-blk w-100 text-align-right">
+            <div class="">
+                <div class="pr-3p float-left pl-15p text-align-left w-100">
+                    <span class="blue-symbol">✖</span>
+                    <span><a class="normal-text" href="${origin}${link}">${text}</a></span>
+                </div>
+                <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
+            </div>      
+        </div>      
+        `
+    }
+    else {
+        box.innerHTML = `
+        <div class="brdr-btm-blk w-100 text-align-right ">
+            <div class="">
+                <div class="pr-3p float-left pl-15p text-align-left w-100">
+                    <span class="blue-symbol">✖</span>
+                    <span>${text}</span>
+                </div>
+                <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
+            </div>      
+        </div>      
+        `
+    }
+
+    //this is easier than just converting the innerHTML to a line by line generator
+    box.children[0].children[0].children[0].children[0].addEventListener("click", e => {
+        deleteNotification(obj.notification_id, obj.is_global)
+    })
+
+
+
+
+
+
+    if (obj.notification_type == "base notification") {
+        notOuter = document.getElementById("notifications-list")
+        box = document.createElement("div")
+        box.className = "m-0 pr-15p clr-blue-ice h-fit-content"
+        box.id = `${obj.notification_id}-notification`
+        link = obj.link
+        text = obj.text
+        createdAt = obj.created_at
+        switchSignaler("notification", turnOn = true)
+
+        if (link) {
+            box.innerHTML = `
+            <div class="brdr-btm-blk w-100 text-align-right">
+                <div class="">
+                    <div class="pr-3p float-left pl-15p text-align-left w-100">
+                        <span class="blue-symbol">✖</span>
+                        <span><a class="normal-text" href="${origin}${link}">${text}</a></span>
+                    </div>
+                    <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
+                </div>      
+            </div>      
+            `
+        }
+        else {
+            box.innerHTML = `
+            <div class="brdr-btm-blk w-100 text-align-right ">
+                <div class="">
+                    <div class="pr-3p float-left pl-15p text-align-left w-100">
+                        <span class="blue-symbol">✖</span>
+                        <span>${text}</span>
+                    </div>
+                    <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
+                </div>      
+            </div>      
+            `
+        }
+
+        //this is easier than just converting the innerHTML to a line by line generator
+        box.children[0].children[0].children[0].children[0].addEventListener("click", e => {
+            deleteNotification(obj.notification_id, obj.is_global)
+        })
+
+
+        if (notOuter.children[0].getAttribute("data-val") == "no-notification") {
+            notOuter.replaceChildren(box)
+        }
+        else {
+            notOuter.prepend(box)
+        }
+    }
+    else if (obj.notification_type == "message notification") {
+        messageOuter = document.getElementById("messages-list")
+        box = document.createElement("div")
+        box.className = "m-0 pr-15p clr-blue-ice h-fit-content"
+        box.id = `${obj.notification_id}-notification`
+        link = obj.link
+        text = obj.text
+        createdAt = obj.created_at
+        switchSignaler("messages", turnOn = true)
+        if (link) {
+            box.innerHTML = `
+                <a class="brdr-btm-blk w-100 text-align-right ">
+                    <div class="">
+                        <div class="pr-3p float-left pl-15p text-align-left w-100">
+                            <span class="blue-symbol">✖</span>
+                            <span>${text}</span>
+                        </div>
+                        <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
+                    </div>      
+                </a>      
+                `
+        }
+        else {
+            box.innerHTML = `
+                <div class="brdr-btm-blk w-100 text-align-right ">
+                    <div class="">
+                        <div class="pr-3p float-left pl-15p text-align-left w-100">
+                            <span class="blue-symbol">✖</span>
+                            <span>${text}</span>
+                        </div>
+                        <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
+                    </div>      
+                </div>      
+                `
+        }
+
+        //this is easier than just converting the innerHTML to a line by line generator
+        box.children[0].children[0].children[0].children[0].addEventListener("click", e => {
+            deleteNotification(obj.notification_id, obj.is_global)
+        })
+
+        if (messageOuter.children[0].getAttribute("data-val") == "no-message") {
+            messageOuter.replaceChildren(box)
+        }
+        else {
+            messageOuter.prepend(box)
+        }
+    }
+}
+
+
+function deleteNotification(notId, isGlobal) {
+    removeElement(`${notId}-notification`)
+    socket.emit('delete notification', { notId: notId, isGlobal: isGlobal });
+
+}
+
+
 function switchSignaler(id, turnOn = false) {
     signaler = document.getElementById(`${id}-signaler`)
     if (turnOn) {
@@ -179,11 +301,6 @@ function switchSignaler(id, turnOn = false) {
     else {
         signaler.style.display = "block"
     }
-}
-function deleteNotification(notId) {
-    removeElement(`${notId}-notification`)
-    socket.emit('delete notification', notId);
-
 }
 function redirectByUrl(url, notId) {
     notification = document.getElementById(`${id}-notification`)
@@ -270,6 +387,12 @@ function clearNavPopups() {
         popupArr[i].style.visibility = "hidden";
     }
 }
+
+
+
+
+
+
 window.addEventListener('load', function () {
 
     async function langSetup() {

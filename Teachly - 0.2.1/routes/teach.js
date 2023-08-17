@@ -170,6 +170,38 @@ router.get('/', async (req, res) => {
 })
 
 
+// @desc    teach landing page
+// @route   GET /
+router.get('/view-course-request/:courseId,', async (req, res) => {
+
+  eventId = req.query.emailCode
+  result = await db.query(`
+  SELECT 
+    t1.body, 
+    t2.user_id,
+    t2.name
+  FROM events t1
+  JOIN 
+    user_info t2
+    ON (t1.body ->> 'user_id')::int = t2.user_id
+  WHERE t1.id = $1;
+    `,
+    [eventId]);
+
+  if (result.rowCount != 1) throw new Error("database issue")
+
+  queryInfo = result.rows[0]
+
+  try {
+    res.render('viewCourseRequest', {
+      layout: "main",
+      context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest", queryInfo), //add new param, dbData or something
+    })
+  }
+  catch (err) {
+    res.json({ "err": err })
+  }
+})
 
 
 module.exports = router

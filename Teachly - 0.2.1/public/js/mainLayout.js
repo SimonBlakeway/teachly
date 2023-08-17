@@ -108,6 +108,33 @@ window.addEventListener('load', function () {
 })
 
 
+function prettyifyDate(date) { // it comes in as seconds from epoch
+    try {
+        if (isNaN(date)) prettyifyDate(Math.floor(Date.now() / 1000))
+         
+        let  secs = Math.floor(Date.now() / 1000) - date
+        if (secs <= 1) return layoutJson.prettifyDate.lessThanSecond
+        if (secs < 60) return layoutJson.prettifyDate.secsAgoPrier + secs + layoutJson.prettifyDate.secsAgoPost
+        if (secs < 3600) return layoutJson.prettifyDate.minAgoPrier + Math.floor(secs / 60) + layoutJson.prettifyDate.minAgoPost
+        if (secs < 86400) return layoutJson.prettifyDate.hourAgoPrier + Math.floor(secs / 3600) + layoutJson.prettifyDate.hourAgoPost
+        if (secs < 604800) return layoutJson.prettifyDate.daysAgoPrier + Math.floor(secs / 86400) + layoutJson.prettifyDate.daysAgoPost
+        return new Date(secs * 1000).toLocaleDateString();
+    }
+    catch (err) {
+        console.log(err)
+        return ""
+    }
+}
+
+function updateDates() {
+    dates = document.getElementsByClassName("date")
+    for (let i = 0; i < dates.length; i++) {
+        timestamp = Number(curVals[i].getAttribute("data-timestamp"))
+        dates[i].innerHTML = prettyifyDate(timestamp)
+    }
+}
+
+
 
 
 function getRandomInt(max) {

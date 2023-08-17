@@ -6,44 +6,24 @@ const { token } = require('morgan');
 
 
 function cookiePrep(str) {
-
-  /*
-  arr = str.split("; ").map(x => {
-    return x.split("=")
-  })
-  obj = {}
-  for (i = 0; i < arr.length; i++) {
-
-    try {
-      obj[`${arr[i][0]}`] = jwt.decode(arr[i][1], process.env.JWT_SECRET)
-    } catch (error) {
-      obj[`${arr[i][0]}`] = arr[i][1]
-
-    }
-  }
-  return obj
-
-  */
-
-
   arr = str.split("; ").map(x => {
     return x.split("=")
   }).flat()
-
   obj = {}
-
   obj.user_refresh_token = jwt.decode(arr[((arr.indexOf("user_refresh_token")) + 1)], process.env.JWT_SECRET)
   obj.userCookie = jwt.decode(arr[arr.indexOf("userCookie") + 1], process.env.JWT_SECRET)
 
   return obj
-
-
 }
-//result = await db.query(`select * FROM notifications WHERE user_id = $1 OR is_global = $2`, [id, true]);
 
 async function sendNotifications(id) {
   try {
-    result = await db.query(`select * FROM notifications WHERE user_id = $1 OR (is_global = $2 AND $3 != ANY(deleted_by))`, [id, true, id]);
+    result = await db.query(`
+    select * FROM notifications 
+    WHERE 
+      user_id = $1 OR 
+      (is_global = $2 AND $3 != ANY(deleted_by))
+      `, [id, true, id]);
     if (result.rowCount != 0) {
       io.to(`${id}-user`).emit("old notifications", result.rows);
     }
@@ -65,11 +45,9 @@ module.exports = {
         userToken = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
         userCookie = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
 
-        if (userToken.id != userCookie.id) { throw new Error("user token and cookie have different ids") }
-        else if (((now - userToken.created_at) > (60 * 15))) {
-          return
-        } //if expired just ignore
-        else { next() }
+        if (userToken.id != userCookie.id)  throw new Error("user token and cookie have different ids") 
+        else if (((now - userToken.created_at) > (60 * 15)))  return  //if expired just ignore
+        else { next() } // all good
 
       } catch (error) {
         console.log(error)
@@ -90,7 +68,7 @@ module.exports = {
 
 
     io.on("connection", function (socket) {
-      
+
       try {
         cookies = cookiePrep(socket.handshake.headers.cookie)
         id = cookies.user_refresh_token.id
@@ -103,28 +81,44 @@ module.exports = {
           //io.emit("user disconnected", socket.userId);
         });
 
+
+        //why are there two routes?
         socket.on("message user", function (data) {
           //io.emit("chat message", data);
         });
-
         socket.on("send message", async function (data) {
           try {
-            console.log("success")
-            console.log(data)
-            //sendMessage(id = cookies.user_refresh_token.id, data.text, data.chatId)
-
-
+            sendMessage(cookies.user_refresh_token.id, data.text, data.chatId)
           } catch (error) {
             console.log(error)
           }
         });
 
+
+
+
         socket.on("delete notification", async function (data) {
           try {
-            result = await db.query(`DELETE FROM notifications WHERE notification_id = $1 AND user_id = $2 AND is_global = $3;`, [data, cookies.user_refresh_token.id, false]);
-
-
-            result = await db.query(`UPDATE notifications SET deleted_by = array_append( deleted_by, $1) WHERE notification_id = $2  AND is_global = $3)`, [cookies.user_refresh_token.id, data, false]);
+            if (data.isGlobal) {
+              result = await db.query(
+                `
+                DELETE FROM notifications 
+                WHERE 
+                  notification_id = $1 AND 
+                  user_id = $2 
+                  AND is_global = $3;
+                `, [data.notId, cookies.user_refresh_token.id, false]);
+            }
+            else {
+              result = await db.query(
+                `
+                UPDATE notifications 
+                SET deleted_by = array_append( deleted_by, $1) 
+                WHERE 
+                  notification_id = $2 AND 
+                  is_global = $3
+                `, [cookies.user_refresh_token.id, data, true]);
+            }
           } catch (error) {
             console.log(error)
           }
@@ -140,11 +134,7 @@ module.exports = {
         socket.disconnect()
         return
       }
-
-
-
     });
-
     global.io = io
   }
 }

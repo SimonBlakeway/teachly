@@ -48,13 +48,30 @@ LIMIT 10 OFFSET 0;`
 
 async function search() {
 
+  teacherId = 217
+  studentId = 208
 
-  str = `
-  SELECT  name FROM user_info`
+  /*
+SELECT
+   banned_users
+FROM
+   user_info
+WHERE 
+   id = 105 AND
+   not banned_users @> '{15}' 
+  */
 
-  res = await db.query(str)
 
-  console.log(res.rows[0])
+  result = await db.query(`
+  SELECT t1.name, banned_users
+  FROM user_info t1
+  WHERE 
+    t1.id = $1 AND
+    '1' = ANY( t1.banned_users )
+    `,
+    [teacherId]);
+
+  console.log(result.rows)
 
 
 }
@@ -227,6 +244,9 @@ router.post('/request-lesson', [ensureUser, bodyParser.json({ limit: "2mb" })], 
     studentId = req.settings.id
     studentName = req.settings.name
 
+    console.log(    "teacherId", req.body.teacherId,
+      "studentId" , req.settings.id)
+
 
 
     //checks that course and teacher id are linked and also makes sure potential student isn't banned by teacher
@@ -235,55 +255,36 @@ router.post('/request-lesson', [ensureUser, bodyParser.json({ limit: "2mb" })], 
       FROM user_info t1
       WHERE 
         t1.id = $1 AND
-        $2 = ANY( t1.banned_users )
-        `,
+        not banned_users @> '{ $2 }' 
+      `,
       [teacherId, studentId]);
 
 
 
-    /*
-
-  //checks that course and teacher id are linked and also makes sure potential student isn't banned by teacher
-  result = await db.query(`
-    SELECT t1.name 
-    FROM user_info t1
-    WHERE 
-      t1.id = $1 AND
-      $2 != ANY( t1.banned_users )
-      `,
-    [teacherId, studentId]); //   
-
-    */
-
-    console.log(result.rows)
-
     if (result.rowCount != 1) {
-      throw new Error("or student is banned") //maybe split this into two parts so as to get a better error message?
+      throw new Error("student is banned") //maybe split this into two parts so as to get a better error message?
     }
 
-    return
+    eventId = utils.genSafeRandomNum(1, 999999999999999)
+
 
     //notify teacher,
-    utils.sendAutomatedNotification(req.setting.lang, "request-lesson", { text: [studentName], link: [] }, teacherId)
-
-    //add event to the db
-    try {
-      result = await db.query(`INSERT INTO event ( type, created_at, data ) VALUES ($1, $2, $3, $4)`,
-        [
-          "lesson_request",
-          Math.floor(Date.now() / 1000),
-          {
-            courseId: courseId,
-            teacherId: teacherId,
-            studentId: studentId
-
-          }
-        ]);
-    } catch (error) {
-      console.log(error)
-    }
-
-
+    utils.sendAutomatedNotification(req.setting.lang, "request-lesson", { text: [studentName], link: [courseId, eventId] }, studentId) // should be teacherId
+    /*
+        //add event to the db
+        result = await db.query(`INSERT INTO event ( type, created_at, data, id ) VALUES ($1, $2, $3, $4)`,
+          [
+            "lesson_request",
+            Math.floor(Date.now() / 1000),
+            {
+              courseId: courseId,
+              teacherId: teacherId,
+              studentId: studentId,
+    
+            },
+            eventId
+          ]);
+    */
     res.sendStatus()
   } catch (error) {
     console.log(error)
@@ -309,7 +310,7 @@ router.post('request-chat', bodyParser.json({ limit: "2mb" }), async (req, res) 
         FULL OUTER  JOIN  user_info t2
           ON teacher_course.teacherId = user_info.id
         WHERE  teacher_course.courseId = $1 AND 
-        $2 != ANY t2.banned_users ;`, [courseId, studentId]);
+        not banned_users @> '{$2}'  ;`, [courseId, studentId]);
 
 
     if (result.rowCount != 1) {

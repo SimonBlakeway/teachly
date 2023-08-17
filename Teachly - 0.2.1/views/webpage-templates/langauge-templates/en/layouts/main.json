@@ -1,10 +1,13 @@
 {
-    "secsAgoPrier": "",
-    "secsAgoPost": " sec(s) ago",
-    "minAgoPrier": "",
-    "minAgoPost": " min(s) ago",
-    "hourAgoPrier": "",
-    "hourAgoPost": " hour(s) ago",
-    "daysAgoPrier": "",
-    "daysAgoPost": " day(s) ago"
+    "prettifyDate": {
+        "lessThanSecond": "one second ago",
+        "secsAgoPrier": "",
+        "secsAgoPost": " seconds ago",
+        "minAgoPrier": "",
+        "minAgoPost": " minutes ago",
+        "hourAgoPrier": "",
+        "hourAgoPost": " hours ago",
+        "daysAgoPrier": "",
+        "daysAgoPost": " days ago"
+    }
 }

@@ -7,6 +7,8 @@ const db = require('./config/db');
 const jwt = require("jwt-simple");
 const { compile } = require('html-to-text');
 const { text } = require('body-parser');
+const { join } = require('path');
+const { relativeTimeThreshold } = require('moment');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
@@ -853,38 +855,41 @@ function sendNotificationGlobal(id, text) {
 }
 
 function sendAutomatedNotification(lang, key, valObj, id) {
-  textLangArr = notificationMessages[`${lang}`][`${key}`].text
-  linkLangArr = notificationMessages[`${lang}`][`${key}`].link
-
-  textSpace = notificationMessages[`${lang}`]["textSpace"]
-
-  for (let i = 0; i < valObj.text; i++) {
-    textLangArr[textLangArr.indexOf(i)] = textValArr[i]
-  }
-  for (let i = 0; i < valObj.link; i++) {
-    linkLangArr[textLangArr.indexOf(i)] = textValArr[i]
-  }
-
-
-
   try {
+    textLangArr = notificationMessages[`${lang}`][`${key}`].text
+    linkLangArr = notificationMessages[`${lang}`][`${key}`].link
+
+    textSpace = notificationMessages[`${lang}`]["textSpace"]
+
+    for (let i = 0; i < valObj.text.length; i++) {
+      textLangArr[textLangArr.indexOf(i)] = valObj["text"][i]
+    }
+    for (let i = 0; i < valObj.link.length; i++) {
+      linkLangArr[linkLangArr.indexOf(i)] = valObj["link"][i]
+    }
+
+
+    let text = textLangArr.join(textSpace)
+    let link = linkLangArr.join()
+
+
     notObj = {
-      text: compiledConvert(textLangArr.join(textSpace)),
+      text: compiledConvert(text),
       created_at: Math.floor(Date.now() / 1000),
       userId: id,
-      link: linkLangArr.join("")
+      link: link
     }
     db.query(`
     INSERT INTO notifications 
-    (text, created_at, user_id)
-    VALUES ($1, $2, $3)`,
-      [notObj.text, notObj.created_at, notObj.userId]);
+      (text, created_at, user_id, link)
+    VALUES 
+      ($1, $2, $3, $4)`,
+      [notObj.text, notObj.created_at, notObj.userId, link]);
     global.io.to(`${id}-user`).emit("notification", notObj);
 
   }
   catch (err) {
     console.log(err)
-    throw new Error(`error: ${err}`)
   }
 }
 

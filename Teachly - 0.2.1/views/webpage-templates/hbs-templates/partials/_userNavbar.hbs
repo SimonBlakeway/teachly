@@ -38,11 +38,13 @@
                 <div class="icon-signaler p-0 m-0" id="profile-signaler"></div>
                 <button id="toggle-nav-profile-popup" class="profile-img mx-2 p-0 w-50pi h-50pi" type="button">
 
-                    <div class="w-100 h-100 profile-img m-0 p-0 bg-i-profile-img bg-r-no-repeat bg-s-cover mt--2pi ml--2pi w-50pi h-50pi"></div>
+                    <div
+                        class="w-100 h-100 profile-img m-0 p-0 bg-i-profile-img bg-r-no-repeat bg-s-cover mt--2pi ml--2pi w-50pi h-50pi">
+                    </div>
                 </button>
             </div>
         </div>
-        <div class="nav-popup" id="language-popup">
+        <div class="nav-popup stop-prop" id="language-popup">
             <div class="text-align-center m-10p fs-25p">language</div>
             <div class="d-flex align-items-center justify-content-center">
                 <input class="nav-input form-control form-control-lg border border-info rounded w-120pi" type="text"
@@ -51,7 +53,7 @@
             <ul id="language-change" class="nav-list scroll h-228pi mt-20p">
             </ul>
         </div>
-        <div class="nav-popup" id="currency-popup">
+        <div class="nav-popup stop-prop" id="currency-popup">
             <div class="text-align-center m-10p  fs-25p">currency</div>
             <div class="d-flex align-items-center justify-content-center">
                 <input
@@ -61,7 +63,7 @@
             <ul id="currency-change" class="nav-list scroll h-230pi mt-20p">
             </ul>
         </div>
-        <div class="nav-popup" id="profile-popup">
+        <div class="nav-popup stop-prop" id="profile-popup">
             <div class="popup-link d-flex justify-content-center align-items-center">
                 <div class="d-flex justify-content-center align-items-center w-60pi h-60pi">
                     <div class="profile-img bg-i-profile-img bg-r-no-repeat bg-s-cover w-60pi h-60pi">
@@ -82,18 +84,7 @@
                         href="\auth\logout">{{navbarContext.profilePopup.logout}}</a></li>
             </ul>
         </div>
-        <div class="nav-popup" id="messages-popup">
-            <div class="popup-link pt-0 mr-0 p-15p">
-                <h3>
-                    {{navbarContext.messagesPopup.messages}}
-                </h3>
-            </div>
-            <ul class="navlist-list d-flex flex-column p-0 m-0" id="notifications-list h-100">
-                <div class="d-flex align-items-center justify-content-center">
-                    {{navbarContext.messagesPopup.noMessages}}</div>
-            </ul>
-        </div>
-        <div class="nav-popup d-flex flex-column" id="navlist-popup">
+        <div class="nav-popup d-flex flex-column stop-prop" id="navlist-popup">
             <div id="settings-buttons-list" class="dispr-mn-442p p-1 stop-prop">
                 <div class="d-flex align-items-center justify-content-center">
                     <div class="m-2">
@@ -109,17 +100,31 @@
             <a class="navbar-brand ml-60" href="\teach">{{navbarContext.navlistPopup.teach}}</a>
             <a class="navbar-brand ml-60" href="\learn">{{navbarContext.navlistPopup.learn}}</a>
         </div>
+
+
+        <div class="nav-popup d-flex flex-column stop-prop" id="messages-popup">
+            <div class="popup-link pt-0 mr-0 p-15p">
+                <h3>
+                    {{navbarContext.messagesPopup.messages}}
+                </h3>
+            </div>
+            <ul class="navlist-list d-flex flex-column p-0 m-0" id="messages-list">
+                <div class="d-flex align-items-center justify-content-center" data-val="no-message">
+                    {{navbarContext.messagesPopup.noMessages}}</div>
+            </ul>
+        </div>
         <div class="nav-popup d-flex flex-column stop-prop" id="notifications-popup">
             <div class="popup-link pt-0 mr-0 p-15p">
                 <h3>
                     {{navbarContext.notificationsPopup.notifications}}
                 </h3>
             </div>
-            <ul class="navlist-list d-flex flex-column p-0 m-0" id="notifications-list h-100">
-                <div class="d-flex align-items-center justify-content-center">
+            <ul class="navlist-list d-flex flex-column p-0 m-0" id="notifications-list">
+                <div class="d-flex align-items-center justify-content-center" data-val="no-notification">
                     {{navbarContext.notificationsPopup.noNotifications}}</div>
             </ul>
         </div>
+
     </div>
 </div>
 <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"

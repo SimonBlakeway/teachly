@@ -79,6 +79,10 @@
       text-align: center;
     }
 
+    .clr-blue-ice {
+      color: #f2fffb;
+    }
+
     #profile-buttons {
       height: 50px;
       text-align: center;
@@ -142,6 +146,22 @@
       padding: 0px !important;
     }
 
+
+
+    #messages-list {
+      height: 300px !important;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    #messages-list::-webkit-scrollbar {
+      display: none;
+    }
+
     .light-blue-text-shadow {
       text-shadow: 0.5px 0.5px 0px #12469a, -0.5px -0.5px 0.5px #15489a, 0.5px -0.5px 0.5px #12418c, -0.5px 0.5px 0.5px #123f88;
     }
@@ -151,6 +171,14 @@
     }
 
     #notifications-popup {
+      height: 360px;
+      width: 280px;
+      border-width: 5px;
+      border-bottom-width: 20px;
+    }
+
+
+    #messages-popup {
       height: 360px;
       width: 280px;
       border-width: 5px;
@@ -172,6 +200,19 @@
       transform: scale(1.2)
     }
 
+    .text-align-right {
+      text-align: right;
+    }
+
+    .blue-symbol {
+      color: #5364a7 !important;
+      font-family: "Segoe UI Symbol";
+    }
+
+    .brdr-btm-blk {
+      border-bottom: 1px solid rgb(255, 255, 255);
+    }
+
     @media only screen and (max-width: 460px) {
       .dispr-mx-442p {
         visibility: hidden;
@@ -188,7 +229,7 @@
 
     .icon-signaler {
       position: absolute;
-      background: radial-gradient(#abb5d3, #909fcc, #546ac2, #2432c5, #1825b7);
+      background: radial-gradient(#7786b2, #7e8fc3, #a3abca, #ffffff, #d6d7e6);
       border-radius: 45%;
       width: 18px;
       height: 18px;
@@ -229,11 +270,10 @@
       float: right !important;
     }
 
-    #navlist-popup  {
-      width:  200px !important;
+    #navlist-popup {
+      width: 200px !important;
     }
 
     .clr-blk {
       color: #000 !important;
     }
-
