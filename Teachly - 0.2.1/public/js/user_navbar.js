@@ -34,85 +34,69 @@ async function socketSetup() {
     socket.on("connect", () => {
         console.log("socket connected");
     });
-
     socket.on("old notifications", (data) => {
-
-
-
-        box = document.createElement("div")
-
-
-
-        
         notOuter = document.getElementById("notifications-list")
-        notOuter.innerHTML = '';
+        mesOuter = document.getElementById("messages-list")
+
+        notBox = document.createElement("div")
+        mesBox = document.createElement("div")
+
         for (let i = 0; i < data.length; i++) {
-            box = document.createElement("li")
-            box.className = "px-0 mx-0 py-1"
-            box.id = `${data[i].notification_id}-notification`
-            divClass = ""
-            if (data[i].url) { object.onclick = () => { redirectByUrl(data[i].url, data[i].notification_id) } }
-
-            function genInner() {
-
-                inner = `
-                <div class="d-flex border-top-light mt-1">
-                  <div class="w-220p">
-                    <div>${data[i].text}</div>
-                    <div class="pt-1 fs-6 clr-f2f2f2">${prettyifyDate(data[i].created_at)}</div>
-                  </div>
-                  <div o000nclick="event.stopPropagation();">
-                    <div>
-                      <div o000nClick="deleteNotification('${data[i].notification_id}')" class="color-white fs-3 ml-10p"><i class="fa fa-times" aria-hidden="true"></i></div>
-                    </div>
-                  </div>
-                </div>
-                  `
-
-                outDiv = document.createElement("div")
-                outDiv.className = "d-flex border-top-light mt-1"
-
-                in1 = document.createElement("div")
-                in1.className = "w-220p"
-                in1.innerHTML = `
-                  <div>${data[i].text}</div>
-                  <div class="pt-1 fs-6 clr-f2f2f2">${prettyifyDate(data[i].created_at)}</div>
-                  `
-
-                in2 = document.createElement("div")
-                in2.addEventListener('click', event => {
-                    event.stopPropagation();
-                })
-
-                in2in = document.createElement("div")
-                in2in2 = document.createElement("div")
-                in2in2.addEventListener('click', event => {
-                    deleteNotification(`${data[i].notification_id}`)
-                })
-                in2in2.className = "color-white fs-3 ml-10p"
-                in2in2.innerHTML = `<i class="fa fa-times" aria-hidden="true"></i>`
-
-
-                in2in.appendChild(in2in2)
-                in2.appendChild(in2in)
-
-                outDiv.append(in1, in2)
-                return outDiv
+            notData = data[i]
+            if (notData.notification_type == "base notification") {
+                notBox.append(generateNotification(notData))
             }
-            box = genInner()
-            notOuter.appendChild(box)
+            else if (notData.notification_type == "message notification") {
+                mesBox.append(generateNotification(notData))
+            }
         }
 
 
-        switchSignaler("notification", turnOn = true)
-    });
+        if (notBox.innerHTML != "") {
+            switchSignaler("notification", turnOn = true)
+            if (notOuter.children[0].getAttribute("data-val") == "no-notification") {
+                notOuter.replaceChildren(box)
+            }
+            else {
+                notOuter.prepend(box)
+            }
+        }
+        if (mesBox.innerHTML != "") {
+            switchSignaler("notification", turnOn = true)
 
+            if (messageOuter.children[0].getAttribute("data-val") == "no-message") {
+                messageOuter.replaceChildren(...box.children)
+            }
+            else {
+                messageOuter.prepend(box)
+            }
+        }
+
+    });
     socket.on("notification", (data) => {
-        generateNotification(data)
+        if (data.notification_type == "base notification") {
+            notOuter = document.getElementById("notifications-list")
+            switchSignaler("notification", turnOn = true)
+
+            if (notOuter.children[0].getAttribute("data-val") == "no-message") {
+                notOuter.replaceChildren(generateNotification(data))
+            }
+            else {
+                notOuter.prepend(generateNotification(data))
+            }
+
+        }
+        else if (data.notification_type == "message notification") {
+            mesOuter = document.getElementById("messages-list")
+
+            if (messageOuter.children[0].getAttribute("data-val") == "no-message") {
+                messageOuter.replaceChildren(generateNotification(data))
+            }
+            else {
+                messageOuter.prepend(generateNotification(data))
+            }
+        }
     });
-
-
-
     socket.on("disconnect", () => {
         console.log("socket disconected");
     });
@@ -182,46 +166,7 @@ function generateNotification(obj) {
 
 
     if (obj.notification_type == "base notification") {
-        notOuter = document.getElementById("notifications-list")
-        box = document.createElement("div")
-        box.className = "m-0 pr-15p clr-blue-ice h-fit-content"
-        box.id = `${obj.notification_id}-notification`
-        link = obj.link
-        text = obj.text
-        createdAt = obj.created_at
-        switchSignaler("notification", turnOn = true)
 
-        if (link) {
-            box.innerHTML = `
-            <div class="brdr-btm-blk w-100 text-align-right">
-                <div class="">
-                    <div class="pr-3p float-left pl-15p text-align-left w-100">
-                        <span class="blue-symbol">✖</span>
-                        <span><a class="normal-text" href="${origin}${link}">${text}</a></span>
-                    </div>
-                    <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
-                </div>      
-            </div>      
-            `
-        }
-        else {
-            box.innerHTML = `
-            <div class="brdr-btm-blk w-100 text-align-right ">
-                <div class="">
-                    <div class="pr-3p float-left pl-15p text-align-left w-100">
-                        <span class="blue-symbol">✖</span>
-                        <span>${text}</span>
-                    </div>
-                    <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
-                </div>      
-            </div>      
-            `
-        }
-
-        //this is easier than just converting the innerHTML to a line by line generator
-        box.children[0].children[0].children[0].children[0].addEventListener("click", e => {
-            deleteNotification(obj.notification_id, obj.is_global)
-        })
 
 
         if (notOuter.children[0].getAttribute("data-val") == "no-notification") {
@@ -281,10 +226,9 @@ function generateNotification(obj) {
     }
 }
 
-
-function deleteNotification(notId, isGlobal) {
+function deleteNotification(notId, NotType) {
     removeElement(`${notId}-notification`)
-    socket.emit('delete notification', { notId: notId, isGlobal: isGlobal });
+    socket.emit('delete notification', { notId: notId, NotType: NotType });
 
 }
 

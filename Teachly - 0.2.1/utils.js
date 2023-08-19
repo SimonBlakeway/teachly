@@ -812,20 +812,24 @@ function convertSearchByKeywordToQuery(str) {
   }
 }
 
-function sendNotification(text, id) {
+function sendNotification(text, id, lang) {
   try {
     notObj = {
       text: compiledConvert(text),
       created_at: Math.floor(Date.now() / 1000),
       userId: id,
+      link: link,
+      notification_type: "notification",
+      lang: lang
     }
     db.query(`
     INSERT INTO notifications 
-    (text, created_at, user_id)
-    VALUES ($1, $2, $3)`,
-      [notObj.text, notObj.created_at, notObj.userId]);
-    global.io.to(`${id}-user`).emit("notification", notObj);
+      (text, created_at, user_id, link, lang, notification_type)
+    VALUES 
+    ($1, $2, $3, $4, $5, $6)`,
+      [notObj.text, notObj.created_at, notObj.userId, link, notObj.lang, notObj.notification_type]);
 
+    global.io.to(`${id}-user`).emit("notification", notObj);
   }
   catch (err) {
     console.log(err)
@@ -833,19 +837,22 @@ function sendNotification(text, id) {
   }
 }
 
-function sendNotificationGlobal(id, text) {
+function sendNotificationGlobal(id, text, lang) {
   try {
     notObj = {
       text: compiledConvert(text),
       created_at: Math.floor(Date.now() / 1000),
-      global: true,
+      userId: id,
+      link: link,
+      notification_type: "global notification",
+      lang: lang
     }
     db.query(`
     INSERT INTO notifications 
-    (text, created_at, is_global)
-    VALUES ($1, $2, $3)
-    WHERE id = $4`,
-      [notObj.text, notObj.created_at, notObj.is_global, id]);
+      (text, created_at, user_id, link, lang, notification_type)
+    VALUES 
+    ($1, $2, $3, $4, $5, $6)`,
+      [notObj.text, notObj.created_at, notObj.userId, link, notObj.lang, notObj.notification_type]);
 
     io.emit("notification", notObj);
   }
@@ -854,21 +861,58 @@ function sendNotificationGlobal(id, text) {
   }
 }
 
-function sendAutomatedNotification(lang, key, valObj, id) {
+async function sendAutomatedNotification(key, valObj, id, lang = false) {
   try {
     textLangArr = notificationMessages[`${lang}`][`${key}`].text
     linkLangArr = notificationMessages[`${lang}`][`${key}`].link
+    textSpace = notificationMessages[`${lang}`]["textSpace"]
+    for (let i = 0; i < valObj.text.length; i++) { textLangArr[textLangArr.indexOf(i)] = valObj["text"][i] }
+    for (let i = 0; i < valObj.link.length; i++) { linkLangArr[linkLangArr.indexOf(i)] = valObj["link"][i] }
+    let text = textLangArr.join(textSpace)
+    let link = linkLangArr.join()
 
+if (lang == false) {
+    lang = (await db.query(
+      `
+      SELECT lang
+      FROM user_info;
+      WHERE id = $1  
+      `, [id])).rows[0].lang
+    }
+
+    notObj = {
+      text: compiledConvert(text),
+      created_at: Math.floor(Date.now() / 1000),
+      userId: id,
+      link: link,
+      notification_type: "notification",
+      lang: lang
+    }
+
+
+    db.query(`
+    INSERT INTO notifications 
+      (text, created_at, user_id, link, lang, notification_type)
+    VALUES 
+    ($1, $2, $3, $4, $5, $6)`,
+      [notObj.text, notObj.created_at, notObj.userId, link, lang, notObj.notification_type]);
+
+    global.io.to(`${id}-user`).emit("notification", notObj);
+
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
+function sendAutomatedNotificationGlobal(lang, key, valObj) {
+  try {
+    textLangArr = notificationMessages[`${lang}`][`${key}`]
+    textSpace = notificationMessages[`${lang}`]["textSpace"]
     textSpace = notificationMessages[`${lang}`]["textSpace"]
 
-    for (let i = 0; i < valObj.text.length; i++) {
-      textLangArr[textLangArr.indexOf(i)] = valObj["text"][i]
-    }
-    for (let i = 0; i < valObj.link.length; i++) {
-      linkLangArr[linkLangArr.indexOf(i)] = valObj["link"][i]
-    }
-
-
+    for (let i = 0; i < valObj.text.length; i++) { textLangArr[textLangArr.indexOf(i)] = valObj["text"][i] }
+    for (let i = 0; i < valObj.link.length; i++) { linkLangArr[linkLangArr.indexOf(i)] = valObj["link"][i] }
     let text = textLangArr.join(textSpace)
     let link = linkLangArr.join()
 
@@ -877,44 +921,16 @@ function sendAutomatedNotification(lang, key, valObj, id) {
       text: compiledConvert(text),
       created_at: Math.floor(Date.now() / 1000),
       userId: id,
-      link: link
+      link: link,
+      lang: lang,
+      notification_type: "global notification",
     }
     db.query(`
     INSERT INTO notifications 
-      (text, created_at, user_id, link)
+      (text, created_at, link, lang, notification_type)
     VALUES 
-      ($1, $2, $3, $4)`,
-      [notObj.text, notObj.created_at, notObj.userId, link]);
-    global.io.to(`${id}-user`).emit("notification", notObj);
-
-  }
-  catch (err) {
-    console.log(err)
-  }
-}
-
-function sendAutomatedNotificationGlobal(lang, key, textValArr, id) {
-  textLangArr = notificationMessages[`${lang}`][`${key}`]
-  textSpace = notificationMessages[`${lang}`]["textSpace"]
-
-  for (let i = 0; i < textValArr; i++) {
-    textLangArr[textLangArr.indexOf(i)] = textValArr[i]
-  }
-
-
-  try {
-    notObj = {
-      text: compiledConvert(textLangArr.join(textSpace)),
-      created_at: Math.floor(Date.now() / 1000),
-      userId: id,
-      global: true,
-    }
-    db.query(`
-    INSERT INTO notifications 
-    (text, created_at, is_global)
-    VALUES ($1, $2, $3)
-    WHERE id = $4`,
-      [notObj.text, notObj.created_at, notObj.is_global, id]);
+      ($1, $2, $3, $4, $5)`,
+      [notObj.text, notObj.created_at, link, lang, notObj.notification_type]);
 
     io.emit("notification", notObj);
 
@@ -925,45 +941,35 @@ function sendAutomatedNotificationGlobal(lang, key, textValArr, id) {
   }
 }
 
-function currencyFloatToInt(num) {
-  return num
-
-}
-
-async function sendMessage(chat_id, text, sender_id, settings) {
-
-  text = compiledConvert(text)
-  created_at = Math.floor(Date.now() / 1000)
-  sender_id = sender_id
-
-
+async function sendMessage(user_id, text, chat_id, settings) {
   try {
-    result = await db.query(`
-    INSERT INTO messages (text, created_at, sender_id, chatId) 
-    VALUES ($1, $2, $3, $4) 
-    WHERE chat_id = $2 AND (teacher_id = $3 OR student_id = $3);
 
-    SELECT t2.id
-    FROM chat t1 
-    INNER JOIN user_info t2
-      ON ((t2.id = t1.teacher_id AND t2.id !=  $3) OR (t2.id = t1.student_id AND t2.id !=  $3)  )
-    WHERE t1.chat_id = $4;
-    `, [text, created_at, sender_id, chat_id])
 
-    reciever_id = result.rows[0].id
+    lang = (await db.query(`
+    SELECT lang FROM user_info
+  `)).rows[0].lang
+
+    notObj = {
+      text: compiledConvert(text),
+      created_at: Math.floor(Date.now() / 1000),
+      user_id: user_id,
+      notification_type: "message",
+      lang: lang
+    }
+
 
     //send add message to db to user
     result = await db.query(`
     INSERT INTO messages (text, created_at, sender_id, chat_id) 
     VALUES ($1, $2, $3, $4) 
     WHERE chat_id = $2 AND (teacher_id = $3 OR student_id = $3);
-     `, [text, created_at, sender_id, chat_id])
+     `, [text, created_at, settings.id, chat_id])
 
     //send message to user
-    io.to(`${reciever_id}-user`).emit("recieve message", notObj);
+    io.to(`${user_id}-user`).emit("send message", notObj);
 
-    //send auto message to user, so if he's on a sepperate page from chat he sees it
-    sendAutomatedNotification(settings.lang, "message-notification", { text: [settings.name], link: [chat_id] }, reciever_id)
+
+    sendAutomatedNotification(lang, "message-notification", { text: [settings.name], link: [chat_id] })
 
   }
   catch (err) {
@@ -971,8 +977,10 @@ async function sendMessage(chat_id, text, sender_id, settings) {
   }
 }
 
+function currencyFloatToInt(num) {
+  return num
 
-
+}
 
 module.exports = {
   getCurrencyFromLanguageCode,

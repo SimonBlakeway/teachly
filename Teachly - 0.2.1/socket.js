@@ -22,8 +22,8 @@ async function sendNotifications(id) {
     select * FROM notifications 
     WHERE 
       user_id = $1 OR 
-      (is_global = $2 AND $3 != ANY(deleted_by))
-      `, [id, true, id]);
+      (notification_type = 'global notification' AND $1 != ANY(deleted_by))
+      `, [id]);
     if (result.rowCount != 0) {
       io.to(`${id}-user`).emit("old notifications", result.rows);
     }
@@ -45,8 +45,8 @@ module.exports = {
         userToken = jwt.decode(req.cookies.user_refresh_token, process.env.JWT_SECRET)
         userCookie = jwt.decode(req.cookies.userCookie, process.env.JWT_SECRET)
 
-        if (userToken.id != userCookie.id)  throw new Error("user token and cookie have different ids") 
-        else if (((now - userToken.created_at) > (60 * 15)))  return  //if expired just ignore
+        if (userToken.id != userCookie.id) throw new Error("user token and cookie have different ids")
+        else if (((now - userToken.created_at) > (60 * 15))) return  //if expired just ignore
         else { next() } // all good
 
       } catch (error) {
@@ -76,16 +76,6 @@ module.exports = {
         sendNotifications(id)
 
 
-        socket.on("get messages", () => {
-          //activeUsers.delete(socket.userId);
-          //io.emit("user disconnected", socket.userId);
-        });
-
-
-        //why are there two routes?
-        socket.on("message user", function (data) {
-          //io.emit("chat message", data);
-        });
         socket.on("send message", async function (data) {
           try {
             sendMessage(cookies.user_refresh_token.id, data.text, data.chatId)
@@ -93,37 +83,42 @@ module.exports = {
             console.log(error)
           }
         });
-
-
-
-
         socket.on("delete notification", async function (data) {
           try {
-            if (data.isGlobal) {
+            if (data.notType = "notification") {
               result = await db.query(
                 `
                 DELETE FROM notifications 
                 WHERE 
                   notification_id = $1 AND 
-                  user_id = $2 
-                  AND is_global = $3;
+                  user_id = $2 AND 
+                  notification_type = 'notification';
                 `, [data.notId, cookies.user_refresh_token.id, false]);
             }
-            else {
+            else if (data.notType = "message") {
+              result = await db.query(
+                `
+                DELETE FROM notifications 
+                WHERE 
+                  notification_id = $1 AND 
+                  user_id = $2 AND
+                  notification_type = 'message notification';
+                `, [data.notId, cookies.user_refresh_token.id]);
+            }
+            else if (data.notType = "global") {
               result = await db.query(
                 `
                 UPDATE notifications 
                 SET deleted_by = array_append( deleted_by, $1) 
                 WHERE 
                   notification_id = $2 AND 
-                  is_global = $3
+                  notification_type = 'global notification';
                 `, [cookies.user_refresh_token.id, data, true]);
             }
           } catch (error) {
             console.log(error)
           }
         });
-
         socket.on("disconnect", (reason) => {
           // ...
         });
