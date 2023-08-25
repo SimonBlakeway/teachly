@@ -1,4 +1,3 @@
-
 const origin = window.location.origin;
 const baseTitle = document.title
 
@@ -35,58 +34,53 @@ async function socketSetup() {
         console.log("socket connected");
     });
     socket.on("old notifications", (data) => {
-        notOuter = document.getElementById("notifications-list")
-        mesOuter = document.getElementById("messages-list")
-
-        notBox = document.createElement("div")
-        mesBox = document.createElement("div")
+        let notOuter = document.getElementById("notifications-list")
+        let mesOuter = document.getElementById("messages-list")
+        let notBox = document.createElement("div")
+        let mesBox = document.createElement("div")
 
         for (let i = 0; i < data.length; i++) {
             notData = data[i]
-            if (notData.notification_type == "base notification") {
+            if (notData.notification_type == "notification" || notData.notification_type == "global") {
                 notBox.append(generateNotification(notData))
             }
-            else if (notData.notification_type == "message notification") {
+            else if (notData.notification_type == "notification") {
                 mesBox.append(generateNotification(notData))
             }
         }
-
-
         if (notBox.innerHTML != "") {
             switchSignaler("notification", turnOn = true)
             if (notOuter.children[0].getAttribute("data-val") == "no-notification") {
-                notOuter.replaceChildren(box)
+                notOuter.replaceChildren(...notBox.children)
             }
             else {
-                notOuter.prepend(box)
+                notOuter.prepend(...notBox.children)
             }
         }
         if (mesBox.innerHTML != "") {
             switchSignaler("notification", turnOn = true)
 
             if (messageOuter.children[0].getAttribute("data-val") == "no-message") {
-                messageOuter.replaceChildren(...box.children)
+                messageOuter.replaceChildren(...mesOuter.children)
             }
             else {
-                messageOuter.prepend(box)
+                messageOuter.prepend(...mesOuter.children)
             }
         }
-
     });
     socket.on("notification", (data) => {
-        if (data.notification_type == "base notification") {
+        document.title  = navbarJson.newNotificationTitle
+        if (data.notification_type == "notification" || data.notification_type == "global") {
             notOuter = document.getElementById("notifications-list")
             switchSignaler("notification", turnOn = true)
-
-            if (notOuter.children[0].getAttribute("data-val") == "no-message") {
+            if (notOuter.children[0].getAttribute("data-val") == "no-notification") {
                 notOuter.replaceChildren(generateNotification(data))
             }
             else {
                 notOuter.prepend(generateNotification(data))
             }
-
         }
-        else if (data.notification_type == "message notification") {
+        else if (data.notification_type == "message") {
             mesOuter = document.getElementById("messages-list")
 
             if (messageOuter.children[0].getAttribute("data-val") == "no-message") {
@@ -119,8 +113,6 @@ window.addEventListener('offline', function (event) {
 
 
 function generateNotification(obj) {
-
-
     box = document.createElement("div")
     box.className = "m-0 pr-15p clr-blue-ice h-fit-content"
     box.id = `${obj.notification_id}-notification`
@@ -134,7 +126,7 @@ function generateNotification(obj) {
             <div class="">
                 <div class="pr-3p float-left pl-15p text-align-left w-100">
                     <span class="blue-symbol">✖</span>
-                    <span><a class="normal-text" href="${origin}${link}">${text}</a></span>
+                    <span><a class="normal-text fs-18pi" href="${origin}${link}">${text}</a></span>
                 </div>
                 <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
             </div>      
@@ -147,7 +139,7 @@ function generateNotification(obj) {
             <div class="">
                 <div class="pr-3p float-left pl-15p text-align-left w-100">
                     <span class="blue-symbol">✖</span>
-                    <span>${text}</span>
+                    <span class="fs-18pi">${text}</span>
                 </div>
                 <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
             </div>      
@@ -160,75 +152,12 @@ function generateNotification(obj) {
         deleteNotification(obj.notification_id, obj.is_global)
     })
 
-
-
-
-
-
-    if (obj.notification_type == "base notification") {
-
-
-
-        if (notOuter.children[0].getAttribute("data-val") == "no-notification") {
-            notOuter.replaceChildren(box)
-        }
-        else {
-            notOuter.prepend(box)
-        }
-    }
-    else if (obj.notification_type == "message notification") {
-        messageOuter = document.getElementById("messages-list")
-        box = document.createElement("div")
-        box.className = "m-0 pr-15p clr-blue-ice h-fit-content"
-        box.id = `${obj.notification_id}-notification`
-        link = obj.link
-        text = obj.text
-        createdAt = obj.created_at
-        switchSignaler("messages", turnOn = true)
-        if (link) {
-            box.innerHTML = `
-                <a class="brdr-btm-blk w-100 text-align-right ">
-                    <div class="">
-                        <div class="pr-3p float-left pl-15p text-align-left w-100">
-                            <span class="blue-symbol">✖</span>
-                            <span>${text}</span>
-                        </div>
-                        <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
-                    </div>      
-                </a>      
-                `
-        }
-        else {
-            box.innerHTML = `
-                <div class="brdr-btm-blk w-100 text-align-right ">
-                    <div class="">
-                        <div class="pr-3p float-left pl-15p text-align-left w-100">
-                            <span class="blue-symbol">✖</span>
-                            <span>${text}</span>
-                        </div>
-                        <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
-                    </div>      
-                </div>      
-                `
-        }
-
-        //this is easier than just converting the innerHTML to a line by line generator
-        box.children[0].children[0].children[0].children[0].addEventListener("click", e => {
-            deleteNotification(obj.notification_id, obj.is_global)
-        })
-
-        if (messageOuter.children[0].getAttribute("data-val") == "no-message") {
-            messageOuter.replaceChildren(box)
-        }
-        else {
-            messageOuter.prepend(box)
-        }
-    }
+    return box
 }
 
-function deleteNotification(notId, NotType) {
+function deleteNotification(notId, notification_type) {
     removeElement(`${notId}-notification`)
-    socket.emit('delete notification', { notId: notId, NotType: NotType });
+    socket.emit('delete notification', { notId: notId, notification_type: notification_type });
 
 }
 

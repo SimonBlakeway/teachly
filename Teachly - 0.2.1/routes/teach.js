@@ -12,6 +12,8 @@ const compiledConvert = compile(options);
 
 router.use(require('../middleware/auth.js').ensureUser)
 
+
+
 // @desc    teach landing page
 // @route   GET /
 router.get('/', (req, res) => {
@@ -149,16 +151,32 @@ router.get('/course/:courseId/settings', async (req, res) => { //[req.params.cou
   }
 })
 
-
 // @desc    teach landing page
 // @route   GET /
-router.get('/', async (req, res) => {
-
-  //get info
-  result = await db.query(`SELECT email, name FROM user_info WHERE email = $1 OR name=$2`, [user.email, user.name]);
-  queryInfo = result.something
-
+router.get('/view-course-request/:eventId', async (req, res) => {
   try {
+
+    eventId = req.query.eventId
+    queryInfo = (await db.query(`
+  SELECT 
+    t1.body, 
+    t1.event_id,
+    t2.user_id,
+    t2.name,
+    t2.description,
+    t2.created_at
+  FROM events t1
+  JOIN 
+    user_info t2
+  ON 
+    (t1.body ->> 'user_id')::int = t2.id
+  WHERE t1.id = $1;
+    `,
+      [eventId])).rows[0]
+
+    if (typeof queryInfo == "undefined") throw new Error("database issue")
+
+
     res.render('viewCourseRequest', {
       layout: "main",
       context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest", queryInfo), //add new param, dbData or something
@@ -169,33 +187,93 @@ router.get('/', async (req, res) => {
   }
 })
 
-
 // @desc    teach landing page
 // @route   GET /
-router.get('/view-course-request/:courseId,', async (req, res) => {
+router.post('/accept-course-request', bodyParser.json({ limit: "2mb" }), async (req, res) => {
+  try {
+    eventId = req.body.eventId
+    teacherId = req.body.teacherId
+    studentId = req.body.studentId
+    courseId = req.body.courseId
+    //remove old event
+    await db.query(`
+    DELETE 
+      FROM events
+    WHERE 
+      type = "lesson requested" AND
+      event_id = $1 AND
+      (body ->> 'teacher_id')::int = $2 AND
+      (body ->> 'course_id')::int = $3 AND
+      (body ->> 'student_id')::int = $4
+    `,
+      [
+        eventId,
+        teacherId,
+        courseId,
+        studentId
+      ])
 
-  eventId = req.query.emailCode
-  result = await db.query(`
+
+
+    eventId = utils.genSafeRandomNum(1, 9999999999999)
+    //add new event to the db
+    result = await db.query(`
+      INSERT INTO event 
+        type, 
+        created_at, 
+        data, 
+        id  
+      VALUES 
+        ($1, $2, $3, $4)`,
+      [
+        "lesson acepted",
+        Math.floor(Date.now() / 1000),
+        {
+          courseId: courseId,
+          teacherId: teacherId,
+          studentId: studentId,
+
+        },
+        eventId
+      ]);
+
+
+
+
+
+
+  }
+  catch (err) {
+    res.json({ "err": err })
+  }
+})
+
+
+
+
+// @desc    course dashboard
+// @route   GET /
+router.get('/course/dashboard/courseId,', async (req, res) => {
+
+  courseId = req.query.courseId
+  queryInfo = (await db.query(`
   SELECT 
-    t1.body, 
-    t2.user_id,
-    t2.name
-  FROM events t1
+    t1.name, 
+    t2.subject
+  FROM user_info t1
   JOIN 
-    user_info t2
-    ON (t1.body ->> 'user_id')::int = t2.user_id
+    teacher_course t2
+    ON (t1.id =  t2.teacher_id AND t2.course_id = $2)
   WHERE t1.id = $1;
     `,
-    [eventId]);
+    [req.settings.id, courseId])).rows[0]
 
-  if (result.rowCount != 1) throw new Error("database issue")
-
-  queryInfo = result.rows[0]
+  if (result.length != 1) throw new Error("database issue")
 
   try {
-    res.render('viewCourseRequest', {
+    res.render('courseDashboard', {
       layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest", queryInfo), //add new param, dbData or something
+      context: contextSetup(req.settings, ["footer"], "courseDashboard", queryInfo), //add new param, dbData or something
     })
   }
   catch (err) {

@@ -18,5 +18,10 @@
     "navlistPopup": {
         "learn": "learn",
         "teach": "teach"
+    },
+    "navbarJson": {
+     "newNotificationTitle": {
+        "newNotification": "new notification"
+     }
     }
 }

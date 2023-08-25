@@ -825,14 +825,14 @@ function togglesearchBar() {
     advancedBars = document.getElementById("advanced-search-bar")
     if (bar.classList.contains("display-blocki") == false) {
         bar.classList.add("display-blocki", "visibility-visiblei")
-        symbol.className = "fa fa-times fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-50p"
+        symbol.className = "fa fa-times fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-40pi"
 
         advancedSearchButton.classList.remove('display-nonei');
     }
     else {
         //hide
         bar.classList.remove("display-blocki", "visibility-visiblei")
-        symbol.className = "fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-50p"
+        symbol.className = "fa fa-bars fa-stack-1x fa-inverse h-40pi fs-30p clr-wht light-blue-text-shadowi h-40p mt--10p w-40pi"
         advancedSearchButton.classList.remove("active-advanced-search-button")
         advancedSearchButton.classList.add("display-nonei")
 
@@ -1067,8 +1067,8 @@ async function searchCourses() {
             rangeArr = calender_times.split(`"`).slice(1, -1)
             for (let index = 0; index < rangeArr.length; index += 2) {
                 rangeStr = rangeArr[index].split(",")
-                start = parseInt(rangeStr[0].slice(1, -1)) * 1000
-                finish = parseInt(rangeStr[0].slice(1, -1)) * 1000
+                start = parseInt(rangeStr[0].slice(1, rangeStr[0].length)) * 1000
+                finish = parseInt((rangeStr[1])) * 1000
                 day = days[new Date(start).getDay()]
                 obj[`${day}`].push([getTimeFromDate(start), getTimeFromDate(finish)])
             }
@@ -1150,7 +1150,7 @@ async function searchCourses() {
             outerDiv = document.createElement("div");
             outerDiv.className = "row container d-flex align-items-center justify-content-center px-0 w-255p p-0 m-0 pb-3";
             dayVal = document.createElement("div");
-            outerDiv.id = `${i}-calender`
+            outerDiv.id = `${i}-calender-${calenderId}`
             dayVal.className = "h-50pi w-100 text-center fs-30p px-0 bg-blacki clr-white user-select-none brdr-r-2"
 
             if (i == 0) {
@@ -1311,8 +1311,8 @@ async function searchCourses() {
                 courseId = e.target.getAttribute("data-course-id")
                 newDayIndex = parseInt(e.target.id.split("-")[3])
                 oldDayIndex = parseInt(e.target.id.split("-")[5])
-                document.getElementById(`${oldDayIndex}-calender`).classList.add("display-nonei")
-                document.getElementById(`${newDayIndex}-calender`).classList.remove("display-nonei")
+                document.getElementById(`${oldDayIndex}-calender-${courseId}`).classList.add("display-nonei")
+                document.getElementById(`${newDayIndex}-calender-${courseId}`).classList.remove("display-nonei")
             }))
 
 

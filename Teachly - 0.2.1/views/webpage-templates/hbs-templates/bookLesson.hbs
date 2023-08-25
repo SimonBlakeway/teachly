@@ -1,0 +1,54 @@
+<script src="/js/bookLesson.js" nonce="{{context.settings.cspNonce}}"></script>
+
+<link rel="stylesheet" href="/css/bookLesson.css" nonce="{{context.settings.cspNonce}}">
+
+<section id="book-lesson" class="d-flex justify-content-center align-items-center">
+    <div class="pb-5 row justify-content-center align-items-center h-100 w-80">
+        <div class="col d-flex justify-content-center align-items-center">
+            <div class="registration-form p-4 p-md-5">
+                <h3 class="p-4">book lesson with sadLemon</h3>
+                <form action="#" class="registration-form-color onsubit-return-false">
+                    <div class="row">
+                        <div class="col my-2 d-flex justify-content-center stop-prop">
+                            <button id="toggle-time-popup" type="button"
+                                class="form-control form-control-md border border-info rounded w-300pi">book
+                                time</button>
+
+                            <div class="h-0p w-0p overflow-hidden position-absolute mr-200p mt-20pi">
+                                <input required id="hidden-time-input" />
+                            </div>
+
+                            <div id="time-range-popup" class="popup bg-light shadow-lg z-index-999 display-nonei">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 p-4">
+                            <div class="form-check d-flex justify-content-center align-items-center mb-4 p-0pi">
+                                <label class="form-check-label text-align-center">
+                                    {{context.bodyContext.IAgreeTo}} <a href="\termsofservice"
+                                        class="text-body"><u>{{context.bodyContext.TOS}}</u></a>
+                                </label>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type='submit' id="send-lesson-booking-req"
+                                    class="btn btn-outline-primary btn-lg">
+                                    book lesson
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script nonce="{{context.settings.cspNonce}}">
+    const subject = "subject"
+    const courseId = 1212
+    const eventId = 1212
+    const teacherId = 1212
+    const CourseTimeRange = '{"[1691752320,1691753520)","[1691752320,1691753520)"}'
+</script>

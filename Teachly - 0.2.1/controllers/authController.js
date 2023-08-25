@@ -295,8 +295,6 @@ exports.refreshToken = async function (req, res) {
     db_token = result.rows[0].user_refresh_token
 
     if ((Math.floor(Date.now() / 1000) - db_token.created_at) < 30) {
-      console.log((Math.floor(Date.now() / 1000) - db_token.created_at))
-      //last refresh was less than 5 minutes ago 
       throw new Error('last update was less than 30 secs ago');
     }
     if (db_token.created_at != client_token.created_at) {

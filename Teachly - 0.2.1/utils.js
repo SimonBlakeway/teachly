@@ -863,6 +863,16 @@ function sendNotificationGlobal(id, text, lang) {
 
 async function sendAutomatedNotification(key, valObj, id, lang = false) {
   try {
+
+    if (lang == false) {
+      lang = (await db.query(
+        `
+      SELECT lang
+      FROM user_info;
+      WHERE id = $1  
+      `, [id])).rows[0].lang
+    }
+
     textLangArr = notificationMessages[`${lang}`][`${key}`].text
     linkLangArr = notificationMessages[`${lang}`][`${key}`].link
     textSpace = notificationMessages[`${lang}`]["textSpace"]
@@ -871,14 +881,6 @@ async function sendAutomatedNotification(key, valObj, id, lang = false) {
     let text = textLangArr.join(textSpace)
     let link = linkLangArr.join()
 
-if (lang == false) {
-    lang = (await db.query(
-      `
-      SELECT lang
-      FROM user_info;
-      WHERE id = $1  
-      `, [id])).rows[0].lang
-    }
 
     notObj = {
       text: compiledConvert(text),
@@ -897,7 +899,8 @@ if (lang == false) {
     ($1, $2, $3, $4, $5, $6)`,
       [notObj.text, notObj.created_at, notObj.userId, link, lang, notObj.notification_type]);
 
-    global.io.to(`${id}-user`).emit("notification", notObj);
+
+    io.in(`${id}-user`).emit("notification", notObj);
 
   }
   catch (err) {
@@ -982,6 +985,15 @@ function currencyFloatToInt(num) {
 
 }
 
+function timstampToLocalDate(lang, timestamp) {
+  let date = new Date(timestamp * 1000)
+  return new Intl.DateTimeFormat(lang).format(date)
+}
+
+function toLocalNumber(lang, number) {
+  return new Intl.NumberFormat(lang).format(number)
+}
+
 module.exports = {
   getCurrencyFromLanguageCode,
   contextSetup,
@@ -1022,7 +1034,7 @@ module.exports = {
   compiledConvert,
   sendAutomatedNotification,
   sendAutomatedNotificationGlobal,
-  formatToPGRange
+  formatToPGRange,
+  timstampToLocalDate,
+  toLocalNumber
 }
-
-

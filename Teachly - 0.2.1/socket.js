@@ -16,16 +16,24 @@ function cookiePrep(str) {
   return obj
 }
 
-async function sendNotifications(id) {
+async function sendOldNotifications(id) {
   try {
     result = await db.query(`
-    select * FROM notifications 
+    select 
+      created_at,
+      notification_id,
+      text,
+      link,
+      notification_type
+    FROM 
+      notifications 
     WHERE 
       user_id = $1 OR 
-      (notification_type = 'global notification' AND $1 != ANY(deleted_by))
+      (notification_type = 'global' AND $1 != ANY(deleted_by))
       `, [id]);
+
     if (result.rowCount != 0) {
-      io.to(`${id}-user`).emit("old notifications", result.rows);
+      io.in(`${id}-user`).emit("old notifications", result.rows);
     }
   } catch (error) {
     console.log(error)
@@ -73,7 +81,7 @@ module.exports = {
         cookies = cookiePrep(socket.handshake.headers.cookie)
         id = cookies.user_refresh_token.id
         socket.join(`${id}-user`)
-        sendNotifications(id)
+        sendOldNotifications(id)
 
 
         socket.on("send message", async function (data) {
@@ -85,7 +93,7 @@ module.exports = {
         });
         socket.on("delete notification", async function (data) {
           try {
-            if (data.notType = "notification") {
+            if (data.notification_type = "notification") {
               result = await db.query(
                 `
                 DELETE FROM notifications 
@@ -93,9 +101,9 @@ module.exports = {
                   notification_id = $1 AND 
                   user_id = $2 AND 
                   notification_type = 'notification';
-                `, [data.notId, cookies.user_refresh_token.id, false]);
+                `, [data.notId, cookies.user_refresh_token.id]);
             }
-            else if (data.notType = "message") {
+            else if (data.notification_type = "message") {
               result = await db.query(
                 `
                 DELETE FROM notifications 
@@ -105,7 +113,7 @@ module.exports = {
                   notification_type = 'message notification';
                 `, [data.notId, cookies.user_refresh_token.id]);
             }
-            else if (data.notType = "global") {
+            else if (data.notification_type = "global") {
               result = await db.query(
                 `
                 UPDATE notifications 
@@ -113,7 +121,7 @@ module.exports = {
                 WHERE 
                   notification_id = $2 AND 
                   notification_type = 'global notification';
-                `, [cookies.user_refresh_token.id, data, true]);
+                `, [cookies.user_refresh_token.id, data.notification_id]);
             }
           } catch (error) {
             console.log(error)

@@ -29,9 +29,23 @@ setInterval(async () => {
 }
 
 
+function makePassword(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
+
+
 
 async function createMeeting(topic, duration) {
     //now
+    password = makePassword(6)
     start_time = new Date().toISOString().substring(0, 18) //format 2023-06-03T12:56:03
     try {
         const result = await axios.post("https://api.zoom.us/v2/users/" + email + "/meetings", {
@@ -40,7 +54,7 @@ async function createMeeting(topic, duration) {
             "start_time": start_time,
             "duration": duration, //in minutes 60 min one hour
             "timezone": "Greenland", //UTC+0
-            "password": "1234567", //password to enter meeting
+            "password": password, //password to enter meeting
             "agenda": topic,
             "settings": {
                 "host_video": true,
