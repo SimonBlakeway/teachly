@@ -155,6 +155,7 @@ router.get('/course/:courseId/settings', async (req, res) => { //[req.params.cou
 // @route   GET /
 router.get('/view-course-request/:eventId', async (req, res) => {
   try {
+    /*
 
     eventId = req.query.eventId
     queryInfo = (await db.query(`
@@ -175,15 +176,15 @@ router.get('/view-course-request/:eventId', async (req, res) => {
       [eventId])).rows[0]
 
     if (typeof queryInfo == "undefined") throw new Error("database issue")
-
+*/
 
     res.render('viewCourseRequest', {
       layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest", queryInfo), //add new param, dbData or something
+      context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest", )// queryInfo), //add new param, dbData or something
     })
   }
   catch (err) {
-    res.json({ "err": err })
+    res.send( err.message )
   }
 })
 

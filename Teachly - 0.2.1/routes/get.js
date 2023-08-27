@@ -68,7 +68,6 @@ router.get('/images/course/:courseId', async (req, res) => {
   }
 })
 
-
 // @desc    get images
 // @route   GET /
 router.get('/images/profile/:id', async (req, res) => {
@@ -115,6 +114,56 @@ router.get('/curConversionRatio/:cur', (req, res) => {
   }
   catch (err) {
     res.json({ "err": err })
+  }
+})
+
+// @desc    get course reviews
+// @route   GET /
+router.post('/course-reviews/:id', async (req, res) => {
+  try {
+    id = req.params.id
+    result = (await db.query(`
+    SELECT 
+      t1.*,
+      t2.name
+    FROM 
+      reviews t1
+      INNER JOIN user_info t2
+          ON t1.author_id = t2.id
+    WHERE 
+      t1.course_id = $1
+    ORDER BY 
+      (likes + dislikes) DESC;`, [id])).rows
+    res.send(result)
+  }
+  catch (err) {
+    console.log(err)
+    res.json({ "err": err.message })
+  }
+})
+
+// @desc    get user reviews
+// @route   GET /
+router.post('/user-reviews/:id', async (req, res) => {
+  try {
+    id = req.params.id
+    result = (await db.query(`
+    SELECT 
+      t1.*,
+      t2.name
+    FROM 
+      reviews t1
+      INNER JOIN user_info t2
+          ON t1.author_id = t2.id
+    WHERE 
+      t1.course_id = $1
+    ORDER BY 
+      (likes + dislikes) DESC;`, [id])).rows
+    res.send(result)
+  }
+  catch (err) {
+    console.log(err)
+    res.json({ "err": err.message })
   }
 })
 

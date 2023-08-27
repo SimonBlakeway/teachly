@@ -1,60 +1,73 @@
-<section class="vh-100" style="background-color: #eee;">
-    <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
+<link rel="stylesheet" href="/css/viewCourseRequest.css" nonce="{{context.settings.cspNonce}}">
+<section class="view-request-box bg-clr-eee">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center align-items-center">
             <div class="col col-md-9 col-lg-7 col-xl-5">
-                <div class="card" style="border-radius: 15px; background-color: #93e2bb;">
+                <div class="card br-15p bg-clr-93e2bb">
                     <div class="card-body p-4 text-black">
                         <div>
-                            <h6 class="mb-4">Exquisite hand henna tattoo</h6>
+                            <h6 class="mb-4">Brooke Clements</h6>
                             <div class="d-flex align-items-center justify-content-between mb-3">
-                                <p class="small mb-0"><i class="far fa-clock me-2"></i>3 hrs</p>
-                                <p class="fw-bold mb-0">$90</p>
+                                <p class="small mb-0"> joined 8/25/2023</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center mb-4">
                             <div class="flex-shrink-0">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-2.webp"
-                                    alt="Generic placeholder image"
-                                    class="img-fluid rounded-circle border border-dark border-3" style="width: 70px;">
+                                <img src="/images/blue-bg.jpg" alt="Generic placeholder image"
+                                    class="img-fluid rounded-circle border border-dark border-3 w-70pi h-70pi">
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <div class="d-flex flex-row align-items-center mb-2">
-                                    <p class="mb-0 me-2">@sheisme</p>
-                                    <ul class="mb-0 list-unstyled d-flex flex-row" style="color: #1B7B2C;">
-                                        <li>
-                                            <i class="fas fa-star fa-xs"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-star fa-xs"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-star fa-xs"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-star fa-xs"></i>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-star fa-xs"></i>
-                                        </li>
+                                    <p class="mb-0 me-2">Brooke Clements</p>
+                                    <ul class="mb-0 list-unstyled d-flex flex-row clr-1B7B2C" id="user-rating">
                                     </ul>
                                 </div>
                                 <div>
+                                    <div class="display-inline stop-prop">
+                                        <button id="toggle-review-popup" type="button"
+                                            class="btn btn-outline-dark btn-rounded btn-sm my-1"
+                                            data-mdb-ripple-color="dark">view reviews</button>
+                                        <div class="popup display-nonei stop-prop" id="review-popup">
+                                            <div
+                                                class="w-100 h-100 d-flex justify-content-center align-items-center fs-2">
+                                                no reviews
+                                            </div>
+                                        </div>
+                                    </div>
                                     <button type="button" class="btn btn-outline-dark btn-rounded btn-sm"
-                                        data-mdb-ripple-color="dark">+ Follow</button>
-                                    <button type="button" class="btn btn-outline-dark btn-rounded btn-sm"
-                                        data-mdb-ripple-color="dark">See profile</button>
-                                    <button type="button" class="btn btn-outline-dark btn-floating btn-sm"
-                                        data-mdb-ripple-color="dark"><i class="fas fa-comment"></i></button>
+                                        id="goto-profile" data-mdb-ripple-color="dark">See profile</button>
                                 </div>
                             </div>
                         </div>
                         <hr>
-                        <p class="my-4 pb-1">52 comments</p>
-                        <button type="button" class="btn btn-success btn-rounded btn-block btn-lg"><i
-                                class="far fa-clock me-2"></i>Book now</button>
+                        <p class="my-4 pb-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                            tempor
+                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                            exercitation
+                            ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+                            reprehenderit in
+                            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                            cupidatat non
+                            proident, sunt in culp</p>
+                        <button id="accept-button" type="button"
+                            class="btn btn-rounded btn-block btn-lg btn-outline-primary">
+                            accept</button>
+
+
+                        <button id="reject-button" type="button"
+                            class="btn btn-rounded btn-block btn-lg btn-outline-primary float-right">
+                            reject</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<script nonce="{{context.settings.cspNonce}}">
+    joinTime = (new Date()).toLocaleDateString('en-US');
+    viewCount = null
+    views = []
+    studentId = 1212
+    rating = 3.5
+</script>
+<script src="/js/viewCourseRequest.js" nonce="{{context.settings.cspNonce}}"></script>

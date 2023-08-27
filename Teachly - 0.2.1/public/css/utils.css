@@ -742,8 +742,23 @@
     width: 211px;
 }
 
+.w-70pi {
+    width: 70px !important;
+}
+
+.h-70pi{
+    height:  70px !important;
+}
+
 .h-46p {
     height: 46px;
+}
+.bg-clr-93e2bb {
+    background-color: #93e2bb;
+}
+
+.br-15p {
+    border-radius: 15px;
 }
 
 .br-40p {
@@ -836,6 +851,10 @@
 
 .fw-700 {
     font-weight: 700;
+}
+
+.bg-clr-eee {
+    background-color: #eee;
 }
 
 
