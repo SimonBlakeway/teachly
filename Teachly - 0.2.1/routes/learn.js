@@ -316,8 +316,6 @@ router.post('/book-lesson', ensureUser, async (req, res) => {
   }
 })
 
-
-
 // @desc    access tutor courses
 // @route   post /learn/create-chat
 router.post('request-chat', bodyParser.json({ limit: "2mb" }), async (req, res) => {

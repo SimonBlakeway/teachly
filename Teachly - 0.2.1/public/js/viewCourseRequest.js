@@ -1,7 +1,13 @@
 sendAcceptBooking = async function () {
+    body = {
+        accept: true,
+        eventId:  eventId,
+        studentId:  studentId,
+        courseId: courseId
+    }
     res = await axios({
         method: 'post',
-        url: '/learn/book-lesson',
+        url: '/teach/handle-course-request',
         data: body,
         headers: {
             'Content-Type': 'application/json',
@@ -9,9 +15,15 @@ sendAcceptBooking = async function () {
     })
 }
 sendRejectBooking = async function () {
+    body = {
+        accept: false,
+        eventId:  eventId,
+        studentId:  studentId,
+        courseId: courseId
+    }
     res = await axios({
         method: 'post',
-        url: '/learn/book-lesson',
+        url: '/teach/handle-course-request',
         data: body,
         headers: {
             'Content-Type': 'application/json',
@@ -27,7 +39,6 @@ gotoProfile = function () {
 
 }
 window.addEventListener('load', function () {
-
     async function getAndGenerateReviews(viewArr) {
         try {
             res = await axios({
@@ -57,7 +68,6 @@ window.addEventListener('load', function () {
     }
     getAndGenerateReviews()
 
-
     document.getElementById("goto-profile").addEventListener("click", e => {
         gotoProfile()
     })
@@ -75,12 +85,10 @@ window.addEventListener('load', function () {
     });
 })
 
-
 function setup() {
-
     box = document.createElement("div")
 
-    for (let i = 0; i < rating-1; i++) {
+    for (let i = 0; i < rating - 1; i++) {
         li = document.createElement("li")
         li.className = "fas fa-star fa-xs"
         box.append(li)
@@ -101,8 +109,5 @@ function setup() {
         box.append(li)
     }
     document.getElementById("user-rating").innerHTML = box.innerHTML
-
-
 }
-
 setup()

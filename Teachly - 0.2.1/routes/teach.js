@@ -180,24 +180,26 @@ router.get('/view-course-request/:eventId', async (req, res) => {
 
     res.render('viewCourseRequest', {
       layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest", )// queryInfo), //add new param, dbData or something
+      context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest",)// queryInfo), //add new param, dbData or something
     })
   }
   catch (err) {
-    res.send( err.message )
+    res.send(err.message)
   }
 })
 
 // @desc    teach landing page
 // @route   GET /
-router.post('/accept-course-request', bodyParser.json({ limit: "2mb" }), async (req, res) => {
+router.post('/handle-course-request', bodyParser.json({ limit: "2mb" }), async (req, res) => {
   try {
-    eventId = req.body.eventId
-    teacherId = req.body.teacherId
-    studentId = req.body.studentId
-    courseId = req.body.courseId
-    //remove old event
-    await db.query(`
+    if (req.body.accept == true) {
+      eventId = req.body.eventId
+      teacherId = req.settings.id
+      teacherName = req.settings.name
+      studentId = req.body.studentId
+      courseId = req.body.courseId
+      //remove old event
+      await db.query(`
     DELETE 
       FROM events
     WHERE 
@@ -207,18 +209,17 @@ router.post('/accept-course-request', bodyParser.json({ limit: "2mb" }), async (
       (body ->> 'course_id')::int = $3 AND
       (body ->> 'student_id')::int = $4
     `,
-      [
-        eventId,
-        teacherId,
-        courseId,
-        studentId
-      ])
+        [
+          eventId,
+          teacherId,
+          courseId,
+          studentId
+        ])
 
 
-
-    eventId = utils.genSafeRandomNum(1, 9999999999999)
-    //add new event to the db
-    result = await db.query(`
+      //add new event to the db
+      newEventId = utils.genSafeRandomNum(1, 9999999999999)
+      result = await db.query(`
       INSERT INTO event 
         type, 
         created_at, 
@@ -226,31 +227,44 @@ router.post('/accept-course-request', bodyParser.json({ limit: "2mb" }), async (
         id  
       VALUES 
         ($1, $2, $3, $4)`,
-      [
-        "lesson acepted",
-        Math.floor(Date.now() / 1000),
-        {
-          courseId: courseId,
-          teacherId: teacherId,
-          studentId: studentId,
+        [
+          "lesson acepted",
+          Math.floor(Date.now() / 1000),
+          {
+            courseId: courseId,
+            teacherId: teacherId,
+            studentId: studentId,
 
-        },
-        eventId
-      ]);
-
-
-
-
-
-
+          },
+          newEventId
+        ]);
+      //notify student
+      utils.sendAutomatedNotification("lesson-request-accepted", { text: [teacherName, subject], link: [newEventId] }, studentId)
+    }
+    else {
+      await db.query(`
+      DELETE 
+        FROM events
+      WHERE 
+        type = "lesson requested" AND
+        event_id = $1 AND
+        (body ->> 'teacher_id')::int = $2 AND
+        (body ->> 'course_id')::int = $3 AND
+        (body ->> 'student_id')::int = $4
+      `,
+        [
+          eventId,
+          teacherId,
+          courseId,
+          studentId
+        ])
+      res.sendStatus(200)
+    }
   }
   catch (err) {
     res.json({ "err": err })
   }
 })
-
-
-
 
 // @desc    course dashboard
 // @route   GET /

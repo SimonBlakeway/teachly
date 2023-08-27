@@ -324,9 +324,6 @@ function generateCalenderTimeTable(calenderId) {
         box.appendChild(innerDiv);
         outerDiv.append(box)
 
-
-
-
         timeRange.appendChild(outerDiv);
     }
 
@@ -1279,7 +1276,8 @@ async function searchCourses() {
                 try {
                     teacherId = e.target.getAttribute("data-teacher-id")
                     chatId = await requestChat(courseId)
-                    gotoChat(chatId)
+                    hostname = location.hostname
+                    window.location.href = `${hostname}/profile/chat?id=${chatId}`;
                 } catch (error) {
                     text = courseJson.requestChatError[`${error.message}`]
                     if (typeof text == "undefined") createOnScreenNotification(text)
@@ -1352,11 +1350,6 @@ async function requestChat(courseId, teacherId) {
     }
 }
 
-async function gotoChat(chatId) {
-    hostname = location.hostname
-    window.location.href = `${hostname}/profile/chat?id=${chatId}`;
-
-}
 
 async function requestLesson(courseId, teacherId) {
     res = await axios({
