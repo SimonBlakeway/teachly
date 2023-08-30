@@ -38,8 +38,6 @@ function updateDatesInterval() {
             console.log(err)
         }
     }, 5000);
-    window.addEventListener('load', function () { updateCurrency(curConversionRatio) }, false);
-
 }
 function removeElement(id) {
     node = document.getElementById(id)
@@ -93,10 +91,6 @@ function fadeout(id, callback) {
 
 }
 
-updateCurrencyInterval(userCur)
-
-updateDatesInterval()
-
 window.addEventListener('load', function () {
     document.querySelectorAll('.stop-prop').forEach(el => el.addEventListener('click', event => {
         event.stopPropagation();
@@ -105,14 +99,19 @@ window.addEventListener('load', function () {
     document.querySelectorAll('.onsubmit-return-false').forEach(el => el.addEventListener('submit', e => {
         e.preventDefault();
     }));
-})
 
+
+
+    updateCurrencyInterval(userCur)
+    updateDatesInterval()
+
+})
 
 function prettyifyDate(date) { // it comes in as seconds from epoch
     try {
         if (isNaN(date)) prettyifyDate(Math.floor(Date.now() / 1000))
-         
-        let  secs = Math.floor(Date.now() / 1000) - date
+
+        let secs = Math.floor(Date.now() / 1000) - date
         if (secs <= 1) return layoutJson.prettifyDate.lessThanSecond
         if (secs < 60) return layoutJson.prettifyDate.secsAgoPrier + secs + layoutJson.prettifyDate.secsAgoPost
         if (secs < 3600) return layoutJson.prettifyDate.minAgoPrier + Math.floor(secs / 60) + layoutJson.prettifyDate.minAgoPost
@@ -127,15 +126,12 @@ function prettyifyDate(date) { // it comes in as seconds from epoch
 }
 
 function updateDates() {
-    dates = document.getElementsByClassName("date")
+    let dates = document.getElementsByClassName("date")
     for (let i = 0; i < dates.length; i++) {
-        timestamp = Number(curVals[i].getAttribute("data-timestamp"))
+        timestamp = parseInt(dates[i].getAttribute("data-timestamp"))
         dates[i].innerHTML = prettyifyDate(timestamp)
     }
 }
-
-
-
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);

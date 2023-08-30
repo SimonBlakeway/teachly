@@ -69,6 +69,8 @@ async function socketSetup() {
         }
     });
     socket.on("notification", (data) => {
+
+        console.log("getting a notification")
         document.title  = navbarJson.newNotificationTitle
         if (data.notification_type == "notification" || data.notification_type == "global") {
             notOuter = document.getElementById("notifications-list")
@@ -128,7 +130,7 @@ function generateNotification(obj) {
                     <span class="blue-symbol">✖</span>
                     <span><a class="normal-text fs-18pi" href="${origin}${link}">${text}</a></span>
                 </div>
-                <div class="fs-10pi">${prettyifyDate(createdAt)}</div>
+                <div data-timestamp="${createdAt}" class="fs-10pi date">${prettyifyDate(createdAt)}</div>
             </div>      
         </div>      
         `

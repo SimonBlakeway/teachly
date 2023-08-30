@@ -879,7 +879,7 @@ async function sendAutomatedNotification(key, valObj, id, lang = false) {
     for (let i = 0; i < valObj.text.length; i++) { textLangArr[textLangArr.indexOf(i)] = valObj["text"][i] }
     for (let i = 0; i < valObj.link.length; i++) { linkLangArr[linkLangArr.indexOf(i)] = valObj["link"][i] }
     let text = textLangArr.join(textSpace)
-    let link = linkLangArr.join()
+    let link = linkLangArr.join("")
 
 
     notObj = {
@@ -917,7 +917,7 @@ function sendAutomatedNotificationGlobal(lang, key, valObj) {
     for (let i = 0; i < valObj.text.length; i++) { textLangArr[textLangArr.indexOf(i)] = valObj["text"][i] }
     for (let i = 0; i < valObj.link.length; i++) { linkLangArr[linkLangArr.indexOf(i)] = valObj["link"][i] }
     let text = textLangArr.join(textSpace)
-    let link = linkLangArr.join()
+    let link = linkLangArr.join("")
 
 
     notObj = {

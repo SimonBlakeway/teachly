@@ -1048,6 +1048,8 @@ async function searchCourses() {
 
     function generateCourseTimeTable(calender_times, courseId) {
 
+        calenderId = `calender-${courseId}`
+
 
         function convertToFormat(calender_times) {
             const pad = num => ("0" + num).slice(-2); // or use padStart
@@ -1288,6 +1290,7 @@ async function searchCourses() {
                 courseId = e.target.getAttribute("data-course-id")
                 teacherId = e.target.getAttribute("data-teacher-id")
                 text = learnJson.requestCourseLessonNot
+                console.log("teacherId is", teacherId)
                 createOnScreenNotification(text)
                 requestLesson(courseId, teacherId)
             }))
@@ -1307,10 +1310,13 @@ async function searchCourses() {
 
             document.querySelectorAll(".goto-calender-day-button-course").forEach(el => el.addEventListener("click", e => {
                 courseId = e.target.getAttribute("data-course-id")
+                
                 newDayIndex = parseInt(e.target.id.split("-")[3])
                 oldDayIndex = parseInt(e.target.id.split("-")[5])
-                document.getElementById(`${oldDayIndex}-calender-${courseId}`).classList.add("display-nonei")
-                document.getElementById(`${newDayIndex}-calender-${courseId}`).classList.remove("display-nonei")
+                calenderId = `calender-${courseId}`
+                console.group(document.getElementById(`${oldDayIndex}-calender-${calenderId}`))
+                document.getElementById(`${oldDayIndex}-calender-${calenderId}`).classList.add("display-nonei")
+                document.getElementById(`${newDayIndex}-calender-${calenderId}`).classList.remove("display-nonei")
             }))
 
 
@@ -1351,7 +1357,7 @@ async function requestChat(courseId, teacherId) {
 }
 
 
-async function requestLesson(courseId, teacherId) {
+async function requestLesson(courseId, teacherId,) {
     res = await axios({
         method: 'post',
         url: '/learn/request-lesson',

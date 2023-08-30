@@ -159,14 +159,22 @@ router.post('/searchTutorCourses', bodyParser.json({ limit: "2mb" }), async (req
 // @route   post /learn/request-lesson
 router.post('/request-lesson', [ensureUser, bodyParser.json({ limit: "2mb" })], async (req, res) => {
   try {
-    courseId = req.body.courseId
+    courseId = parseInt(req.body.courseId)
     teacherId = parseInt(req.body.teacherId)
-    studentId = req.settings.id
+    studentId = parseInt(req.settings.id)
     studentName = req.settings.name
     //checks that course and teacher id are linked and also makes sure potential student isn't banned by teacher and returns the languge for notification
     teacher_info = (await db.query(`
-      SELECT t1.name, t1.lang
-      FROM user_info t1
+      SELECT 
+        t1.name, 
+        t1.lang,
+        t2.subject
+      FROM 
+        user_info t1
+      INNER JOIN 
+        teacher_course t2
+        ON 
+        t1.id = t2.teacher_id AND t2.course_id = ${courseId}
       WHERE 
         t1.id = $1 AND
         not t1.banned_users @> '{ ${studentId} }'
@@ -175,14 +183,16 @@ router.post('/request-lesson', [ensureUser, bodyParser.json({ limit: "2mb" })], 
 
     lang = teacher_info.lang
     teacher_name = teacher_info.lang
+    subject = teacher_info.subject
 
+    console.log(subject)
     if (typeof lang == "undefined") throw new Error("student is banned")
 
 
     eventId = utils.genSafeRandomNum(1, 9999999999999)
 
     //notify teacher,
-    utils.sendAutomatedNotification("request-lesson", { text: [studentName], link: [courseId, eventId] }, studentId, lang) // should be teacherId
+    utils.sendAutomatedNotification("request-lesson", { text: [studentName, subject], link: [eventId] }, studentId, lang) // should be teacherId
 
 
     //add event to the db
@@ -194,10 +204,12 @@ router.post('/request-lesson', [ensureUser, bodyParser.json({ limit: "2mb" })], 
           course_id: courseId,
           teacher_id: teacherId,
           student_id: studentId,
+          subject: subject
 
         },
         eventId
       ]);
+      
 
     res.sendStatus(200)
   } catch (error) {

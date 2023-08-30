@@ -118,8 +118,12 @@
       height: 45px;
   }
 
-  .w-55p {
-      width: 55px;
+  .h-43pi {
+    height: 43px !important;
+}
+
+  .w-50p {
+      width: 50px !important;
 
   }
 
