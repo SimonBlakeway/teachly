@@ -1,7 +1,7 @@
 {
   "name": "teachly",
   "version": "0.1.0",
-  "description": "App for teaching students diffenent subjects and linking teachers to students",
+  "description": "App for teaching students different subjects and linking teachers to students",
   "main": "app.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node app",

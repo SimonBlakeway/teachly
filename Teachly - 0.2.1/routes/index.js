@@ -66,8 +66,8 @@ router.get('/user-image/:userId', async (req, res) => {
 
 
 
-  res.sendFile("img-8.jpg", { root: `./public/images/`, })
-  return
+ // res.sendFile("img-8.jpg", { root: `./public/images/`, })
+ // return
 
 
 
@@ -78,7 +78,7 @@ router.get('/user-image/:userId', async (req, res) => {
       return
     }
 
-    res.sendFile("img-8", { root: `./public/images/` })
+   // res.sendFile("img-8", { root: `./public/images/` })
 
     imgName = `${req.settings.id}.png`
     directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing

@@ -26,7 +26,6 @@ setRefreshTimeout = async () => {
 
 }
 
-
 async function socketSetup() {
     socket = io.connect(origin);
 
@@ -69,16 +68,20 @@ async function socketSetup() {
         }
     });
     socket.on("notification", (data) => {
-
-        console.log("getting a notification")
-        document.title  = navbarJson.newNotificationTitle
+        document.title = navbarJson.notifications.newNotification
         if (data.notification_type == "notification" || data.notification_type == "global") {
             notOuter = document.getElementById("notifications-list")
             switchSignaler("notification", turnOn = true)
-            if (notOuter.children[0].getAttribute("data-val") == "no-notification") {
-                notOuter.replaceChildren(generateNotification(data))
+
+            try {
+                if (notOuter.children[0].getAttribute("data-val") == "no-notification") {
+                    notOuter.replaceChildren(generateNotification(data))
+                }
+                else {
+                    notOuter.prepend(generateNotification(data))
+                }
             }
-            else {
+            catch {
                 notOuter.prepend(generateNotification(data))
             }
         }

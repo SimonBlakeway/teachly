@@ -1,9 +1,15 @@
+document.getElementById("join-time").innerHTML = (new Date(student_created_at * 1000)).toLocaleDateString(userLang);
+
+document.getElementById("description").innerHTML = description ? description : viewJson.noDescription;
+
+
 sendAcceptBooking = async function () {
     body = {
         accept: true,
         eventId:  eventId,
         studentId:  studentId,
-        courseId: courseId
+        courseId: courseId,
+        studentLang: studentLang
     }
     res = await axios({
         method: 'post',

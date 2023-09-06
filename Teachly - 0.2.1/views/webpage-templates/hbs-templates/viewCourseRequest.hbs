@@ -6,19 +6,19 @@
                 <div class="card br-15p bg-clr-93e2bb">
                     <div class="card-body p-4 text-black">
                         <div>
-                            <h6 class="mb-4">Brooke Clements</h6>
+                            <h6 class="mb-4">{{context.dbQuery.name}}</h6>
                             <div class="d-flex align-items-center justify-content-between mb-3">
-                                <p class="small mb-0"> joined 8/25/2023</p>
+                                <p class="small mb-0"> joined <span id="join-time">/25/2023</span></p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center mb-4">
                             <div class="flex-shrink-0">
-                                <img src="/images/blue-bg.jpg" alt="Generic placeholder image"
+                                <img src="/user-image/{{context.dbQuery.data.student_id}}" alt="student image"
                                     class="img-fluid rounded-circle border border-dark border-3 w-70pi h-70pi">
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <div class="d-flex flex-row align-items-center mb-2">
-                                    <p class="mb-0 me-2">Brooke Clements</p>
+                                    <p class="mb-0 me-2">{{context.dbQuery.name}}</p>
                                     <ul class="mb-0 list-unstyled d-flex flex-row clr-1B7B2C" id="user-rating">
                                     </ul>
                                 </div>
@@ -40,15 +40,7 @@
                             </div>
                         </div>
                         <hr>
-                        <p class="my-4 pb-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor
-                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                            exercitation
-                            ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in
-                            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non
-                            proident, sunt in culp</p>
+                        <p id="description" class="my-4 pb-1">{{context.dbQuery.data.description}}</p>
                         <button id="accept-button" type="button"
                             class="btn btn-rounded btn-block btn-lg btn-outline-primary">
                             accept</button>
@@ -64,12 +56,13 @@
     </div>
 </section>
 <script nonce="{{context.settings.cspNonce}}">
-    joinTime = (new Date()).toLocaleDateString('en-US');
-    viewCount = null
-    views = []
-    studentId = 1212
-    courseId = 1212
-    rating = 3.5
-    eventId
+   const viewJson = JSON.parse(`{{json context.bodyContext.viewContext }}`.replaceAll('&quot;', `"`))
+   const studentLang = {{context.dbQuery.student_lang}}
+   const description = {{nullOrZero context.dbQuery.data.description}}
+   const student_created_at = {{context.dbQuery.student_created_at}}
+   const studentId = {{context.dbQuery.data.student_id}}
+   const courseId = {{context.dbQuery.data.course_id}}
+   const rating = {{nullOrZero context.dbQuery.rating}}
+   const eventId = {{context.settings.eventId}}
 </script>
 <script src="/js/viewCourseRequest.js" nonce="{{context.settings.cspNonce}}"></script>

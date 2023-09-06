@@ -24,7 +24,7 @@ const stripeAPI = require('./util-APIs/stripe')
 
 queryInfo = (await db.query(`
 SELECT 
-  t1.body, 
+  t1.data, 
   t2.user_id,
   t2.name,
   description,
@@ -32,7 +32,7 @@ SELECT
 FROM events t1
 JOIN 
   user_info t2
-  ON (t1.body ->> 'user_id')::int = t2.user_id
+  ON (t1.data ->> 'user_id')::int = t2.user_id
 WHERE t1.id = $1;
   `,
   [eventId])).rows[0]
@@ -65,42 +65,18 @@ function setTimeoutByDate(fn, date) {
 
 
 async function activateEvent(event) {
-
   if (event.event_type = "notification") {
-/*
-* template = {  
-*      start_time: int,
-*      text_arr: arr,
-*      link_arr: arr,
-*      user_id: int,
-*      lang: str | Null,
-*      is_global: bool
-*  }
-*/
-    if (event.is_global) {
-      utils.sendAutomatedNotificationGlobal("lesson started:student", { text: [event.text_arr], link: [event.link_arr] }, studentId, student_info.lang)
+    if (event.data.is_global) {
+      utils.sendAutomatedNotificationGlobal(event.data.notification_type, { text: [event.data.text_arr], link: [event.data.link_arr] }, {})
     }
     else {
-      utils.sendAutomatedNotification("lesson started:student", { text: [event.text_arr], link: [event.link_arr] }, event.user_id, event.lang)
+      utils.sendAutomatedNotification(event.data.notification_type, { text: [event.data.text_arr], link: [event.data.link_arr] }, event.data.user_id, {}, event.data.lang)
     }
-
   }
-
   else if (event.event_type = "start lesson") {
 
-/*
-* template = {  
-*      start_time: 1212,
-*      start: req.body.timeRange[0],
-*      finish: req.body.timeRange[1],
-*      student_id: 1212,
-*      teacher_id: 1212,
-*      course_id: 1221,
-*       subject: str,
-*  }
-*/
-    duration = (event.finish_time - event.start_time)
-    subject = event.subject
+    duration = (event.data.finish_time - event.data.start_time)
+    subject = event.data.subject
 
     teacher_info = (await db.query(`
     SELECT 
@@ -129,10 +105,9 @@ async function activateEvent(event) {
     password = zoomInfo.password
     link = zoomInfo.start_url
 
-    utils.sendAutomatedNotification("lesson started:student", { text: [teacher_info.name, subject], link: [link] }, studentId, student_info.lang)
-    utils.sendAutomatedNotification("lesson started:teacher", { text: [student_info.name, subject], link: [link] }, studentId, teacher_info.lang)
+    utils.sendAutomatedNotification("lesson started:student", { text: [teacher_info.name, subject], link: [link] }, studentId, {}, student_info.lang)
+    utils.sendAutomatedNotification("lesson started:teacher", { text: [student_info.name, subject], link: [link] }, studentId, {}, teacher_info.lang)
   }
-
   else if (event.event_type = "end lesson") {
 
   }
@@ -160,8 +135,3 @@ async function getSoonEventsFromDbThenActivate() {
     setTimeoutByDate(() => { activateEvent(event.body) }, event.body.start_time)
   }
 }
-
-
-
-
-

@@ -1,32 +1,25 @@
-{    
-    "title": "Register With Teachly",
-    "language": "language",
-    "localTimezone": "(localTimezone)",
-    "registrationForm": "Registration Form",
-    "fullName": "Full Name",
-    "dateOfBirth": "Date of Birth", 
-    "timezone": "Timezone",
-    "email": "Email",
-    "profileImage": "Profile Image",
-    "currency": "Currency",
-    "password": "Password",
-    "country": "Country",
-    "IAgreeTo": "I agree all statements in",
-    "TOS": "Terms of service",
-    "REGISTER": "REGISTER",
-    "AlreadyhaveAccount": "Have already an account?",
-    "loginHere": " Login here",
-    "languageName": "English",
-    "emailPopup": {
-        "text": "An access code has been sent to your email address, please input the code to continue",
-        "submitButtonText": "Submit"
+{
+    "titleUpdate": {
+        "pre": "learn ",
+        "post": " with teachly"
     },
-    "errPopup": {
-        "nameErr": "Username already taken",
-        "emailErr": "Email already taken"
-    },
-    "emailCode": {
-        "invalidEmailCode": "invalid Email code, please try again"
-    }     
-
+    "viewContext": {
+        "noDescription": "no description",
+        "totalLessons": {
+            "pre": " ",
+            "post": " lessons"
+        },
+        "reviews": {
+            "pre": " ",
+            "post": " reviews"
+        },
+        "ratings": {
+            "pre": "",
+            "post": " ratings"
+        },
+        "lesson_time": {
+            "pre": "",
+            "post": " minutes"
+        }
+    }
 }

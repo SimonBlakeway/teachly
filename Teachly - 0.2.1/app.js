@@ -106,7 +106,8 @@ const {
   json,
   currency,
   mathAdd,
-  mathMultiply
+  mathMultiply,
+  nullOrZero
 } = require('./helpers/hbs');
 
 // Handlebars
@@ -116,7 +117,8 @@ app.engine('.hbs', exphbs.engine({
     json,
     currency,
     mathAdd,
-    mathMultiply
+    mathMultiply,
+    nullOrZero
   },
   defaultLayout: 'main',
   extname: '.hbs', // this is where you can change the extension name

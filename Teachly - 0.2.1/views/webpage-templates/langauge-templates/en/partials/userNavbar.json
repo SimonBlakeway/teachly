@@ -20,7 +20,7 @@
         "teach": "teach"
     },
     "navbarJson": {
-     "newNotificationTitle": {
+     "notifications": {
         "newNotification": "new notification"
      }
     }

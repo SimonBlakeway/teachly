@@ -8,11 +8,7 @@ const { compile } = require('html-to-text');
 const options = { wordwrap: false, };
 const compiledConvert = compile(options);
 
-
-
 router.use(require('../middleware/auth.js').ensureUser)
-
-
 
 // @desc    teach landing page
 // @route   GET /
@@ -27,7 +23,6 @@ router.get('/', (req, res) => {
     res.json({ "err": err })
   }
 })
-
 // @desc    createCourse
 // @route   GET /
 router.get('/create-course', async (req, res) => {
@@ -46,7 +41,6 @@ router.get('/create-course', async (req, res) => {
     res.json({ "err": err })
   }
 })
-
 // @desc    createCourse
 // @route   POST /
 router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res) => {
@@ -135,7 +129,6 @@ router.post('/createCourse', bodyParser.json({ limit: "10mb" }), async (req, res
     res.send({ "err": err.message })
   }
 })
-
 // @desc    course settings
 // @route   GET /
 router.get('/course/:courseId/settings', async (req, res) => { //[req.params.courseId]
@@ -150,44 +143,45 @@ router.get('/course/:courseId/settings', async (req, res) => { //[req.params.cou
     res.json({ "err": err })
   }
 })
-
 // @desc    teach landing page
 // @route   GET /
 router.get('/view-course-request/:eventId', async (req, res) => {
   try {
-    /*
+    eventId = req.params['eventId']
+    req.settings.eventId = eventId
 
-    eventId = req.query.eventId
     queryInfo = (await db.query(`
-  SELECT 
-    t1.body, 
-    t1.event_id,
-    t2.user_id,
-    t2.name,
-    t2.description,
-    t2.created_at
-  FROM events t1
-  JOIN 
-    user_info t2
-  ON 
-    (t1.body ->> 'user_id')::int = t2.id
-  WHERE t1.id = $1;
-    `,
-      [eventId])).rows[0]
-
+      SELECT 
+        t1.data, 
+        t1.id AS event_id,
+        t2.id AS student_id,
+        t2.name,
+        t2.description,
+        t2.created_at AS student_created_at,
+        t2.rating,
+        t2.lang AS student_lang
+      FROM 
+        events t1
+      JOIN 
+        user_info t2  
+      ON 
+        (t1.data ->> 'student_id')::int = t2.id  
+      WHERE
+      t1.id = $1  
+      ;
+        `, [eventId]
+    )).rows[0]
     if (typeof queryInfo == "undefined") throw new Error("database issue")
-*/
-
     res.render('viewCourseRequest', {
       layout: "main",
-      context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest",)// queryInfo), //add new param, dbData or something
+      context: contextSetup(req.settings, ["navbar", "footer"], "viewCourseRequest", queryInfo), //add new param, dbData or something
     })
   }
   catch (err) {
-    res.send(err.message)
+    console.log(err.message)
+    res.redirect("/")
   }
 })
-
 // @desc    teach landing page
 // @route   GET /
 router.post('/handle-course-request', bodyParser.json({ limit: "2mb" }), async (req, res) => {
@@ -204,10 +198,10 @@ router.post('/handle-course-request', bodyParser.json({ limit: "2mb" }), async (
       FROM events
     WHERE 
       type = "lesson requested" AND
-      event_id = $1 AND
-      (body ->> 'teacher_id')::int = $2 AND
-      (body ->> 'course_id')::int = $3 AND
-      (body ->> 'student_id')::int = $4
+      id = $1 AND
+      (data ->> 'teacher_id')::int = $2 AND
+      (data ->> 'course_id')::int = $3 AND
+      (data ->> 'student_id')::int = $4
     `,
         [
           eventId,
@@ -215,6 +209,9 @@ router.post('/handle-course-request', bodyParser.json({ limit: "2mb" }), async (
           courseId,
           studentId
         ])
+
+      //delete request notification
+      utils.deleteNotification(notification_id, "notification", user_id)
 
 
       //add new event to the db
@@ -247,10 +244,10 @@ router.post('/handle-course-request', bodyParser.json({ limit: "2mb" }), async (
         FROM events
       WHERE 
         type = "lesson requested" AND
-        event_id = $1 AND
-        (body ->> 'teacher_id')::int = $2 AND
-        (body ->> 'course_id')::int = $3 AND
-        (body ->> 'student_id')::int = $4
+        id = $1 AND
+        (data ->> 'teacher_id')::int = $2 AND
+        (data ->> 'course_id')::int = $3 AND
+        (data ->> 'student_id')::int = $4
       `,
         [
           eventId,
@@ -265,7 +262,6 @@ router.post('/handle-course-request', bodyParser.json({ limit: "2mb" }), async (
     res.json({ "err": err })
   }
 })
-
 // @desc    course dashboard
 // @route   GET /
 router.get('/course/dashboard/courseId,', async (req, res) => {
@@ -296,7 +292,4 @@ router.get('/course/dashboard/courseId,', async (req, res) => {
   }
 })
 
-
 module.exports = router
-
-

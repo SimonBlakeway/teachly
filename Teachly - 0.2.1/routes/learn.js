@@ -189,14 +189,14 @@ router.post('/request-lesson', [ensureUser, bodyParser.json({ limit: "2mb" })], 
     if (typeof lang == "undefined") throw new Error("student is banned")
 
 
-    eventId = utils.genSafeRandomNum(1, 9999999999999)
+    eventId = utils.genSafeRandomNum(1, 2147483646)
 
     //notify teacher,
-    utils.sendAutomatedNotification("request-lesson", { text: [studentName, subject], link: [eventId] }, studentId, lang) // should be teacherId
+    utils.sendAutomatedNotification("request-lesson", { text: [studentName, subject], link: [eventId] }, studentId, {}, lang) // should be teacherId
 
 
     //add event to the db
-    result = await db.query(`INSERT INTO event ( type, created_at, data, id ) VALUES ($1, $2, $3, $4)`,
+    result = await db.query(`INSERT INTO events ( type, created_at, data, id ) VALUES ($1, $2, $3, $4)`,
       [
         "lesson requested",
         Math.floor(Date.now() / 1000),
@@ -209,7 +209,7 @@ router.post('/request-lesson', [ensureUser, bodyParser.json({ limit: "2mb" })], 
         },
         eventId
       ]);
-      
+
 
     res.sendStatus(200)
   } catch (error) {
@@ -292,7 +292,7 @@ router.post('/book-lesson', ensureUser, async (req, res) => {
       [courseId, time])
 
     //notify teacher,
-    utils.sendAutomatedNotification("booked-lesson", { text: [name, subject, start, finish] }, studentId, lang)
+    utils.sendAutomatedNotification("booked-lesson", { text: [name, subject, start, finish] }, studentId, {}, lang)
 
 
 
