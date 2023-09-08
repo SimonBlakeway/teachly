@@ -1,13 +1,13 @@
 document.getElementById("join-time").innerHTML = (new Date(student_created_at * 1000)).toLocaleDateString(userLang);
 
-document.getElementById("description").innerHTML = description ? description : viewJson.noDescription;
+document.getElementById("description").innerHTML = description != -1 ? description : viewJson.noDescription;
 
 
 sendAcceptBooking = async function () {
     body = {
         accept: true,
-        eventId:  eventId,
-        studentId:  studentId,
+        eventId: eventId,
+        studentId: studentId,
         courseId: courseId,
         studentLang: studentLang
     }
@@ -23,8 +23,8 @@ sendAcceptBooking = async function () {
 sendRejectBooking = async function () {
     body = {
         accept: false,
-        eventId:  eventId,
-        studentId:  studentId,
+        eventId: eventId,
+        studentId: studentId,
         courseId: courseId
     }
     res = await axios({
@@ -81,10 +81,10 @@ window.addEventListener('load', function () {
         toggleReviewsPopup()
     })
     document.getElementById("accept-button").addEventListener("click", e => {
-        // sendAcceptBooking
+        sendAcceptBooking()
     })
     document.getElementById("reject-button").addEventListener("click", e => {
-        // sendRejectBooking()
+        sendRejectBooking()
     })
     window.addEventListener("click", e => {
         document.getElementById("review-popup").classList.add("display-nonei")
@@ -94,26 +94,23 @@ window.addEventListener('load', function () {
 function setup() {
     box = document.createElement("div")
 
-    for (let i = 0; i < rating - 1; i++) {
-        li = document.createElement("li")
-        li.className = "fas fa-star fa-xs"
-        box.append(li)
-    }
-    if (rating - Math.floor(rating) > 0.4) {
-        li = document.createElement("li")
-        li.className = "fas fa-star-half-alt fa-xs"
-        box.append(li)
+    if (rating != -1) {
+        for (let i = 0; i < rating - 1; i++) {
+            li = document.createElement("li")
+            li.className = "fas fa-star fa-xs"
+            li.innerHTML = "<i class='fa fa-star'></i>"
+            box.append(li)
+        }
+        if ((Math.floor(rating) - rating) > 0.4) {
+            li = document.createElement("li")
+            li.className = "fas fa-star fa-xs"
+            li.innerHTML = "<i class='fa fa-star-half'></i>"
+            box.append(li)
+        }
+        document.getElementById("user-rating").innerHTML = box.innerHTML
     }
     else {
-        li = document.createElement("li")
-        li.className = "fa fa-star-o fa-xs"
-        box.append(li)
+        document.getElementById("user-rating").innerHTML = viewJson.noRating
     }
-    for (let i = Math.ceil(rating); i < 5; i++) {
-        li = document.createElement("li")
-        li.className = "icon-star-empty"
-        box.append(li)
-    }
-    document.getElementById("user-rating").innerHTML = box.innerHTML
 }
 setup()

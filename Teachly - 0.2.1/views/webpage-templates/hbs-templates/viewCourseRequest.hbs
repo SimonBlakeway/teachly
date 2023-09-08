@@ -13,8 +13,8 @@
                         </div>
                         <div class="d-flex align-items-center mb-4">
                             <div class="flex-shrink-0">
-                                <img src="/user-image/{{context.dbQuery.data.student_id}}" alt="student image"
-                                    class="img-fluid rounded-circle border border-dark border-3 w-70pi h-70pi">
+                                <img src="/get/images/profile/{{context.dbQuery.data.student_id}}" alt="student image"
+                                    class="rounded-circle border border-dark border-3 w-105pi h-105pi">
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <div class="d-flex flex-row align-items-center mb-2">
@@ -57,12 +57,12 @@
 </section>
 <script nonce="{{context.settings.cspNonce}}">
    const viewJson = JSON.parse(`{{json context.bodyContext.viewContext }}`.replaceAll('&quot;', `"`))
-   const studentLang = {{context.dbQuery.student_lang}}
-   const description = {{nullOrZero context.dbQuery.data.description}}
+   const studentLang = "{{context.dbQuery.student_lang}}"
+   const description = {{nullOrMinusOne context.dbQuery.data.description}}
    const student_created_at = {{context.dbQuery.student_created_at}}
    const studentId = {{context.dbQuery.data.student_id}}
    const courseId = {{context.dbQuery.data.course_id}}
-   const rating = {{nullOrZero context.dbQuery.rating}}
+   const rating = {{nullOrMinusOne context.dbQuery.rating}}
    const eventId = {{context.settings.eventId}}
 </script>
 <script src="/js/viewCourseRequest.js" nonce="{{context.settings.cspNonce}}"></script>

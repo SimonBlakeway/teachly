@@ -5,10 +5,7 @@
     },
     "viewContext": {
         "noDescription": "no description",
-        "totalLessons": {
-            "pre": " ",
-            "post": " lessons"
-        },
+        "noRating": "no rating",
         "reviews": {
             "pre": " ",
             "post": " reviews"

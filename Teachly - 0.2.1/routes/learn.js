@@ -192,7 +192,7 @@ router.post('/request-lesson', [ensureUser, bodyParser.json({ limit: "2mb" })], 
     eventId = utils.genSafeRandomNum(1, 2147483646)
 
     //notify teacher,
-    utils.sendAutomatedNotification("request-lesson", { text: [studentName, subject], link: [eventId] }, studentId, {}, lang) // should be teacherId
+    utils.sendAutomatedNotification("request-lesson", { text: [studentName, subject], link: [eventId] }, studentId, { event_id: eventId, notification_type: "lesson request" }, lang) // should be teacherId
 
 
     //add event to the db

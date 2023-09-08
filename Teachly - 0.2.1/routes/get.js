@@ -105,6 +105,39 @@ router.get('/images/profile/:id', async (req, res) => {
   }
 })
 
+// @desc    get user image
+// @route   GET /user-image/id
+/*
+router.get('/user-image/:userId', async (req, res) => {
+  userId = req.params.userId
+  //res.set("Cache-Control", "private, max-age=80000");
+  try {
+    result = await db.query(`SELECT profile_img FROM user_info WHERE id = $1`, [userId]);
+    if (result.rowCount == 0) {
+      res.send("404")
+      return
+    }
+
+    imgName = `${req.settings.id}.png`
+    directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing
+    img = LZDecompress(result.rows[0].profile_img)
+    fs.writeFileSync(directoryPath + imgName, img, { encoding: 'base64' });
+    res.sendFile(imgName, { root: directoryPath }, () => {
+      fs.unlink(directoryPath + imgName, err => {
+      })
+    })
+
+  } catch (error) {
+    console.log(error)
+    //console.log(error)
+
+  }
+
+
+
+})
+*/
+
 // @desc    get currency ratio
 // @route   GET /
 router.get('/curConversionRatio/:cur', (req, res) => {

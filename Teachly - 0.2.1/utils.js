@@ -824,7 +824,7 @@ async function deleteNotification(notification_id, notification_type, user_id) {
         notification_type = 'notification';
       `, [notification_id, user_id]);
     }
-    else if (data.notification_type = "message") {
+    else if (notification_type = "message") {
       result = await db.query(
         `
       DELETE FROM notifications 
@@ -834,7 +834,7 @@ async function deleteNotification(notification_id, notification_type, user_id) {
         notification_type = 'message notification';
       `, [data.notId, user_id]);
     }
-    else if (data.notification_type = "global") {
+    else if (notification_type = "global") {
       result = await db.query(
         `
       UPDATE notifications 

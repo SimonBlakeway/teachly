@@ -746,6 +746,27 @@
     width: 70px !important;
 }
 
+.w-105pi {
+    width: 105px !important;
+}
+
+.reeee {
+    color: #000;
+    background-color: #000;
+}
+
+.icons svg {
+    color: #2759AE;
+ }
+
+ .icons i {
+    color:#a9b3c5;
+   }
+
+.h-105pi {
+    height: 105px !important;
+}
+
 .h-70pi{
     height:  70px !important;
 }

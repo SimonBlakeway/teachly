@@ -211,7 +211,14 @@ router.post('/handle-course-request', bodyParser.json({ limit: "2mb" }), async (
         ])
 
       //delete request notification
-      utils.deleteNotification(notification_id, "notification", user_id)
+      result = await db.query(
+        `
+      DELETE FROM notifications 
+      WHERE 
+        notification_type = 'notification' AND
+        (data ->> 'event_id')::int = $1 AND
+        (data ->> 'notification_type') = "lesson request";
+      `, [eventId,]);
 
 
       //add new event to the db
@@ -239,6 +246,11 @@ router.post('/handle-course-request', bodyParser.json({ limit: "2mb" }), async (
       utils.sendAutomatedNotification("lesson-request-accepted", { text: [teacherName, subject], link: [newEventId] }, studentId)
     }
     else {
+      eventId = req.body.eventId
+      teacherId = req.settings.id
+      teacherName = req.settings.name
+      studentId = req.body.studentId
+      courseId = req.body.courseId
       await db.query(`
       DELETE 
         FROM events
@@ -255,6 +267,19 @@ router.post('/handle-course-request', bodyParser.json({ limit: "2mb" }), async (
           courseId,
           studentId
         ])
+
+
+      //delete request notification
+      result = await db.query(
+        `
+      DELETE FROM notifications 
+      WHERE 
+        notification_type = 'notification' AND
+        (data ->> 'event_id')::int = $1 AND
+        (data ->> 'notification_type') = "lesson request";
+      `, [eventId,]);
+
+
       res.sendStatus(200)
     }
   }

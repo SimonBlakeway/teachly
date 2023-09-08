@@ -35,12 +35,11 @@ module.exports = {
     }
     return newVal
   },
-  nullOrZero: function (posNull) {
+  nullOrMinusOne: function (posNull) {
     if (!(posNull)) {
-      console.log("reee")
+        return -1;
     }
-    //if val is null return 0
-    return 0;
+    return posNull;
   }
 
 }
