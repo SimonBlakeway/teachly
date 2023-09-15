@@ -1,0 +1,43 @@
+#book-lesson {
+    background-color: #7475c2;
+    background-image: linear-gradient(to bottom right, #a1a1df, #9ac0d8, #b4a6d8, #939fe4, #a4a4eb, #9ea6e6);
+    height: 90.8vh !important;
+    width: 100%;
+    font-size: 18px;
+  }
+  
+  .registration-form {
+    border-radius: 15px;
+    background-color: rgb(255, 255, 255) !important;
+    max-width: 800px;
+  }
+  
+  .popup {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-color: #ffffff;
+    z-index: 1212;
+    border-radius: 5px;
+    margin-top: 10px !important;
+    box-shadow: 10px 10px 20px lightblue;
+  }
+  
+  .view-request-box {
+    height: fit-content !important;
+    min-height: 100vh !important;
+  }
+  
+  .mt-20pi {
+    margin-top: 20px !important;
+  }
+  
+  .clr-1B7B2C {
+    color: #1B7B2C;
+  }
+  
+  @media only screen and (max-width: 460px) {
+    .popup {
+      right: 0px !important;
+    }
+  }

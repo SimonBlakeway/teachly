@@ -17,7 +17,7 @@
 
 .clr-blk {
     color: #000 !important;
-  }
+}
 
 .fs-25pi {
     font-size: 25px !important;
@@ -26,7 +26,7 @@
 .normal-text {
     color: #ffffff;
     text-decoration: none;
-  }
+}
 
 .w-20p {
     width: 20px !important;
@@ -750,30 +750,30 @@
     width: 105px !important;
 }
 
-.reeee {
-    color: #000;
-    background-color: #000;
+.mt-19pi {
+    margin-top: 19px !important;
 }
 
 .icons svg {
     color: #2759AE;
- }
+}
 
- .icons i {
-    color:#a9b3c5;
-   }
+.icons i {
+    color: #a9b3c5;
+}
 
 .h-105pi {
     height: 105px !important;
 }
 
-.h-70pi{
-    height:  70px !important;
+.h-70pi {
+    height: 70px !important;
 }
 
 .h-46p {
     height: 46px;
 }
+
 .bg-clr-93e2bb {
     background-color: #93e2bb;
 }

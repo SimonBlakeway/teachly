@@ -53,7 +53,7 @@ router.get('/img', async (req, res) => {
 
 // @desc    view user profile
 // @route   GET /user/id
-router.get('/chat/', async (req, res) => {
+router.get('/chat', async (req, res) => {
   res.render('chat', {
     layout: "main",
     context: contextSetup(req.settings, ["navbar"], "chat"),

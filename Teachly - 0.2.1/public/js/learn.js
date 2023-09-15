@@ -1277,9 +1277,11 @@ async function searchCourses() {
             document.querySelectorAll('.request-chat-button').forEach(el => el.addEventListener('click', async e => {
                 try {
                     teacherId = e.target.getAttribute("data-teacher-id")
-                    chatId = await requestChat(courseId)
-                    hostname = location.hostname
-                    window.location.href = `${hostname}/profile/chat?id=${chatId}`;
+                    courseId = e.target.getAttribute("data-course-id")
+                    console.log(teacherId, courseId)
+                    chatId = requestChat(courseId, teacherId)
+                    text = courseJson.chatRequestSent
+                    createOnScreenNotification(text)
                 } catch (error) {
                     text = courseJson.requestChatError[`${error.message}`]
                     if (typeof text == "undefined") createOnScreenNotification(text)
@@ -1310,7 +1312,7 @@ async function searchCourses() {
 
             document.querySelectorAll(".goto-calender-day-button-course").forEach(el => el.addEventListener("click", e => {
                 courseId = e.target.getAttribute("data-course-id")
-                
+
                 newDayIndex = parseInt(e.target.id.split("-")[3])
                 oldDayIndex = parseInt(e.target.id.split("-")[5])
                 calenderId = `calender-${courseId}`
@@ -1347,7 +1349,6 @@ async function requestChat(courseId, teacherId) {
                 'Content-Type': 'application/json',
             },
         });
-        return res.data.chatId
     } catch (error) {
         console.log(error)
         //maybe show the user an error message?

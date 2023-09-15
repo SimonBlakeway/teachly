@@ -316,5 +316,152 @@ router.get('/course/dashboard/courseId,', async (req, res) => {
     res.json({ "err": err })
   }
 })
+// @desc    handler for accept/reject chat request
+// @route   GET /
+router.get('/view-chat-request/:eventId', async (req, res) => {
+  try {
+    eventId = req.params['eventId']
+    req.settings.eventId = eventId
+
+    queryInfo = (await db.query(`
+      SELECT 
+        t1.data, 
+        t1.id AS event_id,
+        t2.id AS student_id,
+        t2.name,
+        t2.description,
+        t2.created_at AS student_created_at,
+        t2.rating,
+        t2.lang AS student_lang
+      FROM 
+        events t1
+      JOIN 
+        user_info t2  
+      ON 
+        (t1.data ->> 'student_id')::int = t2.id  
+      WHERE
+      t1.id = $1  
+      ;
+        `, [eventId]
+    )).rows[0]
+    if (typeof queryInfo == "undefined") throw new Error("database issue")
+    res.render('viewChatRequest', {
+      layout: "main",
+      context: contextSetup(req.settings, ["navbar", "footer"], "viewChatRequest", queryInfo), //add new param, dbData or something
+    })
+  }
+  catch (err) {
+    console.log(err.message)
+    res.redirect("/")
+  }
+})
+// @desc    teach landing page
+// @route   GET /
+router.post('/handle-chat-request', bodyParser.json({ limit: "2mb" }), async (req, res) => {
+  try {
+    res.send({url: "/profile/chat?chatId=121212"})
+    return
+    if (req.body.accept == true) {
+      eventId = req.body.eventId
+      teacherId = req.settings.id
+      teacherName = req.settings.name
+      studentId = req.body.studentId
+      courseId = req.body.courseId
+      //remove old event
+      await db.query(`
+    DELETE 
+      FROM events
+    WHERE 
+      type = "chat requested" AND
+      id = $1 AND
+      (data ->> 'teacher_id')::int = $2 AND
+      (data ->> 'course_id')::int = $3 AND
+      (data ->> 'student_id')::int = $4
+    `,
+        [
+          eventId,
+          teacherId,
+          courseId,
+          studentId
+        ])
+
+      //delete request notification
+      result = await db.query(
+        `
+      DELETE FROM notifications 
+      WHERE 
+        notification_type = 'notification' AND
+        (data ->> 'event_id')::int = $1 AND
+        (data ->> 'notification_type') = "lesson request";
+      `, [eventId]);
+
+
+      //add new chat to the db
+      newEventId = utils.genSafeRandomNum(1, 9999999999999)
+      result = await db.query(`
+      INSERT INTO chat 
+        created_at, 
+        teacher_id, 
+        student_id,
+        course_id
+      VALUES 
+        ($1, $2, $3, $4)
+      RETURNING chat_id  `
+        ,
+        [
+          Math.floor(Date.now() / 1000),
+          teacherId,
+          studentId,
+          courseId,
+        ]);
+      chat_id = result.chat_id
+      console.log(result)
+      //notify student
+      utils.sendAutomatedNotification("chat-request-accepted", { text: [teacherName, subject], link: [newEventId] }, studentId)
+
+      res.send({ chatId: chat_id }) // to redirect teacher to chat
+
+    }
+    else {
+      eventId = req.body.eventId
+      teacherId = req.settings.id
+      teacherName = req.settings.name
+      studentId = req.body.studentId
+      courseId = req.body.courseId
+      //delete event
+      await db.query(`
+      DELETE 
+        FROM events
+      WHERE 
+        type = "chat requested" AND
+        id = $1 AND
+        (data ->> 'teacher_id')::int = $2 AND
+        (data ->> 'course_id')::int = $3 AND
+        (data ->> 'student_id')::int = $4
+      `,
+        [
+          eventId,
+          teacherId,
+          courseId,
+          studentId
+        ])
+      //delete request notification
+      result = await db.query(
+        `
+      DELETE FROM notifications 
+      WHERE 
+        notification_type = 'notification' AND
+        (data ->> 'event_id')::int = $1 AND
+        (data ->> 'notification_type') = "chat request";
+      `, [eventId,]);
+
+
+      res.sendStatus(200)
+    }
+  }
+  catch (err) {
+    res.json({ "err": err })
+  }
+})
 
 module.exports = router

@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="/css/viewChatRequest.css" nonce="{{context.settings.cspNonce}}">
+<section class="view-request-box bg-clr-eee">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col col-md-9 col-lg-7 col-xl-5">
+                <div class="card br-15p bg-clr-93e2bb">
+                    <div class="card-body p-4 text-black">
+                        <div>
+                            <h6 class="mb-4">{{context.dbQuery.name}}</h6>
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <p class="small mb-0"> joined <span id="join-time">/25/2023</span></p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="flex-shrink-0">
+                                <img src="/get/images/profile/{{context.dbQuery.data.student_id}}" alt="student image"
+                                    class="rounded-circle border border-dark border-3 w-105pi h-105pi">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <div class="d-flex flex-row align-items-center mb-2">
+                                    <p class="mb-0 me-2">{{context.dbQuery.name}}</p>
+                                    <ul class="mb-0 list-unstyled d-flex flex-row clr-1B7B2C" id="user-rating">
+                                    </ul>
+                                </div>
+                                <div>
+                                    <div class="display-inline stop-prop">
+                                        <button id="toggle-review-popup" type="button"
+                                            class="btn btn-outline-dark btn-rounded btn-sm my-1"
+                                            data-mdb-ripple-color="dark">view reviews</button>
+                                        <div class="popup display-nonei stop-prop" id="review-popup">
+                                            <div
+                                                class="w-100 h-100 d-flex justify-content-center align-items-center fs-2">
+                                                no reviews
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-dark btn-rounded btn-sm"
+                                        id="goto-profile" data-mdb-ripple-color="dark">See profile</button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <p id="description" class="my-4 pb-1">{{context.dbQuery.data.description}}</p>
+                        <button id="accept-button" type="button"
+                            class="btn btn-rounded btn-block btn-lg btn-outline-primary">
+                            accept</button>
+
+
+                        <button id="reject-button" type="button"
+                            class="btn btn-rounded btn-block btn-lg btn-outline-primary float-right">
+                            reject</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script nonce="{{context.settings.cspNonce}}">
+   const viewJson = JSON.parse(`{{json context.bodyContext.viewContext }}`.replaceAll('&quot;', `"`))
+   const studentLang = "{{context.dbQuery.student_lang}}"
+   const description = {{nullOrMinusOne context.dbQuery.data.description}}
+   const student_created_at = {{context.dbQuery.student_created_at}}
+   const studentId = {{context.dbQuery.data.student_id}}
+   const courseId = {{context.dbQuery.data.course_id}}
+   const rating = {{nullOrMinusOne context.dbQuery.rating}}
+   const eventId = {{context.settings.eventId}}
+</script>
+<script src="/js/viewChatRequest.js" nonce="{{context.settings.cspNonce}}"></script>

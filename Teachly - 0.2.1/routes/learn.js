@@ -225,6 +225,35 @@ router.get('/book-lesson/:eventId', ensureUser, async (req, res) => {
     eventId = req.params['eventId']
     if (typeof eventId == "undefined") { throw new Error("no eventId") }
 
+
+
+    queryInfo = (await db.query(`
+    SELECT 
+      t1.data, 
+      t1.id AS event_id,
+      t2.id AS student_id,
+      t2.name,
+      t2.description,
+      t2.created_at AS student_created_at,
+      t2.rating,
+      t2.lang AS student_lang
+    FROM 
+      events t1
+    JOIN 
+      user_info t2  
+    ON 
+      (t1.data ->> 'student_id')::int = t2.id  
+    WHERE
+    t1.id = $1  
+    ;
+      `, [eventId]
+    )).rows[0]
+
+
+
+
+
+
     /*
         //get info
         queryInfo = await db.query(`
@@ -253,7 +282,7 @@ router.get('/book-lesson/:eventId', ensureUser, async (req, res) => {
 
     res.render('bookLesson', {
       layout: "main",
-      context: contextSetup(req.settings, ["navbar"], "bookLesson",) // queryInfo), //add new param, dbData or something
+      context: contextSetup(req.settings, ["navbar"], "bookLesson", queryInfo) // queryInfo), //add new param, dbData or something
     })
 
 
@@ -263,7 +292,6 @@ router.get('/book-lesson/:eventId', ensureUser, async (req, res) => {
     if (error.message == "no eventId") {
       res.sendStatus(404)
     }
-
   }
 })
 
@@ -328,9 +356,10 @@ router.post('/book-lesson', ensureUser, async (req, res) => {
   }
 })
 
+/*
 // @desc    access tutor courses
 // @route   post /learn/create-chat
-router.post('request-chat', bodyParser.json({ limit: "2mb" }), async (req, res) => {
+router.post('/request-chat', bodyParser.json({ limit: "2mb" }), async (req, res) => {
 
   try {
     courseId = req.body.courseId
@@ -382,6 +411,69 @@ router.post('request-chat', bodyParser.json({ limit: "2mb" }), async (req, res) 
     console.log(error)
   }
 })
+*/
+
+// @desc    access tutor courses
+// @route   post /learn/request-chat
+router.post('/request-chat', [ensureUser, bodyParser.json({ limit: "2mb" })], async (req, res) => {
+  try {
+    courseId = parseInt(req.body.courseId)
+    teacherId = parseInt(req.body.teacherId)
+    studentId = parseInt(req.settings.id)
+    studentName = req.settings.name
+    console.log(courseId, teacherId, studentId)
+    //checks that course and teacher id are linked and also makes sure potential student isn't banned by teacher and returns the languge for notification
+    teacher_info = (await db.query(`
+      SELECT 
+        t1.name, 
+        t1.lang,
+        t2.subject
+      FROM 
+        user_info t1
+      INNER JOIN 
+        teacher_course t2
+        ON 
+        t1.id = t2.teacher_id AND t2.course_id = ${courseId}
+      WHERE 
+        t1.id = $1 AND
+        not t1.banned_users @> '{ ${studentId} }'
+      `,
+      [teacherId])).rows[0]
+
+    lang = teacher_info.lang
+    teacher_name = teacher_info.lang
+    subject = teacher_info.subject
+
+    if (typeof lang == "undefined") throw new Error("student is banned")
+
+    eventId = utils.genSafeRandomNum(1, 2147483646)
+
+    //notify teacher,
+    utils.sendAutomatedNotification("request-chat", { text: [studentName], link: [eventId] }, studentId, { event_id: eventId, notification_type: "chat request" }, lang) // should be teacherId
+
+
+    //add event to the db
+    result = await db.query(`INSERT INTO events ( type, created_at, data, id ) VALUES ($1, $2, $3, $4)`,
+      [
+        "lesson requested",
+        Math.floor(Date.now() / 1000),
+        {
+          course_id: courseId,
+          teacher_id: teacherId,
+          student_id: studentId,
+          subject: subject
+        },
+        eventId
+      ]);
+
+
+    res.sendStatus(200)
+  } catch (error) {
+    console.log(error)
+    res.sendStatus(400)
+  }
+})
+
 
 
 module.exports = router

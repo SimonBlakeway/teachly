@@ -1,0 +1,22 @@
+{
+    "titleUpdate": {
+        "pre": "learn ",
+        "post": " with teachly"
+    },
+    "viewContext": {
+        "noDescription": "no description",
+        "noRating": "no rating",
+        "reviews": {
+            "pre": " ",
+            "post": " reviews"
+        },
+        "ratings": {
+            "pre": "",
+            "post": " ratings"
+        },
+        "lesson_time": {
+            "pre": "",
+            "post": " minutes"
+        }
+    }
+}
