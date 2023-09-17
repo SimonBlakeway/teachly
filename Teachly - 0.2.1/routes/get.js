@@ -74,8 +74,9 @@ router.get('/images/profile/:id', async (req, res) => {
   directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing
 
   try {
-    if (req.params.id == null) {
+    if (req.params.id == null || parseInt(req.params.id == NaN || typeof req.params.id == "undefined") ) {
       res.send(404)
+      return
     }
     else if (global.timerObj[`${req.params.id}-profile-image.jpeg`]) {
       console.log("image already exists, sending image to client and resetting timer")
@@ -88,7 +89,7 @@ router.get('/images/profile/:id', async (req, res) => {
       console.log("image does not exist, sending image to client and creating timer")
       result = await db.query(`SELECT profile_img FROM user_info WHERE id = $1`, [req.params.id])
       if (result.rowCount == 0) {
-        res.send("404")
+        res.sendFile(`no-image-found.png`, { root: `./public/images/` })
         return
       }
 
@@ -101,6 +102,7 @@ router.get('/images/profile/:id', async (req, res) => {
     }
   } catch (error) {
     console.log(error)
+    console.log("dfsfdsd")
     res.sendStatus(404)
   }
 })

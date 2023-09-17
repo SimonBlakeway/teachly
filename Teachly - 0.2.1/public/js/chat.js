@@ -68,8 +68,8 @@ socket.on("disconnect", () => {
 
 function updateChatboxText(messageData) {
   //update room
-  document.getElementById(`${messageData.chat_id}-latest-message-created-hidden`).innerHTML = messageData.created_at
   document.getElementById(`${messageData.chat_id}-latest-message-created`).innerHTML = prettyifyDate(messageData.created_at)
+  document.getElementById(`${messageData.chat_id}-latest-message-created`).setAttribute("data-timestamp", messageData.created_at)
   document.getElementById(`${messageData.chat_id}-latest-message-text`).innerHTML = messageData.text
 
   //move room to the top
@@ -242,15 +242,14 @@ window.addEventListener('load', async function () {
       })
       div.innerHTML = `
             <div class="d-flex flex-row">
-              <img src="/images/profile/${roomData.teacher_id}" alt="avatar" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong h-60p" width="60"></img>
+              <img src="/get/images/profile/${roomData.teacher_id}" alt="avatar" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong h-60p" width="60"></img>
                 <div class="pt-1">
                   <p class="fw-bold mb-0">${roomData.teacher_name}</p>
                   <p class="small text-muted" id="${roomData.chat_id}-latest-message-text">${chatData.text}</p>
                 </div>
               <div class="pt-1">
-                <p class="small text-muted mb-1 date">
-                  <span id="${roomData.chat_id}-latest-message-created-hidden" class="disappear">${chatData.created_at}</span>
-                  <span id="${roomData.chat_id}-latest-message-created">${prettyifyDate(chatData.created_at)}</span>
+                <p class="small text-muted mb-1">
+                  <span class="date" data-timestamp="${chatData.created_at}" id="${roomData.chat_id}-latest-message-created">${prettyifyDate(chatData.created_at)}</span>
                   </p>
               </div>
             </div>
@@ -290,7 +289,7 @@ window.addEventListener('load', async function () {
       <div class="p-0 w-100 h-40p d-inline-flex" href="/profile/${roomData.teacher_id}">
         <div class="apr-mx-640p p-0 d-flex align-items-center mx-3 h-40p w-50p d-inline-flex fs-18p exit-chat-btn">←</div>
         <div class="d-flex align-items-center h-40p">
-          <img src="/images/profile/${roomData.teacher_id}" alt="avatar"
+          <img src="/get/images/profile/${roomData.teacher_id}" alt="avatar"
             class="rounded-circle ml-0 shadow-1-strong d-inline-flex" width="35">
         </div>
         <div class="profile-name p-1 pl-3 d-flex align-items-center" id="profile-name-${roomData.teacher_id}">${roomData.teacher_name}</div>

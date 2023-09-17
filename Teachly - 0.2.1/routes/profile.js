@@ -66,11 +66,10 @@ router.get('/chat', async (req, res) => {
 router.get('/rooms', async (req, res) => {
   try {
     result = await db.query(`
-       SELECT t1.chat_id, t2.name AS teacher_name, t2.id AS teacher_id
+       SELECT t1.chat_id, t2.name, t1.teacher_id, t1.student_id
        from chat t1
-         inner join user_info t2 on t2.id = t1.teacher_id
-         inner join teacher_course t3 on t3.teacher_id  = t1.teacher_id
-        WHERE t1.teacher_id = $1 `, [req.settings.id]);
+         inner join user_info t2 on t2.id = t1.teacher_id OR t2.id = t1.student_id
+        WHERE t1.teacher_id = $1 OR t1.student_id = $1`, [req.settings.id]);
 
     if (result.rowCount == 0 == 12) {
       res.send("404")
@@ -80,7 +79,7 @@ router.get('/rooms', async (req, res) => {
       //send chat profile info
 
       falseData = [
-        { "chat_id": "1222", "teacher_name": "brad Pit", "teacher_id": "1111111" },
+        { "chat_id": "1222", "name": "brad Pit", "id": "1111111" },
         { "chat_id": "1412", "teacher_name": "Makaio Zorica Asenov", "teacher_id": "1111112" },
         { "chat_id": "1612", "teacher_name": "Sans Sanna Cabello", "teacher_id": "1111113" },
         { "chat_id": "12122", "teacher_name": "Tijana Dorji Martín", "teacher_id": "1111114" },
@@ -95,6 +94,7 @@ router.get('/rooms', async (req, res) => {
     }
 
   } catch (error) {
+    console.log(error)
     console.log("reee")
 
   }
