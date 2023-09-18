@@ -74,8 +74,8 @@ router.get('/images/profile/:id', async (req, res) => {
   directoryPath = `./private_resources/userImagesForProccesing/`  //this is where the images go for proccesing
 
   try {
-    if (req.params.id == null || parseInt(req.params.id == NaN || typeof req.params.id == "undefined") ) {
-      res.send(404)
+    if (req.params.id == null || isNaN(parseInt(req.params.id))) {
+      res.sendFile(`no-image-found.png`, { root: `./public/images/` })
       return
     }
     else if (global.timerObj[`${req.params.id}-profile-image.jpeg`]) {

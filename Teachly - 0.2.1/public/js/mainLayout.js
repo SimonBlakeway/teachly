@@ -129,6 +129,7 @@ function updateDates() {
     let dates = document.getElementsByClassName("date")
     for (let i = 0; i < dates.length; i++) {
         timestamp = parseInt(dates[i].getAttribute("data-timestamp"))
+        //console.log( (dates[i]))
         dates[i].innerHTML = prettyifyDate(timestamp)
     }
 }

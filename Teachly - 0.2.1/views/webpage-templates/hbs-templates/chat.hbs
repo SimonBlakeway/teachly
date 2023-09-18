@@ -1,3 +1,11 @@
+<script nonce="{{context.settings.cspNonce}}" src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+  integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+
+
+
+
+
+
 <link rel="stylesheet" href="/css/chat.css" nonce="{{context.settings.cspNonce}}">
 <section class="bg-eee mt--30p">
   <div class="pt-3 px-3 mt-19pi">
@@ -85,6 +93,9 @@
     </div>
   </div>
 </section>
+
+
+
 <script nonce="{{context.settings.cspNonce}}">
   const userId = {{ context.settings.id }}
   var activeChat = ""
