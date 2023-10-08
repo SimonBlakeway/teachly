@@ -1,72 +1,10 @@
+var activeChat = ""
 window.addEventListener('load', async function () {
-  socket.on("connect", () => {
-    console.log("eerer");
-  });
-
   socket.on("recieve message", (data) => {
     switchSignaler("notification", turnOn = true)
-    notOuter = document.getElementById("notifications-list")
-    notOuter.innerHTML = '';
-    for (let i = 0; i < data.length; i++) {
-      box = document.createElement("li")
-      box.className = "px-0 mx-0 py-1"
-      box.id = `${data[i].notification_id}-notification`
-      divClass = ""
-      if (data[i].url) { object.onclick = () => { redirectByUrl(data[i].url, data[i].notification_id) } }
-
-
-
-      div1 = document.createElement("div")
-      div1.className = "d-flex border-top-light mt-1"
-
-      div2 = document.createElement("div")
-      div2.className = "w-220p"
-      div3 = document.createElement("div")
-      div3.innerHTML = `${data[i].text}`
-      div4 = document.createElement("div")
-      div4.className = "pt-1 fs-6 clr-f2f2f2"
-      div4.innerHTML = `${prettyifyDate(data[i].created_at)}`
-      div5 = document.createElement("div")
-      div5.addEventListener('click', event => {
-        event.stopPropagation();
-      })
-      div6 = document.createElement("div")
-      div7 = document.createElement("div")
-      div7.addEventListener("click", e => {
-        deleteNotification(`${data[i].notification_id}`)
-      })
-
-      div2.append(div3, div4)
-      div6.append(div7)
-      div5.append(div6)
-
-      /*
-        box.innerHTML = `
-            <div class="d-flex border-top-light mt-1">
-              <div class="w-220p">
-                <div>${data[i].text}</div>
-                <div class="pt-1 fs-6 clr-f2f2f2">${prettyifyDate(data[i].created_at)}</div>
-              </div>
-              <div o000nclick="event.stopPropagation();">
-                <div>
-                  <div o000nClick="deleteNotification('${data[i].notification_id}')" class="color-white fs-3 ml-10p"><i class="fa fa-times" aria-hidden="true"></i></div>
-                </div>
-              </div>
-            </div>
-              `
-        */
-
-      box.append(div2, div5)
-    }
-  });
-
-  socket.on("disconnect", () => {
-    console.log("socket disconected");
+    createMessage(data)
   });
 })
-
-
-
 
 function updateChatboxText(messageData) {
   //update room
@@ -79,6 +17,7 @@ function updateChatboxText(messageData) {
   document.getElementById(`${messageData.chat_id}-room`).remove()
   document.getElementById(`chat-rooms`).prepend(room)
 }
+
 
 function createMessage(messageData) {
   li = document.createElement("li")
@@ -98,8 +37,7 @@ function createMessage(messageData) {
                   <p class="mb-0">${messageData.text}</p>
                 </div>
                 <div class="px-3 py-0 my-0 date">
-                  <span class="disappear">${messageData.created_at}</span>
-                  <p class="text-muted small mb-0 ${floatDirection}">${prettyifyDate(messageData.created_at)}</p>
+                  <p data-timestamp="${messageData.created_at}" class="date text-muted small mb-0 ${floatDirection}">${prettyifyDate(messageData.created_at)}</p>
                 </div>
               </div>`
   return li
@@ -131,6 +69,7 @@ function sendMessage() {
 }
 
 function changeChat(chatId) {
+  console.log("chatId is ", chatId)
   try {
     if (chatId == activeChat) {
       return
@@ -172,9 +111,7 @@ function setupScreenWidthChanges() {
   // this would normally be solved with a css conditional but
   // the interactions are too complex for that
   function resize() {
-
-    smallScreen = (window.innerWidth < 600)
-
+    smallScreen = (window.innerWidth < 666)
     if (smallScreen && activeChat == "") {
       document.getElementById("rooms").classList.remove("disappear")
       document.getElementById(`no-chat-active`).classList.add("disappear")
@@ -225,27 +162,25 @@ window.addEventListener('load', async function () {
 
     function generateRoom(roomData, chatData) {
       //this function exists to simplify the logic present below
-      roomClass = "p-2 border-bottom sd"
+      roomClass = "p-2 border-bottom chat-room-side-bar"
       if (activeChat == roomData.chat_id) {
         document.getElementById("no-chat-active").classList.toggle("disappear")
-        roomClass = "p-2 border-bottom active-room sd"
+        roomClass = "p-2 border-bottom active-room chat-room-side-bar"
       }
       li = document.createElement('li');
       li.id = `${roomData.chat_id}-room`
-      li.onclick = function () { changeChat(`${roomData.chat_id}`) }
       li.className = roomClass
+      li.setAttribute("data-chat-id", roomData.chat_id)
+
 
       div = document.createElement("div")
       div.href = "#!"
       div.className = "d-flex justify-content-between"
-      div.addEventListener("click", e => {
-        changeChat(`${roomData.chat_id}`)
-      })
       div.innerHTML = `
             <div class="d-flex flex-row">
-              <img src="/get/images/profile/${roomData.teacher_id}" alt="avatar" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong h-60p" width="60"></img>
+              <img src="/get/images/profile/${roomData.id}" alt="avatar" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong h-60p" width="60"></img>
                 <div class="pt-1">
-                  <p class="fw-bold mb-0">${roomData.teacher_name}</p>
+                  <p class="fw-bold mb-0">${roomData.name}</p>
                   <p class="small text-muted" id="${roomData.chat_id}-latest-message-text">${chatData.text}</p>
                 </div>
               <div class="pt-1">
@@ -255,27 +190,8 @@ window.addEventListener('load', async function () {
               </div>
             </div>
       `
-      console.log(div)
+      div.setAttribute("data-chat-id", roomData.chat_id)
       li.appendChild(div)
-
-      /*
-      li.innerHTML = `
-          <div href = "#!" class="d-flex justify-content-between" o000nclick='changeChat("${roomData.chat_id}")' >
-            <div class="d-flex flex-row">
-              <img src="/images/profile/${roomData.teacher_id}" alt="avatar" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong h-60p" width="60"></img>
-                <div class="pt-1">
-                  <p class="fw-bold mb-0">${roomData.teacher_name}</p>
-                  <p class="small text-muted" id="${roomData.chat_id}-latest-message-text">${chatData.text}</p>
-                </div>
-              </div>
-              <div class="pt-1">
-                <p class="small text-muted mb-1 date">
-                  <span id="${roomData.chat_id}-latest-message-created-hidden" class="disappear">${chatData.created_at}</span>
-                  <span id="${roomData.chat_id}-latest-message-created">${prettyifyDate(chatData.created_at)}</span>
-                  </p>
-              </div>
-          </div > `
-      */
       return li
     }
 
@@ -288,13 +204,13 @@ window.addEventListener('load', async function () {
       div.id = `${roomData.chat_id}-chat`
       div.innerHTML = `
     <div class="m-0 p-0 chat-profile">
-      <div class="p-0 w-100 h-40p d-inline-flex" href="/profile/${roomData.teacher_id}">
-        <div class="apr-mx-640p p-0 d-flex align-items-center mx-3 h-40p w-50p d-inline-flex fs-18p exit-chat-btn">←</div>
+      <div class="p-0 w-100 h-40p d-inline-flex" href="/profile/${roomData.id}">
+        <div class="apr-mx-640p p-0 d-flex align-items-center mx-3 h-40p w-50p d-inline-flex fs-18p exit-chat-btn default-cursor">←</div>
         <div class="d-flex align-items-center h-40p">
-          <img src="/get/images/profile/${roomData.teacher_id}" alt="avatar"
+          <img src="/get/images/profile/${roomData.id}" alt="avatar"
             class="rounded-circle ml-0 shadow-1-strong d-inline-flex" width="35">
         </div>
-        <div class="profile-name p-1 pl-3 d-flex align-items-center" id="profile-name-${roomData.teacher_id}">${roomData.teacher_name}</div>
+        <div class="profile-name p-1 overflow-x-hiddeni hide-scroll" id="profile-name-${roomData.id}">${roomData.name}</div>
         <div class="contact-options" id="contact-options-id">
           <div class="vert-ilip">⋮</div>
         </div>
@@ -336,41 +252,38 @@ window.addEventListener('load', async function () {
       //storing chats in an obj simplifies the logic 
       chatObj = {}
       roomBox = document.createElement("div")
-
-      for (let i = 0; i < chatRes.length; i++) {
-        mesChatId = chatRes[i].chat_id
-        if (chatObj[mesChatId] != undefined) {
-          chatObj[chatRes[i].chat_id].children[1].appendChild(createMessage(chatRes[i]))
-        }
-        else {
-          roomIndex = getRoomIndex(roomRes, mesChatId)
-          chatObj[chatRes[i].chat_id] = generateChat(roomRes[roomIndex], chatRes[i])
-          chatObj[chatRes[i].chat_id].children[1].appendChild(createMessage(chatRes[i]))
-          roomBox.appendChild(generateRoom(roomRes[roomIndex], chatRes[i]))
-          delete roomRes[roomIndex]
-        }
-      }
-
-      chatArr = Object.values(chatObj);
       chatbox = document.createElement("div")
 
-
-
+      for (let i = 0; i < chatRes.length; i++) {
+        if (!(chatObj[chatRes[i].chat_id])) {
+          chatObj[chatRes[i].chat_id] = document.createElement("div")
+        }
+        chatObj[chatRes[i].chat_id].appendChild(createMessage(chatRes[i]))
+      }
       for (let i = 0; i < roomRes.length; i++) {
+        let chatInfoMessage = {
+          text: "",
+          created_at: ""
+        }
+        if (chatObj[roomRes[i].chat_id]) {
+          chatInfo = chatObj[roomRes[i].chat_id]
+          chatInfoMessage.text = chatInfo.children[chatInfo.children.length - 1].children[0].children[0].children[0].innerHTML
+          chatInfoMessage.created_at = chatInfo.children[chatInfo.children.length - 1].children[0].children[1].children[0].getAttribute("data-timestamp")
+        }
+
         if (typeof roomRes[i] != "undefined") {
-          emptyChat = {
-            text: "",
-            created_at: ""
-          }
-          chatbox.appendChild(generateChat(roomRes[i], emptyChat))
-          roomBox.appendChild(generateRoom(roomRes[i], emptyChat))
+          chatbox.appendChild(generateChat(roomRes[i], chatInfoMessage))
+          roomBox.appendChild(generateRoom(roomRes[i], chatInfoMessage))
         }
       }
       document.getElementById("chat-rooms").innerHTML = roomBox.innerHTML;
       document.getElementById("chat-boxes").innerHTML = chatbox.innerHTML;
 
 
-
+      mesList = Object.keys(chatObj);
+      for (let i = 0; i < mesList.length; i++) {
+        document.getElementById(`${1222}-messages`).innerHTML = chatObj[mesList[i]].innerHTML
+      }
 
 
       //load js function into html
@@ -385,8 +298,8 @@ window.addEventListener('load', async function () {
       }));
 
 
-      document.querySelectorAll(".sd").forEach(el => el.addEventListener('click', e => {
-        console.log("sd")
+      document.querySelectorAll(".chat-room-side-bar").forEach(el => el.addEventListener('click', e => {
+        changeChat(el.getAttribute("data-chat-id"))
       }));
 
     });

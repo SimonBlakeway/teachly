@@ -983,18 +983,15 @@ function sendAutomatedNotificationGlobal(lang, key, valObj, internal_data = {}) 
 
 async function sendMessage(user_id, text, chat_id, settings) {
   try {
+    created_at = Math.floor(Date.now() / 1000),
 
 
-    lang = (await db.query(`
-    SELECT lang FROM user_info
-  `)).rows[0].lang
 
     notObj = {
       text: compiledConvert(text),
       created_at: Math.floor(Date.now() / 1000),
       user_id: user_id,
       notification_type: "message",
-      lang: lang
     }
 
 
@@ -1006,7 +1003,7 @@ async function sendMessage(user_id, text, chat_id, settings) {
      `, [text, created_at, settings.id, chat_id])
 
     //send message to user
-    io.to(`${user_id}-user`).emit("send message", notObj);
+    io.to(`${user_id}-user`).emit("recieve message", notObj);
 
 
     sendAutomatedNotification(lang, "message-notification", { text: [settings.name], link: [chat_id] })

@@ -88,8 +88,10 @@
 .profile-name {
   width: calc(100% - 50px);
   text-align: left;
-  margin-left: 30px;
+  margin-left: 10px;
+  margin-top: 5px !important;
   overflow-x: hidden;
+  white-space: nowrap;
 }
 
 .chat {

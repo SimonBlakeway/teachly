@@ -79,8 +79,8 @@ router.get('/rooms', async (req, res) => {
       //send chat profile info
 
       falseData = [
-        { "chat_id": "1222", "name": "brad Pit", "id": "1111111" },
-        { "chat_id": "1412", "teacher_name": "Makaio Zorica Asenov", "teacher_id": "1111112" },
+        { "chat_id": "1222", "name": "brad Pit", "id": "111231111", "last_message_time": 121212 },
+        { "chat_id": "1412", "name": "Makaio Zorica Asenov", "id": "1111112" },
         { "chat_id": "1612", "teacher_name": "Sans Sanna Cabello", "teacher_id": "1111113" },
         { "chat_id": "12122", "teacher_name": "Tijana Dorji Martín", "teacher_id": "1111114" },
         { "chat_id": "121232", "teacher_name": "dfdfdf Pit", "teacher_id": "1111115" },
@@ -109,7 +109,9 @@ router.get('/old-messages', async (req, res) => {
     FROM chat t1 
     INNER JOIN messages t2
       ON t1.chat_id = t2.chat_id
-    WHERE t1.teacher_id = $1 Or t1.student_id = $1;`, [req.settings.id]);
+    WHERE t1.teacher_id = $1 Or t1.student_id = $1
+    ORDER BY
+      t1.created_at ASC`, [req.settings.id]);
 
     if (result.rowCount == 0 == 12) {
       res.send("404")

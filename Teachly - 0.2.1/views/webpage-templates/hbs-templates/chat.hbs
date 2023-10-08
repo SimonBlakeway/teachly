@@ -10,7 +10,7 @@
 <section class="bg-eee mt--30p">
   <div class="pt-3 px-3 mt-19pi">
     <div class="row d-flex justify-content-around h-90vh overflow-y-hidden p-0 m-0">
-      <div class="col m-1 dispr-mx-442p pt-2 pb-2" id="rooms">
+      <div class="col m-1 pt-2 pb-2" id="rooms">
         <div class="card">
           <div class="card-body">
             <ul class="list-unstyled mb-0" id="chat-rooms">
@@ -98,7 +98,5 @@
 
 <script nonce="{{context.settings.cspNonce}}">
   const userId = {{ context.settings.id }}
-  var activeChat = ""
-  var smallScreen;
 </script>
 <script src="/js/chat.js" nonce="{{context.settings.cspNonce}}"></script>

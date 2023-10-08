@@ -86,7 +86,7 @@ module.exports = {
 
         socket.on("send message", async function (data) {
           try {
-            sendMessage(cookies.user_refresh_token.id, data.text, data.chatId)
+            utils.sendMessage(cookies.user_refresh_token.id, data.text, data.chatId)
           } catch (error) {
             console.log(error)
           }
