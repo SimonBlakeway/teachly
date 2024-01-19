@@ -42,4 +42,16 @@ module.exports = {
       console.log(error)
     }
   },
+  ensureCSRFToken : function (req, res, next) { 
+    try {
+      if (req.settings.CSRFToken != req.body.CSRFToken) {
+        res.redirect('/');
+      }
+      else {
+        return next()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  },
 }

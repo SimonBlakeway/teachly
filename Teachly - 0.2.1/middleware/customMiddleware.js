@@ -77,10 +77,31 @@ async function cookieSettings(req, res, next) {
 
       }
     } catch (error) {
-      console.log(err)
+      console.log(error)
     }
     res.sendStatus(400)
   }
+}
+
+
+async function generateCSRFToken(req, res, next) {
+  /*
+   *  generatate http only cookie,
+   *  with values token, expire date, created date, user id, and hash
+   *  add cookie to client
+   */
+
+  return next()
+}
+
+async function updateCSRFToken(req, res, next) {
+  /*
+  if (req._csrf is all good but token is expired) {
+    reset token
+  }
+   */
+
+  return next()
 }
 
 async function mustHaveValidToken(req, res, next) {
